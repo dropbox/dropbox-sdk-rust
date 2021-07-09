@@ -467,7 +467,7 @@ pub fn get_temporary_link(
 /// A successful temporary upload link consumption request returns the content hash of the uploaded
 /// data in JSON format.
 ///
-/// Example succesful temporary upload link consumption response: {"content-hash":
+/// Example successful temporary upload link consumption response: {"content-hash":
 /// "599d71033d700ac892a0e48fa61b125d2f5994"}
 ///
 /// An unsuccessful temporary upload link consumption request returns any of the following status

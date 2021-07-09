@@ -49,21 +49,6 @@ pub fn add_folder_member(
         None)
 }
 
-/// Identical to update_file_member but with less information returned.
-#[deprecated(note = "replaced by update_file_member")]
-pub fn change_file_member_access(
-    client: &impl crate::client_trait::UserAuthClient,
-    arg: &ChangeFileMemberAccessArgs,
-) -> crate::Result<Result<FileMemberActionResult, FileMemberActionError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/change_file_member_access",
-        arg,
-        None)
-}
-
 /// Returns the status of an asynchronous job.
 pub fn check_job_status(
     client: &impl crate::client_trait::UserAuthClient,
@@ -919,7 +904,7 @@ pub struct AddFileMemberArgs {
     /// File to which to add members.
     pub file: PathOrId,
     /// Members to add. Note that even an email address is given, this may result in a user being
-    /// directy added to the membership if that email is the user's main account email.
+    /// directly added to the membership if that email is the user's main account email.
     pub members: Vec<MemberSelector>,
     /// Message to send to added members in their invitation.
     pub custom_message: Option<String>,
@@ -1840,6 +1825,126 @@ impl ::std::fmt::Display for AddMemberSelectorError {
     }
 }
 
+/// check documentation for ResolvedVisibility.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum AlphaResolvedVisibility {
+    /// Anyone who has received the link can access it. No login required.
+    Public,
+    /// Only members of the same team can access the link. Login is required.
+    TeamOnly,
+    /// A link-specific password is required to access the link. Login is not required.
+    Password,
+    /// Only members of the same team who have the link-specific password can access the link. Login
+    /// is required.
+    TeamAndPassword,
+    /// Only members of the shared folder containing the linked file can access the link. Login is
+    /// required.
+    SharedFolderOnly,
+    /// The link merely points the user to the content, and does not grant any additional rights.
+    /// Existing members of the content who use this link can only access the content with their
+    /// pre-existing access rights. Either on the file directly, or inherited from a parent folder.
+    NoOne,
+    /// Only the current user can view this link.
+    OnlyYou,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AlphaResolvedVisibility {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = AlphaResolvedVisibility;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AlphaResolvedVisibility structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "public" => AlphaResolvedVisibility::Public,
+                    "team_only" => AlphaResolvedVisibility::TeamOnly,
+                    "password" => AlphaResolvedVisibility::Password,
+                    "team_and_password" => AlphaResolvedVisibility::TeamAndPassword,
+                    "shared_folder_only" => AlphaResolvedVisibility::SharedFolderOnly,
+                    "no_one" => AlphaResolvedVisibility::NoOne,
+                    "only_you" => AlphaResolvedVisibility::OnlyYou,
+                    _ => AlphaResolvedVisibility::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["public",
+                                    "team_only",
+                                    "password",
+                                    "team_and_password",
+                                    "shared_folder_only",
+                                    "no_one",
+                                    "only_you",
+                                    "other"];
+        deserializer.deserialize_struct("AlphaResolvedVisibility", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AlphaResolvedVisibility {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            AlphaResolvedVisibility::Public => {
+                // unit
+                let mut s = serializer.serialize_struct("AlphaResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "public")?;
+                s.end()
+            }
+            AlphaResolvedVisibility::TeamOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("AlphaResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "team_only")?;
+                s.end()
+            }
+            AlphaResolvedVisibility::Password => {
+                // unit
+                let mut s = serializer.serialize_struct("AlphaResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "password")?;
+                s.end()
+            }
+            AlphaResolvedVisibility::TeamAndPassword => {
+                // unit
+                let mut s = serializer.serialize_struct("AlphaResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "team_and_password")?;
+                s.end()
+            }
+            AlphaResolvedVisibility::SharedFolderOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("AlphaResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "shared_folder_only")?;
+                s.end()
+            }
+            AlphaResolvedVisibility::NoOne => {
+                // unit
+                let mut s = serializer.serialize_struct("AlphaResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "no_one")?;
+                s.end()
+            }
+            AlphaResolvedVisibility::OnlyYou => {
+                // unit
+                let mut s = serializer.serialize_struct("AlphaResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "only_you")?;
+                s.end()
+            }
+            AlphaResolvedVisibility::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Information about the content that has a link audience different than that of this folder.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -2154,123 +2259,6 @@ impl ::serde::ser::Serialize for AudienceRestrictingSharedFolder {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("AudienceRestrictingSharedFolder", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Arguments for [`change_file_member_access()`](change_file_member_access).
-#[derive(Debug, Clone, PartialEq)]
-#[non_exhaustive] // structs may have more fields added in the future.
-pub struct ChangeFileMemberAccessArgs {
-    /// File for which we are changing a member's access.
-    pub file: PathOrId,
-    /// The member whose access we are changing.
-    pub member: MemberSelector,
-    /// The new access level for the member.
-    pub access_level: AccessLevel,
-}
-
-impl ChangeFileMemberAccessArgs {
-    pub fn new(file: PathOrId, member: MemberSelector, access_level: AccessLevel) -> Self {
-        ChangeFileMemberAccessArgs {
-            file,
-            member,
-            access_level,
-        }
-    }
-}
-
-const CHANGE_FILE_MEMBER_ACCESS_ARGS_FIELDS: &[&str] = &["file",
-                                                         "member",
-                                                         "access_level"];
-impl ChangeFileMemberAccessArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        map: V,
-    ) -> Result<ChangeFileMemberAccessArgs, V::Error> {
-        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
-    }
-
-    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-        optional: bool,
-    ) -> Result<Option<ChangeFileMemberAccessArgs>, V::Error> {
-        let mut field_file = None;
-        let mut field_member = None;
-        let mut field_access_level = None;
-        let mut nothing = true;
-        while let Some(key) = map.next_key::<&str>()? {
-            nothing = false;
-            match key {
-                "file" => {
-                    if field_file.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("file"));
-                    }
-                    field_file = Some(map.next_value()?);
-                }
-                "member" => {
-                    if field_member.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("member"));
-                    }
-                    field_member = Some(map.next_value()?);
-                }
-                "access_level" => {
-                    if field_access_level.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("access_level"));
-                    }
-                    field_access_level = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        if optional && nothing {
-            return Ok(None);
-        }
-        let result = ChangeFileMemberAccessArgs {
-            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
-            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
-            access_level: field_access_level.ok_or_else(|| ::serde::de::Error::missing_field("access_level"))?,
-        };
-        Ok(Some(result))
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("file", &self.file)?;
-        s.serialize_field("member", &self.member)?;
-        s.serialize_field("access_level", &self.access_level)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ChangeFileMemberAccessArgs {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ChangeFileMemberAccessArgs;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a ChangeFileMemberAccessArgs struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ChangeFileMemberAccessArgs::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ChangeFileMemberAccessArgs", CHANGE_FILE_MEMBER_ACCESS_ARGS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ChangeFileMemberAccessArgs {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ChangeFileMemberAccessArgs", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -3774,8 +3762,7 @@ impl ::serde::ser::Serialize for FileMemberActionIndividualResult {
     }
 }
 
-/// Per-member result for [`add_file_member()`](add_file_member) or
-/// [`change_file_member_access()`](change_file_member_access).
+/// Per-member result for [`add_file_member()`](add_file_member).
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileMemberActionResult {
@@ -7059,7 +7046,8 @@ pub enum LinkAudience {
     /// grant additional rights to the user. Members of the content who use this link can only
     /// access the content with their pre-existing access rights.
     NoOne,
-    /// A link-specific password is required to access the link. Login is not required.
+    /// Use `require_password` instead. A link-specific password is required to access the link.
+    /// Login is not required.
     Password,
     /// Link is accessible only by members of the content.
     Members,
@@ -7142,6 +7130,235 @@ impl ::serde::ser::Serialize for LinkAudience {
             }
             LinkAudience::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+/// check documentation for VisibilityPolicyDisallowedReason.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum LinkAudienceDisallowedReason {
+    /// The user needs to delete and recreate the link to change the visibility policy.
+    DeleteAndRecreate,
+    /// The parent shared folder restricts sharing of links outside the shared folder. To change the
+    /// visibility policy, remove the restriction from the parent shared folder.
+    RestrictedBySharedFolder,
+    /// The team policy prevents links being shared outside the team.
+    RestrictedByTeam,
+    /// The user needs to be on a team to set this policy.
+    UserNotOnTeam,
+    /// The user is a basic user or is on a limited team.
+    UserAccountType,
+    /// The user does not have permission.
+    PermissionDenied,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LinkAudienceDisallowedReason {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = LinkAudienceDisallowedReason;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LinkAudienceDisallowedReason structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "delete_and_recreate" => LinkAudienceDisallowedReason::DeleteAndRecreate,
+                    "restricted_by_shared_folder" => LinkAudienceDisallowedReason::RestrictedBySharedFolder,
+                    "restricted_by_team" => LinkAudienceDisallowedReason::RestrictedByTeam,
+                    "user_not_on_team" => LinkAudienceDisallowedReason::UserNotOnTeam,
+                    "user_account_type" => LinkAudienceDisallowedReason::UserAccountType,
+                    "permission_denied" => LinkAudienceDisallowedReason::PermissionDenied,
+                    _ => LinkAudienceDisallowedReason::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["delete_and_recreate",
+                                    "restricted_by_shared_folder",
+                                    "restricted_by_team",
+                                    "user_not_on_team",
+                                    "user_account_type",
+                                    "permission_denied",
+                                    "other"];
+        deserializer.deserialize_struct("LinkAudienceDisallowedReason", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LinkAudienceDisallowedReason {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            LinkAudienceDisallowedReason::DeleteAndRecreate => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudienceDisallowedReason", 1)?;
+                s.serialize_field(".tag", "delete_and_recreate")?;
+                s.end()
+            }
+            LinkAudienceDisallowedReason::RestrictedBySharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudienceDisallowedReason", 1)?;
+                s.serialize_field(".tag", "restricted_by_shared_folder")?;
+                s.end()
+            }
+            LinkAudienceDisallowedReason::RestrictedByTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudienceDisallowedReason", 1)?;
+                s.serialize_field(".tag", "restricted_by_team")?;
+                s.end()
+            }
+            LinkAudienceDisallowedReason::UserNotOnTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudienceDisallowedReason", 1)?;
+                s.serialize_field(".tag", "user_not_on_team")?;
+                s.end()
+            }
+            LinkAudienceDisallowedReason::UserAccountType => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudienceDisallowedReason", 1)?;
+                s.serialize_field(".tag", "user_account_type")?;
+                s.end()
+            }
+            LinkAudienceDisallowedReason::PermissionDenied => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudienceDisallowedReason", 1)?;
+                s.serialize_field(".tag", "permission_denied")?;
+                s.end()
+            }
+            LinkAudienceDisallowedReason::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct LinkAudienceOption {
+    /// Specifies who can access the link.
+    pub audience: LinkAudience,
+    /// Whether the user calling this API can select this audience option.
+    pub allowed: bool,
+    /// If `allowed` is `false`, this will provide the reason that the user is not permitted to set
+    /// the visibility to this policy.
+    pub disallowed_reason: Option<LinkAudienceDisallowedReason>,
+}
+
+impl LinkAudienceOption {
+    pub fn new(audience: LinkAudience, allowed: bool) -> Self {
+        LinkAudienceOption {
+            audience,
+            allowed,
+            disallowed_reason: None,
+        }
+    }
+
+    pub fn with_disallowed_reason(mut self, value: LinkAudienceDisallowedReason) -> Self {
+        self.disallowed_reason = Some(value);
+        self
+    }
+}
+
+const LINK_AUDIENCE_OPTION_FIELDS: &[&str] = &["audience",
+                                               "allowed",
+                                               "disallowed_reason"];
+impl LinkAudienceOption {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LinkAudienceOption, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LinkAudienceOption>, V::Error> {
+        let mut field_audience = None;
+        let mut field_allowed = None;
+        let mut field_disallowed_reason = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "audience" => {
+                    if field_audience.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("audience"));
+                    }
+                    field_audience = Some(map.next_value()?);
+                }
+                "allowed" => {
+                    if field_allowed.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("allowed"));
+                    }
+                    field_allowed = Some(map.next_value()?);
+                }
+                "disallowed_reason" => {
+                    if field_disallowed_reason.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("disallowed_reason"));
+                    }
+                    field_disallowed_reason = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LinkAudienceOption {
+            audience: field_audience.ok_or_else(|| ::serde::de::Error::missing_field("audience"))?,
+            allowed: field_allowed.ok_or_else(|| ::serde::de::Error::missing_field("allowed"))?,
+            disallowed_reason: field_disallowed_reason,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("audience", &self.audience)?;
+        s.serialize_field("allowed", &self.allowed)?;
+        s.serialize_field("disallowed_reason", &self.disallowed_reason)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LinkAudienceOption {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LinkAudienceOption;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LinkAudienceOption struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LinkAudienceOption::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LinkAudienceOption", LINK_AUDIENCE_OPTION_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LinkAudienceOption {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LinkAudienceOption", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -7483,6 +7700,26 @@ impl ::serde::ser::Serialize for LinkPermission {
 pub struct LinkPermissions {
     /// Whether the caller can revoke the shared link.
     pub can_revoke: bool,
+    /// A list of policies that the user might be able to set for the visibility.
+    pub visibility_policies: Vec<VisibilityPolicy>,
+    /// Whether the user can set the expiry settings of the link. This refers to the ability to
+    /// create a new expiry and modify an existing expiry.
+    pub can_set_expiry: bool,
+    /// Whether the user can remove the expiry of the link.
+    pub can_remove_expiry: bool,
+    /// Whether the link can be downloaded or not.
+    pub allow_download: bool,
+    /// Whether the user can allow downloads via the link. This refers to the ability to remove a
+    /// no-download restriction on the link.
+    pub can_allow_download: bool,
+    /// Whether the user can disallow downloads via the link. This refers to the ability to impose a
+    /// no-download restriction on the link.
+    pub can_disallow_download: bool,
+    /// Whether comments are enabled for the linked file. This takes the team commenting policy into
+    /// account.
+    pub allow_comments: bool,
+    /// Whether the team has disabled commenting globally.
+    pub team_restricts_comments: bool,
     /// The current visibility of the link after considering the shared links policies of the the
     /// team (in case the link's owner is part of a team) and the shared folder (in case the linked
     /// file is part of a shared folder). This field is shown only if the caller has access to this
@@ -7507,17 +7744,50 @@ pub struct LinkPermissions {
     /// depend on who is calling this API. In particular, `link_access_level` does not take into
     /// account the API caller's current permissions to the content.
     pub link_access_level: Option<LinkAccessLevel>,
+    /// A list of link audience options the user might be able to set as the new audience.
+    pub audience_options: Option<Vec<LinkAudienceOption>>,
+    /// Whether the user can set a password for the link.
+    pub can_set_password: Option<bool>,
+    /// Whether the user can remove the password of the link.
+    pub can_remove_password: Option<bool>,
+    /// Whether the user is required to provide a password to view the link.
+    pub require_password: Option<bool>,
+    /// Whether the user can use extended sharing controls, based on their account type.
+    pub can_use_extended_sharing_controls: Option<bool>,
 }
 
 impl LinkPermissions {
-    pub fn new(can_revoke: bool) -> Self {
+    pub fn new(
+        can_revoke: bool,
+        visibility_policies: Vec<VisibilityPolicy>,
+        can_set_expiry: bool,
+        can_remove_expiry: bool,
+        allow_download: bool,
+        can_allow_download: bool,
+        can_disallow_download: bool,
+        allow_comments: bool,
+        team_restricts_comments: bool,
+    ) -> Self {
         LinkPermissions {
             can_revoke,
+            visibility_policies,
+            can_set_expiry,
+            can_remove_expiry,
+            allow_download,
+            can_allow_download,
+            can_disallow_download,
+            allow_comments,
+            team_restricts_comments,
             resolved_visibility: None,
             requested_visibility: None,
             revoke_failure_reason: None,
             effective_audience: None,
             link_access_level: None,
+            audience_options: None,
+            can_set_password: None,
+            can_remove_password: None,
+            require_password: None,
+            can_use_extended_sharing_controls: None,
         }
     }
 
@@ -7545,14 +7815,52 @@ impl LinkPermissions {
         self.link_access_level = Some(value);
         self
     }
+
+    pub fn with_audience_options(mut self, value: Vec<LinkAudienceOption>) -> Self {
+        self.audience_options = Some(value);
+        self
+    }
+
+    pub fn with_can_set_password(mut self, value: bool) -> Self {
+        self.can_set_password = Some(value);
+        self
+    }
+
+    pub fn with_can_remove_password(mut self, value: bool) -> Self {
+        self.can_remove_password = Some(value);
+        self
+    }
+
+    pub fn with_require_password(mut self, value: bool) -> Self {
+        self.require_password = Some(value);
+        self
+    }
+
+    pub fn with_can_use_extended_sharing_controls(mut self, value: bool) -> Self {
+        self.can_use_extended_sharing_controls = Some(value);
+        self
+    }
 }
 
 const LINK_PERMISSIONS_FIELDS: &[&str] = &["can_revoke",
+                                           "visibility_policies",
+                                           "can_set_expiry",
+                                           "can_remove_expiry",
+                                           "allow_download",
+                                           "can_allow_download",
+                                           "can_disallow_download",
+                                           "allow_comments",
+                                           "team_restricts_comments",
                                            "resolved_visibility",
                                            "requested_visibility",
                                            "revoke_failure_reason",
                                            "effective_audience",
-                                           "link_access_level"];
+                                           "link_access_level",
+                                           "audience_options",
+                                           "can_set_password",
+                                           "can_remove_password",
+                                           "require_password",
+                                           "can_use_extended_sharing_controls"];
 impl LinkPermissions {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -7565,11 +7873,24 @@ impl LinkPermissions {
         optional: bool,
     ) -> Result<Option<LinkPermissions>, V::Error> {
         let mut field_can_revoke = None;
+        let mut field_visibility_policies = None;
+        let mut field_can_set_expiry = None;
+        let mut field_can_remove_expiry = None;
+        let mut field_allow_download = None;
+        let mut field_can_allow_download = None;
+        let mut field_can_disallow_download = None;
+        let mut field_allow_comments = None;
+        let mut field_team_restricts_comments = None;
         let mut field_resolved_visibility = None;
         let mut field_requested_visibility = None;
         let mut field_revoke_failure_reason = None;
         let mut field_effective_audience = None;
         let mut field_link_access_level = None;
+        let mut field_audience_options = None;
+        let mut field_can_set_password = None;
+        let mut field_can_remove_password = None;
+        let mut field_require_password = None;
+        let mut field_can_use_extended_sharing_controls = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -7579,6 +7900,54 @@ impl LinkPermissions {
                         return Err(::serde::de::Error::duplicate_field("can_revoke"));
                     }
                     field_can_revoke = Some(map.next_value()?);
+                }
+                "visibility_policies" => {
+                    if field_visibility_policies.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("visibility_policies"));
+                    }
+                    field_visibility_policies = Some(map.next_value()?);
+                }
+                "can_set_expiry" => {
+                    if field_can_set_expiry.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_set_expiry"));
+                    }
+                    field_can_set_expiry = Some(map.next_value()?);
+                }
+                "can_remove_expiry" => {
+                    if field_can_remove_expiry.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_remove_expiry"));
+                    }
+                    field_can_remove_expiry = Some(map.next_value()?);
+                }
+                "allow_download" => {
+                    if field_allow_download.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("allow_download"));
+                    }
+                    field_allow_download = Some(map.next_value()?);
+                }
+                "can_allow_download" => {
+                    if field_can_allow_download.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_allow_download"));
+                    }
+                    field_can_allow_download = Some(map.next_value()?);
+                }
+                "can_disallow_download" => {
+                    if field_can_disallow_download.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_disallow_download"));
+                    }
+                    field_can_disallow_download = Some(map.next_value()?);
+                }
+                "allow_comments" => {
+                    if field_allow_comments.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("allow_comments"));
+                    }
+                    field_allow_comments = Some(map.next_value()?);
+                }
+                "team_restricts_comments" => {
+                    if field_team_restricts_comments.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("team_restricts_comments"));
+                    }
+                    field_team_restricts_comments = Some(map.next_value()?);
                 }
                 "resolved_visibility" => {
                     if field_resolved_visibility.is_some() {
@@ -7610,6 +7979,36 @@ impl LinkPermissions {
                     }
                     field_link_access_level = Some(map.next_value()?);
                 }
+                "audience_options" => {
+                    if field_audience_options.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("audience_options"));
+                    }
+                    field_audience_options = Some(map.next_value()?);
+                }
+                "can_set_password" => {
+                    if field_can_set_password.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_set_password"));
+                    }
+                    field_can_set_password = Some(map.next_value()?);
+                }
+                "can_remove_password" => {
+                    if field_can_remove_password.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_remove_password"));
+                    }
+                    field_can_remove_password = Some(map.next_value()?);
+                }
+                "require_password" => {
+                    if field_require_password.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("require_password"));
+                    }
+                    field_require_password = Some(map.next_value()?);
+                }
+                "can_use_extended_sharing_controls" => {
+                    if field_can_use_extended_sharing_controls.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_use_extended_sharing_controls"));
+                    }
+                    field_can_use_extended_sharing_controls = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -7621,11 +8020,24 @@ impl LinkPermissions {
         }
         let result = LinkPermissions {
             can_revoke: field_can_revoke.ok_or_else(|| ::serde::de::Error::missing_field("can_revoke"))?,
+            visibility_policies: field_visibility_policies.ok_or_else(|| ::serde::de::Error::missing_field("visibility_policies"))?,
+            can_set_expiry: field_can_set_expiry.ok_or_else(|| ::serde::de::Error::missing_field("can_set_expiry"))?,
+            can_remove_expiry: field_can_remove_expiry.ok_or_else(|| ::serde::de::Error::missing_field("can_remove_expiry"))?,
+            allow_download: field_allow_download.ok_or_else(|| ::serde::de::Error::missing_field("allow_download"))?,
+            can_allow_download: field_can_allow_download.ok_or_else(|| ::serde::de::Error::missing_field("can_allow_download"))?,
+            can_disallow_download: field_can_disallow_download.ok_or_else(|| ::serde::de::Error::missing_field("can_disallow_download"))?,
+            allow_comments: field_allow_comments.ok_or_else(|| ::serde::de::Error::missing_field("allow_comments"))?,
+            team_restricts_comments: field_team_restricts_comments.ok_or_else(|| ::serde::de::Error::missing_field("team_restricts_comments"))?,
             resolved_visibility: field_resolved_visibility,
             requested_visibility: field_requested_visibility,
             revoke_failure_reason: field_revoke_failure_reason,
             effective_audience: field_effective_audience,
             link_access_level: field_link_access_level,
+            audience_options: field_audience_options,
+            can_set_password: field_can_set_password,
+            can_remove_password: field_can_remove_password,
+            require_password: field_require_password,
+            can_use_extended_sharing_controls: field_can_use_extended_sharing_controls,
         };
         Ok(Some(result))
     }
@@ -7636,11 +8048,24 @@ impl LinkPermissions {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("can_revoke", &self.can_revoke)?;
+        s.serialize_field("visibility_policies", &self.visibility_policies)?;
+        s.serialize_field("can_set_expiry", &self.can_set_expiry)?;
+        s.serialize_field("can_remove_expiry", &self.can_remove_expiry)?;
+        s.serialize_field("allow_download", &self.allow_download)?;
+        s.serialize_field("can_allow_download", &self.can_allow_download)?;
+        s.serialize_field("can_disallow_download", &self.can_disallow_download)?;
+        s.serialize_field("allow_comments", &self.allow_comments)?;
+        s.serialize_field("team_restricts_comments", &self.team_restricts_comments)?;
         s.serialize_field("resolved_visibility", &self.resolved_visibility)?;
         s.serialize_field("requested_visibility", &self.requested_visibility)?;
         s.serialize_field("revoke_failure_reason", &self.revoke_failure_reason)?;
         s.serialize_field("effective_audience", &self.effective_audience)?;
-        s.serialize_field("link_access_level", &self.link_access_level)
+        s.serialize_field("link_access_level", &self.link_access_level)?;
+        s.serialize_field("audience_options", &self.audience_options)?;
+        s.serialize_field("can_set_password", &self.can_set_password)?;
+        s.serialize_field("can_remove_password", &self.can_remove_password)?;
+        s.serialize_field("require_password", &self.require_password)?;
+        s.serialize_field("can_use_extended_sharing_controls", &self.can_use_extended_sharing_controls)
     }
 }
 
@@ -7666,7 +8091,7 @@ impl ::serde::ser::Serialize for LinkPermissions {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("LinkPermissions", 6)?;
+        let mut s = serializer.serialize_struct("LinkPermissions", 19)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -13002,6 +13427,12 @@ pub enum ResolvedVisibility {
     /// Only members of the shared folder containing the linked file can access the link. Login is
     /// required.
     SharedFolderOnly,
+    /// The link merely points the user to the content, and does not grant any additional rights.
+    /// Existing members of the content who use this link can only access the content with their
+    /// pre-existing access rights. Either on the file directly, or inherited from a parent folder.
+    NoOne,
+    /// Only the current user can view this link.
+    OnlyYou,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -13028,6 +13459,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ResolvedVisibility {
                     "password" => ResolvedVisibility::Password,
                     "team_and_password" => ResolvedVisibility::TeamAndPassword,
                     "shared_folder_only" => ResolvedVisibility::SharedFolderOnly,
+                    "no_one" => ResolvedVisibility::NoOne,
+                    "only_you" => ResolvedVisibility::OnlyYou,
                     _ => ResolvedVisibility::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -13039,6 +13472,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ResolvedVisibility {
                                     "password",
                                     "team_and_password",
                                     "shared_folder_only",
+                                    "no_one",
+                                    "only_you",
                                     "other"];
         deserializer.deserialize_struct("ResolvedVisibility", VARIANTS, EnumVisitor)
     }
@@ -13077,6 +13512,18 @@ impl ::serde::ser::Serialize for ResolvedVisibility {
                 // unit
                 let mut s = serializer.serialize_struct("ResolvedVisibility", 1)?;
                 s.serialize_field(".tag", "shared_folder_only")?;
+                s.end()
+            }
+            ResolvedVisibility::NoOne => {
+                // unit
+                let mut s = serializer.serialize_struct("ResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "no_one")?;
+                s.end()
+            }
+            ResolvedVisibility::OnlyYou => {
+                // unit
+                let mut s = serializer.serialize_struct("ResolvedVisibility", 1)?;
+                s.serialize_field(".tag", "only_you")?;
                 s.end()
             }
             ResolvedVisibility::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -16688,11 +17135,9 @@ impl ::serde::ser::Serialize for SharedLinkPolicy {
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedLinkSettings {
-    /// The requested access for this shared link.
-    pub requested_visibility: Option<RequestedVisibility>,
-    /// If `requested_visibility` is
-    /// [`RequestedVisibility::Password`](RequestedVisibility::Password) this is needed to specify
-    /// the password to access the link.
+    /// Boolean flag to enable or disable password protection.
+    pub require_password: Option<bool>,
+    /// If `require_password` is true, this is needed to specify the password to access the link.
     pub link_password: Option<String>,
     /// Expiration time of the shared link. By default the link won't expire.
     pub expires: Option<super::common::DropboxTimestamp>,
@@ -16704,23 +17149,29 @@ pub struct SharedLinkSettings {
     /// Requested access level you want the audience to gain from this link. Note, modifying access
     /// level for an existing link is not supported.
     pub access: Option<RequestedLinkAccessLevel>,
+    /// Use `audience` instead.  The requested access for this shared link.
+    pub requested_visibility: Option<RequestedVisibility>,
+    /// Boolean flag to allow or not download capabilities for shared links.
+    pub allow_download: Option<bool>,
 }
 
 impl Default for SharedLinkSettings {
     fn default() -> Self {
         SharedLinkSettings {
-            requested_visibility: None,
+            require_password: None,
             link_password: None,
             expires: None,
             audience: None,
             access: None,
+            requested_visibility: None,
+            allow_download: None,
         }
     }
 }
 
 impl SharedLinkSettings {
-    pub fn with_requested_visibility(mut self, value: RequestedVisibility) -> Self {
-        self.requested_visibility = Some(value);
+    pub fn with_require_password(mut self, value: bool) -> Self {
+        self.require_password = Some(value);
         self
     }
 
@@ -16743,30 +17194,44 @@ impl SharedLinkSettings {
         self.access = Some(value);
         self
     }
+
+    pub fn with_requested_visibility(mut self, value: RequestedVisibility) -> Self {
+        self.requested_visibility = Some(value);
+        self
+    }
+
+    pub fn with_allow_download(mut self, value: bool) -> Self {
+        self.allow_download = Some(value);
+        self
+    }
 }
 
-const SHARED_LINK_SETTINGS_FIELDS: &[&str] = &["requested_visibility",
+const SHARED_LINK_SETTINGS_FIELDS: &[&str] = &["require_password",
                                                "link_password",
                                                "expires",
                                                "audience",
-                                               "access"];
+                                               "access",
+                                               "requested_visibility",
+                                               "allow_download"];
 impl SharedLinkSettings {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedLinkSettings, V::Error> {
-        let mut field_requested_visibility = None;
+        let mut field_require_password = None;
         let mut field_link_password = None;
         let mut field_expires = None;
         let mut field_audience = None;
         let mut field_access = None;
+        let mut field_requested_visibility = None;
+        let mut field_allow_download = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
-                "requested_visibility" => {
-                    if field_requested_visibility.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("requested_visibility"));
+                "require_password" => {
+                    if field_require_password.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("require_password"));
                     }
-                    field_requested_visibility = Some(map.next_value()?);
+                    field_require_password = Some(map.next_value()?);
                 }
                 "link_password" => {
                     if field_link_password.is_some() {
@@ -16792,6 +17257,18 @@ impl SharedLinkSettings {
                     }
                     field_access = Some(map.next_value()?);
                 }
+                "requested_visibility" => {
+                    if field_requested_visibility.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("requested_visibility"));
+                    }
+                    field_requested_visibility = Some(map.next_value()?);
+                }
+                "allow_download" => {
+                    if field_allow_download.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("allow_download"));
+                    }
+                    field_allow_download = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -16799,11 +17276,13 @@ impl SharedLinkSettings {
             }
         }
         let result = SharedLinkSettings {
-            requested_visibility: field_requested_visibility,
+            require_password: field_require_password,
             link_password: field_link_password,
             expires: field_expires,
             audience: field_audience,
             access: field_access,
+            requested_visibility: field_requested_visibility,
+            allow_download: field_allow_download,
         };
         Ok(result)
     }
@@ -16813,11 +17292,13 @@ impl SharedLinkSettings {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("requested_visibility", &self.requested_visibility)?;
+        s.serialize_field("require_password", &self.require_password)?;
         s.serialize_field("link_password", &self.link_password)?;
         s.serialize_field("expires", &self.expires)?;
         s.serialize_field("audience", &self.audience)?;
-        s.serialize_field("access", &self.access)
+        s.serialize_field("access", &self.access)?;
+        s.serialize_field("requested_visibility", &self.requested_visibility)?;
+        s.serialize_field("allow_download", &self.allow_download)
     }
 }
 
@@ -16843,7 +17324,7 @@ impl ::serde::ser::Serialize for SharedLinkSettings {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettings", 5)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettings", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -19462,6 +19943,253 @@ impl ::serde::ser::Serialize for Visibility {
                 s.end()
             }
             Visibility::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct VisibilityPolicy {
+    /// This is the value to submit when saving the visibility setting.
+    pub policy: RequestedVisibility,
+    /// This is what the effective policy would be, if you selected this option. The resolved policy
+    /// is obtained after considering external effects such as shared folder settings and team
+    /// policy. This value is guaranteed to be provided.
+    pub resolved_policy: AlphaResolvedVisibility,
+    /// Whether the user is permitted to set the visibility to this policy.
+    pub allowed: bool,
+    /// If `allowed` is `false`, this will provide the reason that the user is not permitted to set
+    /// the visibility to this policy.
+    pub disallowed_reason: Option<VisibilityPolicyDisallowedReason>,
+}
+
+impl VisibilityPolicy {
+    pub fn new(
+        policy: RequestedVisibility,
+        resolved_policy: AlphaResolvedVisibility,
+        allowed: bool,
+    ) -> Self {
+        VisibilityPolicy {
+            policy,
+            resolved_policy,
+            allowed,
+            disallowed_reason: None,
+        }
+    }
+
+    pub fn with_disallowed_reason(mut self, value: VisibilityPolicyDisallowedReason) -> Self {
+        self.disallowed_reason = Some(value);
+        self
+    }
+}
+
+const VISIBILITY_POLICY_FIELDS: &[&str] = &["policy",
+                                            "resolved_policy",
+                                            "allowed",
+                                            "disallowed_reason"];
+impl VisibilityPolicy {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<VisibilityPolicy, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<VisibilityPolicy>, V::Error> {
+        let mut field_policy = None;
+        let mut field_resolved_policy = None;
+        let mut field_allowed = None;
+        let mut field_disallowed_reason = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "policy" => {
+                    if field_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("policy"));
+                    }
+                    field_policy = Some(map.next_value()?);
+                }
+                "resolved_policy" => {
+                    if field_resolved_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("resolved_policy"));
+                    }
+                    field_resolved_policy = Some(map.next_value()?);
+                }
+                "allowed" => {
+                    if field_allowed.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("allowed"));
+                    }
+                    field_allowed = Some(map.next_value()?);
+                }
+                "disallowed_reason" => {
+                    if field_disallowed_reason.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("disallowed_reason"));
+                    }
+                    field_disallowed_reason = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = VisibilityPolicy {
+            policy: field_policy.ok_or_else(|| ::serde::de::Error::missing_field("policy"))?,
+            resolved_policy: field_resolved_policy.ok_or_else(|| ::serde::de::Error::missing_field("resolved_policy"))?,
+            allowed: field_allowed.ok_or_else(|| ::serde::de::Error::missing_field("allowed"))?,
+            disallowed_reason: field_disallowed_reason,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("policy", &self.policy)?;
+        s.serialize_field("resolved_policy", &self.resolved_policy)?;
+        s.serialize_field("allowed", &self.allowed)?;
+        s.serialize_field("disallowed_reason", &self.disallowed_reason)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for VisibilityPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = VisibilityPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a VisibilityPolicy struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                VisibilityPolicy::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("VisibilityPolicy", VISIBILITY_POLICY_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for VisibilityPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("VisibilityPolicy", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum VisibilityPolicyDisallowedReason {
+    /// The user needs to delete and recreate the link to change the visibility policy.
+    DeleteAndRecreate,
+    /// The parent shared folder restricts sharing of links outside the shared folder. To change the
+    /// visibility policy, remove the restriction from the parent shared folder.
+    RestrictedBySharedFolder,
+    /// The team policy prevents links being shared outside the team.
+    RestrictedByTeam,
+    /// The user needs to be on a team to set this policy.
+    UserNotOnTeam,
+    /// The user is a basic user or is on a limited team.
+    UserAccountType,
+    /// The user does not have permission.
+    PermissionDenied,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for VisibilityPolicyDisallowedReason {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = VisibilityPolicyDisallowedReason;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a VisibilityPolicyDisallowedReason structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "delete_and_recreate" => VisibilityPolicyDisallowedReason::DeleteAndRecreate,
+                    "restricted_by_shared_folder" => VisibilityPolicyDisallowedReason::RestrictedBySharedFolder,
+                    "restricted_by_team" => VisibilityPolicyDisallowedReason::RestrictedByTeam,
+                    "user_not_on_team" => VisibilityPolicyDisallowedReason::UserNotOnTeam,
+                    "user_account_type" => VisibilityPolicyDisallowedReason::UserAccountType,
+                    "permission_denied" => VisibilityPolicyDisallowedReason::PermissionDenied,
+                    _ => VisibilityPolicyDisallowedReason::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["delete_and_recreate",
+                                    "restricted_by_shared_folder",
+                                    "restricted_by_team",
+                                    "user_not_on_team",
+                                    "user_account_type",
+                                    "permission_denied",
+                                    "other"];
+        deserializer.deserialize_struct("VisibilityPolicyDisallowedReason", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for VisibilityPolicyDisallowedReason {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            VisibilityPolicyDisallowedReason::DeleteAndRecreate => {
+                // unit
+                let mut s = serializer.serialize_struct("VisibilityPolicyDisallowedReason", 1)?;
+                s.serialize_field(".tag", "delete_and_recreate")?;
+                s.end()
+            }
+            VisibilityPolicyDisallowedReason::RestrictedBySharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("VisibilityPolicyDisallowedReason", 1)?;
+                s.serialize_field(".tag", "restricted_by_shared_folder")?;
+                s.end()
+            }
+            VisibilityPolicyDisallowedReason::RestrictedByTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("VisibilityPolicyDisallowedReason", 1)?;
+                s.serialize_field(".tag", "restricted_by_team")?;
+                s.end()
+            }
+            VisibilityPolicyDisallowedReason::UserNotOnTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("VisibilityPolicyDisallowedReason", 1)?;
+                s.serialize_field(".tag", "user_not_on_team")?;
+                s.end()
+            }
+            VisibilityPolicyDisallowedReason::UserAccountType => {
+                // unit
+                let mut s = serializer.serialize_struct("VisibilityPolicyDisallowedReason", 1)?;
+                s.serialize_field(".tag", "user_account_type")?;
+                s.end()
+            }
+            VisibilityPolicyDisallowedReason::PermissionDenied => {
+                // unit
+                let mut s = serializer.serialize_struct("VisibilityPolicyDisallowedReason", 1)?;
+                s.serialize_field(".tag", "permission_denied")?;
+                s.end()
+            }
+            VisibilityPolicyDisallowedReason::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

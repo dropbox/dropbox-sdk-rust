@@ -1588,7 +1588,7 @@ impl ::serde::ser::Serialize for ActiveWebSession {
 
 /// Result of trying to add a secondary email to a user. 'success' is the only value indicating that
 /// a secondary email was successfully added to a user. The other values explain the type of error
-/// that occurred, and include the email for which the error occured.
+/// that occurred, and include the email for which the error occurred.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AddSecondaryEmailResult {
@@ -2891,7 +2891,7 @@ impl ::std::fmt::Display for DateRangeError {
 
 /// Result of trying to delete a secondary email address. 'success' is the only value indicating
 /// that a secondary email was successfully deleted. The other values explain the type of error that
-/// occurred, and include the email for which the error occured.
+/// occurred, and include the email for which the error occurred.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteSecondaryEmailResult {
@@ -9902,7 +9902,7 @@ pub struct LegalHoldPolicy {
     pub id: LegalHoldId,
     /// Policy name.
     pub name: LegalHoldPolicyName,
-    /// Team members IDs and number of permanetly deleted members under hold.
+    /// Team members IDs and number of permanently deleted members under hold.
     pub members: MembersInfo,
     /// The current state of the hold.
     pub status: LegalHoldStatus,
@@ -21919,7 +21919,7 @@ impl ::serde::ser::Serialize for RemovedStatus {
 
 /// Result of trying to resend verification email to a secondary email address. 'success' is the
 /// only value indicating that a verification email was successfully sent. The other values explain
-/// the type of error that occurred, and include the email for which the error occured.
+/// the type of error that occurred, and include the email for which the error occurred.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ResendSecondaryEmailResult {
@@ -27990,7 +27990,7 @@ impl ::serde::ser::Serialize for UploadApiRateLimitValue {
 
 /// Result of trying to add secondary emails to a user. 'success' is the only value indicating that
 /// a user was successfully retrieved for adding secondary emails. The other values explain the type
-/// of error that occurred, and include the user for which the error occured.
+/// of error that occurred, and include the user for which the error occurred.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserAddResult {
@@ -28411,7 +28411,7 @@ impl ::serde::ser::Serialize for UserDeleteEmailsResult {
 
 /// Result of trying to delete a user's secondary emails. 'success' is the only value indicating
 /// that a user was successfully retrieved for deleting secondary emails. The other values explain
-/// the type of error that occurred, and include the user for which the error occured.
+/// the type of error that occurred, and include the user for which the error occurred.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserDeleteResult {
@@ -28588,7 +28588,7 @@ impl ::serde::ser::Serialize for UserResendEmailsResult {
 
 /// Result of trying to resend verification emails to a user. 'success' is the only value indicating
 /// that a user was successfully retrieved for sending verification emails. The other values explain
-/// the type of error that occurred, and include the user for which the error occured.
+/// the type of error that occurred, and include the user for which the error occurred.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserResendResult {
