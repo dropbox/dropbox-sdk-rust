@@ -428,13 +428,13 @@ class RustBackend(RustHelperBackend):
                         u'Result<(), S::Error>',
                         access=u'pub(crate)'):
                     self.emit(u'use serde::ser::SerializeStruct;')
-                    self.generate_multiline_list(
-                        list(u's.serialize_field("{}", &self.{})'
-                             .format(field.name, self.field_name(field))
-                             for field in struct.all_fields),
-                        delim=(u'', u''),
-                        sep='?;',
-                        skip_last_sep=True)
+                    for field in struct.all_fields:
+                        if ir.is_nullable_type(field.data_type):
+                            with self.block(u'if let Some(val) = &self.{}'.format(self.field_name(field))):
+                                self.emit(u's.serialize_field("{}", val)?;'.format(field.name))
+                        else:
+                            self.emit(u's.serialize_field("{}", &self.{})?;'.format(field.name, self.field_name(field)))
+                    self.emit(u'Ok(())')
         self.emit()
         with self._impl_deserialize(self.struct_name(struct)):
             self.emit(u'// struct deserializer')

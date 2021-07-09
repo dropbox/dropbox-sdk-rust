@@ -1676,7 +1676,8 @@ impl TeamMemberPolicies {
         s.serialize_field("sharing", &self.sharing)?;
         s.serialize_field("emm_state", &self.emm_state)?;
         s.serialize_field("office_addin", &self.office_addin)?;
-        s.serialize_field("suggest_members_policy", &self.suggest_members_policy)
+        s.serialize_field("suggest_members_policy", &self.suggest_members_policy)?;
+        Ok(())
     }
 }
 
@@ -1797,7 +1798,8 @@ impl TeamSharingPolicies {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_member_policy", &self.shared_folder_member_policy)?;
         s.serialize_field("shared_folder_join_policy", &self.shared_folder_join_policy)?;
-        s.serialize_field("shared_link_create_policy", &self.shared_link_create_policy)
+        s.serialize_field("shared_link_create_policy", &self.shared_link_create_policy)?;
+        Ok(())
     }
 }
 

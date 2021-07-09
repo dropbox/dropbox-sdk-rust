@@ -212,8 +212,13 @@ impl GroupSummary {
         s.serialize_field("group_name", &self.group_name)?;
         s.serialize_field("group_id", &self.group_id)?;
         s.serialize_field("group_management_type", &self.group_management_type)?;
-        s.serialize_field("group_external_id", &self.group_external_id)?;
-        s.serialize_field("member_count", &self.member_count)
+        if let Some(val) = &self.group_external_id {
+            s.serialize_field("group_external_id", val)?;
+        }
+        if let Some(val) = &self.member_count {
+            s.serialize_field("member_count", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -462,8 +467,13 @@ impl TimeRange {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("start_time", &self.start_time)?;
-        s.serialize_field("end_time", &self.end_time)
+        if let Some(val) = &self.start_time {
+            s.serialize_field("start_time", val)?;
+        }
+        if let Some(val) = &self.end_time {
+            s.serialize_field("end_time", val)?;
+        }
+        Ok(())
     }
 }
 

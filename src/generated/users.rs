@@ -216,7 +216,10 @@ impl Account {
         s.serialize_field("email", &self.email)?;
         s.serialize_field("email_verified", &self.email_verified)?;
         s.serialize_field("disabled", &self.disabled)?;
-        s.serialize_field("profile_photo_url", &self.profile_photo_url)
+        if let Some(val) = &self.profile_photo_url {
+            s.serialize_field("profile_photo_url", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -417,8 +420,13 @@ impl BasicAccount {
         s.serialize_field("email_verified", &self.email_verified)?;
         s.serialize_field("disabled", &self.disabled)?;
         s.serialize_field("is_teammate", &self.is_teammate)?;
-        s.serialize_field("profile_photo_url", &self.profile_photo_url)?;
-        s.serialize_field("team_member_id", &self.team_member_id)
+        if let Some(val) = &self.profile_photo_url {
+            s.serialize_field("profile_photo_url", val)?;
+        }
+        if let Some(val) = &self.team_member_id {
+            s.serialize_field("team_member_id", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -775,10 +783,19 @@ impl FullAccount {
         s.serialize_field("is_paired", &self.is_paired)?;
         s.serialize_field("account_type", &self.account_type)?;
         s.serialize_field("root_info", &self.root_info)?;
-        s.serialize_field("profile_photo_url", &self.profile_photo_url)?;
-        s.serialize_field("country", &self.country)?;
-        s.serialize_field("team", &self.team)?;
-        s.serialize_field("team_member_id", &self.team_member_id)
+        if let Some(val) = &self.profile_photo_url {
+            s.serialize_field("profile_photo_url", val)?;
+        }
+        if let Some(val) = &self.country {
+            s.serialize_field("country", val)?;
+        }
+        if let Some(val) = &self.team {
+            s.serialize_field("team", val)?;
+        }
+        if let Some(val) = &self.team_member_id {
+            s.serialize_field("team_member_id", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -913,7 +930,8 @@ impl FullTeam {
         s.serialize_field("id", &self.id)?;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("sharing_policies", &self.sharing_policies)?;
-        s.serialize_field("office_addin_policy", &self.office_addin_policy)
+        s.serialize_field("office_addin_policy", &self.office_addin_policy)?;
+        Ok(())
     }
 }
 
@@ -1003,7 +1021,8 @@ impl GetAccountArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("account_id", &self.account_id)
+        s.serialize_field("account_id", &self.account_id)?;
+        Ok(())
     }
 }
 
@@ -1093,7 +1112,8 @@ impl GetAccountBatchArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("account_ids", &self.account_ids)
+        s.serialize_field("account_ids", &self.account_ids)?;
+        Ok(())
     }
 }
 
@@ -1322,7 +1342,8 @@ impl IndividualSpaceAllocation {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("allocated", &self.allocated)
+        s.serialize_field("allocated", &self.allocated)?;
+        Ok(())
     }
 }
 
@@ -1472,7 +1493,8 @@ impl Name {
         s.serialize_field("surname", &self.surname)?;
         s.serialize_field("familiar_name", &self.familiar_name)?;
         s.serialize_field("display_name", &self.display_name)?;
-        s.serialize_field("abbreviated_name", &self.abbreviated_name)
+        s.serialize_field("abbreviated_name", &self.abbreviated_name)?;
+        Ok(())
     }
 }
 
@@ -1710,7 +1732,8 @@ impl SpaceUsage {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("used", &self.used)?;
-        s.serialize_field("allocation", &self.allocation)
+        s.serialize_field("allocation", &self.allocation)?;
+        Ok(())
     }
 }
 
@@ -1814,7 +1837,8 @@ impl Team {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("name", &self.name)
+        s.serialize_field("name", &self.name)?;
+        Ok(())
     }
 }
 
@@ -1963,7 +1987,8 @@ impl TeamSpaceAllocation {
         s.serialize_field("allocated", &self.allocated)?;
         s.serialize_field("user_within_team_space_allocated", &self.user_within_team_space_allocated)?;
         s.serialize_field("user_within_team_space_limit_type", &self.user_within_team_space_limit_type)?;
-        s.serialize_field("user_within_team_space_used_cached", &self.user_within_team_space_used_cached)
+        s.serialize_field("user_within_team_space_used_cached", &self.user_within_team_space_used_cached)?;
+        Ok(())
     }
 }
 
@@ -2198,7 +2223,8 @@ impl UserFeaturesGetValuesBatchArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("features", &self.features)
+        s.serialize_field("features", &self.features)?;
+        Ok(())
     }
 }
 
@@ -2352,7 +2378,8 @@ impl UserFeaturesGetValuesBatchResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("values", &self.values)
+        s.serialize_field("values", &self.values)?;
+        Ok(())
     }
 }
 

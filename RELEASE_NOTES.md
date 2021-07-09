@@ -5,6 +5,8 @@ xxxx-yy-zz
   * 2021-06-30: (breaking change) remove deprecated sharing::change_file_member_access
     function and associated structs
   * 2021-07-08: sharing namespace additions
+* Changed struct serialization to not emit fields at all where the value is `None`.
+  * (previously it emitted `null` into the JSON as the value of the fields)
 
 # v0.11.3
 2021-05-08

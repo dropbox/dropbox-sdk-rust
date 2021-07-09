@@ -97,7 +97,8 @@ impl EchoArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("query", &self.query)
+        s.serialize_field("query", &self.query)?;
+        Ok(())
     }
 }
 
@@ -184,7 +185,8 @@ impl EchoResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("result", &self.result)
+        s.serialize_field("result", &self.result)?;
+        Ok(())
     }
 }
 

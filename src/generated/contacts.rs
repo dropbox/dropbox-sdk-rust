@@ -93,7 +93,8 @@ impl DeleteManualContactsArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("email_addresses", &self.email_addresses)
+        s.serialize_field("email_addresses", &self.email_addresses)?;
+        Ok(())
     }
 }
 

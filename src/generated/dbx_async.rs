@@ -199,7 +199,8 @@ impl PollArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("async_job_id", &self.async_job_id)
+        s.serialize_field("async_job_id", &self.async_job_id)?;
+        Ok(())
     }
 }
 
