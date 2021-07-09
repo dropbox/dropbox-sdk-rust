@@ -1,5 +1,10 @@
-# v0.11.4
+# v0.12.0
 xxxx-yy-zz
+* API spec updates:
+  * 2021-05-11, 2021-05-26, 2021-06-16, 2021-06-23, 2021-07-02: comments and team_log namespace changes
+  * 2021-06-30: (breaking change) remove deprecated sharing::change_file_member_access
+    function and associated structs
+  * 2021-07-08: sharing namespace additions
 
 # v0.11.3
 2021-05-08
