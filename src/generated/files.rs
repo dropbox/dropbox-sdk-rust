@@ -1361,8 +1361,13 @@ impl AlphaGetMetadataArg {
         s.serialize_field("include_media_info", &self.include_media_info)?;
         s.serialize_field("include_deleted", &self.include_deleted)?;
         s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
-        s.serialize_field("include_property_groups", &self.include_property_groups)?;
-        s.serialize_field("include_property_templates", &self.include_property_templates)
+        if let Some(val) = &self.include_property_groups {
+            s.serialize_field("include_property_groups", val)?;
+        }
+        if let Some(val) = &self.include_property_templates {
+            s.serialize_field("include_property_templates", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -1659,10 +1664,15 @@ impl CommitInfo {
         s.serialize_field("path", &self.path)?;
         s.serialize_field("mode", &self.mode)?;
         s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("client_modified", &self.client_modified)?;
+        if let Some(val) = &self.client_modified {
+            s.serialize_field("client_modified", val)?;
+        }
         s.serialize_field("mute", &self.mute)?;
-        s.serialize_field("property_groups", &self.property_groups)?;
-        s.serialize_field("strict_conflict", &self.strict_conflict)
+        if let Some(val) = &self.property_groups {
+            s.serialize_field("property_groups", val)?;
+        }
+        s.serialize_field("strict_conflict", &self.strict_conflict)?;
+        Ok(())
     }
 }
 
@@ -1870,10 +1880,15 @@ impl CommitInfoWithProperties {
         s.serialize_field("path", &self.path)?;
         s.serialize_field("mode", &self.mode)?;
         s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("client_modified", &self.client_modified)?;
+        if let Some(val) = &self.client_modified {
+            s.serialize_field("client_modified", val)?;
+        }
         s.serialize_field("mute", &self.mute)?;
-        s.serialize_field("property_groups", &self.property_groups)?;
-        s.serialize_field("strict_conflict", &self.strict_conflict)
+        if let Some(val) = &self.property_groups {
+            s.serialize_field("property_groups", val)?;
+        }
+        s.serialize_field("strict_conflict", &self.strict_conflict)?;
+        Ok(())
     }
 }
 
@@ -1976,7 +1991,8 @@ impl ContentSyncSetting {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("sync_setting", &self.sync_setting)
+        s.serialize_field("sync_setting", &self.sync_setting)?;
+        Ok(())
     }
 }
 
@@ -2079,7 +2095,8 @@ impl ContentSyncSettingArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("sync_setting", &self.sync_setting)
+        s.serialize_field("sync_setting", &self.sync_setting)?;
+        Ok(())
     }
 }
 
@@ -2188,7 +2205,8 @@ impl CreateFolderArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("autorename", &self.autorename)
+        s.serialize_field("autorename", &self.autorename)?;
+        Ok(())
     }
 }
 
@@ -2316,7 +2334,8 @@ impl CreateFolderBatchArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("paths", &self.paths)?;
         s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("force_async", &self.force_async)
+        s.serialize_field("force_async", &self.force_async)?;
+        Ok(())
     }
 }
 
@@ -2632,7 +2651,8 @@ impl CreateFolderBatchResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -2866,7 +2886,8 @@ impl CreateFolderEntryResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -3027,7 +3048,8 @@ impl CreateFolderResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -3136,7 +3158,10 @@ impl DeleteArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("parent_rev", &self.parent_rev)
+        if let Some(val) = &self.parent_rev {
+            s.serialize_field("parent_rev", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -3225,7 +3250,8 @@ impl DeleteBatchArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -3540,7 +3566,8 @@ impl DeleteBatchResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -3630,7 +3657,8 @@ impl DeleteBatchResultData {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -3904,7 +3932,8 @@ impl DeleteResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -4054,9 +4083,16 @@ impl DeletedMetadata {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("path_display", &self.path_display)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)
+        if let Some(val) = &self.path_lower {
+            s.serialize_field("path_lower", val)?;
+        }
+        if let Some(val) = &self.path_display {
+            s.serialize_field("path_display", val)?;
+        }
+        if let Some(val) = &self.parent_shared_folder_id {
+            s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4160,7 +4196,8 @@ impl Dimensions {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("height", &self.height)?;
-        s.serialize_field("width", &self.width)
+        s.serialize_field("width", &self.width)?;
+        Ok(())
     }
 }
 
@@ -4268,7 +4305,10 @@ impl DownloadArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("rev", &self.rev)
+        if let Some(val) = &self.rev {
+            s.serialize_field("rev", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4447,7 +4487,8 @@ impl DownloadZipArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        Ok(())
     }
 }
 
@@ -4637,7 +4678,8 @@ impl DownloadZipResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -4747,7 +4789,10 @@ impl ExportArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("export_format", &self.export_format)
+        if let Some(val) = &self.export_format {
+            s.serialize_field("export_format", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4963,8 +5008,13 @@ impl ExportInfo {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("export_as", &self.export_as)?;
-        s.serialize_field("export_options", &self.export_options)
+        if let Some(val) = &self.export_as {
+            s.serialize_field("export_as", val)?;
+        }
+        if let Some(val) = &self.export_options {
+            s.serialize_field("export_options", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -5105,8 +5155,13 @@ impl ExportMetadata {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("size", &self.size)?;
-        s.serialize_field("export_hash", &self.export_hash)?;
-        s.serialize_field("paper_revision", &self.paper_revision)
+        if let Some(val) = &self.export_hash {
+            s.serialize_field("export_hash", val)?;
+        }
+        if let Some(val) = &self.paper_revision {
+            s.serialize_field("paper_revision", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -5209,7 +5264,8 @@ impl ExportResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("export_metadata", &self.export_metadata)?;
-        s.serialize_field("file_metadata", &self.file_metadata)
+        s.serialize_field("file_metadata", &self.file_metadata)?;
+        Ok(())
     }
 }
 
@@ -5444,7 +5500,8 @@ impl FileLock {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("content", &self.content)
+        s.serialize_field("content", &self.content)?;
+        Ok(())
     }
 }
 
@@ -5647,10 +5704,19 @@ impl FileLockMetadata {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("is_lockholder", &self.is_lockholder)?;
-        s.serialize_field("lockholder_name", &self.lockholder_name)?;
-        s.serialize_field("lockholder_account_id", &self.lockholder_account_id)?;
-        s.serialize_field("created", &self.created)
+        if let Some(val) = &self.is_lockholder {
+            s.serialize_field("is_lockholder", val)?;
+        }
+        if let Some(val) = &self.lockholder_name {
+            s.serialize_field("lockholder_name", val)?;
+        }
+        if let Some(val) = &self.lockholder_account_id {
+            s.serialize_field("lockholder_account_id", val)?;
+        }
+        if let Some(val) = &self.created {
+            s.serialize_field("created", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -6042,18 +6108,41 @@ impl FileMetadata {
         s.serialize_field("server_modified", &self.server_modified)?;
         s.serialize_field("rev", &self.rev)?;
         s.serialize_field("size", &self.size)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("path_display", &self.path_display)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("media_info", &self.media_info)?;
-        s.serialize_field("symlink_info", &self.symlink_info)?;
-        s.serialize_field("sharing_info", &self.sharing_info)?;
+        if let Some(val) = &self.path_lower {
+            s.serialize_field("path_lower", val)?;
+        }
+        if let Some(val) = &self.path_display {
+            s.serialize_field("path_display", val)?;
+        }
+        if let Some(val) = &self.parent_shared_folder_id {
+            s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.media_info {
+            s.serialize_field("media_info", val)?;
+        }
+        if let Some(val) = &self.symlink_info {
+            s.serialize_field("symlink_info", val)?;
+        }
+        if let Some(val) = &self.sharing_info {
+            s.serialize_field("sharing_info", val)?;
+        }
         s.serialize_field("is_downloadable", &self.is_downloadable)?;
-        s.serialize_field("export_info", &self.export_info)?;
-        s.serialize_field("property_groups", &self.property_groups)?;
-        s.serialize_field("has_explicit_shared_members", &self.has_explicit_shared_members)?;
-        s.serialize_field("content_hash", &self.content_hash)?;
-        s.serialize_field("file_lock_info", &self.file_lock_info)
+        if let Some(val) = &self.export_info {
+            s.serialize_field("export_info", val)?;
+        }
+        if let Some(val) = &self.property_groups {
+            s.serialize_field("property_groups", val)?;
+        }
+        if let Some(val) = &self.has_explicit_shared_members {
+            s.serialize_field("has_explicit_shared_members", val)?;
+        }
+        if let Some(val) = &self.content_hash {
+            s.serialize_field("content_hash", val)?;
+        }
+        if let Some(val) = &self.file_lock_info {
+            s.serialize_field("file_lock_info", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -6226,7 +6315,10 @@ impl FileSharingInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("read_only", &self.read_only)?;
         s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("modified_by", &self.modified_by)
+        if let Some(val) = &self.modified_by {
+            s.serialize_field("modified_by", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -6507,12 +6599,25 @@ impl FolderMetadata {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("path_display", &self.path_display)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("sharing_info", &self.sharing_info)?;
-        s.serialize_field("property_groups", &self.property_groups)
+        if let Some(val) = &self.path_lower {
+            s.serialize_field("path_lower", val)?;
+        }
+        if let Some(val) = &self.path_display {
+            s.serialize_field("path_display", val)?;
+        }
+        if let Some(val) = &self.parent_shared_folder_id {
+            s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.shared_folder_id {
+            s.serialize_field("shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.sharing_info {
+            s.serialize_field("sharing_info", val)?;
+        }
+        if let Some(val) = &self.property_groups {
+            s.serialize_field("property_groups", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -6676,10 +6781,15 @@ impl FolderSharingInfo {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("read_only", &self.read_only)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
+        if let Some(val) = &self.parent_shared_folder_id {
+            s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.shared_folder_id {
+            s.serialize_field("shared_folder_id", val)?;
+        }
         s.serialize_field("traverse_only", &self.traverse_only)?;
-        s.serialize_field("no_access", &self.no_access)
+        s.serialize_field("no_access", &self.no_access)?;
+        Ok(())
     }
 }
 
@@ -6769,7 +6879,8 @@ impl GetCopyReferenceArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        Ok(())
     }
 }
 
@@ -6969,7 +7080,8 @@ impl GetCopyReferenceResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
         s.serialize_field("copy_reference", &self.copy_reference)?;
-        s.serialize_field("expires", &self.expires)
+        s.serialize_field("expires", &self.expires)?;
+        Ok(())
     }
 }
 
@@ -7137,7 +7249,10 @@ impl GetMetadataArg {
         s.serialize_field("include_media_info", &self.include_media_info)?;
         s.serialize_field("include_deleted", &self.include_deleted)?;
         s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
-        s.serialize_field("include_property_groups", &self.include_property_groups)
+        if let Some(val) = &self.include_property_groups {
+            s.serialize_field("include_property_groups", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -7298,7 +7413,8 @@ impl GetTemporaryLinkArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        Ok(())
     }
 }
 
@@ -7514,7 +7630,8 @@ impl GetTemporaryLinkResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
-        s.serialize_field("link", &self.link)
+        s.serialize_field("link", &self.link)?;
+        Ok(())
     }
 }
 
@@ -7624,7 +7741,8 @@ impl GetTemporaryUploadLinkArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("commit_info", &self.commit_info)?;
-        s.serialize_field("duration", &self.duration)
+        s.serialize_field("duration", &self.duration)?;
+        Ok(())
     }
 }
 
@@ -7714,7 +7832,8 @@ impl GetTemporaryUploadLinkResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("link", &self.link)
+        s.serialize_field("link", &self.link)?;
+        Ok(())
     }
 }
 
@@ -7805,7 +7924,8 @@ impl GetThumbnailBatchArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -7962,7 +8082,8 @@ impl GetThumbnailBatchResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -8064,7 +8185,8 @@ impl GetThumbnailBatchResultData {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
-        s.serialize_field("thumbnail", &self.thumbnail)
+        s.serialize_field("thumbnail", &self.thumbnail)?;
+        Ok(())
     }
 }
 
@@ -8240,7 +8362,8 @@ impl GpsCoordinates {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("latitude", &self.latitude)?;
-        s.serialize_field("longitude", &self.longitude)
+        s.serialize_field("longitude", &self.longitude)?;
+        Ok(())
     }
 }
 
@@ -8343,7 +8466,8 @@ impl HighlightSpan {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("highlight_str", &self.highlight_str)?;
-        s.serialize_field("is_highlighted", &self.is_highlighted)
+        s.serialize_field("is_highlighted", &self.is_highlighted)?;
+        Ok(())
     }
 }
 
@@ -8680,10 +8804,17 @@ impl ListFolderArg {
         s.serialize_field("include_deleted", &self.include_deleted)?;
         s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
         s.serialize_field("include_mounted_folders", &self.include_mounted_folders)?;
-        s.serialize_field("limit", &self.limit)?;
-        s.serialize_field("shared_link", &self.shared_link)?;
-        s.serialize_field("include_property_groups", &self.include_property_groups)?;
-        s.serialize_field("include_non_downloadable_files", &self.include_non_downloadable_files)
+        if let Some(val) = &self.limit {
+            s.serialize_field("limit", val)?;
+        }
+        if let Some(val) = &self.shared_link {
+            s.serialize_field("shared_link", val)?;
+        }
+        if let Some(val) = &self.include_property_groups {
+            s.serialize_field("include_property_groups", val)?;
+        }
+        s.serialize_field("include_non_downloadable_files", &self.include_non_downloadable_files)?;
+        Ok(())
     }
 }
 
@@ -8774,7 +8905,8 @@ impl ListFolderContinueArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -9052,7 +9184,8 @@ impl ListFolderGetLatestCursorResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -9164,7 +9297,8 @@ impl ListFolderLongpollArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("timeout", &self.timeout)
+        s.serialize_field("timeout", &self.timeout)?;
+        Ok(())
     }
 }
 
@@ -9339,7 +9473,10 @@ impl ListFolderLongpollResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("changes", &self.changes)?;
-        s.serialize_field("backoff", &self.backoff)
+        if let Some(val) = &self.backoff {
+            s.serialize_field("backoff", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -9457,7 +9594,8 @@ impl ListFolderResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)
+        s.serialize_field("has_more", &self.has_more)?;
+        Ok(())
     }
 }
 
@@ -9583,7 +9721,8 @@ impl ListRevisionsArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("limit", &self.limit)
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
     }
 }
 
@@ -9850,7 +9989,10 @@ impl ListRevisionsResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("is_deleted", &self.is_deleted)?;
         s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("server_deleted", &self.server_deleted)
+        if let Some(val) = &self.server_deleted {
+            s.serialize_field("server_deleted", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -9940,7 +10082,8 @@ impl LockConflictError {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("lock", &self.lock)
+        s.serialize_field("lock", &self.lock)?;
+        Ok(())
     }
 }
 
@@ -10030,7 +10173,8 @@ impl LockFileArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        Ok(())
     }
 }
 
@@ -10121,7 +10265,8 @@ impl LockFileBatchArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -10212,7 +10357,8 @@ impl LockFileBatchResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -10474,7 +10620,8 @@ impl LockFileResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
-        s.serialize_field("lock", &self.lock)
+        s.serialize_field("lock", &self.lock)?;
+        Ok(())
     }
 }
 
@@ -11106,8 +11253,13 @@ impl MinimalFileLinkMetadata {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("rev", &self.rev)?;
-        s.serialize_field("id", &self.id)?;
-        s.serialize_field("path", &self.path)
+        if let Some(val) = &self.id {
+            s.serialize_field("id", val)?;
+        }
+        if let Some(val) = &self.path {
+            s.serialize_field("path", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -11235,7 +11387,8 @@ impl MoveBatchArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
         s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
+        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        Ok(())
     }
 }
 
@@ -11507,7 +11660,8 @@ impl PaperCreateArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("import_format", &self.import_format)
+        s.serialize_field("import_format", &self.import_format)?;
+        Ok(())
     }
 }
 
@@ -11781,7 +11935,8 @@ impl PaperCreateResult {
         s.serialize_field("url", &self.url)?;
         s.serialize_field("result_path", &self.result_path)?;
         s.serialize_field("file_id", &self.file_id)?;
-        s.serialize_field("paper_revision", &self.paper_revision)
+        s.serialize_field("paper_revision", &self.paper_revision)?;
+        Ok(())
     }
 }
 
@@ -12007,7 +12162,10 @@ impl PaperUpdateArg {
         s.serialize_field("path", &self.path)?;
         s.serialize_field("import_format", &self.import_format)?;
         s.serialize_field("doc_update_policy", &self.doc_update_policy)?;
-        s.serialize_field("paper_revision", &self.paper_revision)
+        if let Some(val) = &self.paper_revision {
+            s.serialize_field("paper_revision", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -12254,7 +12412,8 @@ impl PaperUpdateResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("paper_revision", &self.paper_revision)
+        s.serialize_field("paper_revision", &self.paper_revision)?;
+        Ok(())
     }
 }
 
@@ -12446,9 +12605,16 @@ impl PhotoMetadata {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("dimensions", &self.dimensions)?;
-        s.serialize_field("location", &self.location)?;
-        s.serialize_field("time_taken", &self.time_taken)
+        if let Some(val) = &self.dimensions {
+            s.serialize_field("dimensions", val)?;
+        }
+        if let Some(val) = &self.location {
+            s.serialize_field("location", val)?;
+        }
+        if let Some(val) = &self.time_taken {
+            s.serialize_field("time_taken", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -12556,7 +12722,10 @@ impl PreviewArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("rev", &self.rev)
+        if let Some(val) = &self.rev {
+            s.serialize_field("rev", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -12767,8 +12936,13 @@ impl PreviewResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("file_metadata", &self.file_metadata)?;
-        s.serialize_field("link_metadata", &self.link_metadata)
+        if let Some(val) = &self.file_metadata {
+            s.serialize_field("file_metadata", val)?;
+        }
+        if let Some(val) = &self.link_metadata {
+            s.serialize_field("link_metadata", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -12927,7 +13101,8 @@ impl RelocationArg {
         s.serialize_field("to_path", &self.to_path)?;
         s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
         s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
+        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        Ok(())
     }
 }
 
@@ -13073,7 +13248,8 @@ impl RelocationBatchArg {
         s.serialize_field("entries", &self.entries)?;
         s.serialize_field("autorename", &self.autorename)?;
         s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
-        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
+        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        Ok(())
     }
 }
 
@@ -13182,7 +13358,8 @@ impl RelocationBatchArgBase {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("autorename", &self.autorename)
+        s.serialize_field("autorename", &self.autorename)?;
+        Ok(())
     }
 }
 
@@ -13751,7 +13928,8 @@ impl RelocationBatchResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -13841,7 +14019,8 @@ impl RelocationBatchResultData {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -14141,7 +14320,8 @@ impl RelocationBatchV2Result {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -14478,7 +14658,8 @@ impl RelocationPath {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("from_path", &self.from_path)?;
-        s.serialize_field("to_path", &self.to_path)
+        s.serialize_field("to_path", &self.to_path)?;
+        Ok(())
     }
 }
 
@@ -14568,7 +14749,8 @@ impl RelocationResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -14671,7 +14853,8 @@ impl RestoreArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("rev", &self.rev)
+        s.serialize_field("rev", &self.rev)?;
+        Ok(())
     }
 }
 
@@ -14895,7 +15078,8 @@ impl SaveCopyReferenceArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("copy_reference", &self.copy_reference)?;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        Ok(())
     }
 }
 
@@ -15109,7 +15293,8 @@ impl SaveCopyReferenceResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -15212,7 +15397,8 @@ impl SaveUrlArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("url", &self.url)
+        s.serialize_field("url", &self.url)?;
+        Ok(())
     }
 }
 
@@ -15629,7 +15815,8 @@ impl SearchArg {
         s.serialize_field("query", &self.query)?;
         s.serialize_field("start", &self.start)?;
         s.serialize_field("max_results", &self.max_results)?;
-        s.serialize_field("mode", &self.mode)
+        s.serialize_field("mode", &self.mode)?;
+        Ok(())
     }
 }
 
@@ -15843,7 +16030,8 @@ impl SearchMatch {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("match_type", &self.match_type)?;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("metadata", &self.metadata)?;
+        Ok(())
     }
 }
 
@@ -15929,7 +16117,8 @@ impl SearchMatchFieldOptions {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("include_highlights", &self.include_highlights)
+        s.serialize_field("include_highlights", &self.include_highlights)?;
+        Ok(())
     }
 }
 
@@ -16210,8 +16399,13 @@ impl SearchMatchV2 {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
-        s.serialize_field("match_type", &self.match_type)?;
-        s.serialize_field("highlight_spans", &self.highlight_spans)
+        if let Some(val) = &self.match_type {
+            s.serialize_field("match_type", val)?;
+        }
+        if let Some(val) = &self.highlight_spans {
+            s.serialize_field("highlight_spans", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -16471,13 +16665,22 @@ impl SearchOptions {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
+        if let Some(val) = &self.path {
+            s.serialize_field("path", val)?;
+        }
         s.serialize_field("max_results", &self.max_results)?;
-        s.serialize_field("order_by", &self.order_by)?;
+        if let Some(val) = &self.order_by {
+            s.serialize_field("order_by", val)?;
+        }
         s.serialize_field("file_status", &self.file_status)?;
         s.serialize_field("filename_only", &self.filename_only)?;
-        s.serialize_field("file_extensions", &self.file_extensions)?;
-        s.serialize_field("file_categories", &self.file_categories)
+        if let Some(val) = &self.file_extensions {
+            s.serialize_field("file_extensions", val)?;
+        }
+        if let Some(val) = &self.file_categories {
+            s.serialize_field("file_categories", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -16658,7 +16861,8 @@ impl SearchResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("matches", &self.matches)?;
         s.serialize_field("more", &self.more)?;
-        s.serialize_field("start", &self.start)
+        s.serialize_field("start", &self.start)?;
+        Ok(())
     }
 }
 
@@ -16800,9 +17004,16 @@ impl SearchV2Arg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("query", &self.query)?;
-        s.serialize_field("options", &self.options)?;
-        s.serialize_field("match_field_options", &self.match_field_options)?;
-        s.serialize_field("include_highlights", &self.include_highlights)
+        if let Some(val) = &self.options {
+            s.serialize_field("options", val)?;
+        }
+        if let Some(val) = &self.match_field_options {
+            s.serialize_field("match_field_options", val)?;
+        }
+        if let Some(val) = &self.include_highlights {
+            s.serialize_field("include_highlights", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -16893,7 +17104,8 @@ impl SearchV2ContinueArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -17016,7 +17228,10 @@ impl SearchV2Result {
         use serde::ser::SerializeStruct;
         s.serialize_field("matches", &self.matches)?;
         s.serialize_field("has_more", &self.has_more)?;
-        s.serialize_field("cursor", &self.cursor)
+        if let Some(val) = &self.cursor {
+            s.serialize_field("cursor", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -17124,7 +17339,10 @@ impl SharedLink {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
-        s.serialize_field("password", &self.password)
+        if let Some(val) = &self.password {
+            s.serialize_field("password", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -17253,8 +17471,13 @@ impl SharedLinkFileInfo {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("password", &self.password)
+        if let Some(val) = &self.path {
+            s.serialize_field("path", val)?;
+        }
+        if let Some(val) = &self.password {
+            s.serialize_field("password", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -17345,7 +17568,8 @@ impl SharingInfo {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("read_only", &self.read_only)
+        s.serialize_field("read_only", &self.read_only)?;
+        Ok(())
     }
 }
 
@@ -17469,7 +17693,10 @@ impl SingleUserLock {
         use serde::ser::SerializeStruct;
         s.serialize_field("created", &self.created)?;
         s.serialize_field("lock_holder_account_id", &self.lock_holder_account_id)?;
-        s.serialize_field("lock_holder_team_id", &self.lock_holder_team_id)
+        if let Some(val) = &self.lock_holder_team_id {
+            s.serialize_field("lock_holder_team_id", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -17559,7 +17786,8 @@ impl SymlinkInfo {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target", &self.target)
+        s.serialize_field("target", &self.target)?;
+        Ok(())
     }
 }
 
@@ -17950,7 +18178,8 @@ impl ThumbnailArg {
         s.serialize_field("path", &self.path)?;
         s.serialize_field("format", &self.format)?;
         s.serialize_field("size", &self.size)?;
-        s.serialize_field("mode", &self.mode)
+        s.serialize_field("mode", &self.mode)?;
+        Ok(())
     }
 }
 
@@ -18457,7 +18686,8 @@ impl ThumbnailV2Arg {
         s.serialize_field("resource", &self.resource)?;
         s.serialize_field("format", &self.format)?;
         s.serialize_field("size", &self.size)?;
-        s.serialize_field("mode", &self.mode)
+        s.serialize_field("mode", &self.mode)?;
+        Ok(())
     }
 }
 
@@ -18682,7 +18912,8 @@ impl UnlockFileArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        Ok(())
     }
 }
 
@@ -18773,7 +19004,8 @@ impl UnlockFileBatchArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -19066,7 +19298,8 @@ impl UploadSessionAppendArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("close", &self.close)
+        s.serialize_field("close", &self.close)?;
+        Ok(())
     }
 }
 
@@ -19170,7 +19403,8 @@ impl UploadSessionCursor {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
-        s.serialize_field("offset", &self.offset)
+        s.serialize_field("offset", &self.offset)?;
+        Ok(())
     }
 }
 
@@ -19273,7 +19507,8 @@ impl UploadSessionFinishArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("commit", &self.commit)
+        s.serialize_field("commit", &self.commit)?;
+        Ok(())
     }
 }
 
@@ -19363,7 +19598,8 @@ impl UploadSessionFinishBatchArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -19590,7 +19826,8 @@ impl UploadSessionFinishBatchResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
     }
 }
 
@@ -20060,7 +20297,8 @@ impl UploadSessionOffsetError {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("correct_offset", &self.correct_offset)
+        s.serialize_field("correct_offset", &self.correct_offset)?;
+        Ok(())
     }
 }
 
@@ -20166,7 +20404,10 @@ impl UploadSessionStartArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("close", &self.close)?;
-        s.serialize_field("session_type", &self.session_type)
+        if let Some(val) = &self.session_type {
+            s.serialize_field("session_type", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -20336,7 +20577,8 @@ impl UploadSessionStartResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("session_id", &self.session_id)
+        s.serialize_field("session_id", &self.session_id)?;
+        Ok(())
     }
 }
 
@@ -20506,7 +20748,8 @@ impl UploadWriteFailed {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("reason", &self.reason)?;
-        s.serialize_field("upload_session_id", &self.upload_session_id)
+        s.serialize_field("upload_session_id", &self.upload_session_id)?;
+        Ok(())
     }
 }
 
@@ -20644,10 +20887,19 @@ impl VideoMetadata {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("dimensions", &self.dimensions)?;
-        s.serialize_field("location", &self.location)?;
-        s.serialize_field("time_taken", &self.time_taken)?;
-        s.serialize_field("duration", &self.duration)
+        if let Some(val) = &self.dimensions {
+            s.serialize_field("dimensions", val)?;
+        }
+        if let Some(val) = &self.location {
+            s.serialize_field("location", val)?;
+        }
+        if let Some(val) = &self.time_taken {
+            s.serialize_field("time_taken", val)?;
+        }
+        if let Some(val) = &self.duration {
+            s.serialize_field("duration", val)?;
+        }
+        Ok(())
     }
 }
 

@@ -504,7 +504,8 @@ impl RateLimitError {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("reason", &self.reason)?;
-        s.serialize_field("retry_after", &self.retry_after)
+        s.serialize_field("retry_after", &self.retry_after)?;
+        Ok(())
     }
 }
 
@@ -672,7 +673,8 @@ impl TokenFromOAuth1Arg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("oauth1_token", &self.oauth1_token)?;
-        s.serialize_field("oauth1_token_secret", &self.oauth1_token_secret)
+        s.serialize_field("oauth1_token_secret", &self.oauth1_token_secret)?;
+        Ok(())
     }
 }
 
@@ -840,7 +842,8 @@ impl TokenFromOAuth1Result {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("oauth2_token", &self.oauth2_token)
+        s.serialize_field("oauth2_token", &self.oauth2_token)?;
+        Ok(())
     }
 }
 
@@ -930,7 +933,8 @@ impl TokenScopeError {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("required_scope", &self.required_scope)
+        s.serialize_field("required_scope", &self.required_scope)?;
+        Ok(())
     }
 }
 

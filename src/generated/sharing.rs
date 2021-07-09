@@ -1039,10 +1039,13 @@ impl AddFileMemberArgs {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("members", &self.members)?;
-        s.serialize_field("custom_message", &self.custom_message)?;
+        if let Some(val) = &self.custom_message {
+            s.serialize_field("custom_message", val)?;
+        }
         s.serialize_field("quiet", &self.quiet)?;
         s.serialize_field("access_level", &self.access_level)?;
-        s.serialize_field("add_message_as_comment", &self.add_message_as_comment)
+        s.serialize_field("add_message_as_comment", &self.add_message_as_comment)?;
+        Ok(())
     }
 }
 
@@ -1302,7 +1305,10 @@ impl AddFolderMemberArg {
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("members", &self.members)?;
         s.serialize_field("quiet", &self.quiet)?;
-        s.serialize_field("custom_message", &self.custom_message)
+        if let Some(val) = &self.custom_message {
+            s.serialize_field("custom_message", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -1649,7 +1655,8 @@ impl AddMember {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("access_level", &self.access_level)
+        s.serialize_field("access_level", &self.access_level)?;
+        Ok(())
     }
 }
 
@@ -2004,7 +2011,8 @@ impl AudienceExceptionContentInfo {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("name", &self.name)
+        s.serialize_field("name", &self.name)?;
+        Ok(())
     }
 }
 
@@ -2110,7 +2118,8 @@ impl AudienceExceptions {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("count", &self.count)?;
-        s.serialize_field("exceptions", &self.exceptions)
+        s.serialize_field("exceptions", &self.exceptions)?;
+        Ok(())
     }
 }
 
@@ -2232,7 +2241,8 @@ impl AudienceRestrictingSharedFolder {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("name", &self.name)?;
-        s.serialize_field("audience", &self.audience)
+        s.serialize_field("audience", &self.audience)?;
+        Ok(())
     }
 }
 
@@ -2354,7 +2364,10 @@ impl CollectionLinkMetadata {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("visibility", &self.visibility)?;
-        s.serialize_field("expires", &self.expires)
+        if let Some(val) = &self.expires {
+            s.serialize_field("expires", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -2483,7 +2496,10 @@ impl CreateSharedLinkArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("short_url", &self.short_url)?;
-        s.serialize_field("pending_upload", &self.pending_upload)
+        if let Some(val) = &self.pending_upload {
+            s.serialize_field("pending_upload", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -2670,7 +2686,10 @@ impl CreateSharedLinkWithSettingsArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("settings", &self.settings)
+        if let Some(val) = &self.settings {
+            s.serialize_field("settings", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -3001,9 +3020,16 @@ impl ExpectedSharedContentLinkMetadata {
         s.serialize_field("current_audience", &self.current_audience)?;
         s.serialize_field("link_permissions", &self.link_permissions)?;
         s.serialize_field("password_protected", &self.password_protected)?;
-        s.serialize_field("access_level", &self.access_level)?;
-        s.serialize_field("audience_restricting_shared_folder", &self.audience_restricting_shared_folder)?;
-        s.serialize_field("expiry", &self.expiry)
+        if let Some(val) = &self.access_level {
+            s.serialize_field("access_level", val)?;
+        }
+        if let Some(val) = &self.audience_restricting_shared_folder {
+            s.serialize_field("audience_restricting_shared_folder", val)?;
+        }
+        if let Some(val) = &self.expiry {
+            s.serialize_field("expiry", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -3536,11 +3562,22 @@ impl FileLinkMetadata {
         s.serialize_field("server_modified", &self.server_modified)?;
         s.serialize_field("rev", &self.rev)?;
         s.serialize_field("size", &self.size)?;
-        s.serialize_field("id", &self.id)?;
-        s.serialize_field("expires", &self.expires)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("team_member_info", &self.team_member_info)?;
-        s.serialize_field("content_owner_team_info", &self.content_owner_team_info)
+        if let Some(val) = &self.id {
+            s.serialize_field("id", val)?;
+        }
+        if let Some(val) = &self.expires {
+            s.serialize_field("expires", val)?;
+        }
+        if let Some(val) = &self.path_lower {
+            s.serialize_field("path_lower", val)?;
+        }
+        if let Some(val) = &self.team_member_info {
+            s.serialize_field("team_member_info", val)?;
+        }
+        if let Some(val) = &self.content_owner_team_info {
+            s.serialize_field("content_owner_team_info", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -3834,7 +3871,8 @@ impl FileMemberActionResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("result", &self.result)
+        s.serialize_field("result", &self.result)?;
+        Ok(())
     }
 }
 
@@ -4029,7 +4067,10 @@ impl FilePermission {
         use serde::ser::SerializeStruct;
         s.serialize_field("action", &self.action)?;
         s.serialize_field("allow", &self.allow)?;
-        s.serialize_field("reason", &self.reason)
+        if let Some(val) = &self.reason {
+            s.serialize_field("reason", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4422,11 +4463,22 @@ impl FolderLinkMetadata {
         s.serialize_field("url", &self.url)?;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("link_permissions", &self.link_permissions)?;
-        s.serialize_field("id", &self.id)?;
-        s.serialize_field("expires", &self.expires)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("team_member_info", &self.team_member_info)?;
-        s.serialize_field("content_owner_team_info", &self.content_owner_team_info)
+        if let Some(val) = &self.id {
+            s.serialize_field("id", val)?;
+        }
+        if let Some(val) = &self.expires {
+            s.serialize_field("expires", val)?;
+        }
+        if let Some(val) = &self.path_lower {
+            s.serialize_field("path_lower", val)?;
+        }
+        if let Some(val) = &self.team_member_info {
+            s.serialize_field("team_member_info", val)?;
+        }
+        if let Some(val) = &self.content_owner_team_info {
+            s.serialize_field("content_owner_team_info", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4549,7 +4601,10 @@ impl FolderPermission {
         use serde::ser::SerializeStruct;
         s.serialize_field("action", &self.action)?;
         s.serialize_field("allow", &self.allow)?;
-        s.serialize_field("reason", &self.reason)
+        if let Some(val) = &self.reason {
+            s.serialize_field("reason", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4709,9 +4764,16 @@ impl FolderPolicy {
         use serde::ser::SerializeStruct;
         s.serialize_field("acl_update_policy", &self.acl_update_policy)?;
         s.serialize_field("shared_link_policy", &self.shared_link_policy)?;
-        s.serialize_field("member_policy", &self.member_policy)?;
-        s.serialize_field("resolved_member_policy", &self.resolved_member_policy)?;
-        s.serialize_field("viewer_info_policy", &self.viewer_info_policy)
+        if let Some(val) = &self.member_policy {
+            s.serialize_field("member_policy", val)?;
+        }
+        if let Some(val) = &self.resolved_member_policy {
+            s.serialize_field("resolved_member_policy", val)?;
+        }
+        if let Some(val) = &self.viewer_info_policy {
+            s.serialize_field("viewer_info_policy", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4822,7 +4884,10 @@ impl GetFileMetadataArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
-        s.serialize_field("actions", &self.actions)
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4933,7 +4998,10 @@ impl GetFileMetadataBatchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("files", &self.files)?;
-        s.serialize_field("actions", &self.actions)
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -5038,7 +5106,8 @@ impl GetFileMetadataBatchResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
-        s.serialize_field("result", &self.result)
+        s.serialize_field("result", &self.result)?;
+        Ok(())
     }
 }
 
@@ -5319,7 +5388,10 @@ impl GetMetadataArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("actions", &self.actions)
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -5544,8 +5616,13 @@ impl GetSharedLinkMetadataArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("link_password", &self.link_password)
+        if let Some(val) = &self.path {
+            s.serialize_field("path", val)?;
+        }
+        if let Some(val) = &self.link_password {
+            s.serialize_field("link_password", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -5631,7 +5708,10 @@ impl GetSharedLinksArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
+        if let Some(val) = &self.path {
+            s.serialize_field("path", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -5797,7 +5877,8 @@ impl GetSharedLinksResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("links", &self.links)
+        s.serialize_field("links", &self.links)?;
+        Ok(())
     }
 }
 
@@ -6008,8 +6089,13 @@ impl GroupInfo {
         s.serialize_field("is_member", &self.is_member)?;
         s.serialize_field("is_owner", &self.is_owner)?;
         s.serialize_field("same_team", &self.same_team)?;
-        s.serialize_field("group_external_id", &self.group_external_id)?;
-        s.serialize_field("member_count", &self.member_count)
+        if let Some(val) = &self.group_external_id {
+            s.serialize_field("group_external_id", val)?;
+        }
+        if let Some(val) = &self.member_count {
+            s.serialize_field("member_count", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -6167,9 +6253,14 @@ impl GroupMembershipInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("group", &self.group)?;
-        s.serialize_field("permissions", &self.permissions)?;
-        s.serialize_field("initials", &self.initials)?;
-        s.serialize_field("is_inherited", &self.is_inherited)
+        if let Some(val) = &self.permissions {
+            s.serialize_field("permissions", val)?;
+        }
+        if let Some(val) = &self.initials {
+            s.serialize_field("initials", val)?;
+        }
+        s.serialize_field("is_inherited", &self.is_inherited)?;
+        Ok(())
     }
 }
 
@@ -6278,7 +6369,10 @@ impl InsufficientPlan {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("message", &self.message)?;
-        s.serialize_field("upsell_url", &self.upsell_url)
+        if let Some(val) = &self.upsell_url {
+            s.serialize_field("upsell_url", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -6394,7 +6488,8 @@ impl InsufficientQuotaAmounts {
         use serde::ser::SerializeStruct;
         s.serialize_field("space_needed", &self.space_needed)?;
         s.serialize_field("space_shortage", &self.space_shortage)?;
-        s.serialize_field("space_left", &self.space_left)
+        s.serialize_field("space_left", &self.space_left)?;
+        Ok(())
     }
 }
 
@@ -6632,10 +6727,17 @@ impl InviteeMembershipInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("invitee", &self.invitee)?;
-        s.serialize_field("permissions", &self.permissions)?;
-        s.serialize_field("initials", &self.initials)?;
+        if let Some(val) = &self.permissions {
+            s.serialize_field("permissions", val)?;
+        }
+        if let Some(val) = &self.initials {
+            s.serialize_field("initials", val)?;
+        }
         s.serialize_field("is_inherited", &self.is_inherited)?;
-        s.serialize_field("user", &self.user)
+        if let Some(val) = &self.user {
+            s.serialize_field("user", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -7330,7 +7432,10 @@ impl LinkAudienceOption {
         use serde::ser::SerializeStruct;
         s.serialize_field("audience", &self.audience)?;
         s.serialize_field("allowed", &self.allowed)?;
-        s.serialize_field("disallowed_reason", &self.disallowed_reason)
+        if let Some(val) = &self.disallowed_reason {
+            s.serialize_field("disallowed_reason", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -7663,7 +7768,10 @@ impl LinkPermission {
         use serde::ser::SerializeStruct;
         s.serialize_field("action", &self.action)?;
         s.serialize_field("allow", &self.allow)?;
-        s.serialize_field("reason", &self.reason)
+        if let Some(val) = &self.reason {
+            s.serialize_field("reason", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -8056,16 +8164,37 @@ impl LinkPermissions {
         s.serialize_field("can_disallow_download", &self.can_disallow_download)?;
         s.serialize_field("allow_comments", &self.allow_comments)?;
         s.serialize_field("team_restricts_comments", &self.team_restricts_comments)?;
-        s.serialize_field("resolved_visibility", &self.resolved_visibility)?;
-        s.serialize_field("requested_visibility", &self.requested_visibility)?;
-        s.serialize_field("revoke_failure_reason", &self.revoke_failure_reason)?;
-        s.serialize_field("effective_audience", &self.effective_audience)?;
-        s.serialize_field("link_access_level", &self.link_access_level)?;
-        s.serialize_field("audience_options", &self.audience_options)?;
-        s.serialize_field("can_set_password", &self.can_set_password)?;
-        s.serialize_field("can_remove_password", &self.can_remove_password)?;
-        s.serialize_field("require_password", &self.require_password)?;
-        s.serialize_field("can_use_extended_sharing_controls", &self.can_use_extended_sharing_controls)
+        if let Some(val) = &self.resolved_visibility {
+            s.serialize_field("resolved_visibility", val)?;
+        }
+        if let Some(val) = &self.requested_visibility {
+            s.serialize_field("requested_visibility", val)?;
+        }
+        if let Some(val) = &self.revoke_failure_reason {
+            s.serialize_field("revoke_failure_reason", val)?;
+        }
+        if let Some(val) = &self.effective_audience {
+            s.serialize_field("effective_audience", val)?;
+        }
+        if let Some(val) = &self.link_access_level {
+            s.serialize_field("link_access_level", val)?;
+        }
+        if let Some(val) = &self.audience_options {
+            s.serialize_field("audience_options", val)?;
+        }
+        if let Some(val) = &self.can_set_password {
+            s.serialize_field("can_set_password", val)?;
+        }
+        if let Some(val) = &self.can_remove_password {
+            s.serialize_field("can_remove_password", val)?;
+        }
+        if let Some(val) = &self.require_password {
+            s.serialize_field("require_password", val)?;
+        }
+        if let Some(val) = &self.can_use_extended_sharing_controls {
+            s.serialize_field("can_use_extended_sharing_controls", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -8204,10 +8333,19 @@ impl LinkSettings {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("access_level", &self.access_level)?;
-        s.serialize_field("audience", &self.audience)?;
-        s.serialize_field("expiry", &self.expiry)?;
-        s.serialize_field("password", &self.password)
+        if let Some(val) = &self.access_level {
+            s.serialize_field("access_level", val)?;
+        }
+        if let Some(val) = &self.audience {
+            s.serialize_field("audience", val)?;
+        }
+        if let Some(val) = &self.expiry {
+            s.serialize_field("expiry", val)?;
+        }
+        if let Some(val) = &self.password {
+            s.serialize_field("password", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -8350,9 +8488,12 @@ impl ListFileMembersArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
-        s.serialize_field("actions", &self.actions)?;
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
         s.serialize_field("include_inherited", &self.include_inherited)?;
-        s.serialize_field("limit", &self.limit)
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
     }
 }
 
@@ -8461,7 +8602,8 @@ impl ListFileMembersBatchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("files", &self.files)?;
-        s.serialize_field("limit", &self.limit)
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
     }
 }
 
@@ -8565,7 +8707,8 @@ impl ListFileMembersBatchResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
-        s.serialize_field("result", &self.result)
+        s.serialize_field("result", &self.result)?;
+        Ok(())
     }
 }
 
@@ -8658,7 +8801,8 @@ impl ListFileMembersContinueArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -8869,7 +9013,8 @@ impl ListFileMembersCountResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("members", &self.members)?;
-        s.serialize_field("member_count", &self.member_count)
+        s.serialize_field("member_count", &self.member_count)?;
+        Ok(())
     }
 }
 
@@ -9147,7 +9292,10 @@ impl ListFilesArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)?;
-        s.serialize_field("actions", &self.actions)
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -9238,7 +9386,8 @@ impl ListFilesContinueArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -9438,7 +9587,10 @@ impl ListFilesResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("cursor", &self.cursor)
+        if let Some(val) = &self.cursor {
+            s.serialize_field("cursor", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -9566,8 +9718,11 @@ impl ListFolderMembersArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("actions", &self.actions)?;
-        s.serialize_field("limit", &self.limit)
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
     }
 }
 
@@ -9658,7 +9813,8 @@ impl ListFolderMembersContinueArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -9853,8 +10009,11 @@ impl ListFolderMembersCursorArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("actions", &self.actions)?;
-        s.serialize_field("limit", &self.limit)
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
     }
 }
 
@@ -9960,7 +10119,10 @@ impl ListFoldersArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)?;
-        s.serialize_field("actions", &self.actions)
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -10050,7 +10212,8 @@ impl ListFoldersContinueArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -10230,7 +10393,10 @@ impl ListFoldersResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("cursor", &self.cursor)
+        if let Some(val) = &self.cursor {
+            s.serialize_field("cursor", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -10350,9 +10516,16 @@ impl ListSharedLinksArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("direct_only", &self.direct_only)
+        if let Some(val) = &self.path {
+            s.serialize_field("path", val)?;
+        }
+        if let Some(val) = &self.cursor {
+            s.serialize_field("cursor", val)?;
+        }
+        if let Some(val) = &self.direct_only {
+            s.serialize_field("direct_only", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -10565,7 +10738,10 @@ impl ListSharedLinksResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("links", &self.links)?;
         s.serialize_field("has_more", &self.has_more)?;
-        s.serialize_field("cursor", &self.cursor)
+        if let Some(val) = &self.cursor {
+            s.serialize_field("cursor", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -10688,9 +10864,16 @@ impl MemberAccessLevelResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("access_level", &self.access_level)?;
-        s.serialize_field("warning", &self.warning)?;
-        s.serialize_field("access_details", &self.access_details)
+        if let Some(val) = &self.access_level {
+            s.serialize_field("access_level", val)?;
+        }
+        if let Some(val) = &self.warning {
+            s.serialize_field("warning", val)?;
+        }
+        if let Some(val) = &self.access_details {
+            s.serialize_field("access_details", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -10918,7 +11101,10 @@ impl MemberPermission {
         use serde::ser::SerializeStruct;
         s.serialize_field("action", &self.action)?;
         s.serialize_field("allow", &self.allow)?;
-        s.serialize_field("reason", &self.reason)
+        if let Some(val) = &self.reason {
+            s.serialize_field("reason", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -11210,9 +11396,14 @@ impl MembershipInfo {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
-        s.serialize_field("permissions", &self.permissions)?;
-        s.serialize_field("initials", &self.initials)?;
-        s.serialize_field("is_inherited", &self.is_inherited)
+        if let Some(val) = &self.permissions {
+            s.serialize_field("permissions", val)?;
+        }
+        if let Some(val) = &self.initials {
+            s.serialize_field("initials", val)?;
+        }
+        s.serialize_field("is_inherited", &self.is_inherited)?;
+        Ok(())
     }
 }
 
@@ -11333,7 +11524,8 @@ impl ModifySharedLinkSettingsArgs {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("settings", &self.settings)?;
-        s.serialize_field("remove_expiration", &self.remove_expiration)
+        s.serialize_field("remove_expiration", &self.remove_expiration)?;
+        Ok(())
     }
 }
 
@@ -11547,7 +11739,8 @@ impl MountFolderArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("shared_folder_id", &self.shared_folder_id)
+        s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
+        Ok(())
     }
 }
 
@@ -11818,7 +12011,8 @@ impl ParentFolderAccessInfo {
         s.serialize_field("folder_name", &self.folder_name)?;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("permissions", &self.permissions)?;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        Ok(())
     }
 }
 
@@ -11953,7 +12147,10 @@ impl PathLinkMetadata {
         s.serialize_field("url", &self.url)?;
         s.serialize_field("visibility", &self.visibility)?;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("expires", &self.expires)
+        if let Some(val) = &self.expires {
+            s.serialize_field("expires", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -12299,7 +12496,8 @@ impl RelinquishFileMembershipArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("file", &self.file)
+        s.serialize_field("file", &self.file)?;
+        Ok(())
     }
 }
 
@@ -12509,7 +12707,8 @@ impl RelinquishFolderMembershipArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("leave_a_copy", &self.leave_a_copy)
+        s.serialize_field("leave_a_copy", &self.leave_a_copy)?;
+        Ok(())
     }
 }
 
@@ -12764,7 +12963,8 @@ impl RemoveFileMemberArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
-        s.serialize_field("member", &self.member)
+        s.serialize_field("member", &self.member)?;
+        Ok(())
     }
 }
 
@@ -12997,7 +13197,8 @@ impl RemoveFolderMemberArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("leave_a_copy", &self.leave_a_copy)
+        s.serialize_field("leave_a_copy", &self.leave_a_copy)?;
+        Ok(())
     }
 }
 
@@ -13589,7 +13790,8 @@ impl RevokeSharedLinkArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("url", &self.url)
+        s.serialize_field("url", &self.url)?;
+        Ok(())
     }
 }
 
@@ -13796,7 +13998,8 @@ impl SetAccessInheritanceArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("access_inheritance", &self.access_inheritance)
+        s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        Ok(())
     }
 }
 
@@ -14118,14 +14321,27 @@ impl ShareFolderArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("acl_update_policy", &self.acl_update_policy)?;
+        if let Some(val) = &self.acl_update_policy {
+            s.serialize_field("acl_update_policy", val)?;
+        }
         s.serialize_field("force_async", &self.force_async)?;
-        s.serialize_field("member_policy", &self.member_policy)?;
-        s.serialize_field("shared_link_policy", &self.shared_link_policy)?;
-        s.serialize_field("viewer_info_policy", &self.viewer_info_policy)?;
+        if let Some(val) = &self.member_policy {
+            s.serialize_field("member_policy", val)?;
+        }
+        if let Some(val) = &self.shared_link_policy {
+            s.serialize_field("shared_link_policy", val)?;
+        }
+        if let Some(val) = &self.viewer_info_policy {
+            s.serialize_field("viewer_info_policy", val)?;
+        }
         s.serialize_field("access_inheritance", &self.access_inheritance)?;
-        s.serialize_field("actions", &self.actions)?;
-        s.serialize_field("link_settings", &self.link_settings)
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        if let Some(val) = &self.link_settings {
+            s.serialize_field("link_settings", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -14320,12 +14536,21 @@ impl ShareFolderArgBase {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("acl_update_policy", &self.acl_update_policy)?;
+        if let Some(val) = &self.acl_update_policy {
+            s.serialize_field("acl_update_policy", val)?;
+        }
         s.serialize_field("force_async", &self.force_async)?;
-        s.serialize_field("member_policy", &self.member_policy)?;
-        s.serialize_field("shared_link_policy", &self.shared_link_policy)?;
-        s.serialize_field("viewer_info_policy", &self.viewer_info_policy)?;
-        s.serialize_field("access_inheritance", &self.access_inheritance)
+        if let Some(val) = &self.member_policy {
+            s.serialize_field("member_policy", val)?;
+        }
+        if let Some(val) = &self.shared_link_policy {
+            s.serialize_field("shared_link_policy", val)?;
+        }
+        if let Some(val) = &self.viewer_info_policy {
+            s.serialize_field("viewer_info_policy", val)?;
+        }
+        s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        Ok(())
     }
 }
 
@@ -15136,10 +15361,19 @@ impl SharedContentLinkMetadata {
         s.serialize_field("link_permissions", &self.link_permissions)?;
         s.serialize_field("password_protected", &self.password_protected)?;
         s.serialize_field("url", &self.url)?;
-        s.serialize_field("access_level", &self.access_level)?;
-        s.serialize_field("audience_restricting_shared_folder", &self.audience_restricting_shared_folder)?;
-        s.serialize_field("expiry", &self.expiry)?;
-        s.serialize_field("audience_exceptions", &self.audience_exceptions)
+        if let Some(val) = &self.access_level {
+            s.serialize_field("access_level", val)?;
+        }
+        if let Some(val) = &self.audience_restricting_shared_folder {
+            s.serialize_field("audience_restricting_shared_folder", val)?;
+        }
+        if let Some(val) = &self.expiry {
+            s.serialize_field("expiry", val)?;
+        }
+        if let Some(val) = &self.audience_exceptions {
+            s.serialize_field("audience_exceptions", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -15332,9 +15566,16 @@ impl SharedContentLinkMetadataBase {
         s.serialize_field("current_audience", &self.current_audience)?;
         s.serialize_field("link_permissions", &self.link_permissions)?;
         s.serialize_field("password_protected", &self.password_protected)?;
-        s.serialize_field("access_level", &self.access_level)?;
-        s.serialize_field("audience_restricting_shared_folder", &self.audience_restricting_shared_folder)?;
-        s.serialize_field("expiry", &self.expiry)
+        if let Some(val) = &self.access_level {
+            s.serialize_field("access_level", val)?;
+        }
+        if let Some(val) = &self.audience_restricting_shared_folder {
+            s.serialize_field("audience_restricting_shared_folder", val)?;
+        }
+        if let Some(val) = &self.expiry {
+            s.serialize_field("expiry", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -15478,7 +15719,10 @@ impl SharedFileMembers {
         s.serialize_field("users", &self.users)?;
         s.serialize_field("groups", &self.groups)?;
         s.serialize_field("invitees", &self.invitees)?;
-        s.serialize_field("cursor", &self.cursor)
+        if let Some(val) = &self.cursor {
+            s.serialize_field("cursor", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -15798,16 +16042,37 @@ impl SharedFileMetadata {
         s.serialize_field("name", &self.name)?;
         s.serialize_field("policy", &self.policy)?;
         s.serialize_field("preview_url", &self.preview_url)?;
-        s.serialize_field("access_type", &self.access_type)?;
-        s.serialize_field("expected_link_metadata", &self.expected_link_metadata)?;
-        s.serialize_field("link_metadata", &self.link_metadata)?;
-        s.serialize_field("owner_display_names", &self.owner_display_names)?;
-        s.serialize_field("owner_team", &self.owner_team)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("path_display", &self.path_display)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("permissions", &self.permissions)?;
-        s.serialize_field("time_invited", &self.time_invited)
+        if let Some(val) = &self.access_type {
+            s.serialize_field("access_type", val)?;
+        }
+        if let Some(val) = &self.expected_link_metadata {
+            s.serialize_field("expected_link_metadata", val)?;
+        }
+        if let Some(val) = &self.link_metadata {
+            s.serialize_field("link_metadata", val)?;
+        }
+        if let Some(val) = &self.owner_display_names {
+            s.serialize_field("owner_display_names", val)?;
+        }
+        if let Some(val) = &self.owner_team {
+            s.serialize_field("owner_team", val)?;
+        }
+        if let Some(val) = &self.parent_shared_folder_id {
+            s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.path_display {
+            s.serialize_field("path_display", val)?;
+        }
+        if let Some(val) = &self.path_lower {
+            s.serialize_field("path_lower", val)?;
+        }
+        if let Some(val) = &self.permissions {
+            s.serialize_field("permissions", val)?;
+        }
+        if let Some(val) = &self.time_invited {
+            s.serialize_field("time_invited", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -16139,7 +16404,10 @@ impl SharedFolderMembers {
         s.serialize_field("users", &self.users)?;
         s.serialize_field("groups", &self.groups)?;
         s.serialize_field("invitees", &self.invitees)?;
-        s.serialize_field("cursor", &self.cursor)
+        if let Some(val) = &self.cursor {
+            s.serialize_field("cursor", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -16473,14 +16741,29 @@ impl SharedFolderMetadata {
         s.serialize_field("preview_url", &self.preview_url)?;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("time_invited", &self.time_invited)?;
-        s.serialize_field("owner_display_names", &self.owner_display_names)?;
-        s.serialize_field("owner_team", &self.owner_team)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("parent_folder_name", &self.parent_folder_name)?;
-        s.serialize_field("link_metadata", &self.link_metadata)?;
-        s.serialize_field("permissions", &self.permissions)?;
-        s.serialize_field("access_inheritance", &self.access_inheritance)
+        if let Some(val) = &self.owner_display_names {
+            s.serialize_field("owner_display_names", val)?;
+        }
+        if let Some(val) = &self.owner_team {
+            s.serialize_field("owner_team", val)?;
+        }
+        if let Some(val) = &self.parent_shared_folder_id {
+            s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.path_lower {
+            s.serialize_field("path_lower", val)?;
+        }
+        if let Some(val) = &self.parent_folder_name {
+            s.serialize_field("parent_folder_name", val)?;
+        }
+        if let Some(val) = &self.link_metadata {
+            s.serialize_field("link_metadata", val)?;
+        }
+        if let Some(val) = &self.permissions {
+            s.serialize_field("permissions", val)?;
+        }
+        s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        Ok(())
     }
 }
 
@@ -16691,11 +16974,22 @@ impl SharedFolderMetadataBase {
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("is_inside_team_folder", &self.is_inside_team_folder)?;
         s.serialize_field("is_team_folder", &self.is_team_folder)?;
-        s.serialize_field("owner_display_names", &self.owner_display_names)?;
-        s.serialize_field("owner_team", &self.owner_team)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("parent_folder_name", &self.parent_folder_name)
+        if let Some(val) = &self.owner_display_names {
+            s.serialize_field("owner_display_names", val)?;
+        }
+        if let Some(val) = &self.owner_team {
+            s.serialize_field("owner_team", val)?;
+        }
+        if let Some(val) = &self.parent_shared_folder_id {
+            s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.path_lower {
+            s.serialize_field("path_lower", val)?;
+        }
+        if let Some(val) = &self.parent_folder_name {
+            s.serialize_field("parent_folder_name", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -17292,13 +17586,28 @@ impl SharedLinkSettings {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("require_password", &self.require_password)?;
-        s.serialize_field("link_password", &self.link_password)?;
-        s.serialize_field("expires", &self.expires)?;
-        s.serialize_field("audience", &self.audience)?;
-        s.serialize_field("access", &self.access)?;
-        s.serialize_field("requested_visibility", &self.requested_visibility)?;
-        s.serialize_field("allow_download", &self.allow_download)
+        if let Some(val) = &self.require_password {
+            s.serialize_field("require_password", val)?;
+        }
+        if let Some(val) = &self.link_password {
+            s.serialize_field("link_password", val)?;
+        }
+        if let Some(val) = &self.expires {
+            s.serialize_field("expires", val)?;
+        }
+        if let Some(val) = &self.audience {
+            s.serialize_field("audience", val)?;
+        }
+        if let Some(val) = &self.access {
+            s.serialize_field("access", val)?;
+        }
+        if let Some(val) = &self.requested_visibility {
+            s.serialize_field("requested_visibility", val)?;
+        }
+        if let Some(val) = &self.allow_download {
+            s.serialize_field("allow_download", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -17675,7 +17984,10 @@ impl TeamMemberInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_info", &self.team_info)?;
         s.serialize_field("display_name", &self.display_name)?;
-        s.serialize_field("member_id", &self.member_id)
+        if let Some(val) = &self.member_id {
+            s.serialize_field("member_id", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -17778,7 +18090,8 @@ impl TransferFolderArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("to_dropbox_id", &self.to_dropbox_id)
+        s.serialize_field("to_dropbox_id", &self.to_dropbox_id)?;
+        Ok(())
     }
 }
 
@@ -18013,7 +18326,8 @@ impl UnmountFolderArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("shared_folder_id", &self.shared_folder_id)
+        s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
+        Ok(())
     }
 }
 
@@ -18206,7 +18520,8 @@ impl UnshareFileArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("file", &self.file)
+        s.serialize_field("file", &self.file)?;
+        Ok(())
     }
 }
 
@@ -18414,7 +18729,8 @@ impl UnshareFolderArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("leave_a_copy", &self.leave_a_copy)
+        s.serialize_field("leave_a_copy", &self.leave_a_copy)?;
+        Ok(())
     }
 }
 
@@ -18643,7 +18959,8 @@ impl UpdateFileMemberArgs {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("access_level", &self.access_level)
+        s.serialize_field("access_level", &self.access_level)?;
+        Ok(())
     }
 }
 
@@ -18764,7 +19081,8 @@ impl UpdateFolderMemberArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("access_level", &self.access_level)
+        s.serialize_field("access_level", &self.access_level)?;
+        Ok(())
     }
 }
 
@@ -19103,12 +19421,25 @@ impl UpdateFolderPolicyArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("member_policy", &self.member_policy)?;
-        s.serialize_field("acl_update_policy", &self.acl_update_policy)?;
-        s.serialize_field("viewer_info_policy", &self.viewer_info_policy)?;
-        s.serialize_field("shared_link_policy", &self.shared_link_policy)?;
-        s.serialize_field("link_settings", &self.link_settings)?;
-        s.serialize_field("actions", &self.actions)
+        if let Some(val) = &self.member_policy {
+            s.serialize_field("member_policy", val)?;
+        }
+        if let Some(val) = &self.acl_update_policy {
+            s.serialize_field("acl_update_policy", val)?;
+        }
+        if let Some(val) = &self.viewer_info_policy {
+            s.serialize_field("viewer_info_policy", val)?;
+        }
+        if let Some(val) = &self.shared_link_policy {
+            s.serialize_field("shared_link_policy", val)?;
+        }
+        if let Some(val) = &self.link_settings {
+            s.serialize_field("link_settings", val)?;
+        }
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -19433,11 +19764,20 @@ impl UserFileMembershipInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("user", &self.user)?;
-        s.serialize_field("permissions", &self.permissions)?;
-        s.serialize_field("initials", &self.initials)?;
+        if let Some(val) = &self.permissions {
+            s.serialize_field("permissions", val)?;
+        }
+        if let Some(val) = &self.initials {
+            s.serialize_field("initials", val)?;
+        }
         s.serialize_field("is_inherited", &self.is_inherited)?;
-        s.serialize_field("time_last_seen", &self.time_last_seen)?;
-        s.serialize_field("platform_type", &self.platform_type)
+        if let Some(val) = &self.time_last_seen {
+            s.serialize_field("time_last_seen", val)?;
+        }
+        if let Some(val) = &self.platform_type {
+            s.serialize_field("platform_type", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -19592,7 +19932,10 @@ impl UserInfo {
         s.serialize_field("email", &self.email)?;
         s.serialize_field("display_name", &self.display_name)?;
         s.serialize_field("same_team", &self.same_team)?;
-        s.serialize_field("team_member_id", &self.team_member_id)
+        if let Some(val) = &self.team_member_id {
+            s.serialize_field("team_member_id", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -19750,9 +20093,14 @@ impl UserMembershipInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("user", &self.user)?;
-        s.serialize_field("permissions", &self.permissions)?;
-        s.serialize_field("initials", &self.initials)?;
-        s.serialize_field("is_inherited", &self.is_inherited)
+        if let Some(val) = &self.permissions {
+            s.serialize_field("permissions", val)?;
+        }
+        if let Some(val) = &self.initials {
+            s.serialize_field("initials", val)?;
+        }
+        s.serialize_field("is_inherited", &self.is_inherited)?;
+        Ok(())
     }
 }
 
@@ -20056,7 +20404,10 @@ impl VisibilityPolicy {
         s.serialize_field("policy", &self.policy)?;
         s.serialize_field("resolved_policy", &self.resolved_policy)?;
         s.serialize_field("allowed", &self.allowed)?;
-        s.serialize_field("disallowed_reason", &self.disallowed_reason)
+        if let Some(val) = &self.disallowed_reason {
+            s.serialize_field("disallowed_reason", val)?;
+        }
+        Ok(())
     }
 }
 

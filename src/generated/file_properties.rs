@@ -367,7 +367,8 @@ impl AddPropertiesArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("property_groups", &self.property_groups)
+        s.serialize_field("property_groups", &self.property_groups)?;
+        Ok(())
     }
 }
 
@@ -647,7 +648,8 @@ impl AddTemplateArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("description", &self.description)?;
-        s.serialize_field("fields", &self.fields)
+        s.serialize_field("fields", &self.fields)?;
+        Ok(())
     }
 }
 
@@ -739,7 +741,8 @@ impl AddTemplateResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)
+        s.serialize_field("template_id", &self.template_id)?;
+        Ok(())
     }
 }
 
@@ -831,7 +834,8 @@ impl GetTemplateArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)
+        s.serialize_field("template_id", &self.template_id)?;
+        Ok(())
     }
 }
 
@@ -948,7 +952,8 @@ impl GetTemplateResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("description", &self.description)?;
-        s.serialize_field("fields", &self.fields)
+        s.serialize_field("fields", &self.fields)?;
+        Ok(())
     }
 }
 
@@ -1192,7 +1197,8 @@ impl ListTemplateResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("template_ids", &self.template_ids)
+        s.serialize_field("template_ids", &self.template_ids)?;
+        Ok(())
     }
 }
 
@@ -1667,7 +1673,8 @@ impl OverwritePropertyGroupArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("property_groups", &self.property_groups)
+        s.serialize_field("property_groups", &self.property_groups)?;
+        Ok(())
     }
 }
 
@@ -1894,7 +1901,8 @@ impl PropertiesSearchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("queries", &self.queries)?;
-        s.serialize_field("template_filter", &self.template_filter)
+        s.serialize_field("template_filter", &self.template_filter)?;
+        Ok(())
     }
 }
 
@@ -1985,7 +1993,8 @@ impl PropertiesSearchContinueArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -2263,7 +2272,8 @@ impl PropertiesSearchMatch {
         s.serialize_field("id", &self.id)?;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("is_deleted", &self.is_deleted)?;
-        s.serialize_field("property_groups", &self.property_groups)
+        s.serialize_field("property_groups", &self.property_groups)?;
+        Ok(())
     }
 }
 
@@ -2446,7 +2456,8 @@ impl PropertiesSearchQuery {
         use serde::ser::SerializeStruct;
         s.serialize_field("query", &self.query)?;
         s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("logical_operator", &self.logical_operator)
+        s.serialize_field("logical_operator", &self.logical_operator)?;
+        Ok(())
     }
 }
 
@@ -2555,7 +2566,10 @@ impl PropertiesSearchResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("matches", &self.matches)?;
-        s.serialize_field("cursor", &self.cursor)
+        if let Some(val) = &self.cursor {
+            s.serialize_field("cursor", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -2661,7 +2675,8 @@ impl PropertyField {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
-        s.serialize_field("value", &self.value)
+        s.serialize_field("value", &self.value)?;
+        Ok(())
     }
 }
 
@@ -2780,7 +2795,8 @@ impl PropertyFieldTemplate {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("description", &self.description)?;
-        s.serialize_field("type", &self.type_field)
+        s.serialize_field("type", &self.type_field)?;
+        Ok(())
     }
 }
 
@@ -2888,7 +2904,8 @@ impl PropertyGroup {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)?;
-        s.serialize_field("fields", &self.fields)
+        s.serialize_field("fields", &self.fields)?;
+        Ok(())
     }
 }
 
@@ -3006,7 +3023,8 @@ impl PropertyGroupTemplate {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("description", &self.description)?;
-        s.serialize_field("fields", &self.fields)
+        s.serialize_field("fields", &self.fields)?;
+        Ok(())
     }
 }
 
@@ -3132,8 +3150,13 @@ impl PropertyGroupUpdate {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)?;
-        s.serialize_field("add_or_update_fields", &self.add_or_update_fields)?;
-        s.serialize_field("remove_fields", &self.remove_fields)
+        if let Some(val) = &self.add_or_update_fields {
+            s.serialize_field("add_or_update_fields", val)?;
+        }
+        if let Some(val) = &self.remove_fields {
+            s.serialize_field("remove_fields", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -3294,7 +3317,8 @@ impl RemovePropertiesArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("property_template_ids", &self.property_template_ids)
+        s.serialize_field("property_template_ids", &self.property_template_ids)?;
+        Ok(())
     }
 }
 
@@ -3522,7 +3546,8 @@ impl RemoveTemplateArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)
+        s.serialize_field("template_id", &self.template_id)?;
+        Ok(())
     }
 }
 
@@ -3911,7 +3936,8 @@ impl UpdatePropertiesArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("update_property_groups", &self.update_property_groups)
+        s.serialize_field("update_property_groups", &self.update_property_groups)?;
+        Ok(())
     }
 }
 
@@ -4226,9 +4252,16 @@ impl UpdateTemplateArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)?;
-        s.serialize_field("name", &self.name)?;
-        s.serialize_field("description", &self.description)?;
-        s.serialize_field("add_fields", &self.add_fields)
+        if let Some(val) = &self.name {
+            s.serialize_field("name", val)?;
+        }
+        if let Some(val) = &self.description {
+            s.serialize_field("description", val)?;
+        }
+        if let Some(val) = &self.add_fields {
+            s.serialize_field("add_fields", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4320,7 +4353,8 @@ impl UpdateTemplateResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)
+        s.serialize_field("template_id", &self.template_id)?;
+        Ok(())
     }
 }
 

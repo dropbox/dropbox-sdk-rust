@@ -357,7 +357,8 @@ impl TeamRootInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("root_namespace_id", &self.root_namespace_id)?;
         s.serialize_field("home_namespace_id", &self.home_namespace_id)?;
-        s.serialize_field("home_path", &self.home_path)
+        s.serialize_field("home_path", &self.home_path)?;
+        Ok(())
     }
 }
 
@@ -464,7 +465,8 @@ impl UserRootInfo {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("root_namespace_id", &self.root_namespace_id)?;
-        s.serialize_field("home_namespace_id", &self.home_namespace_id)
+        s.serialize_field("home_namespace_id", &self.home_namespace_id)?;
+        Ok(())
     }
 }
 

@@ -141,7 +141,8 @@ impl SetProfilePhotoArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("photo", &self.photo)
+        s.serialize_field("photo", &self.photo)?;
+        Ok(())
     }
 }
 
@@ -342,7 +343,8 @@ impl SetProfilePhotoResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("profile_photo_url", &self.profile_photo_url)
+        s.serialize_field("profile_photo_url", &self.profile_photo_url)?;
+        Ok(())
     }
 }
 

@@ -78,7 +78,8 @@ impl SecondaryEmail {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("email", &self.email)?;
-        s.serialize_field("is_verified", &self.is_verified)
+        s.serialize_field("is_verified", &self.is_verified)?;
+        Ok(())
     }
 }
 

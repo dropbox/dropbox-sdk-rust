@@ -463,7 +463,8 @@ impl AddMember {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("permission_level", &self.permission_level)
+        s.serialize_field("permission_level", &self.permission_level)?;
+        Ok(())
     }
 }
 
@@ -602,8 +603,11 @@ impl AddPaperDocUser {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("members", &self.members)?;
-        s.serialize_field("custom_message", &self.custom_message)?;
-        s.serialize_field("quiet", &self.quiet)
+        if let Some(val) = &self.custom_message {
+            s.serialize_field("custom_message", val)?;
+        }
+        s.serialize_field("quiet", &self.quiet)?;
+        Ok(())
     }
 }
 
@@ -707,7 +711,8 @@ impl AddPaperDocUserMemberResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("result", &self.result)
+        s.serialize_field("result", &self.result)?;
+        Ok(())
     }
 }
 
@@ -939,7 +944,10 @@ impl Cursor {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("value", &self.value)?;
-        s.serialize_field("expiration", &self.expiration)
+        if let Some(val) = &self.expiration {
+            s.serialize_field("expiration", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -1269,7 +1277,8 @@ impl Folder {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("name", &self.name)
+        s.serialize_field("name", &self.name)?;
+        Ok(())
     }
 }
 
@@ -1514,8 +1523,13 @@ impl FoldersContainingPaperDoc {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("folder_sharing_policy_type", &self.folder_sharing_policy_type)?;
-        s.serialize_field("folders", &self.folders)
+        if let Some(val) = &self.folder_sharing_policy_type {
+            s.serialize_field("folder_sharing_policy_type", val)?;
+        }
+        if let Some(val) = &self.folders {
+            s.serialize_field("folders", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -1699,7 +1713,8 @@ impl InviteeInfoWithPermissionLevel {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("invitee", &self.invitee)?;
-        s.serialize_field("permission_level", &self.permission_level)
+        s.serialize_field("permission_level", &self.permission_level)?;
+        Ok(())
     }
 }
 
@@ -1919,7 +1934,8 @@ impl ListPaperDocsArgs {
         s.serialize_field("filter_by", &self.filter_by)?;
         s.serialize_field("sort_by", &self.sort_by)?;
         s.serialize_field("sort_order", &self.sort_order)?;
-        s.serialize_field("limit", &self.limit)
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
     }
 }
 
@@ -2010,7 +2026,8 @@ impl ListPaperDocsContinueArgs {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -2198,7 +2215,8 @@ impl ListPaperDocsResponse {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_ids", &self.doc_ids)?;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)
+        s.serialize_field("has_more", &self.has_more)?;
+        Ok(())
     }
 }
 
@@ -2550,7 +2568,8 @@ impl ListUsersOnFolderArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("limit", &self.limit)
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
     }
 }
 
@@ -2655,7 +2674,8 @@ impl ListUsersOnFolderContinueArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -2794,7 +2814,8 @@ impl ListUsersOnFolderResponse {
         s.serialize_field("invitees", &self.invitees)?;
         s.serialize_field("users", &self.users)?;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)
+        s.serialize_field("has_more", &self.has_more)?;
+        Ok(())
     }
 }
 
@@ -2921,7 +2942,8 @@ impl ListUsersOnPaperDocArgs {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("limit", &self.limit)?;
-        s.serialize_field("filter_by", &self.filter_by)
+        s.serialize_field("filter_by", &self.filter_by)?;
+        Ok(())
     }
 }
 
@@ -3025,7 +3047,8 @@ impl ListUsersOnPaperDocContinueArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -3179,7 +3202,8 @@ impl ListUsersOnPaperDocResponse {
         s.serialize_field("users", &self.users)?;
         s.serialize_field("doc_owner", &self.doc_owner)?;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)
+        s.serialize_field("has_more", &self.has_more)?;
+        Ok(())
     }
 }
 
@@ -3456,7 +3480,10 @@ impl PaperDocCreateArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("import_format", &self.import_format)?;
-        s.serialize_field("parent_folder_id", &self.parent_folder_id)
+        if let Some(val) = &self.parent_folder_id {
+            s.serialize_field("parent_folder_id", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -3686,7 +3713,8 @@ impl PaperDocCreateUpdateResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("revision", &self.revision)?;
-        s.serialize_field("title", &self.title)
+        s.serialize_field("title", &self.title)?;
+        Ok(())
     }
 }
 
@@ -3788,7 +3816,8 @@ impl PaperDocExport {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("export_format", &self.export_format)
+        s.serialize_field("export_format", &self.export_format)?;
+        Ok(())
     }
 }
 
@@ -3918,7 +3947,8 @@ impl PaperDocExportResult {
         s.serialize_field("owner", &self.owner)?;
         s.serialize_field("title", &self.title)?;
         s.serialize_field("revision", &self.revision)?;
-        s.serialize_field("mime_type", &self.mime_type)
+        s.serialize_field("mime_type", &self.mime_type)?;
+        Ok(())
     }
 }
 
@@ -4086,7 +4116,8 @@ impl PaperDocSharingPolicy {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("sharing_policy", &self.sharing_policy)
+        s.serialize_field("sharing_policy", &self.sharing_policy)?;
+        Ok(())
     }
 }
 
@@ -4221,7 +4252,8 @@ impl PaperDocUpdateArgs {
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("doc_update_policy", &self.doc_update_policy)?;
         s.serialize_field("revision", &self.revision)?;
-        s.serialize_field("import_format", &self.import_format)
+        s.serialize_field("import_format", &self.import_format)?;
+        Ok(())
     }
 }
 
@@ -4573,8 +4605,13 @@ impl PaperFolderCreateArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
-        s.serialize_field("parent_folder_id", &self.parent_folder_id)?;
-        s.serialize_field("is_team_folder", &self.is_team_folder)
+        if let Some(val) = &self.parent_folder_id {
+            s.serialize_field("parent_folder_id", val)?;
+        }
+        if let Some(val) = &self.is_team_folder {
+            s.serialize_field("is_team_folder", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -4755,7 +4792,8 @@ impl PaperFolderCreateResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("folder_id", &self.folder_id)
+        s.serialize_field("folder_id", &self.folder_id)?;
+        Ok(())
     }
 }
 
@@ -4845,7 +4883,8 @@ impl RefPaperDoc {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("doc_id", &self.doc_id)
+        s.serialize_field("doc_id", &self.doc_id)?;
+        Ok(())
     }
 }
 
@@ -4949,7 +4988,8 @@ impl RemovePaperDocUser {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("member", &self.member)
+        s.serialize_field("member", &self.member)?;
+        Ok(())
     }
 }
 
@@ -5053,8 +5093,13 @@ impl SharingPolicy {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("public_sharing_policy", &self.public_sharing_policy)?;
-        s.serialize_field("team_sharing_policy", &self.team_sharing_policy)
+        if let Some(val) = &self.public_sharing_policy {
+            s.serialize_field("public_sharing_policy", val)?;
+        }
+        if let Some(val) = &self.team_sharing_policy {
+            s.serialize_field("team_sharing_policy", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -5306,7 +5351,8 @@ impl UserInfoWithPermissionLevel {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
-        s.serialize_field("permission_level", &self.permission_level)
+        s.serialize_field("permission_level", &self.permission_level)?;
+        Ok(())
     }
 }
 

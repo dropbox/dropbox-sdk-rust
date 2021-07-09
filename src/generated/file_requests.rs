@@ -267,7 +267,8 @@ impl CountFileRequestsResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("file_request_count", &self.file_request_count)
+        s.serialize_field("file_request_count", &self.file_request_count)?;
+        Ok(())
     }
 }
 
@@ -426,9 +427,14 @@ impl CreateFileRequestArgs {
         use serde::ser::SerializeStruct;
         s.serialize_field("title", &self.title)?;
         s.serialize_field("destination", &self.destination)?;
-        s.serialize_field("deadline", &self.deadline)?;
+        if let Some(val) = &self.deadline {
+            s.serialize_field("deadline", val)?;
+        }
         s.serialize_field("open", &self.open)?;
-        s.serialize_field("description", &self.description)
+        if let Some(val) = &self.description {
+            s.serialize_field("description", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -816,7 +822,8 @@ impl DeleteAllClosedFileRequestsResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("file_requests", &self.file_requests)
+        s.serialize_field("file_requests", &self.file_requests)?;
+        Ok(())
     }
 }
 
@@ -907,7 +914,8 @@ impl DeleteFileRequestArgs {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("ids", &self.ids)
+        s.serialize_field("ids", &self.ids)?;
+        Ok(())
     }
 }
 
@@ -1146,7 +1154,8 @@ impl DeleteFileRequestsResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("file_requests", &self.file_requests)
+        s.serialize_field("file_requests", &self.file_requests)?;
+        Ok(())
     }
 }
 
@@ -1365,9 +1374,16 @@ impl FileRequest {
         s.serialize_field("created", &self.created)?;
         s.serialize_field("is_open", &self.is_open)?;
         s.serialize_field("file_count", &self.file_count)?;
-        s.serialize_field("destination", &self.destination)?;
-        s.serialize_field("deadline", &self.deadline)?;
-        s.serialize_field("description", &self.description)
+        if let Some(val) = &self.destination {
+            s.serialize_field("destination", val)?;
+        }
+        if let Some(val) = &self.deadline {
+            s.serialize_field("deadline", val)?;
+        }
+        if let Some(val) = &self.description {
+            s.serialize_field("description", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -1476,7 +1492,10 @@ impl FileRequestDeadline {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("deadline", &self.deadline)?;
-        s.serialize_field("allow_late_uploads", &self.allow_late_uploads)
+        if let Some(val) = &self.allow_late_uploads {
+            s.serialize_field("allow_late_uploads", val)?;
+        }
+        Ok(())
     }
 }
 
@@ -1772,7 +1791,8 @@ impl GetFileRequestArgs {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("id", &self.id)
+        s.serialize_field("id", &self.id)?;
+        Ok(())
     }
 }
 
@@ -2086,7 +2106,8 @@ impl ListFileRequestsArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
     }
 }
 
@@ -2176,7 +2197,8 @@ impl ListFileRequestsContinueArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
     }
 }
 
@@ -2415,7 +2437,8 @@ impl ListFileRequestsResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("file_requests", &self.file_requests)
+        s.serialize_field("file_requests", &self.file_requests)?;
+        Ok(())
     }
 }
 
@@ -2534,7 +2557,8 @@ impl ListFileRequestsV2Result {
         use serde::ser::SerializeStruct;
         s.serialize_field("file_requests", &self.file_requests)?;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)
+        s.serialize_field("has_more", &self.has_more)?;
+        Ok(())
     }
 }
 
@@ -2713,11 +2737,20 @@ impl UpdateFileRequestArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("title", &self.title)?;
-        s.serialize_field("destination", &self.destination)?;
+        if let Some(val) = &self.title {
+            s.serialize_field("title", val)?;
+        }
+        if let Some(val) = &self.destination {
+            s.serialize_field("destination", val)?;
+        }
         s.serialize_field("deadline", &self.deadline)?;
-        s.serialize_field("open", &self.open)?;
-        s.serialize_field("description", &self.description)
+        if let Some(val) = &self.open {
+            s.serialize_field("open", val)?;
+        }
+        if let Some(val) = &self.description {
+            s.serialize_field("description", val)?;
+        }
+        Ok(())
     }
 }
 
