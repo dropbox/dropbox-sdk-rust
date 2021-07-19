@@ -4,8 +4,7 @@
 //! the contents of a folder recursively, and fetching a file given its path.
 
 use dropbox_sdk::{files, UserAuthClient};
-use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
-    Oauth2Type};
+use dropbox_sdk::oauth2::{Authorization, AuthorizeUrlBuilder, Oauth2Type, PkceCode};
 use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
 
 use std::collections::VecDeque;
@@ -43,26 +42,27 @@ fn prompt(msg: &str) -> String {
 fn get_oauth2_token() -> String {
     env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
         let client_id = prompt("Give me a Dropbox API app key");
-        let client_secret = prompt("Give me a Dropbox API app secret");
 
-        let url = Oauth2AuthorizeUrlBuilder::new(&client_id, Oauth2Type::AuthorizationCode).build();
+        let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
+        let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
+            .build();
         eprintln!("Open this URL in your browser:");
         eprintln!("{}", url);
         eprintln!();
         let auth_code = prompt("Then paste the code here");
 
         eprintln!("requesting OAuth2 token");
-        match oauth2_token_from_authorization_code(
-            NoauthDefaultClient::default(), &client_id, &client_secret, auth_code.trim(), None)
-        {
+        let mut auth = Authorization::from_auth_code(
+            client_id,
+            oauth2_flow,
+            auth_code.trim().to_owned(),
+            None,
+        );
+        match auth.obtain_access_token(NoauthDefaultClient::default()) {
             Ok(token) => {
                 eprintln!("got token: {}", token);
-
-                // This is where you'd save the token somewhere so you don't need to do this dance
-                // again.
-
                 token
-            },
+            }
             Err(e) => {
                 eprintln!("Error getting OAuth2 token: {}", e);
                 std::process::exit(1);
