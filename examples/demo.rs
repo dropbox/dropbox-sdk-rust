@@ -5,7 +5,7 @@
 
 use dropbox_sdk::{files, UserAuthClient};
 use dropbox_sdk::oauth2::{Authorization, AuthorizeUrlBuilder, Oauth2Type, PkceCode};
-use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
+use dropbox_sdk::default_client::UserAuthDefaultClient;
 
 use std::collections::VecDeque;
 use std::env;
@@ -39,36 +39,37 @@ fn prompt(msg: &str) -> String {
 }
 
 /// Let the user pass the token in an environment variable, or prompt them if that's not found.
-fn get_oauth2_token() -> String {
-    env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
-        let client_id = prompt("Give me a Dropbox API app key");
+fn get_authorization() -> Authorization {
+    if let Ok(long_lived) = env::var("DBX_OAUTH_TOKEN") {
+        // Used to provide a legacy long-lived token.
+        return Authorization::from_access_token(long_lived);
+    }
 
-        let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
-        let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
-            .build();
-        eprintln!("Open this URL in your browser:");
-        eprintln!("{}", url);
-        eprintln!();
-        let auth_code = prompt("Then paste the code here");
-
-        eprintln!("requesting OAuth2 token");
-        let mut auth = Authorization::from_auth_code(
-            client_id,
-            oauth2_flow,
-            auth_code.trim().to_owned(),
-            None,
-        );
-        match auth.obtain_access_token(NoauthDefaultClient::default()) {
-            Ok(token) => {
-                eprintln!("got token: {}", token);
-                token
-            }
-            Err(e) => {
-                eprintln!("Error getting OAuth2 token: {}", e);
-                std::process::exit(1);
+    if let (Ok(client_id), Ok(saved)) = (env::var("DBX_CLIENT_ID"), env::var("DBX_OAUTH")) {
+        match Authorization::load(client_id, &saved) {
+            Some(auth) => return auth,
+            None => {
+                eprintln!("saved authorization in DBX_CLIENT_ID and DBX_OAUTH are invalid");
             }
         }
-    })
+    }
+
+    let client_id = prompt("Give me a Dropbox API app key");
+
+    let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
+    let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
+        .build();
+    eprintln!("Open this URL in your browser:");
+    eprintln!("{}", url);
+    eprintln!();
+    let auth_code = prompt("Then paste the code here");
+
+    Authorization::from_auth_code(
+        client_id,
+        oauth2_flow,
+        auth_code.trim().to_owned(),
+        None,
+    )
 }
 
 fn main() {
@@ -91,7 +92,7 @@ fn main() {
         Operation::Download { path } => Some(path),
     };
 
-    let client = UserAuthDefaultClient::new(get_oauth2_token());
+    let client = UserAuthDefaultClient::new(get_authorization());
 
     if let Some(path) = download_path {
         eprintln!("downloading file {}", path);
