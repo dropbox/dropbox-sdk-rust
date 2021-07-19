@@ -6,8 +6,7 @@
 
 use dropbox_sdk::files;
 use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
-use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
-    Oauth2Type};
+use dropbox_sdk::oauth2::{Authorization, AuthorizeUrlBuilder, Oauth2Type, PkceCode};
 use std::collections::HashMap;
 use std::fs::File;
 use std::path::{Path, PathBuf};
@@ -110,17 +109,23 @@ fn parse_args() -> Operation {
 fn get_oauth2_token() -> String {
     std::env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
         let client_id = prompt("Give me a Dropbox API app key");
-        let client_secret = prompt("Give me a Dropbox API app secret");
 
-        let url = Oauth2AuthorizeUrlBuilder::new(&client_id, Oauth2Type::AuthorizationCode).build();
+        let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
+        let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
+            .build();
         eprintln!("Open this URL in your browser:");
         eprintln!("{}", url);
         eprintln!();
         let auth_code = prompt("Then paste the code here");
 
         eprintln!("requesting OAuth2 token");
-        match oauth2_token_from_authorization_code(
-            NoauthDefaultClient::default(), &client_id, &client_secret, auth_code.trim(), None)
+        let mut auth = Authorization::from_auth_code(
+            client_id,
+            oauth2_flow,
+            auth_code.trim().to_owned(),
+            None,
+        );
+        match auth.obtain_access_token(NoauthDefaultClient::default())
         {
             Ok(token) => {
                 eprintln!("got token: {}", token);
