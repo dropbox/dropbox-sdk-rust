@@ -265,6 +265,18 @@ impl<'a> AuthorizeUrlBuilder<'a> {
     }
 }
 
+/// [`Authorization`] is a state-machine.
+///
+/// Every flow starts with the `InitialAuth` state, which is just after the user authorizes the app
+/// and gets redirected back. It then proceeds to either the `Refresh` or `AccessToken` state
+/// depending on whether a long-lived token was requested.
+///
+/// `Refresh` contains the authorization code (from initial auth) and the refresh token necessary to
+/// obtain updated short-lived access tokens.
+///
+/// `AccessToken` contains just the access token itself, which is either a long-lived access token
+/// not expected to expire, or a short-lived token which, if it expires, cannot be refreshed except
+/// by starting the authorization flow over again.
 #[derive(Debug, Clone)]
 enum AuthorizationState {
     InitialAuth {
@@ -276,7 +288,7 @@ enum AuthorizationState {
         auth_code: String,
         refresh_token: String,
     },
-    LongLived(String),
+    AccessToken(String),
 }
 
 /// Provides for continuing authorization of the app.
@@ -287,8 +299,8 @@ pub struct Authorization {
 }
 
 impl Authorization {
-    /// Create a new instance using the authorization code provided upon redirect back to your app
-    /// from the authorization process (or via manual user entry if not using a redirect URI).
+    /// Create a new instance using the authorization code provided by the authorization process
+    /// upon redirect back to your app (or via manual user entry if not using a redirect URI).
     ///
     /// Requires the client ID; the type of OAuth2 flow being used (including the client secret or
     /// the PKCE challenge); the authorization code; and the redirect URI used for the original
@@ -305,6 +317,30 @@ impl Authorization {
         }
     }
 
+    /// Recreate the authorization from a saved authorization code and refresh token.
+    pub fn from_refresh_token(
+        client_id: String,
+        auth_code: String,
+        refresh_token: String,
+    ) -> Self {
+        Self {
+            client_id,
+            state: AuthorizationState::Refresh { auth_code, refresh_token },
+        }
+    }
+
+    /// Recreate the authorization from a saved long-lived access token. This token cannot be
+    /// refreshed; any call to obtain_access_token will simply return the given token.
+    pub fn from_access_token(
+        client_id: String,
+        access_token: String,
+    ) -> Self {
+        Self {
+            client_id,
+            state: AuthorizationState::AccessToken(access_token),
+        }
+    }
+
     /// Obtain an access token. Use this to complete the authorization process, or to obtain an
     /// updated token when a short-lived access token has expired.
     pub fn obtain_access_token(&mut self, client: impl NoauthClient) -> crate::Result<String> {
@@ -315,13 +351,13 @@ impl Authorization {
         let mut refresh_token = None;
 
         match self.state.clone() {
-            AuthorizationState::LongLived(token) => {
+            AuthorizationState::AccessToken(token) => {
                 return Ok(token);
             }
             AuthorizationState::InitialAuth { flow_type, auth_code: code, redirect_uri: uri } => {
                 match flow_type {
                     Oauth2Type::ImplicitGrant(_secret) => {
-                        self.state = AuthorizationState::LongLived(code.clone());
+                        self.state = AuthorizationState::AccessToken(code.clone());
                         return Ok(code);
                     }
                     Oauth2Type::AuthorizationCode(secret) => {
@@ -401,7 +437,7 @@ impl Authorization {
                 self.state = AuthorizationState::Refresh { auth_code, refresh_token: refresh };
             }
             None => {
-                self.state = AuthorizationState::LongLived(access_token.clone());
+                self.state = AuthorizationState::AccessToken(access_token.clone());
             }
         }
 
