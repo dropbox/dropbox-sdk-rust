@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2020 Dropbox, Inc.
+// Copyright (c) 2019-2021 Dropbox, Inc.
 
 //! Helpers for requesting OAuth2 tokens.
 //!
@@ -16,6 +16,8 @@ use crate::Error;
 use crate::client_trait::*;
 use ring::rand::{SecureRandom, SystemRandom};
 use std::env;
+use std::io::{self, Write};
+use std::sync::{Arc, RwLock};
 use url::form_urlencoded::Serializer as UrlEncoder;
 use url::Url;
 
@@ -62,8 +64,8 @@ pub enum TokenType {
     /// This is the default type for this SDK.
     ShortLivedAndRefresh,
 
-    /// Return just the short-lived bearer token, without refresh token. The app will have to call
-    /// [authorize] again to obtain a new token.
+    /// Return just the short-lived bearer token, without refresh token. The app will have to start
+    /// the authorization flow again to obtain a new token.
     ShortLived,
 
     /// Return a long-lived bearer token. The app must be allowed to do this in the Dropbox app
@@ -124,7 +126,7 @@ impl PkceCode {
 ///
 /// If you are using the deprecated Implicit Grant flow, the redirect after authentication will
 /// provide you an OAuth2 token. In all other cases, you will have an authorization code, and you
-/// must call [`oauth2_token_from_authorization_code`] to obtain a token.
+/// must call make another call to obtain a token. See [`Authorization`], which is used to do this.
 #[derive(Debug)]
 pub struct AuthorizeUrlBuilder<'a> {
     client_id: &'a str,
@@ -299,8 +301,8 @@ pub struct Authorization {
 }
 
 impl Authorization {
-    /// Create a new instance using the authorization code provided by the authorization process
-    /// upon redirect back to your app (or via manual user entry if not using a redirect URI).
+    /// Create a new instance using the authorization code provided upon redirect back to your app
+    /// (or via manual user entry if not using a redirect URI) after the user logs in.
     ///
     /// Requires the client ID; the type of OAuth2 flow being used (including the client secret or
     /// the PKCE challenge); the authorization code; and the redirect URI used for the original
@@ -331,7 +333,7 @@ impl Authorization {
         }
     }
 
-    /// Reload a saved authorization state produced by [`save()`].
+    /// Reload a saved authorization state produced by [`save`](Authorization::save).
     ///
     /// Returns `None` if the string could not be recognized. In this case, you should start the
     /// authorization procedure from scratch.
@@ -363,7 +365,8 @@ impl Authorization {
     }
 
     /// Recreate the authorization from a long-lived access token. This token cannot be refreshed;
-    /// any call to obtain_access_token will simply return the given token.
+    /// any call to [`obtain_access_token`](Authorization::obtain_access_token) will simply return
+    /// the given token.
     pub fn from_access_token(
         access_token: String,
     ) -> Self {
@@ -384,7 +387,9 @@ impl Authorization {
             AuthorizationState::AccessToken(token) => {
                 return Ok(token);
             }
-            AuthorizationState::InitialAuth { client_id: id, flow_type, auth_code: code, redirect_uri: uri } => {
+            AuthorizationState::InitialAuth {
+                client_id: id, flow_type, auth_code: code, redirect_uri: uri } =>
+            {
                 match flow_type {
                     Oauth2Type::ImplicitGrant(_secret) => {
                         self.state = AuthorizationState::AccessToken(code.clone());
@@ -423,7 +428,9 @@ impl Authorization {
             if let Some(pkce) = pkce_code {
                 params.append_pair("code_verifier", &pkce);
             } else {
-                params.append_pair("client_secret", &client_secret.expect("need either PKCE code or client secret"));
+                params.append_pair(
+                    "client_secret",
+                    &client_secret.expect("need either PKCE code or client secret"));
             }
         }
 
@@ -457,7 +464,9 @@ impl Authorization {
                 }
                 match map.remove("refresh_token") {
                     Some(serde_json::Value::String(refresh)) => refresh_token = Some(refresh),
-                    Some(_) => return Err(Error::UnexpectedResponse("refresh token is not a string!")),
+                    Some(_) => {
+                        return Err(Error::UnexpectedResponse("refresh token is not a string!"));
+                    },
                     None => refresh_token = None,
                 }
             },
@@ -477,15 +486,13 @@ impl Authorization {
     }
 }
 
-use std::sync::{Arc, RwLock};
-
 /// `TokenCache` provides the current OAuth2 token and a means to refresh it in a thread-safe way.
 pub struct TokenCache {
     auth: RwLock<(Authorization, Arc<String>)>,
 }
 
 impl TokenCache {
-    /// Make a new token cache, using the given Authorization as a source of tokens.
+    /// Make a new token cache, using the given [`Authorization`] as a source of tokens.
     pub fn new(auth: Authorization) -> Self {
         Self {
             auth: RwLock::new((auth, Arc::new(String::new()))),
@@ -509,7 +516,9 @@ impl TokenCache {
     /// Forces an update to the token, for when it is detected that the token is expired.
     ///
     /// To avoid double-updating the token in a race, requires the token which is being replaced.
-    pub fn update_token(&self, client: impl NoauthClient, old_token: Arc<String>) -> crate::Result<Arc<String>> {
+    pub fn update_token(&self, client: impl NoauthClient, old_token: Arc<String>)
+        -> crate::Result<Arc<String>>
+    {
         let mut write = self.auth.write().unwrap();
         // Check if the token changed while we were unlocked; only update it if it
         // didn't.
@@ -553,7 +562,6 @@ pub fn get_auth_from_env_or_prompt() -> Authorization {
     }
 
     fn prompt(msg: &str) -> String {
-        use std::io::{self, Write};
         eprint!("{}: ", msg);
         io::stderr().flush().unwrap();
         let mut input = String::new();
