@@ -13,13 +13,13 @@
 
 use crate::Error;
 use crate::client_trait::*;
-use crate::oauth2::Authorization;
-use std::sync::{Arc, RwLock};
+use crate::oauth2::{Authorization, TokenCache};
+use std::sync::Arc;
 
 const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
 
 macro_rules! forward_noauth_request {
-    ($self:ident, $inner:expr, $token:expr, $path_root:expr, $team_select:expr) => {
+    ($self:ident, $inner:expr, $path_root:expr) => {
         fn request(
             &$self,
             endpoint: Endpoint,
@@ -32,13 +32,13 @@ macro_rules! forward_noauth_request {
             range_end: Option<u64>,
         ) -> crate::Result<HttpRequestResultRaw> {
             $inner.request(endpoint, style, function, &params, params_type, body, range_start,
-                range_end, $token, $path_root, $team_select)
+                range_end, None, $path_root, None)
         }
     }
 }
 
-macro_rules! forward_auth_request {
-    ($self:ident, $inner:expr, $path_root:expr, $team_select:expr) => {
+macro_rules! forward_authed_request {
+    ($self:ident, $tokens:expr, $inner:expr, $path_root:expr, $team_select:expr) => {
         fn request(
             &$self,
             endpoint: Endpoint,
@@ -50,8 +50,32 @@ macro_rules! forward_auth_request {
             range_start: Option<u64>,
             range_end: Option<u64>,
         ) -> crate::Result<HttpRequestResultRaw> {
-            $inner.request(endpoint, style, function, &params, params_type, body, range_start,
-                range_end, $path_root, $team_select)
+            let mut token = $tokens.get_token(TokenUpdateClient { inner: &$inner })?;
+
+            let mut retried = false;
+            loop {
+                let result = $inner.request(endpoint, style, function, &params, params_type, body,
+                    range_start, range_end, Some(&token), $path_root, $team_select);
+
+                if retried {
+                    break result;
+                }
+
+                if let Err(crate::Error::InvalidToken(msg)) = &result {
+                    if msg == "expired_access_token" {
+                        info!("refreshing token");
+                        let old_token = token;
+                        token = $tokens.update_token(
+                            TokenUpdateClient { inner: &$inner },
+                            old_token,
+                        )?;
+                        retried = true;
+                        continue;
+                    }
+                }
+
+                break result;
+            }
         }
     }
 }
@@ -76,15 +100,23 @@ macro_rules! impl_set_path_root {
 
 /// Default HTTP client using User authorization.
 pub struct UserAuthDefaultClient {
-    inner: UreqAuthClient,
+    inner: UreqClient,
+    tokens: Arc<TokenCache>,
     path_root: Option<String>, // a serialized PathRoot enum
 }
 
 impl UserAuthDefaultClient {
-    /// Create a new client using the given OAuth2 token.
+    /// Create a new client using the given OAuth2 authorization.
     pub fn new(auth: Authorization) -> Self {
+        Self::from_token_cache(Arc::new(TokenCache::new(auth)))
+    }
+
+    /// Create a new client from a [`TokenCache`], which lets you share the same tokens between
+    /// multiple clients.
+    pub fn from_token_cache(tokens: Arc<TokenCache>) -> Self {
         Self {
-            inner: UreqAuthClient::new(auth),
+            inner: UreqClient::default(),
+            tokens,
             path_root: None,
         }
     }
@@ -93,23 +125,25 @@ impl UserAuthDefaultClient {
 }
 
 impl HttpClient for UserAuthDefaultClient {
-    forward_auth_request! { self, self.inner, self.path_root.as_deref(), None }
+    forward_authed_request! { self, self.tokens, self.inner, self.path_root.as_deref(), None }
 }
 
 impl UserAuthClient for UserAuthDefaultClient {}
 
 /// Default HTTP client using Team authorization.
 pub struct TeamAuthDefaultClient {
-    inner: UreqAuthClient,
+    inner: UreqClient,
+    tokens: Arc<TokenCache>,
     path_root: Option<String>, // a serialized PathRoot enum
     team_select: Option<TeamSelect>,
 }
 
 impl TeamAuthDefaultClient {
     /// Create a new client using the given OAuth2 token, with no user/admin context selected.
-    pub fn new(auth: Authorization) -> Self {
+    pub fn new(tokens: impl Into<Arc<TokenCache>>) -> Self {
         Self {
-            inner: UreqAuthClient::new(auth),
+            inner: UreqClient::default(),
+            tokens: tokens.into(),
             path_root: None,
             team_select: None,
         }
@@ -124,7 +158,7 @@ impl TeamAuthDefaultClient {
 }
 
 impl HttpClient for TeamAuthDefaultClient {
-    forward_auth_request! { self, self.inner, self.path_root.as_deref(), self.team_select.as_ref() }
+    forward_authed_request! { self, self.tokens, self.inner, self.path_root.as_deref(), self.team_select.as_ref() }
 }
 
 impl TeamAuthClient for TeamAuthDefaultClient {}
@@ -141,7 +175,7 @@ impl NoauthDefaultClient {
 }
 
 impl HttpClient for NoauthDefaultClient {
-    forward_noauth_request! { self, self.inner, None, self.path_root.as_deref(), None }
+    forward_noauth_request! { self, self.inner, self.path_root.as_deref() }
 }
 
 impl NoauthClient for NoauthDefaultClient {}
@@ -153,90 +187,10 @@ struct TokenUpdateClient<'a> {
 }
 
 impl<'a> HttpClient for TokenUpdateClient<'a> {
-    forward_noauth_request! { self, self.inner, None, None, None }
+    forward_noauth_request! { self, self.inner, None }
 }
 
 impl<'a> NoauthClient for TokenUpdateClient<'a> {}
-
-struct UreqAuthClient {
-    inner: UreqClient,
-    auth: RwLock<(Authorization, Arc<String>)>,
-}
-
-impl UreqAuthClient {
-    fn new(auth: Authorization) -> Self {
-        Self {
-            inner: UreqClient::default(),
-            auth: RwLock::new((auth, Arc::new(String::new()))), // obtain a token on first request
-        }
-    }
-}
-
-impl UreqAuthClient {
-    #[allow(clippy::too_many_arguments)]
-    fn request(
-        &self,
-        endpoint: Endpoint,
-        style: Style,
-        function: &str,
-        params: &str,
-        params_type: ParamsType,
-        body: Option<&[u8]>,
-        range_start: Option<u64>,
-        range_end: Option<u64>,
-        path_root: Option<&str>,
-        team_select: Option<&TeamSelect>,
-    ) -> crate::Result<HttpRequestResultRaw> {
-        let mut token: Arc<String> = {
-            let read = self.auth.read().unwrap();
-            if read.1.is_empty() {
-                drop(read);
-                let mut write = self.auth.write().unwrap();
-                if write.1.is_empty() {
-                    // Check again; it's possible someone else updated it while
-                    // we were unlocked.
-                    info!("Requesting initial OAuth2 token");
-                    let client = TokenUpdateClient { inner: &self.inner };
-                    write.1 = Arc::new(write.0.obtain_access_token(client)?);
-                }
-                Arc::clone(&write.1)
-            } else {
-                Arc::clone(&read.1)
-            }
-        };
-
-        let mut retried = false;
-        loop {
-            let result = self.inner.request(
-                endpoint, style, function, params, params_type, body, range_start, range_end,
-                Some(&token), path_root, team_select);
-
-            if retried {
-                break result;
-            }
-
-            if let Err(crate::Error::InvalidToken(msg)) = &result {
-                if msg == "expired_access_token" {
-                    let mut write = self.auth.write().unwrap();
-                    // Check if the token changed while we were unlocked; only update it if it
-                    // didn't.
-                    if write.1 == token {
-                        info!("Refreshing OAuth2 token");
-                        let client = TokenUpdateClient { inner: &self.inner };
-                        token = Arc::new(write.0.obtain_access_token(client)?);
-                        write.1 = Arc::clone(&token);
-                    } else {
-                        token = Arc::clone(&write.1);
-                    }
-                    retried = true;
-                    continue;
-                }
-            }
-
-            break result;
-        }
-    }
-}
 
 #[derive(Debug, Default)]
 struct UreqClient {}
