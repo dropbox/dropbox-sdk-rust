@@ -11,6 +11,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [dependencies]
+atty = "0.2.14"
 base64 = "0.13"
 log = "0.4"
 ring = "0.16"

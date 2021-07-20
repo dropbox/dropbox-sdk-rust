@@ -4,12 +4,10 @@
 //! the contents of a folder recursively, and fetching a file given its path.
 
 use dropbox_sdk::{files, UserAuthClient};
-use dropbox_sdk::oauth2::{Authorization, AuthorizeUrlBuilder, Oauth2Type, PkceCode};
 use dropbox_sdk::default_client::UserAuthDefaultClient;
 
 use std::collections::VecDeque;
-use std::env;
-use std::io::{self, Read, Write};
+use std::io::{self, Read};
 
 enum Operation {
     Usage,
@@ -28,48 +26,6 @@ fn parse_args() -> Operation {
             Operation::Usage
         }
     }
-}
-
-fn prompt(msg: &str) -> String {
-    eprint!("{}: ", msg);
-    io::stderr().flush().unwrap();
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
-    input.trim().to_owned()
-}
-
-/// Let the user pass the token in an environment variable, or prompt them if that's not found.
-fn get_authorization() -> Authorization {
-    if let Ok(long_lived) = env::var("DBX_OAUTH_TOKEN") {
-        // Used to provide a legacy long-lived token.
-        return Authorization::from_access_token(long_lived);
-    }
-
-    if let (Ok(client_id), Ok(saved)) = (env::var("DBX_CLIENT_ID"), env::var("DBX_OAUTH")) {
-        match Authorization::load(client_id, &saved) {
-            Some(auth) => return auth,
-            None => {
-                eprintln!("saved authorization in DBX_CLIENT_ID and DBX_OAUTH are invalid");
-            }
-        }
-    }
-
-    let client_id = prompt("Give me a Dropbox API app key");
-
-    let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
-    let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
-        .build();
-    eprintln!("Open this URL in your browser:");
-    eprintln!("{}", url);
-    eprintln!();
-    let auth_code = prompt("Then paste the code here");
-
-    Authorization::from_auth_code(
-        client_id,
-        oauth2_flow,
-        auth_code.trim().to_owned(),
-        None,
-    )
 }
 
 fn main() {
@@ -92,7 +48,8 @@ fn main() {
         Operation::Download { path } => Some(path),
     };
 
-    let client = UserAuthDefaultClient::new(get_authorization());
+    let auth = dropbox_sdk::oauth2::get_auth_from_env_or_prompt();
+    let client = UserAuthDefaultClient::new(auth);
 
     if let Some(path) = download_path {
         eprintln!("downloading file {}", path);
