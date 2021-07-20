@@ -16,17 +16,19 @@ struct TopLevelError<T> {
     pub error: T,
 }
 
+/// This is actually [`auth::RateLimitError`] but re-imported here with less type info because the
+/// auth namespace is not necessarily compiled in, but this must always be available.
 #[derive(Debug, Deserialize)]
 struct RateLimitedError {
-    pub reason: RateLimitedReason,
+    pub reason: OpenUnionTag,
 
     #[serde(default)] // too_many_write_operations errors don't include this field; default to 0.
     pub retry_after: u32,
 }
 
-// Rather than deserializing into an enum, just capture the tag value.
+/// Rather than deserializing into an enum, just capture the tag value.
 #[derive(Debug, Deserialize)]
-struct RateLimitedReason {
+struct OpenUnionTag {
     #[serde(rename = ".tag")]
     tag: String,
 }
@@ -75,8 +77,29 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + StdError, P:
                         Err(Error::BadRequest(response))
                     },
                     401 => {
-                        Err(Error::InvalidToken(response))
+                        match serde_json::from_str::<TopLevelError<OpenUnionTag>>(&response) {
+                            Ok(deserialized) => {
+                                error!("invalid token: {}", deserialized.error.tag);
+                                Err(Error::InvalidToken(deserialized.error.tag))
+                            }
+                            Err(de_error) => {
+                                error!("Failed to deserialize JSON from API error: {}", de_error);
+                                Err(Error::Json(de_error))
+                            }
+                        }
                     },
+                    403 => {
+                        match serde_json::from_str::<TopLevelError<serde_json::Value>>(&response) {
+                            Ok(deserialized) => {
+                                error!("access denied: {:?}", deserialized.error);
+                                Err(Error::AccessDenied(deserialized.error))
+                            }
+                            Err(de_error) => {
+                                error!("Failed to deserialize JSON from API error: {}", de_error);
+                                Err(Error::Json(de_error))
+                            }
+                        }
+                    }
                     409 => {
                         // Response should be JSON-deseraializable into the strongly-typed
                         // error specified by type parameter E.

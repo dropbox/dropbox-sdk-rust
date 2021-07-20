@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2020 Dropbox, Inc.
+// Copyright (c) 2019-2021 Dropbox, Inc.
 
 #![deny(
     missing_docs,
@@ -66,6 +66,12 @@ pub enum Error {
         /// You can retry this request after this many seconds.
         retry_after_seconds: u32,
     },
+
+    /// The user or team account doesn't have access to the endpoint or feature.
+    /// Value is a JSON object which matches the [`auth::AccessError`] type (if that namespace
+    /// feature is enabled).
+    #[error("Dropbox API denied access to the resource: {0}")]
+    AccessDenied(serde_json::Value),
 
     /// The Dropbox API server had an internal error.
     #[error("Dropbox API had an internal server error: {0}")]
