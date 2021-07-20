@@ -5,8 +5,8 @@ use dropbox_sdk::files::{self, ListFolderArg};
 #[test]
 #[ignore] // requires a pre-configured app token; should be run separately
 fn invalid_path_root() {
-    let token = std::env::var("DBX_OAUTH_TOKEN").expect("DBX_OAUTH_TOKEN must be set");
-    let mut client = UserAuthDefaultClient::new(token);
+    let auth = dropbox_sdk::oauth2::get_auth_from_env_or_prompt();
+    let mut client = UserAuthDefaultClient::new(auth);
     client.set_path_root(&PathRoot::NamespaceId("1".to_owned()));
     match files::list_folder(&client, &ListFolderArg::new("/".to_owned())) {
         // If the oauth token is for an app which only has access to its app folder, then the path

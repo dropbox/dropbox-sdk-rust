@@ -5,12 +5,11 @@
 //! interrupted uploads, and uploading blocks in parallel.
 
 use dropbox_sdk::files;
-use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
-use dropbox_sdk::oauth2::{Authorization, AuthorizeUrlBuilder, Oauth2Type, PkceCode};
+use dropbox_sdk::default_client::UserAuthDefaultClient;
 use std::collections::HashMap;
 use std::fs::File;
 use std::path::{Path, PathBuf};
-use std::io::{self, Write, Seek, SeekFrom};
+use std::io::{Seek, SeekFrom};
 use std::process::exit;
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicU64, Ordering::SeqCst};
@@ -104,38 +103,6 @@ fn parse_args() -> Operation {
             Operation::Usage
         }
     }
-}
-
-fn get_oauth2_token() -> String {
-    std::env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
-        let client_id = prompt("Give me a Dropbox API app key");
-
-        let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
-        let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
-            .build();
-        eprintln!("Open this URL in your browser:");
-        eprintln!("{}", url);
-        eprintln!();
-        let auth_code = prompt("Then paste the code here");
-
-        eprintln!("requesting OAuth2 token");
-        let mut auth = Authorization::from_auth_code(
-            client_id,
-            oauth2_flow,
-            auth_code.trim().to_owned(),
-            None,
-        );
-        match auth.obtain_access_token(NoauthDefaultClient::default())
-        {
-            Ok(token) => {
-                eprintln!("got token: {}", token);
-                token
-            }
-            Err(e) => {
-                fatal!("Error getting OAuth2 token: {}", e);
-            }
-        }
-    })
 }
 
 /// Figure out if destination is a folder or not and change the destination path accordingly.
@@ -473,14 +440,6 @@ fn upload_block_with_retry(
     Ok(())
 }
 
-fn prompt(msg: &str) -> String {
-    eprint!("{}: ", msg);
-    io::stderr().flush().unwrap();
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
-    input.trim().to_owned()
-}
-
 fn human_number(n: u64) -> String {
     let mut f = n as f64;
     let prefixes = ['k','M','G','T','E'];
@@ -532,7 +491,8 @@ fn main() {
             fatal!("Source file {:?} not found: {}", args.source_path, e);
         });
 
-    let client = Arc::new(UserAuthDefaultClient::new(get_oauth2_token()));
+    let auth = dropbox_sdk::oauth2::get_auth_from_env_or_prompt();
+    let client = Arc::new(UserAuthDefaultClient::new(auth));
 
     let dest_path = get_destination_path(client.as_ref(), &args.dest_path, &args.source_path)
         .unwrap_or_else(|e| {

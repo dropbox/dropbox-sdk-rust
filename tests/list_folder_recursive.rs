@@ -8,8 +8,8 @@ mod common;
 #[test]
 #[ignore] // very time-consuming to run; should be run separately
 fn list_folder_recursive() {
-    let token = std::env::var("DBX_OAUTH_TOKEN").expect("DBX_OAUTH_TOKEN must be set");
-    let client = Arc::new(UserAuthDefaultClient::new(token));
+    let auth = dropbox_sdk::oauth2::get_auth_from_env_or_prompt();
+    let client = Arc::new(UserAuthDefaultClient::new(auth));
 
     const FOLDER: &str = "/list_folder_recursive";
     const FOLDER_INNER: &str = "/list_folder_recursive/subfolder";

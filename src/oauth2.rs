@@ -15,6 +15,7 @@
 use crate::Error;
 use crate::client_trait::*;
 use ring::rand::{SecureRandom, SystemRandom};
+use std::env;
 use url::form_urlencoded::Serializer as UrlEncoder;
 use url::Url;
 
@@ -474,4 +475,106 @@ impl Authorization {
 
         Ok(access_token)
     }
+}
+
+use std::sync::{Arc, RwLock};
+
+/// `TokenCache` provides the current OAuth2 token and a means to refresh it in a thread-safe way.
+pub struct TokenCache {
+    auth: RwLock<(Authorization, Arc<String>)>,
+}
+
+impl TokenCache {
+    /// Make a new token cache, using the given Authorization as a source of tokens.
+    pub fn new(auth: Authorization) -> Self {
+        Self {
+            auth: RwLock::new((auth, Arc::new(String::new()))),
+        }
+    }
+
+    /// Get the current token, or obtain one if no cached token is set yet.
+    ///
+    /// Unless the token has not been obtained yet, this does not do any HTTP request.
+    pub fn get_token(&self, client: impl NoauthClient) -> crate::Result<Arc<String>> {
+        let read = self.auth.read().unwrap();
+        if read.1.is_empty() {
+            let empty = Arc::clone(&read.1);
+            drop(read);
+            self.update_token(client, empty)
+        } else {
+            Ok(Arc::clone(&read.1))
+        }
+    }
+
+    /// Forces an update to the token, for when it is detected that the token is expired.
+    ///
+    /// To avoid double-updating the token in a race, requires the token which is being replaced.
+    pub fn update_token(&self, client: impl NoauthClient, old_token: Arc<String>) -> crate::Result<Arc<String>> {
+        let mut write = self.auth.write().unwrap();
+        // Check if the token changed while we were unlocked; only update it if it
+        // didn't.
+        if write.1 == old_token {
+            write.1 = Arc::new(write.0.obtain_access_token(client)?);
+        }
+        Ok(Arc::clone(&write.1))
+    }
+}
+
+/// Get an [`Authorization`] instance from environment variables `DBX_CLIENT_ID` and `DBX_OAUTH`
+/// (containing a refresh token) or `DBX_OAUTH_TOKEN` (containing a legacy long-lived token).
+///
+/// If environment variables are not set, and stdin is a terminal, prompt interactively for
+/// authorization.
+///
+/// If environment variables are not set, and stdin is not a terminal, panics.
+///
+/// This is a helper function mainly intended for tests and example code. Use in production code is
+/// discouraged; you should consider writing something more customized to your needs instead.
+pub fn get_auth_from_env_or_prompt() -> Authorization {
+    if let Ok(long_lived) = env::var("DBX_OAUTH_TOKEN") {
+        // Used to provide a legacy long-lived token.
+        return Authorization::from_access_token(long_lived);
+    }
+
+    if let (Ok(client_id), Ok(saved)) =
+    (env::var("DBX_CLIENT_ID"), env::var("DBX_OAUTH"))
+    {
+        match Authorization::load(client_id, &saved) {
+            Some(auth) => return auth,
+            None => {
+                eprintln!("saved authorization in DBX_CLIENT_ID and DBX_OAUTH are invalid");
+                // and fall back to prompting
+            }
+        }
+    }
+
+    if !atty::is(atty::Stream::Stdin) {
+        panic!("DBX_CLIENT_ID and/or DBX_OAUTH not set, and stdin not a TTY; cannot authorize");
+    }
+
+    fn prompt(msg: &str) -> String {
+        use std::io::{self, Write};
+        eprint!("{}: ", msg);
+        io::stderr().flush().unwrap();
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+        input.trim().to_owned()
+    }
+
+    let client_id = prompt("Give me a Dropbox API app key");
+
+    let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
+    let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
+        .build();
+    eprintln!("Open this URL in your browser:");
+    eprintln!("{}", url);
+    eprintln!();
+    let auth_code = prompt("Then paste the code here");
+
+    Authorization::from_auth_code(
+        client_id,
+        oauth2_flow,
+        auth_code.trim().to_owned(),
+        None,
+    )
 }
