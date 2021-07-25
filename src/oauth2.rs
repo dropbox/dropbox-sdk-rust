@@ -537,16 +537,23 @@ impl TokenCache {
 ///
 /// If environment variables are not set, and stdin is not a terminal, panics.
 ///
-/// This is a helper function mainly intended for tests and example code. Use in production code is
-/// discouraged; you should consider writing something more customized to your needs instead.
+/// This is a helper function intended only for tests and example code. Use in production code is
+/// strongly discouraged; you should write something more customized to your needs instead.
+///
+/// In particular, in real production code, you probably don't want to use environment variables.
+/// The client ID should be a hard-coded constant, or specified in configuration somewhere. It is
+/// not something that will change often, or maybe ever.
+/// The refresh token should only be stored somewhere safe like a file or database with restricted
+/// access permissions.
 pub fn get_auth_from_env_or_prompt() -> Authorization {
     if let Ok(long_lived) = env::var("DBX_OAUTH_TOKEN") {
         // Used to provide a legacy long-lived token.
         return Authorization::from_access_token(long_lived);
     }
 
-    if let (Ok(client_id), Ok(saved)) =
-    (env::var("DBX_CLIENT_ID"), env::var("DBX_OAUTH"))
+    if let (Ok(client_id), Ok(saved))
+        = (env::var("DBX_CLIENT_ID"), env::var("DBX_OAUTH"))
+        // important! see the above warning about using environment variables for this
     {
         match Authorization::load(client_id, &saved) {
             Some(auth) => return auth,

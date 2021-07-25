@@ -1,5 +1,15 @@
-# v0.12.1
+# v0.13.0
 xxxx-yy-zz
+* Major update to OAuth2 code
+  * Now supports short-lived tokens with refresh tokens
+  * Now supports PKCE auth flow, for apps that can't have client secrets
+* the `Error` type changed slightly:
+  * `Error::InvalidToken` is now `Error::Authentication`, and uses the `auth::AuthError` type to
+    specify the specific error, instead of a string.
+  * `Error::AccessDenied` has been added which is used when handling HTTP 403 errors.
+  * `Error::RateLimitedError` now uses the `auth::RateLimitReason` type to specify the specific
+    error, instead of a string.
+* the `auth` namespace is now always compiled in. The `dbx_auth` feature is retained, but ignored.
 
 # v0.12.0
 2021-07-10
