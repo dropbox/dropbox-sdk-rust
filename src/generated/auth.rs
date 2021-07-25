@@ -602,6 +602,16 @@ impl ::serde::ser::Serialize for RateLimitReason {
     }
 }
 
+impl ::std::fmt::Display for RateLimitReason {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            RateLimitReason::TooManyRequests => f.write_str("You are making too many requests in the past few minutes."),
+            RateLimitReason::TooManyWriteOperations => f.write_str("There are currently too many write operations happening in the user's Dropbox."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenFromOAuth1Arg {

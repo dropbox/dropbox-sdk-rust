@@ -1,14 +1,15 @@
-// Copyright (c) 2019-2020 Dropbox, Inc.
+// Copyright (c) 2019-2021 Dropbox, Inc.
 
 use std::error::Error as StdError;
 use crate::Error;
+use crate::auth;
 use crate::client_trait::*;
 use serde::{Deserialize};
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 
-// When Dropbox returns an error with HTTP 409 or 429, it uses an implicit JSON object with the
-// following structure, which contains the acutal error as a field.
+/// When Dropbox returns an error with HTTP 409 or 429, it uses an implicit JSON object with the
+/// following structure, which contains the actual error as a field.
 #[derive(Debug, Deserialize)]
 struct TopLevelError<T> {
     pub error_summary: String,
@@ -16,21 +17,15 @@ struct TopLevelError<T> {
     pub error: T,
 }
 
-/// This is actually [`auth::RateLimitError`] but re-imported here with less type info because the
-/// auth namespace is not necessarily compiled in, but this must always be available.
+/// This is mostly [`auth::RateLimitError`] but re-implemented here because it doesn't exactly match
+/// the Stone type: `retry_after` is not actually specified in all responses, though it is marked as
+/// a required field.
 #[derive(Debug, Deserialize)]
 struct RateLimitedError {
-    pub reason: OpenUnionTag,
+    pub reason: auth::RateLimitReason,
 
     #[serde(default)] // too_many_write_operations errors don't include this field; default to 0.
     pub retry_after: u32,
-}
-
-/// Rather than deserializing into an enum, just capture the tag value.
-#[derive(Debug, Deserialize)]
-struct OpenUnionTag {
-    #[serde(rename = ".tag")]
-    tag: String,
 }
 
 /// Does the request and returns a two-level result. The outer result has an error if something
@@ -77,10 +72,10 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + StdError, P:
                         Err(Error::BadRequest(response))
                     },
                     401 => {
-                        match serde_json::from_str::<TopLevelError<OpenUnionTag>>(&response) {
+                        match serde_json::from_str::<TopLevelError<auth::AuthError>>(&response) {
                             Ok(deserialized) => {
-                                error!("invalid token: {}", deserialized.error.tag);
-                                Err(Error::InvalidToken(deserialized.error.tag))
+                                error!("auth error: {}", deserialized.error);
+                                Err(Error::Authentication(deserialized.error))
                             }
                             Err(de_error) => {
                                 error!("Failed to deserialize JSON from API error: {}", de_error);
@@ -89,7 +84,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + StdError, P:
                         }
                     },
                     403 => {
-                        match serde_json::from_str::<TopLevelError<serde_json::Value>>(&response) {
+                        match serde_json::from_str::<TopLevelError<auth::AccessError>>(&response) {
                             Ok(deserialized) => {
                                 error!("access denied: {:?}", deserialized.error);
                                 Err(Error::AccessDenied(deserialized.error))
@@ -118,7 +113,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + StdError, P:
                         match serde_json::from_str::<TopLevelError<RateLimitedError>>(&response) {
                             Ok(deserialized) => {
                                 let e = Error::RateLimited {
-                                    reason: deserialized.error.reason.tag,
+                                    reason: deserialized.error.reason,
                                     retry_after_seconds: deserialized.error.retry_after,
                                 };
                                 error!("{}", e);

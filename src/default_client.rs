@@ -12,6 +12,7 @@
 //! This code (and its dependencies) are only built if you use the `default_client` Cargo feature.
 
 use crate::Error;
+use crate::auth::AuthError;
 use crate::client_trait::*;
 use crate::oauth2::{Authorization, TokenCache};
 use std::sync::Arc;
@@ -61,17 +62,15 @@ macro_rules! forward_authed_request {
                     break result;
                 }
 
-                if let Err(crate::Error::InvalidToken(msg)) = &result {
-                    if msg == "expired_access_token" {
-                        info!("refreshing token");
-                        let old_token = token;
-                        token = $tokens.update_token(
-                            TokenUpdateClient { inner: &$inner },
-                            old_token,
-                        )?;
-                        retried = true;
-                        continue;
-                    }
+                if let Err(crate::Error::Authentication(AuthError::ExpiredAccessToken)) = &result {
+                    info!("refreshing auth token");
+                    let old_token = token;
+                    token = $tokens.update_token(
+                        TokenUpdateClient { inner: &$inner },
+                        old_token,
+                    )?;
+                    retried = true;
+                    continue;
                 }
 
                 break result;
