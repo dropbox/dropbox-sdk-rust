@@ -23,6 +23,13 @@ RUST_GLOBAL_NAMESPACE = [
     "Some", "None", "Result", "Ok", "Err", "SliceConcatExt", "String", "ToString", "Vec",
 ]
 
+# These namespaces contain types used in the core SDK code and must always be compiled in.
+REQUIRED_NAMESPACES = ["auth"]
+
+# Additional types we want to implement Display for. Outside of this list, only error-like types
+# get a Display impl.
+EXTRA_DISPLAY_TYPES = ["auth::RateLimitReason"]
+
 
 class RustHelperBackend(CodeBackend):
     """

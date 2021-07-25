@@ -4,7 +4,7 @@ import re
 import string
 import sys
 
-from rust import RustHelperBackend
+from rust import RustHelperBackend, REQUIRED_NAMESPACES
 from stone import ir
 from stone.backends.python_helpers import fmt_class as fmt_py_class
 
@@ -83,7 +83,8 @@ class TestBackend(RustHelperBackend):
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
             for ns in api.namespaces:
-                self.emit(u'#[cfg(feature = "dbx_{}")]'.format(ns))
+                if ns not in REQUIRED_NAMESPACES:
+                    self.emit(u'#[cfg(feature = "dbx_{}")]'.format(ns))
                 self.emit(u'mod {};'.format(self.namespace_name_raw(ns)))
                 self.emit()
 

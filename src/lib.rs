@@ -52,26 +52,24 @@ pub enum Error {
     #[error("Dropbox API indicated that the request was malformed: {0}")]
     BadRequest(String),
 
-    /// Your access token is invalid.
-    #[error("Dropbox API indicated that the access token is bad: {0}")]
-    InvalidToken(String),
+    /// Errors occurred during authentication.
+    #[error("Dropbox API indicated a problem with authentication: {0}")]
+    Authentication(auth::AuthError),
 
     /// Your request was rejected due to rate-limiting. You can retry it later.
     #[error("Dropbox API declined the request due to rate-limiting ({reason}), \
         retry after {retry_after_seconds}s")]
     RateLimited {
         /// The server-given reason for the rate-limiting.
-        reason: String,
+        reason: auth::RateLimitReason,
 
         /// You can retry this request after this many seconds.
         retry_after_seconds: u32,
     },
 
     /// The user or team account doesn't have access to the endpoint or feature.
-    /// Value is a JSON object which matches the [`auth::AccessError`] type (if that namespace
-    /// feature is enabled).
     #[error("Dropbox API denied access to the resource: {0}")]
-    AccessDenied(serde_json::Value),
+    AccessDenied(auth::AccessError),
 
     /// The Dropbox API server had an internal error.
     #[error("Dropbox API had an internal server error: {0}")]

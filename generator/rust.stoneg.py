@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 
-from rust import RustHelperBackend
+from rust import RustHelperBackend, EXTRA_DISPLAY_TYPES, REQUIRED_NAMESPACES
 from stone import ir
 from stone.backends.helpers import split_words
 
@@ -49,8 +49,11 @@ class RustBackend(RustHelperBackend):
             self.emit(u'#![allow(missing_docs)]')
             self.emit()
             for module in self._modules:
-                self.emit(u'if_feature! {{ "dbx_{}", pub mod {}; }}'.format(
-                    module, self.namespace_name_raw(module)))
+                if module in REQUIRED_NAMESPACES:
+                    self.emit(u'pub mod {};'.format(self.namespace_name_raw(module)))
+                else:
+                    self.emit(u'if_feature! {{ "dbx_{}", pub mod {}; }}'.format(
+                        module, self.namespace_name_raw(module)))
                 self.emit()
             with self.block(u'pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
                             u' -> Result<(), V::Error>'
@@ -131,6 +134,10 @@ class RustBackend(RustHelperBackend):
 
         if self._is_error_type(struct):
             self._impl_error(struct)
+        elif self._rust_type(struct) in EXTRA_DISPLAY_TYPES:
+            self._impl_display(struct)
+        elif struct.name == "RateLimitReason":
+            print(self._rust_type(struct))
 
     def _emit_polymorphic_struct(self, struct):
         enum_name = self.enum_name(struct)
@@ -174,6 +181,10 @@ class RustBackend(RustHelperBackend):
 
         if self._is_error_type(union):
             self._impl_error(union)
+        elif self.namespace_name_raw(self._current_namespace) + "::" + self._rust_type(union) in EXTRA_DISPLAY_TYPES:
+            self._impl_display(union)
+        elif union.name == "RateLimitReason":
+            print(self._rust_type(union))
 
     def _emit_route(self, ns, fn, auth_trait = None):
         route_name = self.route_name(fn)
@@ -951,6 +962,12 @@ class RustBackend(RustHelperBackend):
                             self.emit(u'_ => None,')
 
         self.emit()
+        self._impl_display(typ)
+
+    def _impl_display(self, typ):
+        type_name = self.enum_name(typ)
+        variants = self.get_enum_variants(typ)
+
         with self.block(u'impl ::std::fmt::Display for {}'.format(type_name)):
             with self.emit_rust_function_def(
                     u'fmt',

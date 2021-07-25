@@ -13,7 +13,7 @@ if_feature! { "dbx_account", pub mod account; }
 
 if_feature! { "dbx_async", pub mod dbx_async; }
 
-if_feature! { "dbx_auth", pub mod auth; }
+pub mod auth;
 
 if_feature! { "dbx_check", pub mod check; }
 
