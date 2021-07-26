@@ -5,18 +5,17 @@
     rust_2018_idioms,
 )]
 
-// Enable a nightly-only feature for docs.rs which enables inlining an external file into
-// documentation.
-#![cfg_attr(docsrs, feature(external_doc))]
-
-// Then if that is available, inline the entirety of README.md; otherwise, include a short blurb
-// that simply references it.
-#![cfg_attr(docsrs, doc(include = "../README.md"))]
-#![cfg_attr(not(docsrs), doc = "Dropbox SDK for Rust. See README.md for more details.")]
-
 // Enable a nightly feature for docs.rs which enables decorating feature-gated items.
 // To enable this manually, run e.g. `cargo rustdoc --all-features -- --cfg docsrs`.
 #![cfg_attr(docsrs, feature(doc_cfg))]
+
+// As of Rust 1.56, we can do #![doc = include_str!("../README.md")] to include README.md verbatim.
+// But this is too new of a MSRV, so we're still gating it on the docsrs flag for now. Note the
+// double cfg_attr gate, which is needed because feature(extended_key_value_attributes) makes a
+// change to how this syntax is parsed in older compilers.
+#![cfg_attr(docsrs, feature(extended_key_value_attributes))]
+#![cfg_attr(docsrs, cfg_attr(docsrs, doc = include_str!("../README.md")))]
+#![cfg_attr(not(docsrs), doc = "Dropbox SDK for Rust. See README.md for more details.")]
 
 /// Feature-gate something and also decorate it with the feature name on docs.rs.
 macro_rules! if_feature {

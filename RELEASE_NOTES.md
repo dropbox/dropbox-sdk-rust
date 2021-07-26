@@ -1,5 +1,6 @@
 # v0.13.1
-xxxx-yy-zz
+2021-07-25
+* Fixed doc generation on docs.rs. No code change.
 
 # v0.13.0
 2021-07-25
