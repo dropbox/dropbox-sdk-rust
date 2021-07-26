@@ -1,5 +1,5 @@
 # v0.13.0
-xxxx-yy-zz
+2021-07-25
 * Major update to OAuth2 code
   * Now supports short-lived tokens with refresh tokens
   * Now supports PKCE auth flow, for apps that can't have client secrets
