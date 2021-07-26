@@ -339,8 +339,8 @@ impl Authorization {
     /// authorization procedure from scratch.
     ///
     /// Note that a loaded authorization state is not necessarily still valid and may produce
-    /// [`InvalidToken`](crate::Error::InvalidToken) errors. In such a case you should also start
-    /// the authorization procedure from scratch.
+    /// [`Authentication`](crate::Error::Authentication) errors. In such a case you should also
+    /// start the authorization procedure from scratch.
     pub fn load(client_id: String, saved: &str) -> Option<Self> {
         let state = match saved.get(0..2) {
             Some("1&") => AuthorizationState::AccessToken((&saved[2..]).to_owned()),
