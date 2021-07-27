@@ -1,3 +1,7 @@
+# v0.13.2
+xxxx-yy-zz
+* Fixed a bug with non-ASCII paths using download and upload endpoints (#65)
+
 # v0.13.1
 2021-07-25
 * Fixed doc generation on docs.rs. No code change.
