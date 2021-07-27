@@ -1,5 +1,5 @@
 # v0.13.2
-xxxx-yy-zz
+2021-07-27
 * Fixed a bug with non-ASCII paths using download and upload endpoints (#65)
 
 # v0.13.1
