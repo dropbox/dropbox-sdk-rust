@@ -15,6 +15,7 @@ use crate::Error;
 use crate::auth::AuthError;
 use crate::client_trait::*;
 use crate::oauth2::{Authorization, TokenCache};
+use std::borrow::Cow;
 use std::sync::Arc;
 
 const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
@@ -250,8 +251,11 @@ impl UreqClient {
                     req.send_string(params)
                 }
                 Style::Upload | Style::Download => {
-                    // Send params in a header.
-                    req = req.set("Dropbox-API-Arg", params);
+                    // Send params in a header. Note that non-ASCII and 0x7F in a header need to be
+                    // escaped per the HTTP spec.
+                    req = req.set(
+                        "Dropbox-API-Arg",
+                        json_escape_header(&params).as_ref());
                     if style == Style::Upload {
                         req = req.set("Content-Type", "application/octet-stream");
                         if let Some(body) = body {
@@ -371,5 +375,51 @@ impl std::fmt::Debug for RequestError {
 impl std::error::Error for RequestError {
     fn cause(&self) -> Option<&dyn std::error::Error> {
         Some(&self.inner)
+    }
+}
+
+/// Replaces any non-ASCII characters (and 0x7f) with JSON-style '\uXXXX' sequence. Otherwise,
+/// returns it unmodified without any additional allocation or copying.
+fn json_escape_header(s: &str) -> Cow<'_, str> {
+    // Unfortunately, the HTTP spec requires escaping ASCII DEL (0x7F), so we can't use the quicker
+    // bit pattern check done in str::is_ascii() to skip this for the common case of all ASCII. :(
+
+    let mut out = Cow::Borrowed(s);
+    for (i, c) in s.char_indices() {
+        if !c.is_ascii() || c == '\x7f' {
+            let mstr = match out {
+                Cow::Borrowed(_) => {
+                    // If we're still borrowed, we must have had ascii up until this point.
+                    // Clone the string up until here, and from now on we'll be pushing chars to it.
+                    out = Cow::Owned((&s[0..i]).to_owned());
+                    out.to_mut()
+                }
+                Cow::Owned(ref mut m) => m,
+            };
+            mstr.push_str(&format!("\\u{:04x}", c as u32));
+        } else if let Cow::Owned(ref mut o) = out {
+            o.push(c);
+        }
+    }
+    out
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_json_escape() {
+        assert_eq!(Cow::Borrowed("foobar"), json_escape_header("foobar"));
+        assert_eq!(
+            Cow::<'_, str>::Owned("tro\\u0161kovi".to_owned()),
+            json_escape_header("troškovi"));
+        assert_eq!(
+            Cow::<'_, str>::Owned(
+                r#"{"field": "some_\u00fc\u00f1\u00eec\u00f8d\u00e9_and_\u007f"}"#.to_owned()),
+            json_escape_header("{\"field\": \"some_üñîcødé_and_\x7f\"}"));
+        assert_eq!(
+            Cow::<'_, str>::Owned("almost,\\u007f but not quite".to_owned()),
+            json_escape_header("almost,\x7f but not quite"));
     }
 }
