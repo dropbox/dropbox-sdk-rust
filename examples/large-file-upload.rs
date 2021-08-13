@@ -257,13 +257,8 @@ impl CompletionTracker {
             self.complete_up_to += block_len;
 
             // Also look if we can advance it further still.
-            loop {
-                let key = self.complete_up_to;
-                if let Some(len) = self.uploaded_blocks.remove(&key) {
-                    self.complete_up_to += len;
-                } else {
-                    break;
-                }
+            while let Some(len) = self.uploaded_blocks.remove(&self.complete_up_to) {
+                self.complete_up_to += len;
             }
         } else {
             // This block isn't at the low-water mark; there's a gap behind it. Save it for later.

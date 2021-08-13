@@ -255,7 +255,7 @@ impl UreqClient {
                     // escaped per the HTTP spec.
                     req = req.set(
                         "Dropbox-API-Arg",
-                        json_escape_header(&params).as_ref());
+                        json_escape_header(params).as_ref());
                     if style == Style::Upload {
                         req = req.set("Content-Type", "application/octet-stream");
                         if let Some(body) = body {
