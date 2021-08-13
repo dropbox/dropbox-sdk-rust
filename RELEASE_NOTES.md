@@ -1,5 +1,7 @@
 # v0.13.3
 xxxx-yy-zz
+* API spec update 2021-08-11
+    * documentation, team_log updates
 
 # v0.13.2
 2021-07-27

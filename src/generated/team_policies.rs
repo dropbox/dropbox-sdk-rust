@@ -224,6 +224,71 @@ impl ::serde::ser::Serialize for EmmState {
 
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
+pub enum ExternalDriveBackupPolicyState {
+    /// External Drive Backup feature is disabled.
+    Disabled,
+    /// External Drive Backup feature is enabled.
+    Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExternalDriveBackupPolicyState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ExternalDriveBackupPolicyState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ExternalDriveBackupPolicyState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "disabled" => ExternalDriveBackupPolicyState::Disabled,
+                    "enabled" => ExternalDriveBackupPolicyState::Enabled,
+                    _ => ExternalDriveBackupPolicyState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("ExternalDriveBackupPolicyState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExternalDriveBackupPolicyState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ExternalDriveBackupPolicyState::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ExternalDriveBackupPolicyState", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ExternalDriveBackupPolicyState::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ExternalDriveBackupPolicyState", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ExternalDriveBackupPolicyState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileLockingPolicyState {
     /// File locking feature is disabled.
     Disabled,

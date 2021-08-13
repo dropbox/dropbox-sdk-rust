@@ -1222,8 +1222,9 @@ pub fn team_folder_activate(
         None)
 }
 
-/// Sets an active team folder's status to archived and removes all folder and file members.
-/// Permission : Team member file access.
+/// Sets an active team folder's status to archived and removes all folder and file members. This
+/// endpoint cannot be used for teams that have a shared team space. Permission : Team member file
+/// access.
 pub fn team_folder_archive(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderArchiveArg,
@@ -1252,7 +1253,8 @@ pub fn team_folder_archive_check(
         None)
 }
 
-/// Creates a new, active, team folder with no members. Permission : Team member file access.
+/// Creates a new, active, team folder with no members. This endpoint can only be used for teams
+/// that do not already have a shared team space. Permission : Team member file access.
 pub fn team_folder_create(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderCreateArg,
@@ -1309,7 +1311,8 @@ pub fn team_folder_list_continue(
         None)
 }
 
-/// Permanently deletes an archived team folder. Permission : Team member file access.
+/// Permanently deletes an archived team folder. This endpoint cannot be used for teams that have a
+/// shared team space. Permission : Team member file access.
 pub fn team_folder_permanently_delete(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderIdArg,

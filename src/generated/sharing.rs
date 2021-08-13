@@ -92,12 +92,9 @@ pub fn check_share_job_status(
 }
 
 /// Create a shared link. If a shared link already exists for the given path, that link is returned.
-/// Note that in the returned [`PathLinkMetadata`](PathLinkMetadata), the
-/// [`PathLinkMetadata::url`](PathLinkMetadata) field is the shortened URL if
-/// [`CreateSharedLinkArg::short_url`](CreateSharedLinkArg) argument is set to `true`. Previously,
-/// it was technically possible to break a shared link by moving or renaming the corresponding file
-/// or folder. In the future, this will no longer be the case, so your app shouldn't rely on this
-/// behavior. Instead, if your app needs to revoke a shared link, use
+/// Previously, it was technically possible to break a shared link by moving or renaming the
+/// corresponding file or folder. In the future, this will no longer be the case, so your app
+/// shouldn't rely on this behavior. Instead, if your app needs to revoke a shared link, use
 /// [`revoke_shared_link()`](revoke_shared_link).
 #[deprecated(note = "replaced by create_shared_link_with_settings")]
 pub fn create_shared_link(
@@ -207,7 +204,7 @@ pub fn get_shared_link_metadata(
 /// links. If no path is given, returns a list of all shared links for the current user, including
 /// collection links, up to a maximum of 1000 links. If a non-empty path is given, returns a list of
 /// all shared links that allow access to the given path.  Collection links are never returned in
-/// this case. Note that the url field in the response is never the shortened URL.
+/// this case.
 #[deprecated(note = "replaced by list_shared_links")]
 pub fn get_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
@@ -2404,7 +2401,6 @@ impl ::serde::ser::Serialize for CollectionLinkMetadata {
 pub struct CreateSharedLinkArg {
     /// The path to share.
     pub path: String,
-    /// Whether to return a shortened URL.
     pub short_url: bool,
     /// If it's okay to share a path that does not yet exist, set this to either
     /// [`PendingUploadMode::File`](PendingUploadMode::File) or
@@ -12636,7 +12632,8 @@ impl ::std::fmt::Display for RelinquishFileMembershipError {
 pub struct RelinquishFolderMembershipArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
-    /// Keep a copy of the folder's contents upon relinquishing membership.
+    /// Keep a copy of the folder's contents upon relinquishing membership. This must be set to
+    /// false when the folder is within a team folder or another shared folder.
     pub leave_a_copy: bool,
 }
 
@@ -13115,8 +13112,8 @@ pub struct RemoveFolderMemberArg {
     /// The member to remove from the folder.
     pub member: MemberSelector,
     /// If true, the removed user will keep their copy of the folder after it's unshared, assuming
-    /// it was mounted. Otherwise, it will be removed from their Dropbox. Also, this must be set to
-    /// false when kicking a group.
+    /// it was mounted. Otherwise, it will be removed from their Dropbox. This must be set to false
+    /// when removing a group, or when the folder is within a team folder or another shared folder.
     pub leave_a_copy: bool,
 }
 
@@ -19620,7 +19617,8 @@ pub struct UserFileMembershipInfo {
     pub initials: Option<String>,
     /// True if the member has access from a parent folder.
     pub is_inherited: bool,
-    /// The UTC timestamp of when the user has last seen the content, if they have.
+    /// The UTC timestamp of when the user has last seen the content. Only populated if the user has
+    /// seen the content and the caller has a plan that includes viewer history.
     pub time_last_seen: Option<super::common::DropboxTimestamp>,
     /// The platform on which the user has last seen the content, or unknown.
     pub platform_type: Option<super::seen_state::PlatformType>,
