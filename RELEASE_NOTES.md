@@ -1,6 +1,7 @@
 # v0.13.3
 xxxx-yy-zz
-* API spec update 2021-08-11
+* API spec update 2021-08-11, 2021-08-18, 2021-08-26, 2021-09-08, 2021-09-22, 2021-09-29
+    * added files::upload_session_finish_batch_v2
     * documentation, team_log updates
 
 # v0.13.2

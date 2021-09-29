@@ -1143,6 +1143,34 @@ pub fn upload_session_finish_batch(
         None)
 }
 
+/// This route helps you commit many files at once into a user's Dropbox. Use
+/// [`upload_session_start()`](upload_session_start) and
+/// [`upload_session_append_v2()`](upload_session_append_v2) to upload file contents. We recommend
+/// uploading many files in parallel to increase throughput. Once the file contents have been
+/// uploaded, rather than calling [`upload_session_finish()`](upload_session_finish), use this route
+/// to finish all your upload sessions in a single request.
+/// [`UploadSessionStartArg::close`](UploadSessionStartArg) or
+/// [`UploadSessionAppendArg::close`](UploadSessionAppendArg) needs to be true for the last
+/// [`upload_session_start()`](upload_session_start) or
+/// [`upload_session_append_v2()`](upload_session_append_v2) call of each upload session. The
+/// maximum size of a file one can upload to an upload session is 350 GB. We allow up to 1000
+/// entries in a single request. Calls to this endpoint will count as data transport calls for any
+/// Dropbox Business teams with a limit on the number of data transport calls allowed per month. For
+/// more information, see the [Data transport limit
+/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
+pub fn upload_session_finish_batch_v2(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &UploadSessionFinishBatchArg,
+) -> crate::Result<Result<UploadSessionFinishBatchResult, crate::NoError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/upload_session/finish_batch_v2",
+        arg,
+        None)
+}
+
 /// Returns the status of an asynchronous job for
 /// [`upload_session_finish_batch()`](upload_session_finish_batch). If success, it returns list of
 /// result for each entry.
@@ -21205,9 +21233,13 @@ pub enum WriteMode {
     /// Always overwrite the existing file. The autorename strategy is the same as it is for
     /// [`Add`](WriteMode::Add).
     Overwrite,
-    /// Overwrite if the given "rev" matches the existing file's "rev". The autorename strategy is
-    /// to append the string "conflicted copy" to the file name. For example, "document.txt" might
-    /// become "document (conflicted copy).txt" or "document (Panda's conflicted copy).txt".
+    /// Overwrite if the given "rev" matches the existing file's "rev". The supplied value should be
+    /// the latest known "rev" of the file, for example, from [`FileMetadata`](FileMetadata), from
+    /// when the file was last downloaded by the app. This will cause the file on the Dropbox
+    /// servers to be overwritten if the given "rev" matches the existing file's current "rev" on
+    /// the Dropbox servers. The autorename strategy is to append the string "conflicted copy" to
+    /// the file name. For example, "document.txt" might become "document (conflicted copy).txt" or
+    /// "document (Panda's conflicted copy).txt".
     Update(Rev),
 }
 
