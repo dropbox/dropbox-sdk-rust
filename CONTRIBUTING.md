@@ -12,7 +12,7 @@ You can file a bug report on the [GitHub Issues][issues] page.
 
 ## Submitting Pull Requests
 
-We are more than happy to recieve pull requests helping us improve the state of our SDK. You can open a new pull request on the [GitHub Pull Requests][pr] page.
+We are more than happy to receive pull requests helping us improve the state of our SDK. You can open a new pull request on the [GitHub Pull Requests][pr] page.
 
 1. Please ensure that you have read the [License][license], [Code of Conduct][coc] and have signed the [Contributing License Agreement (CLA)][cla].
 
