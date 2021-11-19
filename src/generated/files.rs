@@ -5330,7 +5330,7 @@ impl ::std::fmt::Display for ExportError {
 }
 
 /// Export information for a file.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExportInfo {
     /// Format to which the file can be exported to.
@@ -5338,15 +5338,6 @@ pub struct ExportInfo {
     /// Additional formats to which the file can be exported. These values can be specified as the
     /// export_format in /files/export.
     pub export_options: Option<Vec<String>>,
-}
-
-impl Default for ExportInfo {
-    fn default() -> Self {
-        ExportInfo {
-            export_as: None,
-            export_options: None,
-        }
-    }
 }
 
 impl ExportInfo {
@@ -5993,7 +5984,7 @@ impl ::serde::ser::Serialize for FileLockContent {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileLockMetadata {
     /// True if caller holds the file lock.
@@ -6004,17 +5995,6 @@ pub struct FileLockMetadata {
     pub lockholder_account_id: Option<super::users_common::AccountId>,
     /// The timestamp of the lock was created.
     pub created: Option<super::common::DropboxTimestamp>,
-}
-
-impl Default for FileLockMetadata {
-    fn default() -> Self {
-        FileLockMetadata {
-            is_lockholder: None,
-            lockholder_name: None,
-            lockholder_account_id: None,
-            created: None,
-        }
-    }
 }
 
 impl FileLockMetadata {
@@ -6568,16 +6548,9 @@ impl ::serde::ser::Serialize for FileMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileOpsResult {
-}
-
-impl Default for FileOpsResult {
-    fn default() -> Self {
-        FileOpsResult {
-        }
-    }
 }
 
 const FILE_OPS_RESULT_FIELDS: &[&str] = &[];
@@ -13197,7 +13170,7 @@ impl ::serde::ser::Serialize for PathToTags {
 }
 
 /// Metadata for a photo.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PhotoMetadata {
     /// Dimension of the photo/video.
@@ -13206,16 +13179,6 @@ pub struct PhotoMetadata {
     pub location: Option<GpsCoordinates>,
     /// The timestamp when the photo/video is taken.
     pub time_taken: Option<super::common::DropboxTimestamp>,
-}
-
-impl Default for PhotoMetadata {
-    fn default() -> Self {
-        PhotoMetadata {
-            dimensions: None,
-            location: None,
-            time_taken: None,
-        }
-    }
 }
 
 impl PhotoMetadata {
@@ -13543,7 +13506,7 @@ impl ::std::fmt::Display for PreviewError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PreviewResult {
     /// Metadata corresponding to the file received as an argument. Will be populated if the
@@ -13552,15 +13515,6 @@ pub struct PreviewResult {
     /// Minimal metadata corresponding to the file received as an argument. Will be populated if the
     /// endpoint is called using a shared link (SharedLinkFileInfo).
     pub link_metadata: Option<MinimalFileLinkMetadata>,
-}
-
-impl Default for PreviewResult {
-    fn default() -> Self {
-        PreviewResult {
-            file_metadata: None,
-            link_metadata: None,
-        }
-    }
 }
 
 impl PreviewResult {
@@ -16937,19 +16891,11 @@ impl ::serde::ser::Serialize for SearchMatch {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchMatchFieldOptions {
     /// Whether to include highlight span from file title.
     pub include_highlights: bool,
-}
-
-impl Default for SearchMatchFieldOptions {
-    fn default() -> Self {
-        SearchMatchFieldOptions {
-            include_highlights: false,
-        }
-    }
 }
 
 impl SearchMatchFieldOptions {
@@ -21261,7 +21207,7 @@ impl ::serde::ser::Serialize for UploadSessionOffsetError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionStartArg {
     /// If true, the current session will be closed, at which point you won't be able to call
@@ -21270,15 +21216,6 @@ pub struct UploadSessionStartArg {
     /// Type of upload session you want to start. If not specified, default is
     /// [`UploadSessionType::Sequential`](UploadSessionType::Sequential).
     pub session_type: Option<UploadSessionType>,
-}
-
-impl Default for UploadSessionStartArg {
-    fn default() -> Self {
-        UploadSessionStartArg {
-            close: false,
-            session_type: None,
-        }
-    }
 }
 
 impl UploadSessionStartArg {
@@ -21803,7 +21740,7 @@ impl ::serde::ser::Serialize for UserGeneratedTag {
 }
 
 /// Metadata for a video.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct VideoMetadata {
     /// Dimension of the photo/video.
@@ -21814,17 +21751,6 @@ pub struct VideoMetadata {
     pub time_taken: Option<super::common::DropboxTimestamp>,
     /// The duration of the video in milliseconds.
     pub duration: Option<u64>,
-}
-
-impl Default for VideoMetadata {
-    fn default() -> Self {
-        VideoMetadata {
-            dimensions: None,
-            location: None,
-            time_taken: None,
-            duration: None,
-        }
-    }
 }
 
 impl VideoMetadata {

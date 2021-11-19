@@ -1452,22 +1452,13 @@ impl ::serde::ser::Serialize for FolderSubscriptionLevel {
 }
 
 /// Metadata about Paper folders containing the specififed Paper doc.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FoldersContainingPaperDoc {
     /// The sharing policy of the folder containing the Paper doc.
     pub folder_sharing_policy_type: Option<FolderSharingPolicyType>,
     /// The folder path. If present the first folder is the root folder.
     pub folders: Option<Vec<Folder>>,
-}
-
-impl Default for FoldersContainingPaperDoc {
-    fn default() -> Self {
-        FoldersContainingPaperDoc {
-            folder_sharing_policy_type: None,
-            folders: None,
-        }
-    }
 }
 
 impl FoldersContainingPaperDoc {
@@ -5022,22 +5013,13 @@ impl ::serde::ser::Serialize for RemovePaperDocUser {
 }
 
 /// Sharing policy of Paper doc.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharingPolicy {
     /// This value applies to the non-team members.
     pub public_sharing_policy: Option<SharingPublicPolicyType>,
     /// This value applies to the team members only. The value is null for all personal accounts.
     pub team_sharing_policy: Option<SharingTeamPolicyType>,
-}
-
-impl Default for SharingPolicy {
-    fn default() -> Self {
-        SharingPolicy {
-            public_sharing_policy: None,
-            team_sharing_policy: None,
-        }
-    }
 }
 
 impl SharingPolicy {

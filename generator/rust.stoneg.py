@@ -5,7 +5,7 @@ from stone import ir
 from stone.backends.helpers import split_words
 
 
-DERIVE_TRAITS = u'Debug, Clone, PartialEq'
+DERIVE_TRAITS = ['Debug', 'Clone', 'PartialEq']
 
 
 def fmt_shouting_snake(name):
@@ -111,7 +111,10 @@ class RustBackend(RustHelperBackend):
     def _emit_struct(self, struct):
         struct_name = self.struct_name(struct)
         self._emit_doc(struct.doc)
-        self.emit(u'#[derive({})]'.format(DERIVE_TRAITS))
+        derive_traits = list(DERIVE_TRAITS)
+        if not any(self._needs_explicit_default(field) for field in struct.all_fields):
+            derive_traits.append('Default')
+        self.emit(u'#[derive({})]'.format(u', '.join(derive_traits)))
         self.emit(u'#[non_exhaustive] // structs may have more fields added in the future.')
         with self.block(u'pub struct {}'.format(struct_name)):
             for field in struct.all_fields:
@@ -121,7 +124,7 @@ class RustBackend(RustHelperBackend):
                     self._rust_type(field.data_type)))
         self.emit()
 
-        if not struct.all_required_fields:
+        if not struct.all_required_fields and 'Default' not in derive_traits:
             self._impl_default_for_struct(struct)
             self.emit()
 
@@ -142,7 +145,7 @@ class RustBackend(RustHelperBackend):
     def _emit_polymorphic_struct(self, struct):
         enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
-        self.emit(u'#[derive({})]'.format(DERIVE_TRAITS))
+        self.emit(u'#[derive({})]'.format(u', '.join(DERIVE_TRAITS)))
         if struct.is_catch_all():
             self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
@@ -159,7 +162,7 @@ class RustBackend(RustHelperBackend):
     def _emit_union(self, union):
         enum_name = self.enum_name(union)
         self._emit_doc(union.doc)
-        self.emit(u'#[derive({})]'.format(DERIVE_TRAITS))
+        self.emit(u'#[derive({})]'.format(u', '.join(DERIVE_TRAITS)))
         if not union.closed:
             self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
@@ -931,9 +934,22 @@ class RustBackend(RustHelperBackend):
             return field.default
 
     def _needs_explicit_default(self, field):
-        return field.has_default \
-                and not (isinstance(field, ir.Nullable)
-                         or (isinstance(field.data_type, ir.Boolean) and not field.default))
+        if isinstance(field.data_type, ir.Nullable):
+            # default is always None
+            return False
+        elif not field.has_default or isinstance(field.default, ir.TagRef):
+            return True
+        elif ir.is_numeric_type(ir.unwrap_aliases(field.data_type)[0]):
+            return field.default != 0
+        elif isinstance(field.data_type, ir.Boolean):
+            return field.default
+        elif isinstance(field.data_type, ir.String):
+            return len(field.default) != 0
+        else:
+            print(u'WARNING: don\'t know if field {} can have derived Default trait'.format(field))
+            print(u'its data type is {}'.format(field.data_type))
+            print(u'its default is {}'.format(field.default))
+            return True
 
     def _is_error_type(self, typ):
         return typ in self._error_types

@@ -5650,19 +5650,11 @@ impl ::serde::ser::Serialize for GetSharedLinkMetadataArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinksArg {
     /// See [`get_shared_links()`](get_shared_links) description.
     pub path: Option<String>,
-}
-
-impl Default for GetSharedLinksArg {
-    fn default() -> Self {
-        GetSharedLinksArg {
-            path: None,
-        }
-    }
 }
 
 impl GetSharedLinksArg {
@@ -8223,7 +8215,7 @@ impl ::serde::ser::Serialize for LinkPermissions {
 }
 
 /// Settings that apply to a link.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkSettings {
     /// The access level on the link for this file. Currently, it only accepts 'viewer' and
@@ -8235,17 +8227,6 @@ pub struct LinkSettings {
     pub expiry: Option<LinkExpiry>,
     /// The password for the link.
     pub password: Option<LinkPassword>,
-}
-
-impl Default for LinkSettings {
-    fn default() -> Self {
-        LinkSettings {
-            access_level: None,
-            audience: None,
-            expiry: None,
-            password: None,
-        }
-    }
 }
 
 impl LinkSettings {
@@ -10424,7 +10405,7 @@ impl ::serde::ser::Serialize for ListFoldersResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListSharedLinksArg {
     /// See [`list_shared_links()`](list_shared_links) description.
@@ -10433,16 +10414,6 @@ pub struct ListSharedLinksArg {
     pub cursor: Option<String>,
     /// See [`list_shared_links()`](list_shared_links) description.
     pub direct_only: Option<bool>,
-}
-
-impl Default for ListSharedLinksArg {
-    fn default() -> Self {
-        ListSharedLinksArg {
-            path: None,
-            cursor: None,
-            direct_only: None,
-        }
-    }
 }
 
 impl ListSharedLinksArg {
@@ -10770,7 +10741,7 @@ impl ::serde::ser::Serialize for ListSharedLinksResult {
 }
 
 /// Contains information about a member's access level to content after an operation.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAccessLevelResult {
     /// The member still has this level of access to the content through a parent folder.
@@ -10781,16 +10752,6 @@ pub struct MemberAccessLevelResult {
     /// The parent folders that a member has access to. The field is present if the user has access
     /// to the first parent folder where the member gains access.
     pub access_details: Option<Vec<ParentFolderAccessInfo>>,
-}
-
-impl Default for MemberAccessLevelResult {
-    fn default() -> Self {
-        MemberAccessLevelResult {
-            access_level: None,
-            warning: None,
-            access_details: None,
-        }
-    }
 }
 
 impl MemberAccessLevelResult {
@@ -17423,7 +17384,7 @@ impl ::serde::ser::Serialize for SharedLinkPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedLinkSettings {
     /// Boolean flag to enable or disable password protection.
@@ -17444,20 +17405,6 @@ pub struct SharedLinkSettings {
     pub requested_visibility: Option<RequestedVisibility>,
     /// Boolean flag to allow or not download capabilities for shared links.
     pub allow_download: Option<bool>,
-}
-
-impl Default for SharedLinkSettings {
-    fn default() -> Self {
-        SharedLinkSettings {
-            require_password: None,
-            link_password: None,
-            expires: None,
-            audience: None,
-            access: None,
-            requested_visibility: None,
-            allow_download: None,
-        }
-    }
 }
 
 impl SharedLinkSettings {

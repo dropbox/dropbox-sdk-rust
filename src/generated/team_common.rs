@@ -396,22 +396,13 @@ impl ::serde::ser::Serialize for MemberSpaceLimitType {
 }
 
 /// Time range.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TimeRange {
     /// Optional starting time (inclusive).
     pub start_time: Option<super::common::DropboxTimestamp>,
     /// Optional ending time (exclusive).
     pub end_time: Option<super::common::DropboxTimestamp>,
-}
-
-impl Default for TimeRange {
-    fn default() -> Self {
-        TimeRange {
-            start_time: None,
-            end_time: None,
-        }
-    }
 }
 
 impl TimeRange {
