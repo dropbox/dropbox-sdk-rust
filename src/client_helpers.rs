@@ -12,9 +12,11 @@ use serde::ser::Serialize;
 /// following structure, which contains the actual error as a field.
 #[derive(Debug, Deserialize)]
 struct TopLevelError<T> {
-    pub error_summary: String,
-    pub user_message: Option<String>,
     pub error: T,
+
+    // It also has these fields, which we don't expose anywhere:
+    //pub error_summary: String,
+    //pub user_message: Option<String>,
 }
 
 /// This is mostly [`auth::RateLimitError`] but re-implemented here because it doesn't exactly match
