@@ -12,6 +12,11 @@
 /// It has no other effect. If you receive an HTTP 200 response with the supplied query, it
 /// indicates at least part of the Dropbox API infrastructure is working and that the app key and
 /// secret valid.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn app(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &EchoArg,
@@ -29,6 +34,11 @@ pub fn app(
 /// the supplied string, to allow you to test your code and connection to the Dropbox API. It has no
 /// other effect. If you receive an HTTP 200 response with the supplied query, it indicates at least
 /// part of the Dropbox API infrastructure is working and that the access token is valid.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &EchoArg,

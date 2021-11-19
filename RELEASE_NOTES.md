@@ -1,8 +1,9 @@
-# v0.13.4
+# v0.14.0
 xxxx-yy-zz
+* Unstable "Preview" functionality now gated behind an `unstable` feature flag.
 * Codegen change to let rustc derive `Default` in most cases
 * API spec update 2021-10-06, 2021-10-21, 2021-11-03, 2021-11-17
-    * files::upload_session_finish_batch is deprecated by a _v2 version.
+    * files::upload_session_finish_batch is deprecated by a "v2" version.
     * app auth added for files::list_folder and files::list_folder_continue
     * added preview file tagging functions
     * documentation, team_log_updates

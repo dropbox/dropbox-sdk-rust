@@ -29,6 +29,11 @@ pub type WritePathOrId = String;
 
 /// Returns the metadata for a file or folder. This is an alpha endpoint compatible with the
 /// properties API. Note: Metadata for the root folder is unsupported.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 #[deprecated(note = "replaced by get_metadata")]
 pub fn alpha_get_metadata(
     client: &impl crate::client_trait::UserAuthClient,
@@ -47,6 +52,11 @@ pub fn alpha_get_metadata(
 /// the properties API alpha and is slightly different from [`upload()`](upload). Do not use this to
 /// upload a file larger than 150 MB. Instead, create an upload session with
 /// [`upload_session_start()`](upload_session_start).
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 #[deprecated(note = "replaced by alpha_upload")]
 pub fn alpha_upload(
     client: &impl crate::client_trait::UserAuthClient,
@@ -362,6 +372,11 @@ pub fn download_zip(
 /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be
 /// downloaded directly  and whose [`ExportResult::file_metadata`](ExportResult) has
 /// [`ExportInfo::export_as`](ExportInfo) populated.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn export(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ExportArg,
@@ -840,6 +855,11 @@ pub fn move_batch_check(
 }
 
 /// Creates a new Paper doc with the provided content.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn paper_create(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperCreateArg,
@@ -855,6 +875,11 @@ pub fn paper_create(
 }
 
 /// Updates an existing Paper doc with the provided content.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn paper_update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperUpdateArg,
@@ -1067,6 +1092,11 @@ pub fn search_continue_v2(
 }
 
 /// Add a tag to an item. A tag is a string. No more than 20 tags can be added to a given item.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn tags_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddTagArg,
@@ -1081,6 +1111,11 @@ pub fn tags_add(
 }
 
 /// Get list of tags assigned to items.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn tags_get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetTagsArg,
@@ -1095,6 +1130,11 @@ pub fn tags_get(
 }
 
 /// Remove a tag from an item.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn tags_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveTagArg,
