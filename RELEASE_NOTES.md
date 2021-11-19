@@ -1,5 +1,10 @@
 # v0.13.4
 xxxx-yy-zz
+* API spec update 2021-10-06, 2021-10-21, 2021-11-03, 2021-11-17
+    * files::upload_session_finish_batch is deprecated by a _v2 version.
+    * app auth added for files::list_folder and files::list_folder_continue
+    * added preview file tagging functions
+    * documentation, team_log_updates
 
 # v0.13.3
 2021-09-29
