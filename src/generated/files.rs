@@ -23,6 +23,7 @@ pub type Rev = String;
 pub type SearchV2Cursor = String;
 pub type Sha256HexHash = String;
 pub type SharedLinkUrl = String;
+pub type TagText = String;
 pub type WritePath = String;
 pub type WritePathOrId = String;
 
@@ -602,11 +603,60 @@ pub fn list_folder(
         None)
 }
 
+/// Starts returning the contents of a folder. If the result's
+/// [`ListFolderResult::has_more`](ListFolderResult) field is `true`, call
+/// [`list_folder_continue()`](list_folder_continue) with the returned
+/// [`ListFolderResult::cursor`](ListFolderResult) to retrieve more entries. If you're using
+/// [`ListFolderArg::recursive`](ListFolderArg) set to `true` to keep a local cache of the contents
+/// of a Dropbox account, iterate through each entry in order and process them as follows to keep
+/// your local state in sync: For each [`FileMetadata`](FileMetadata), store the new entry at the
+/// given path in your local state. If the required parent folders don't exist yet, create them. If
+/// there's already something else at the given path, replace it and remove all its children. For
+/// each [`FolderMetadata`](FolderMetadata), store the new entry at the given path in your local
+/// state. If the required parent folders don't exist yet, create them. If there's already something
+/// else at the given path, replace it but leave the children as they are. Check the new entry's
+/// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
+/// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
+/// something at the given path, remove it and all its children. If there's nothing at the given
+/// path, ignore this entry. Note: [`auth::RateLimitError`](super::auth::RateLimitError) may be
+/// returned if multiple [`list_folder()`](list_folder) or
+/// [`list_folder_continue()`](list_folder_continue) calls with same parameters are made
+/// simultaneously by same API app for same user. If your app implements retry logic, please hold
+/// off the retry until the previous request finishes.
+pub fn list_folder_app_auth(
+    client: &impl crate::client_trait::AppAuthClient,
+    arg: &ListFolderArg,
+) -> crate::Result<Result<ListFolderResult, ListFolderError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/list_folder",
+        arg,
+        None)
+}
+
 /// Once a cursor has been retrieved from [`list_folder()`](list_folder), use this to paginate
 /// through all files and retrieve updates to the folder, following the same rules as documented for
 /// [`list_folder()`](list_folder).
 pub fn list_folder_continue(
     client: &impl crate::client_trait::UserAuthClient,
+    arg: &ListFolderContinueArg,
+) -> crate::Result<Result<ListFolderResult, ListFolderContinueError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/list_folder/continue",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`list_folder()`](list_folder), use this to paginate
+/// through all files and retrieve updates to the folder, following the same rules as documented for
+/// [`list_folder()`](list_folder).
+pub fn list_folder_continue_app_auth(
+    client: &impl crate::client_trait::AppAuthClient,
     arg: &ListFolderContinueArg,
 ) -> crate::Result<Result<ListFolderResult, ListFolderContinueError>> {
     crate::client_helpers::request(
@@ -1016,6 +1066,48 @@ pub fn search_continue_v2(
         None)
 }
 
+/// Add a tag to an item. A tag is a string. No more than 20 tags can be added to a given item.
+pub fn tags_add(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &AddTagArg,
+) -> crate::Result<Result<(), AddTagError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/tags/add",
+        arg,
+        None)
+}
+
+/// Get list of tags assigned to items.
+pub fn tags_get(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &GetTagsArg,
+) -> crate::Result<Result<GetTagsResult, BaseTagError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/tags/get",
+        arg,
+        None)
+}
+
+/// Remove a tag from an item.
+pub fn tags_remove(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &RemoveTagArg,
+) -> crate::Result<Result<(), RemoveTagError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/tags/remove",
+        arg,
+        None)
+}
+
 /// Unlock the files at the given paths. A locked file can only be unlocked by the lock holder or,
 /// if a business account, a team admin. A successful response indicates that the file has been
 /// unlocked. Returns a list of the unlocked file paths and their metadata after this operation.
@@ -1130,6 +1222,7 @@ pub fn upload_session_finish(
 /// Calls to this endpoint will count as data transport calls for any Dropbox Business teams with a
 /// limit on the number of data transport calls allowed per month. For more information, see the
 /// [Data transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit).
+#[deprecated(note = "replaced by upload_session_finish_batch_v2")]
 pub fn upload_session_finish_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionFinishBatchArg,
@@ -1230,6 +1323,200 @@ pub fn upload_session_start(
         "files/upload_session/start",
         arg,
         Some(body))
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct AddTagArg {
+    /// Path to the item to be tagged.
+    pub path: Path,
+    /// The value of the tag to add.
+    pub tag_text: TagText,
+}
+
+impl AddTagArg {
+    pub fn new(path: Path, tag_text: TagText) -> Self {
+        AddTagArg {
+            path,
+            tag_text,
+        }
+    }
+}
+
+const ADD_TAG_ARG_FIELDS: &[&str] = &["path",
+                                      "tag_text"];
+impl AddTagArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<AddTagArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AddTagArg>, V::Error> {
+        let mut field_path = None;
+        let mut field_tag_text = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "tag_text" => {
+                    if field_tag_text.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("tag_text"));
+                    }
+                    field_tag_text = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AddTagArg {
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            tag_text: field_tag_text.ok_or_else(|| ::serde::de::Error::missing_field("tag_text"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("tag_text", &self.tag_text)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AddTagArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AddTagArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AddTagArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AddTagArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AddTagArg", ADD_TAG_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AddTagArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AddTagArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum AddTagError {
+    Path(LookupError),
+    /// The item already has the maximum supported number of tags.
+    TooManyTags,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AddTagError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = AddTagError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AddTagError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => AddTagError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "too_many_tags" => AddTagError::TooManyTags,
+                    _ => AddTagError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["path",
+                                    "other",
+                                    "too_many_tags"];
+        deserializer.deserialize_struct("AddTagError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AddTagError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            AddTagError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("AddTagError", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            AddTagError::TooManyTags => {
+                // unit
+                let mut s = serializer.serialize_struct("AddTagError", 1)?;
+                s.serialize_field(".tag", "too_many_tags")?;
+                s.end()
+            }
+            AddTagError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for AddTagError {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AddTagError::Path(inner) => Some(inner),
+            _ => None,
+        }
+    }
+}
+
+impl ::std::fmt::Display for AddTagError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            AddTagError::Path(inner) => write!(f, "{}", inner),
+            AddTagError::TooManyTags => f.write_str("The item already has the maximum supported number of tags."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1512,6 +1799,85 @@ impl ::std::fmt::Display for AlphaGetMetadataError {
         match self {
             AlphaGetMetadataError::Path(inner) => write!(f, "{}", inner),
             AlphaGetMetadataError::PropertiesError(inner) => write!(f, "{}", inner),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum BaseTagError {
+    Path(LookupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BaseTagError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = BaseTagError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BaseTagError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => BaseTagError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => BaseTagError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
+        deserializer.deserialize_struct("BaseTagError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BaseTagError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            BaseTagError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("BaseTagError", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            BaseTagError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for BaseTagError {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            BaseTagError::Path(inner) => Some(inner),
+            _ => None,
+        }
+    }
+}
+
+impl ::std::fmt::Display for BaseTagError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            BaseTagError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
         }
     }
 }
@@ -7385,6 +7751,188 @@ impl ::std::fmt::Display for GetMetadataError {
 
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetTagsArg {
+    /// Path to the items.
+    pub paths: Vec<Path>,
+}
+
+impl GetTagsArg {
+    pub fn new(paths: Vec<Path>) -> Self {
+        GetTagsArg {
+            paths,
+        }
+    }
+}
+
+const GET_TAGS_ARG_FIELDS: &[&str] = &["paths"];
+impl GetTagsArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<GetTagsArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetTagsArg>, V::Error> {
+        let mut field_paths = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "paths" => {
+                    if field_paths.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("paths"));
+                    }
+                    field_paths = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetTagsArg {
+            paths: field_paths.ok_or_else(|| ::serde::de::Error::missing_field("paths"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("paths", &self.paths)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTagsArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetTagsArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetTagsArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetTagsArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetTagsArg", GET_TAGS_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTagsArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetTagsArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetTagsResult {
+    /// List of paths and their corresponding tags.
+    pub paths_to_tags: Vec<PathToTags>,
+}
+
+impl GetTagsResult {
+    pub fn new(paths_to_tags: Vec<PathToTags>) -> Self {
+        GetTagsResult {
+            paths_to_tags,
+        }
+    }
+}
+
+const GET_TAGS_RESULT_FIELDS: &[&str] = &["paths_to_tags"];
+impl GetTagsResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<GetTagsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetTagsResult>, V::Error> {
+        let mut field_paths_to_tags = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "paths_to_tags" => {
+                    if field_paths_to_tags.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("paths_to_tags"));
+                    }
+                    field_paths_to_tags = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetTagsResult {
+            paths_to_tags: field_paths_to_tags.ok_or_else(|| ::serde::de::Error::missing_field("paths_to_tags"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("paths_to_tags", &self.paths_to_tags)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTagsResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetTagsResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetTagsResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetTagsResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetTagsResult", GET_TAGS_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTagsResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetTagsResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemporaryLinkArg {
     /// The path to the file you want a temporary link to.
     pub path: ReadPath,
@@ -12544,6 +13092,110 @@ impl ::serde::ser::Serialize for PathOrLink {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct PathToTags {
+    /// Path of the item.
+    pub path: Path,
+    /// Tags assigned to this item.
+    pub tags: Vec<Tag>,
+}
+
+impl PathToTags {
+    pub fn new(path: Path, tags: Vec<Tag>) -> Self {
+        PathToTags {
+            path,
+            tags,
+        }
+    }
+}
+
+const PATH_TO_TAGS_FIELDS: &[&str] = &["path",
+                                       "tags"];
+impl PathToTags {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<PathToTags, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PathToTags>, V::Error> {
+        let mut field_path = None;
+        let mut field_tags = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "tags" => {
+                    if field_tags.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("tags"));
+                    }
+                    field_tags = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PathToTags {
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            tags: field_tags.ok_or_else(|| ::serde::de::Error::missing_field("tags"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("tags", &self.tags)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PathToTags {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PathToTags;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PathToTags struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PathToTags::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PathToTags", PATH_TO_TAGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PathToTags {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PathToTags", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Metadata for a photo.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -14807,6 +15459,200 @@ impl ::serde::ser::Serialize for RelocationResult {
         let mut s = serializer.serialize_struct("RelocationResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct RemoveTagArg {
+    /// Path to the item to tag.
+    pub path: Path,
+    /// The tag to remove.
+    pub tag_text: TagText,
+}
+
+impl RemoveTagArg {
+    pub fn new(path: Path, tag_text: TagText) -> Self {
+        RemoveTagArg {
+            path,
+            tag_text,
+        }
+    }
+}
+
+const REMOVE_TAG_ARG_FIELDS: &[&str] = &["path",
+                                         "tag_text"];
+impl RemoveTagArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<RemoveTagArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RemoveTagArg>, V::Error> {
+        let mut field_path = None;
+        let mut field_tag_text = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "tag_text" => {
+                    if field_tag_text.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("tag_text"));
+                    }
+                    field_tag_text = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RemoveTagArg {
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            tag_text: field_tag_text.ok_or_else(|| ::serde::de::Error::missing_field("tag_text"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("tag_text", &self.tag_text)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RemoveTagArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RemoveTagArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RemoveTagArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RemoveTagArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RemoveTagArg", REMOVE_TAG_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RemoveTagArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RemoveTagArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum RemoveTagError {
+    Path(LookupError),
+    /// That tag doesn't exist at this path.
+    TagNotPresent,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RemoveTagError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RemoveTagError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RemoveTagError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => RemoveTagError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "tag_not_present" => RemoveTagError::TagNotPresent,
+                    _ => RemoveTagError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["path",
+                                    "other",
+                                    "tag_not_present"];
+        deserializer.deserialize_struct("RemoveTagError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RemoveTagError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RemoveTagError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("RemoveTagError", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            RemoveTagError::TagNotPresent => {
+                // unit
+                let mut s = serializer.serialize_struct("RemoveTagError", 1)?;
+                s.serialize_field(".tag", "tag_not_present")?;
+                s.end()
+            }
+            RemoveTagError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for RemoveTagError {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RemoveTagError::Path(inner) => Some(inner),
+            _ => None,
+        }
+    }
+}
+
+impl ::std::fmt::Display for RemoveTagError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            RemoveTagError::Path(inner) => write!(f, "{}", inner),
+            RemoveTagError::TagNotPresent => f.write_str("That tag doesn't exist at this path."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18093,6 +18939,63 @@ impl ::std::fmt::Display for SyncSettingsError {
     }
 }
 
+/// Tag that can be added in multiple ways.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum Tag {
+    /// Tag generated by the user.
+    UserGeneratedTag(UserGeneratedTag),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for Tag {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = Tag;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a Tag structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "user_generated_tag" => Tag::UserGeneratedTag(UserGeneratedTag::internal_deserialize(&mut map)?),
+                    _ => Tag::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["user_generated_tag",
+                                    "other"];
+        deserializer.deserialize_struct("Tag", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for Tag {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            Tag::UserGeneratedTag(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("Tag", 2)?;
+                s.serialize_field(".tag", "user_generated_tag")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            Tag::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ThumbnailArg {
@@ -20804,6 +21707,96 @@ impl ::serde::ser::Serialize for UploadWriteFailed {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("UploadWriteFailed", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UserGeneratedTag {
+    pub tag_text: TagText,
+}
+
+impl UserGeneratedTag {
+    pub fn new(tag_text: TagText) -> Self {
+        UserGeneratedTag {
+            tag_text,
+        }
+    }
+}
+
+const USER_GENERATED_TAG_FIELDS: &[&str] = &["tag_text"];
+impl UserGeneratedTag {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UserGeneratedTag, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UserGeneratedTag>, V::Error> {
+        let mut field_tag_text = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "tag_text" => {
+                    if field_tag_text.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("tag_text"));
+                    }
+                    field_tag_text = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UserGeneratedTag {
+            tag_text: field_tag_text.ok_or_else(|| ::serde::de::Error::missing_field("tag_text"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("tag_text", &self.tag_text)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserGeneratedTag {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UserGeneratedTag;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UserGeneratedTag struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UserGeneratedTag::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UserGeneratedTag", USER_GENERATED_TAG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserGeneratedTag {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UserGeneratedTag", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

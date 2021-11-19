@@ -1102,6 +1102,9 @@ pub enum SharedLinkCreatePolicy {
     /// Only members of the same team can access all shared links. Login will be required to access
     /// all shared links.
     TeamOnly,
+    /// Only people invited can access newly created links. Login will be required to access the
+    /// shared links unless overridden.
+    DefaultNoOne,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1126,6 +1129,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
                     "default_public" => SharedLinkCreatePolicy::DefaultPublic,
                     "default_team_only" => SharedLinkCreatePolicy::DefaultTeamOnly,
                     "team_only" => SharedLinkCreatePolicy::TeamOnly,
+                    "default_no_one" => SharedLinkCreatePolicy::DefaultNoOne,
                     _ => SharedLinkCreatePolicy::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -1135,6 +1139,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
         const VARIANTS: &[&str] = &["default_public",
                                     "default_team_only",
                                     "team_only",
+                                    "default_no_one",
                                     "other"];
         deserializer.deserialize_struct("SharedLinkCreatePolicy", VARIANTS, EnumVisitor)
     }
@@ -1161,6 +1166,12 @@ impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
                 // unit
                 let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
                 s.serialize_field(".tag", "team_only")?;
+                s.end()
+            }
+            SharedLinkCreatePolicy::DefaultNoOne => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
+                s.serialize_field(".tag", "default_no_one")?;
                 s.end()
             }
             SharedLinkCreatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
