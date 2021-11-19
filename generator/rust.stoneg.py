@@ -236,6 +236,14 @@ class RustBackend(RustHelperBackend):
 
         self._emit_doc(fn.doc)
 
+        if fn.attrs.get("is_preview"):
+            if fn.doc:
+                self.emit(u'///')
+            self.emit(u'/// # Stability')
+            self.emit(u'/// *PREVIEW*: This function may change or disappear without notice.')
+            self.emit(u'#[cfg(feature = "unstable")]')
+            self.emit(u'#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]')
+
         if fn.deprecated:
             if fn.deprecated.by:
                 self.emit(u'#[deprecated(note = "replaced by {}")]'.format(
