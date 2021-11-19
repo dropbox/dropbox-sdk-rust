@@ -2757,7 +2757,7 @@ impl ::serde::ser::Serialize for CustomQuotaUsersArg {
 }
 
 /// Input arguments that can be provided for most reports.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DateRange {
     /// Optional starting date (inclusive). If start_date is None or too long ago, this field will
@@ -2765,15 +2765,6 @@ pub struct DateRange {
     pub start_date: Option<super::common::Date>,
     /// Optional ending date (exclusive).
     pub end_date: Option<super::common::Date>,
-}
-
-impl Default for DateRange {
-    fn default() -> Self {
-        DateRange {
-            start_date: None,
-            end_date: None,
-        }
-    }
 }
 
 impl DateRange {
@@ -4420,19 +4411,11 @@ impl ::serde::ser::Serialize for ExcludedUsersListResult {
 
 /// Argument of excluded users update operation. Should include a list of users to add/remove
 /// (according to endpoint), Maximum size of the list is 1000 users.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExcludedUsersUpdateArg {
     /// List of users to be added/removed.
     pub users: Option<Vec<UserSelectorArg>>,
-}
-
-impl Default for ExcludedUsersUpdateArg {
-    fn default() -> Self {
-        ExcludedUsersUpdateArg {
-            users: None,
-        }
-    }
 }
 
 impl ExcludedUsersUpdateArg {
@@ -11098,19 +11081,11 @@ impl ::std::fmt::Display for LegalHoldsListHeldRevisionsError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListPoliciesArg {
     /// Whether to return holds that were released.
     pub include_released: bool,
-}
-
-impl Default for LegalHoldsListPoliciesArg {
-    fn default() -> Self {
-        LegalHoldsListPoliciesArg {
-            include_released: false,
-        }
-    }
 }
 
 impl LegalHoldsListPoliciesArg {
@@ -12676,7 +12651,7 @@ impl ::std::fmt::Display for ListMemberDevicesError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMemberDevicesResult {
     /// List of web sessions made by this team member.
@@ -12685,16 +12660,6 @@ pub struct ListMemberDevicesResult {
     pub desktop_client_sessions: Option<Vec<DesktopClientSession>>,
     /// List of mobile client used by this team member.
     pub mobile_client_sessions: Option<Vec<MobileClientSession>>,
-}
-
-impl Default for ListMemberDevicesResult {
-    fn default() -> Self {
-        ListMemberDevicesResult {
-            active_web_sessions: None,
-            desktop_client_sessions: None,
-            mobile_client_sessions: None,
-        }
-    }
 }
 
 impl ListMemberDevicesResult {
@@ -12806,7 +12771,7 @@ impl ::serde::ser::Serialize for ListMemberDevicesResult {
 }
 
 /// Arguments for [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMembersAppsArg {
     /// At the first call to the
@@ -12815,14 +12780,6 @@ pub struct ListMembersAppsArg {
     /// requests should include the received cursors in order to receive the next sub list of the
     /// team applications.
     pub cursor: Option<String>,
-}
-
-impl Default for ListMembersAppsArg {
-    fn default() -> Self {
-        ListMembersAppsArg {
-            cursor: None,
-        }
-    }
 }
 
 impl ListMembersAppsArg {
@@ -13436,7 +13393,7 @@ impl ::serde::ser::Serialize for ListMembersDevicesResult {
 }
 
 /// Arguments for [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTeamAppsArg {
     /// At the first call to the
@@ -13445,14 +13402,6 @@ pub struct ListTeamAppsArg {
     /// requests should include the received cursors in order to receive the next sub list of the
     /// team applications.
     pub cursor: Option<String>,
-}
-
-impl Default for ListTeamAppsArg {
-    fn default() -> Self {
-        ListTeamAppsArg {
-            cursor: None,
-        }
-    }
 }
 
 impl ListTeamAppsArg {
@@ -16304,19 +16253,11 @@ impl ::serde::ser::Serialize for MembersAddArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersAddArgBase {
     /// Whether to force the add to happen asynchronously.
     pub force_async: bool,
-}
-
-impl Default for MembersAddArgBase {
-    fn default() -> Self {
-        MembersAddArgBase {
-            force_async: false,
-        }
-    }
 }
 
 impl MembersAddArgBase {
