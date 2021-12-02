@@ -229,6 +229,8 @@ pub enum ExternalDriveBackupPolicyState {
     Disabled,
     /// External Drive Backup feature is enabled.
     Enabled,
+    /// External Drive Backup default value based on team tier.
+    Default,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -252,6 +254,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ExternalDriveBackupPolicyState {
                 let value = match tag {
                     "disabled" => ExternalDriveBackupPolicyState::Disabled,
                     "enabled" => ExternalDriveBackupPolicyState::Enabled,
+                    "default" => ExternalDriveBackupPolicyState::Default,
                     _ => ExternalDriveBackupPolicyState::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -260,6 +263,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ExternalDriveBackupPolicyState {
         }
         const VARIANTS: &[&str] = &["disabled",
                                     "enabled",
+                                    "default",
                                     "other"];
         deserializer.deserialize_struct("ExternalDriveBackupPolicyState", VARIANTS, EnumVisitor)
     }
@@ -280,6 +284,12 @@ impl ::serde::ser::Serialize for ExternalDriveBackupPolicyState {
                 // unit
                 let mut s = serializer.serialize_struct("ExternalDriveBackupPolicyState", 1)?;
                 s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ExternalDriveBackupPolicyState::Default => {
+                // unit
+                let mut s = serializer.serialize_struct("ExternalDriveBackupPolicyState", 1)?;
+                s.serialize_field(".tag", "default")?;
                 s.end()
             }
             ExternalDriveBackupPolicyState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
