@@ -14933,6 +14933,8 @@ pub enum SharePathError {
     InsideOsxPackage,
     /// We do not support sharing the Vault folder.
     IsVault,
+    /// We do not support sharing a folder inside a locked Vault.
+    IsVaultLocked,
     /// We do not support sharing the Family folder.
     IsFamily,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -14970,6 +14972,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                     "is_osx_package" => SharePathError::IsOsxPackage,
                     "inside_osx_package" => SharePathError::InsideOsxPackage,
                     "is_vault" => SharePathError::IsVault,
+                    "is_vault_locked" => SharePathError::IsVaultLocked,
                     "is_family" => SharePathError::IsFamily,
                     _ => SharePathError::Other,
                 };
@@ -14991,6 +14994,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                                     "is_osx_package",
                                     "inside_osx_package",
                                     "is_vault",
+                                    "is_vault_locked",
                                     "is_family",
                                     "other"];
         deserializer.deserialize_struct("SharePathError", VARIANTS, EnumVisitor)
@@ -15087,6 +15091,12 @@ impl ::serde::ser::Serialize for SharePathError {
                 s.serialize_field(".tag", "is_vault")?;
                 s.end()
             }
+            SharePathError::IsVaultLocked => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathError", 1)?;
+                s.serialize_field(".tag", "is_vault_locked")?;
+                s.end()
+            }
             SharePathError::IsFamily => {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathError", 1)?;
@@ -15118,6 +15128,7 @@ impl ::std::fmt::Display for SharePathError {
             SharePathError::IsOsxPackage => f.write_str("We do not support sharing a Mac OS X package."),
             SharePathError::InsideOsxPackage => f.write_str("We do not support sharing a folder inside a Mac OS X package."),
             SharePathError::IsVault => f.write_str("We do not support sharing the Vault folder."),
+            SharePathError::IsVaultLocked => f.write_str("We do not support sharing a folder inside a locked Vault."),
             SharePathError::IsFamily => f.write_str("We do not support sharing the Family folder."),
             _ => write!(f, "{:?}", *self),
         }
