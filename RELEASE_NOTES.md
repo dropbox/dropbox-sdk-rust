@@ -1,5 +1,5 @@
 # v0.14.0
-xxxx-yy-zz
+2021-12-09
 * Unstable "Preview" functionality now gated behind an `unstable` feature flag.
 * Codegen change to let rustc derive `Default` in most cases
 * API spec update 2021-10-06, 2021-10-21, 2021-11-03, 2021-11-17, 2021-11-24, 2021-12-01
