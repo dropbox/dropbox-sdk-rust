@@ -905,7 +905,8 @@ pub struct AddFileMemberArgs {
     pub members: Vec<MemberSelector>,
     /// Message to send to added members in their invitation.
     pub custom_message: Option<String>,
-    /// Whether added members should be notified via device notifications of their invitation.
+    /// Whether added members should be notified via email and device notifications of their
+    /// invitation.
     pub quiet: bool,
     /// AccessLevel union object, describing what access level we want to give new members.
     pub access_level: AccessLevel,

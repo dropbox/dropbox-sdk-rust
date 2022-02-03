@@ -12011,6 +12011,73 @@ impl ::serde::ser::Serialize for MoveBatchArg {
 
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
+pub enum MoveIntoFamilyError {
+    /// Moving shared folder into Family Room folder is not allowed.
+    IsSharedFolder,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MoveIntoFamilyError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MoveIntoFamilyError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MoveIntoFamilyError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "is_shared_folder" => MoveIntoFamilyError::IsSharedFolder,
+                    _ => MoveIntoFamilyError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["is_shared_folder",
+                                    "other"];
+        deserializer.deserialize_struct("MoveIntoFamilyError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MoveIntoFamilyError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MoveIntoFamilyError::IsSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("MoveIntoFamilyError", 1)?;
+                s.serialize_field(".tag", "is_shared_folder")?;
+                s.end()
+            }
+            MoveIntoFamilyError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MoveIntoFamilyError {
+}
+
+impl ::std::fmt::Display for MoveIntoFamilyError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            MoveIntoFamilyError::IsSharedFolder => f.write_str("Moving shared folder into Family Room folder is not allowed."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MoveIntoVaultError {
     /// Moving shared folder into Vault is not allowed.
     IsSharedFolder,
@@ -14094,6 +14161,9 @@ pub enum RelocationBatchError {
     CantMoveSharedFolder,
     /// Some content cannot be moved into Vault under certain circumstances, see detailed error.
     CantMoveIntoVault(MoveIntoVaultError),
+    /// Some content cannot be moved into the Family Room folder under certain circumstances, see
+    /// detailed error.
+    CantMoveIntoFamily(MoveIntoFamilyError),
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -14154,6 +14224,13 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "cant_move_into_family" => {
+                        match map.next_key()? {
+                            Some("cant_move_into_family") => RelocationBatchError::CantMoveIntoFamily(map.next_value()?),
+                            None => return Err(de::Error::missing_field("cant_move_into_family")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     "too_many_write_operations" => RelocationBatchError::TooManyWriteOperations,
                     _ => RelocationBatchError::Other,
                 };
@@ -14174,6 +14251,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                                     "internal_error",
                                     "cant_move_shared_folder",
                                     "cant_move_into_vault",
+                                    "cant_move_into_family",
                                     "other",
                                     "too_many_write_operations"];
         deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
@@ -14267,6 +14345,13 @@ impl ::serde::ser::Serialize for RelocationBatchError {
                 s.serialize_field("cant_move_into_vault", x)?;
                 s.end()
             }
+            RelocationBatchError::CantMoveIntoFamily(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("RelocationBatchError", 2)?;
+                s.serialize_field(".tag", "cant_move_into_family")?;
+                s.serialize_field("cant_move_into_family", x)?;
+                s.end()
+            }
             RelocationBatchError::TooManyWriteOperations => {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
@@ -14285,6 +14370,7 @@ impl ::std::error::Error for RelocationBatchError {
             RelocationBatchError::FromWrite(inner) => Some(inner),
             RelocationBatchError::To(inner) => Some(inner),
             RelocationBatchError::CantMoveIntoVault(inner) => Some(inner),
+            RelocationBatchError::CantMoveIntoFamily(inner) => Some(inner),
             _ => None,
         }
     }
@@ -14304,6 +14390,7 @@ impl ::std::fmt::Display for RelocationBatchError {
             RelocationBatchError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
             RelocationBatchError::CantMoveSharedFolder => f.write_str("Can't move the shared folder to the given destination."),
             RelocationBatchError::CantMoveIntoVault(inner) => write!(f, "Some content cannot be moved into Vault under certain circumstances, see detailed error: {}", inner),
+            RelocationBatchError::CantMoveIntoFamily(inner) => write!(f, "Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error: {}", inner),
             RelocationBatchError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
             _ => write!(f, "{:?}", *self),
         }
@@ -15056,6 +15143,9 @@ pub enum RelocationError {
     CantMoveSharedFolder,
     /// Some content cannot be moved into Vault under certain circumstances, see detailed error.
     CantMoveIntoVault(MoveIntoVaultError),
+    /// Some content cannot be moved into the Family Room folder under certain circumstances, see
+    /// detailed error.
+    CantMoveIntoFamily(MoveIntoFamilyError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -15114,6 +15204,13 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "cant_move_into_family" => {
+                        match map.next_key()? {
+                            Some("cant_move_into_family") => RelocationError::CantMoveIntoFamily(map.next_value()?),
+                            None => return Err(de::Error::missing_field("cant_move_into_family")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => RelocationError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -15133,6 +15230,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                                     "internal_error",
                                     "cant_move_shared_folder",
                                     "cant_move_into_vault",
+                                    "cant_move_into_family",
                                     "other"];
         deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
     }
@@ -15225,6 +15323,13 @@ impl ::serde::ser::Serialize for RelocationError {
                 s.serialize_field("cant_move_into_vault", x)?;
                 s.end()
             }
+            RelocationError::CantMoveIntoFamily(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("RelocationError", 2)?;
+                s.serialize_field(".tag", "cant_move_into_family")?;
+                s.serialize_field("cant_move_into_family", x)?;
+                s.end()
+            }
             RelocationError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -15237,6 +15342,7 @@ impl ::std::error::Error for RelocationError {
             RelocationError::FromWrite(inner) => Some(inner),
             RelocationError::To(inner) => Some(inner),
             RelocationError::CantMoveIntoVault(inner) => Some(inner),
+            RelocationError::CantMoveIntoFamily(inner) => Some(inner),
             _ => None,
         }
     }
@@ -15256,6 +15362,7 @@ impl ::std::fmt::Display for RelocationError {
             RelocationError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
             RelocationError::CantMoveSharedFolder => f.write_str("Can't move the shared folder to the given destination."),
             RelocationError::CantMoveIntoVault(inner) => write!(f, "Some content cannot be moved into Vault under certain circumstances, see detailed error: {}", inner),
+            RelocationError::CantMoveIntoFamily(inner) => write!(f, "Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -19961,6 +20068,8 @@ pub enum UploadError {
     Path(UploadWriteFailed),
     /// The supplied property group is invalid. The file has uploaded without property groups.
     PropertiesError(super::file_properties::InvalidPropertyGroupError),
+    /// The request payload must be at most 150 MB.
+    PayloadTooLarge,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -19990,6 +20099,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "payload_too_large" => UploadError::PayloadTooLarge,
                     _ => UploadError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -19998,6 +20108,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
         }
         const VARIANTS: &[&str] = &["path",
                                     "properties_error",
+                                    "payload_too_large",
                                     "other"];
         deserializer.deserialize_struct("UploadError", VARIANTS, EnumVisitor)
     }
@@ -20022,6 +20133,12 @@ impl ::serde::ser::Serialize for UploadError {
                 s.serialize_field("properties_error", x)?;
                 s.end()
             }
+            UploadError::PayloadTooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadError", 1)?;
+                s.serialize_field(".tag", "payload_too_large")?;
+                s.end()
+            }
             UploadError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -20041,6 +20158,7 @@ impl ::std::fmt::Display for UploadError {
         match self {
             UploadError::Path(inner) => write!(f, "Unable to save the uploaded contents to a file: {:?}", inner),
             UploadError::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
+            UploadError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -20053,6 +20171,8 @@ pub enum UploadErrorWithProperties {
     Path(UploadWriteFailed),
     /// The supplied property group is invalid. The file has uploaded without property groups.
     PropertiesError(super::file_properties::InvalidPropertyGroupError),
+    /// The request payload must be at most 150 MB.
+    PayloadTooLarge,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -20082,6 +20202,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "payload_too_large" => UploadErrorWithProperties::PayloadTooLarge,
                     _ => UploadErrorWithProperties::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -20090,6 +20211,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
         }
         const VARIANTS: &[&str] = &["path",
                                     "properties_error",
+                                    "payload_too_large",
                                     "other"];
         deserializer.deserialize_struct("UploadErrorWithProperties", VARIANTS, EnumVisitor)
     }
@@ -20114,6 +20236,12 @@ impl ::serde::ser::Serialize for UploadErrorWithProperties {
                 s.serialize_field("properties_error", x)?;
                 s.end()
             }
+            UploadErrorWithProperties::PayloadTooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadErrorWithProperties", 1)?;
+                s.serialize_field(".tag", "payload_too_large")?;
+                s.end()
+            }
             UploadErrorWithProperties::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -20133,6 +20261,7 @@ impl ::std::fmt::Display for UploadErrorWithProperties {
         match self {
             UploadErrorWithProperties::Path(inner) => write!(f, "Unable to save the uploaded contents to a file: {:?}", inner),
             UploadErrorWithProperties::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
+            UploadErrorWithProperties::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -20863,6 +20992,8 @@ pub enum UploadSessionFinishError {
     ConcurrentSessionNotClosed,
     /// Not all pieces of data were uploaded before trying to finish the session.
     ConcurrentSessionMissingData,
+    /// The request payload must be at most 150 MB.
+    PayloadTooLarge,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -20910,6 +21041,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                     "concurrent_session_data_not_allowed" => UploadSessionFinishError::ConcurrentSessionDataNotAllowed,
                     "concurrent_session_not_closed" => UploadSessionFinishError::ConcurrentSessionNotClosed,
                     "concurrent_session_missing_data" => UploadSessionFinishError::ConcurrentSessionMissingData,
+                    "payload_too_large" => UploadSessionFinishError::PayloadTooLarge,
                     _ => UploadSessionFinishError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -20924,6 +21056,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                                     "concurrent_session_data_not_allowed",
                                     "concurrent_session_not_closed",
                                     "concurrent_session_missing_data",
+                                    "payload_too_large",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionFinishError", VARIANTS, EnumVisitor)
     }
@@ -20985,6 +21118,12 @@ impl ::serde::ser::Serialize for UploadSessionFinishError {
                 s.serialize_field(".tag", "concurrent_session_missing_data")?;
                 s.end()
             }
+            UploadSessionFinishError::PayloadTooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
+                s.serialize_field(".tag", "payload_too_large")?;
+                s.end()
+            }
             UploadSessionFinishError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -21012,6 +21151,7 @@ impl ::std::fmt::Display for UploadSessionFinishError {
             UploadSessionFinishError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when finishing concurrent upload session."),
             UploadSessionFinishError::ConcurrentSessionNotClosed => f.write_str("Concurrent upload sessions need to be closed before finishing."),
             UploadSessionFinishError::ConcurrentSessionMissingData => f.write_str("Not all pieces of data were uploaded before trying to finish the session."),
+            UploadSessionFinishError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -21039,6 +21179,8 @@ pub enum UploadSessionLookupError {
     /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be
     /// uploaded.
     ConcurrentSessionInvalidDataSize,
+    /// The request payload must be at most 150 MB.
+    PayloadTooLarge,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -21067,6 +21209,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                     "too_large" => UploadSessionLookupError::TooLarge,
                     "concurrent_session_invalid_offset" => UploadSessionLookupError::ConcurrentSessionInvalidOffset,
                     "concurrent_session_invalid_data_size" => UploadSessionLookupError::ConcurrentSessionInvalidDataSize,
+                    "payload_too_large" => UploadSessionLookupError::PayloadTooLarge,
                     _ => UploadSessionLookupError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -21080,6 +21223,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                                     "too_large",
                                     "concurrent_session_invalid_offset",
                                     "concurrent_session_invalid_data_size",
+                                    "payload_too_large",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionLookupError", VARIANTS, EnumVisitor)
     }
@@ -21133,6 +21277,12 @@ impl ::serde::ser::Serialize for UploadSessionLookupError {
                 s.serialize_field(".tag", "concurrent_session_invalid_data_size")?;
                 s.end()
             }
+            UploadSessionLookupError::PayloadTooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
+                s.serialize_field(".tag", "payload_too_large")?;
+                s.end()
+            }
             UploadSessionLookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -21151,6 +21301,7 @@ impl ::std::fmt::Display for UploadSessionLookupError {
             UploadSessionLookupError::TooLarge => f.write_str("You can not append to the upload session because the size of a file should not reach the max file size limit (i.e. 350GB)."),
             UploadSessionLookupError::ConcurrentSessionInvalidOffset => f.write_str("For concurrent upload sessions, offset needs to be multiple of 4194304 bytes."),
             UploadSessionLookupError::ConcurrentSessionInvalidDataSize => f.write_str("For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded."),
+            UploadSessionLookupError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -21354,6 +21505,8 @@ pub enum UploadSessionStartError {
     ConcurrentSessionDataNotAllowed,
     /// Can not start a closed concurrent upload session.
     ConcurrentSessionCloseNotAllowed,
+    /// The request payload must be at most 150 MB.
+    PayloadTooLarge,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -21377,6 +21530,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartError {
                 let value = match tag {
                     "concurrent_session_data_not_allowed" => UploadSessionStartError::ConcurrentSessionDataNotAllowed,
                     "concurrent_session_close_not_allowed" => UploadSessionStartError::ConcurrentSessionCloseNotAllowed,
+                    "payload_too_large" => UploadSessionStartError::PayloadTooLarge,
                     _ => UploadSessionStartError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -21385,6 +21539,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartError {
         }
         const VARIANTS: &[&str] = &["concurrent_session_data_not_allowed",
                                     "concurrent_session_close_not_allowed",
+                                    "payload_too_large",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionStartError", VARIANTS, EnumVisitor)
     }
@@ -21407,6 +21562,12 @@ impl ::serde::ser::Serialize for UploadSessionStartError {
                 s.serialize_field(".tag", "concurrent_session_close_not_allowed")?;
                 s.end()
             }
+            UploadSessionStartError::PayloadTooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionStartError", 1)?;
+                s.serialize_field(".tag", "payload_too_large")?;
+                s.end()
+            }
             UploadSessionStartError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -21420,6 +21581,7 @@ impl ::std::fmt::Display for UploadSessionStartError {
         match self {
             UploadSessionStartError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when starting concurrent upload session."),
             UploadSessionStartError::ConcurrentSessionCloseNotAllowed => f.write_str("Can not start a closed concurrent upload session."),
+            UploadSessionStartError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
             _ => write!(f, "{:?}", *self),
         }
     }
