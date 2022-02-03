@@ -1,5 +1,8 @@
 # v0.14.1
 xxxx-yy-zz
+* API spec update 2022-02-02
+    * files: variants added to MoveIntoVaultError and UploadError
+    * documentation, team_log updates
 
 # v0.14.0
 2021-12-09
@@ -9,7 +12,7 @@ xxxx-yy-zz
     * files::upload_session_finish_batch is deprecated by a "v2" version.
     * app auth added for files::list_folder and files::list_folder_continue
     * added preview file tagging functions
-    * documentation, team_log_updates
+    * documentation, team_log updates
 
 # v0.13.3
 2021-09-29
