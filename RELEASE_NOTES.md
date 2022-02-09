@@ -1,5 +1,5 @@
 # v0.14.1
-xxxx-yy-zz
+2022-02-09
 * API spec update 2022-02-02
     * files: variants added to MoveIntoVaultError and UploadError
     * documentation, team_log updates
