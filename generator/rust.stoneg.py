@@ -417,7 +417,7 @@ class RustBackend(RustHelperBackend):
                                 default_value = self._default_value(field)
                                 if isinstance(field.data_type, ir.String) \
                                         and not field.default:
-                                    self.emit(u'{}: field_{}.unwrap_or_else(String::new),'
+                                    self.emit(u'{}: field_{}.unwrap_or_default(),'
                                               .format(field_name, field_name))
                                 elif (ir.is_primitive_type(ir.unwrap_aliases(field.data_type)[0])
                                         # Also, as a rough but effective heuristic, consider values

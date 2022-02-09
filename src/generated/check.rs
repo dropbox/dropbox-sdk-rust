@@ -89,7 +89,7 @@ impl EchoArg {
             }
         }
         let result = EchoArg {
-            query: field_query.unwrap_or_else(String::new),
+            query: field_query.unwrap_or_default(),
         };
         Ok(result)
     }
@@ -169,7 +169,7 @@ impl EchoResult {
             }
         }
         let result = EchoResult {
-            result: field_result.unwrap_or_else(String::new),
+            result: field_result.unwrap_or_default(),
         };
         Ok(result)
     }

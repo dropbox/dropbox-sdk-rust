@@ -343,10 +343,10 @@ impl Authorization {
     /// start the authorization procedure from scratch.
     pub fn load(client_id: String, saved: &str) -> Option<Self> {
         let state = match saved.get(0..2) {
-            Some("1&") => AuthorizationState::AccessToken((&saved[2..]).to_owned()),
+            Some("1&") => AuthorizationState::AccessToken(saved[2..].to_owned()),
             Some("2&") => AuthorizationState::Refresh {
                 client_id,
-                refresh_token: (&saved[2..]).to_owned(),
+                refresh_token: saved[2..].to_owned(),
             },
             _ => {
                 error!("unrecognized saved Authorization representation: {:?}", saved);

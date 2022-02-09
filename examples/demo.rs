@@ -65,6 +65,7 @@ fn main() {
                     let mut body = download_result.body.expect("no body received!");
                     loop {
                         // limit read to 1 MiB per loop iteration so we can output progress
+                        #[allow(clippy::needless_borrow)] // 2022-02-09: this lint is wrong
                         let mut input_chunk = (&mut body).take(1024 * 1024);
                         match io::copy(&mut input_chunk, &mut stdout_lock) {
                             Ok(0) => {
