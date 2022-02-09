@@ -391,7 +391,7 @@ fn json_escape_header(s: &str) -> Cow<'_, str> {
                 Cow::Borrowed(_) => {
                     // If we're still borrowed, we must have had ascii up until this point.
                     // Clone the string up until here, and from now on we'll be pushing chars to it.
-                    out = Cow::Owned((&s[0..i]).to_owned());
+                    out = Cow::Owned(s[0..i].to_owned());
                     out.to_mut()
                 }
                 Cow::Owned(ref mut m) => m,
