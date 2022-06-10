@@ -112,6 +112,8 @@ class RustBackend(RustHelperBackend):
         struct_name = self.struct_name(struct)
         self._emit_doc(struct.doc)
         derive_traits = list(DERIVE_TRAITS)
+        if self._can_derive_eq(struct):
+            derive_traits.append('Eq')
         if not any(self._needs_explicit_default(field) for field in struct.all_fields):
             derive_traits.append('Default')
         self.emit(u'#[derive({})]'.format(u', '.join(derive_traits)))
@@ -145,7 +147,10 @@ class RustBackend(RustHelperBackend):
     def _emit_polymorphic_struct(self, struct):
         enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
-        self.emit(u'#[derive({})]'.format(u', '.join(DERIVE_TRAITS)))
+        derive_traits = list(DERIVE_TRAITS)
+        if self._can_derive_eq(struct):
+            derive_traits.append('Eq')
+        self.emit(u'#[derive({})]'.format(u', '.join(derive_traits)))
         if struct.is_catch_all():
             self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
@@ -162,7 +167,10 @@ class RustBackend(RustHelperBackend):
     def _emit_union(self, union):
         enum_name = self.enum_name(union)
         self._emit_doc(union.doc)
-        self.emit(u'#[derive({})]'.format(u', '.join(DERIVE_TRAITS)))
+        derive_traits = list(DERIVE_TRAITS)
+        if self._can_derive_eq(union):
+            derive_traits.append('Eq')
+        self.emit(u'#[derive({})]'.format(u', '.join(derive_traits)))
         if not union.closed:
             self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
@@ -940,6 +948,28 @@ class RustBackend(RustHelperBackend):
             if isinstance(field.data_type, ir.Alias):
                 print(u'    unwrapped alias: {}'.format(ir.unwrap_aliases(field.data_type)[0]))
             return field.default
+
+    def _can_derive_eq(self, typ):
+        if isinstance(typ, ir.Float32) or isinstance(typ, ir.Float64):
+            # These are the only primitive types that don't have strict equality.
+            return False
+
+        # Check for various kinds of compound types and check all fields:
+        if hasattr(typ, "data_type"):
+            return self._can_derive_eq(typ.data_type)
+        if hasattr(typ, "has_enumerated_subtypes") and typ.has_enumerated_subtypes():
+            for styp in typ.get_enumerated_subtypes():
+                if not self._can_derive_eq(styp):
+                    return False
+            return True
+        if hasattr(typ, "all_fields"):
+            for field in typ.all_fields:
+                if not self._can_derive_eq(field.data_type):
+                    return False
+            return True
+
+        # All other primitive types are strict-comparable.
+        return True
 
     def _needs_explicit_default(self, field):
         if isinstance(field.data_type, ir.Nullable):

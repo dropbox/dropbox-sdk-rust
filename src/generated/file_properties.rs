@@ -295,7 +295,7 @@ pub fn templates_update_for_user(
         None)
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddPropertiesArg {
     /// A unique identifier for the file or folder.
@@ -400,7 +400,7 @@ impl ::serde::ser::Serialize for AddPropertiesArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AddPropertiesError {
     /// Template does not exist for the given identifier.
@@ -563,7 +563,7 @@ impl ::std::fmt::Display for AddPropertiesError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddTemplateArg {
     /// Display name for the template. Template names can be up to 256 bytes.
@@ -681,7 +681,7 @@ impl ::serde::ser::Serialize for AddTemplateArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddTemplateResult {
     /// An identifier for template added by  See
@@ -774,7 +774,7 @@ impl ::serde::ser::Serialize for AddTemplateResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemplateArg {
     /// An identifier for template added by route  See
@@ -867,7 +867,7 @@ impl ::serde::ser::Serialize for GetTemplateArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemplateResult {
     /// Display name for the template. Template names can be up to 256 bytes.
@@ -985,7 +985,7 @@ impl ::serde::ser::Serialize for GetTemplateResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum InvalidPropertyGroupError {
     /// Template does not exist for the given identifier.
@@ -1137,7 +1137,7 @@ impl ::std::fmt::Display for InvalidPropertyGroupError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTemplateResult {
     /// List of identifiers for templates added by  See
@@ -1231,7 +1231,7 @@ impl ::serde::ser::Serialize for ListTemplateResult {
 }
 
 /// Logical operator to join search queries together.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LogicalOperator {
     /// Append a query with an "or" operator.
@@ -1286,7 +1286,7 @@ impl ::serde::ser::Serialize for LogicalOperator {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LookUpPropertiesError {
     /// No property group was found.
@@ -1353,7 +1353,7 @@ impl ::std::fmt::Display for LookUpPropertiesError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LookupError {
     MalformedPath(String),
@@ -1471,7 +1471,7 @@ impl ::std::fmt::Display for LookupError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ModifyTemplateError {
     /// Template does not exist for the given identifier.
@@ -1601,7 +1601,7 @@ impl ::std::fmt::Display for ModifyTemplateError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct OverwritePropertyGroupArg {
     /// A unique identifier for the file or folder.
@@ -1706,7 +1706,7 @@ impl ::serde::ser::Serialize for OverwritePropertyGroupArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PropertiesError {
     /// Template does not exist for the given identifier.
@@ -1825,7 +1825,7 @@ impl ::std::fmt::Display for PropertiesError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertiesSearchArg {
     /// Queries to search.
@@ -1934,7 +1934,7 @@ impl ::serde::ser::Serialize for PropertiesSearchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertiesSearchContinueArg {
     /// The cursor returned by your last call to [`properties_search()`](properties_search) or
@@ -2026,7 +2026,7 @@ impl ::serde::ser::Serialize for PropertiesSearchContinueArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PropertiesSearchContinueError {
     /// Indicates that the cursor has been invalidated. Call
@@ -2091,7 +2091,7 @@ impl ::std::fmt::Display for PropertiesSearchContinueError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PropertiesSearchError {
     PropertyGroupLookup(LookUpPropertiesError),
@@ -2170,7 +2170,7 @@ impl ::std::fmt::Display for PropertiesSearchError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertiesSearchMatch {
     /// The ID for the matched file or folder.
@@ -2305,7 +2305,7 @@ impl ::serde::ser::Serialize for PropertiesSearchMatch {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PropertiesSearchMode {
     /// Search for a value associated with this field name.
@@ -2367,7 +2367,7 @@ impl ::serde::ser::Serialize for PropertiesSearchMode {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertiesSearchQuery {
     /// The property field value for which to search across templates.
@@ -2489,7 +2489,7 @@ impl ::serde::ser::Serialize for PropertiesSearchQuery {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertiesSearchResult {
     /// A list (possibly empty) of matches for the query.
@@ -2603,7 +2603,7 @@ impl ::serde::ser::Serialize for PropertiesSearchResult {
 
 /// Raw key/value data to be associated with a Dropbox file. Property fields are added to Dropbox
 /// files as a [`PropertyGroup`](PropertyGroup).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertyField {
     /// Key of the property field associated with a file and template. Keys can be up to 256 bytes.
@@ -2710,7 +2710,7 @@ impl ::serde::ser::Serialize for PropertyField {
 
 /// Defines how a single property field may be structured. Used exclusively by
 /// [`PropertyGroupTemplate`](PropertyGroupTemplate).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertyFieldTemplate {
     /// Key of the property field being described. Property field keys can be up to 256 bytes.
@@ -2832,7 +2832,7 @@ impl ::serde::ser::Serialize for PropertyFieldTemplate {
 /// [`PropertyGroupTemplate`](PropertyGroupTemplate). Properties are always added to a Dropbox file
 /// as a [`PropertyGroup`](PropertyGroup). The possible key names and value types in this group are
 /// defined by the corresponding [`PropertyGroupTemplate`](PropertyGroupTemplate).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertyGroup {
     /// A unique identifier for the associated template.
@@ -2938,7 +2938,7 @@ impl ::serde::ser::Serialize for PropertyGroup {
 }
 
 /// Defines how a property group may be structured.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertyGroupTemplate {
     /// Display name for the template. Template names can be up to 256 bytes.
@@ -3056,7 +3056,7 @@ impl ::serde::ser::Serialize for PropertyGroupTemplate {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertyGroupUpdate {
     /// A unique identifier for a property template.
@@ -3189,7 +3189,7 @@ impl ::serde::ser::Serialize for PropertyGroupUpdate {
 }
 
 /// Data type of the given property field added.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PropertyType {
     /// The associated property field will be of type string. Unicode is supported.
@@ -3244,7 +3244,7 @@ impl ::serde::ser::Serialize for PropertyType {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemovePropertiesArg {
     /// A unique identifier for the file or folder.
@@ -3350,7 +3350,7 @@ impl ::serde::ser::Serialize for RemovePropertiesArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RemovePropertiesError {
     /// Template does not exist for the given identifier.
@@ -3487,7 +3487,7 @@ impl ::std::fmt::Display for RemovePropertiesError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveTemplateArg {
     /// An identifier for a template created by [`templates_add_for_user()`](templates_add_for_user)
@@ -3579,7 +3579,7 @@ impl ::serde::ser::Serialize for RemoveTemplateArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TemplateError {
     /// Template does not exist for the given identifier.
@@ -3664,7 +3664,7 @@ impl ::std::fmt::Display for TemplateError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TemplateFilter {
     /// Only templates with an ID in the supplied list will be returned (a subset of templates will
@@ -3737,7 +3737,7 @@ impl ::serde::ser::Serialize for TemplateFilter {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TemplateFilterBase {
     /// Only templates with an ID in the supplied list will be returned (a subset of templates will
@@ -3800,7 +3800,7 @@ impl ::serde::ser::Serialize for TemplateFilterBase {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TemplateOwnerType {
     /// Template will be associated with a user.
@@ -3865,7 +3865,7 @@ impl ::serde::ser::Serialize for TemplateOwnerType {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdatePropertiesArg {
     /// A unique identifier for the file or folder.
@@ -3969,7 +3969,7 @@ impl ::serde::ser::Serialize for UpdatePropertiesArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UpdatePropertiesError {
     /// Template does not exist for the given identifier.
@@ -4139,7 +4139,7 @@ impl ::std::fmt::Display for UpdatePropertiesError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateTemplateArg {
     /// An identifier for template added by  See
@@ -4293,7 +4293,7 @@ impl ::serde::ser::Serialize for UpdateTemplateArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateTemplateResult {
     /// An identifier for template added by route  See

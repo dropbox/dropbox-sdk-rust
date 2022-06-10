@@ -12,7 +12,7 @@
 pub type AccountId = String;
 
 /// What type of account this user has.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum AccountType {
     /// The basic account type.
     Basic,

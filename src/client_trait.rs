@@ -69,7 +69,7 @@ pub struct HttpRequestResult<T> {
 }
 
 /// The API base endpoint for a request. Determines which hostname the request should go to.
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Endpoint {
     /// The endpoint used for most API calls.
     Api,
@@ -98,7 +98,7 @@ impl Endpoint {
 
 /// The style of a request, which determines how arguments are passed, and whether there is a
 /// request and/or response body.
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Style {
     /// Arguments are passed in the request body; response is in the body; no request or response
     /// body content stream.
@@ -114,7 +114,7 @@ pub enum Style {
 }
 
 /// The format of arguments being sent in a request.
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ParamsType {
     /// JSON.
     Json,

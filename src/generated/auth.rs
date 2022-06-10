@@ -37,7 +37,7 @@ pub fn token_revoke(
 }
 
 /// Error occurred because the account doesn't have permission to access the resource.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AccessError {
     /// Current account type cannot access the resource.
@@ -137,7 +137,7 @@ impl ::std::fmt::Display for AccessError {
 }
 
 /// Errors occurred during authentication.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AuthError {
     /// The access token is invalid.
@@ -271,7 +271,7 @@ impl ::std::fmt::Display for AuthError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum InvalidAccountTypeError {
     /// Current account type doesn't have permission to access this route endpoint.
@@ -349,7 +349,7 @@ impl ::std::fmt::Display for InvalidAccountTypeError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperAccessError {
     /// Paper is disabled.
@@ -428,7 +428,7 @@ impl ::std::fmt::Display for PaperAccessError {
 }
 
 /// Error occurred because the app is being rate limited.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RateLimitError {
     /// The reason why the app is being rate limited.
@@ -537,7 +537,7 @@ impl ::serde::ser::Serialize for RateLimitError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RateLimitReason {
     /// You are making too many requests in the past few minutes.
@@ -612,7 +612,7 @@ impl ::std::fmt::Display for RateLimitReason {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenFromOAuth1Arg {
     /// The supplied OAuth 1.0 access token.
@@ -716,7 +716,7 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Arg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TokenFromOAuth1Error {
     /// Part or all of the OAuth 1.0 access token info is invalid.
@@ -794,7 +794,7 @@ impl ::std::fmt::Display for TokenFromOAuth1Error {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenFromOAuth1Result {
     /// The OAuth 2.0 token generated from the supplied OAuth 1.0 token.
@@ -885,7 +885,7 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Result {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenScopeError {
     /// The required scope to access the route.
