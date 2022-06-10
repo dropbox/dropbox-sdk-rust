@@ -35,7 +35,7 @@ pub fn delete_manual_contacts_batch(
         None)
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteManualContactsArg {
     /// List of manually added contacts to be deleted.
@@ -126,7 +126,7 @@ impl ::serde::ser::Serialize for DeleteManualContactsArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteManualContactsError {
     /// Can't delete contacts from this list. Make sure the list only has manually added contacts.

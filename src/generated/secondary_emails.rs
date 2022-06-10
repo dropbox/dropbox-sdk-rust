@@ -7,7 +7,7 @@
     clippy::doc_markdown,
 )]
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SecondaryEmail {
     /// Secondary email address.

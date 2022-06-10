@@ -1365,7 +1365,7 @@ pub fn upload_session_start(
         Some(body))
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddTagArg {
     /// Path to the item to be tagged.
@@ -1469,7 +1469,7 @@ impl ::serde::ser::Serialize for AddTagArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AddTagError {
     Path(LookupError),
@@ -1559,7 +1559,7 @@ impl ::std::fmt::Display for AddTagError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AlphaGetMetadataArg {
     /// The path of a file or folder on Dropbox.
@@ -1754,7 +1754,7 @@ impl ::serde::ser::Serialize for AlphaGetMetadataArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum AlphaGetMetadataError {
     Path(LookupError),
     PropertiesError(super::file_properties::LookUpPropertiesError),
@@ -1843,7 +1843,7 @@ impl ::std::fmt::Display for AlphaGetMetadataError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum BaseTagError {
     Path(LookupError),
@@ -1922,7 +1922,7 @@ impl ::std::fmt::Display for BaseTagError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CommitInfo {
     /// Path in the user's Dropbox to save the file.
@@ -2138,7 +2138,7 @@ impl ::serde::ser::Serialize for CommitInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CommitInfoWithProperties {
     /// Path in the user's Dropbox to save the file.
@@ -2354,7 +2354,7 @@ impl ::serde::ser::Serialize for CommitInfoWithProperties {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ContentSyncSetting {
     /// Id of the item this setting is applied to.
@@ -2458,7 +2458,7 @@ impl ::serde::ser::Serialize for ContentSyncSetting {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ContentSyncSettingArg {
     /// Id of the item this setting is applied to.
@@ -2562,7 +2562,7 @@ impl ::serde::ser::Serialize for ContentSyncSettingArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderArg {
     /// Path in the user's Dropbox to create.
@@ -2672,7 +2672,7 @@ impl ::serde::ser::Serialize for CreateFolderArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderBatchArg {
     /// List of paths to be created in the user's Dropbox. Duplicate path arguments in the batch are
@@ -2801,7 +2801,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderBatchError {
     /// The operation would involve too many files or folders.
@@ -2868,7 +2868,7 @@ impl ::std::fmt::Display for CreateFolderBatchError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderBatchJobStatus {
     /// The asynchronous job is still in progress.
@@ -2953,7 +2953,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchJobStatus {
 
 /// Result returned by [`create_folder_batch()`](create_folder_batch) that may either launch an
 /// asynchronous job or complete synchronously.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -3026,7 +3026,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchLaunch {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderBatchResult {
     /// Each entry in [`CreateFolderBatchArg::paths`](CreateFolderBatchArg) will appear at the same
@@ -3118,7 +3118,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CreateFolderBatchResultEntry {
     Success(CreateFolderEntryResult),
     Failure(CreateFolderEntryError),
@@ -3183,7 +3183,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchResultEntry {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderEntryError {
     Path(WriteError),
@@ -3262,7 +3262,7 @@ impl ::std::fmt::Display for CreateFolderEntryError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderEntryResult {
     /// Metadata of the created folder.
@@ -3353,7 +3353,7 @@ impl ::serde::ser::Serialize for CreateFolderEntryResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CreateFolderError {
     Path(WriteError),
 }
@@ -3424,7 +3424,7 @@ impl ::std::fmt::Display for CreateFolderError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderResult {
     /// Metadata of the created folder.
@@ -3515,7 +3515,7 @@ impl ::serde::ser::Serialize for CreateFolderResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteArg {
     /// Path in the user's Dropbox to delete.
@@ -3627,7 +3627,7 @@ impl ::serde::ser::Serialize for DeleteArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteBatchArg {
     pub entries: Vec<DeleteArg>,
@@ -3717,7 +3717,7 @@ impl ::serde::ser::Serialize for DeleteBatchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteBatchError {
     /// Use [`DeleteError::TooManyWriteOperations`](DeleteError::TooManyWriteOperations).
@@ -4189,7 +4189,7 @@ impl ::serde::ser::Serialize for DeleteBatchResultEntry {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteError {
     PathLookup(LookupError),
@@ -4400,7 +4400,7 @@ impl ::serde::ser::Serialize for DeleteResult {
 }
 
 /// Indicates that there used to be a file or folder at this path, but it no longer exists.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeletedMetadata {
     /// The last component of the path (including extension). This never contains a slash.
@@ -4559,7 +4559,7 @@ impl ::serde::ser::Serialize for DeletedMetadata {
 }
 
 /// Dimensions for a photo or video.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct Dimensions {
     /// Height of the photo/video.
@@ -4663,7 +4663,7 @@ impl ::serde::ser::Serialize for Dimensions {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DownloadArg {
     /// The path of the file to download.
@@ -4774,7 +4774,7 @@ impl ::serde::ser::Serialize for DownloadArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DownloadError {
     Path(LookupError),
@@ -4863,7 +4863,7 @@ impl ::std::fmt::Display for DownloadError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DownloadZipArg {
     /// The path of the folder to download.
@@ -4954,7 +4954,7 @@ impl ::serde::ser::Serialize for DownloadZipArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DownloadZipError {
     Path(LookupError),
@@ -5055,7 +5055,7 @@ impl ::std::fmt::Display for DownloadZipError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DownloadZipResult {
     pub metadata: FolderMetadata,
@@ -5145,7 +5145,7 @@ impl ::serde::ser::Serialize for DownloadZipResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExportArg {
     /// The path of the file to be exported.
@@ -5258,7 +5258,7 @@ impl ::serde::ser::Serialize for ExportArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ExportError {
     Path(LookupError),
@@ -5370,7 +5370,7 @@ impl ::std::fmt::Display for ExportError {
 }
 
 /// Export information for a file.
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExportInfo {
     /// Format to which the file can be exported to.
@@ -5471,7 +5471,7 @@ impl ::serde::ser::Serialize for ExportInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExportMetadata {
     /// The last component of the path (including extension). This never contains a slash.
@@ -5722,7 +5722,7 @@ impl ::serde::ser::Serialize for ExportResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileCategory {
     /// jpg, png, gif, and more.
@@ -5867,7 +5867,7 @@ impl ::serde::ser::Serialize for FileCategory {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileLock {
     /// The lock description.
@@ -5958,7 +5958,7 @@ impl ::serde::ser::Serialize for FileLock {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileLockContent {
     /// Empty type to indicate no lock.
@@ -6024,7 +6024,7 @@ impl ::serde::ser::Serialize for FileLockContent {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileLockMetadata {
     /// True if caller holds the file lock.
@@ -6588,7 +6588,7 @@ impl ::serde::ser::Serialize for FileMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileOpsResult {
 }
@@ -6632,7 +6632,7 @@ impl ::serde::ser::Serialize for FileOpsResult {
 }
 
 /// Sharing info for a file which is contained by a shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileSharingInfo {
     /// True if the file or folder is inside a read-only shared folder.
@@ -6757,7 +6757,7 @@ impl ::serde::ser::Serialize for FileSharingInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileStatus {
     Active,
@@ -6820,7 +6820,7 @@ impl ::serde::ser::Serialize for FileStatus {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderMetadata {
     /// The last component of the path (including extension). This never contains a slash.
@@ -7058,7 +7058,7 @@ impl ::serde::ser::Serialize for FolderMetadata {
 
 /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount
 /// point.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderSharingInfo {
     /// True if the file or folder is inside a read-only shared folder.
@@ -7228,7 +7228,7 @@ impl ::serde::ser::Serialize for FolderSharingInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetCopyReferenceArg {
     /// The path to the file or folder you want to get a copy reference to.
@@ -7319,7 +7319,7 @@ impl ::serde::ser::Serialize for GetCopyReferenceArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetCopyReferenceError {
     Path(LookupError),
@@ -7520,7 +7520,7 @@ impl ::serde::ser::Serialize for GetCopyReferenceResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMetadataArg {
     /// The path of a file or folder on Dropbox.
@@ -7691,7 +7691,7 @@ impl ::serde::ser::Serialize for GetMetadataArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GetMetadataError {
     Path(LookupError),
 }
@@ -7762,7 +7762,7 @@ impl ::std::fmt::Display for GetMetadataError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTagsArg {
     /// Path to the items.
@@ -7853,7 +7853,7 @@ impl ::serde::ser::Serialize for GetTagsArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTagsResult {
     /// List of paths and their corresponding tags.
@@ -7944,7 +7944,7 @@ impl ::serde::ser::Serialize for GetTagsResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemporaryLinkArg {
     /// The path to the file you want a temporary link to.
@@ -8035,7 +8035,7 @@ impl ::serde::ser::Serialize for GetTemporaryLinkArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetTemporaryLinkError {
     Path(LookupError),
@@ -8363,7 +8363,7 @@ impl ::serde::ser::Serialize for GetTemporaryUploadLinkArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemporaryUploadLinkResult {
     /// The temporary link which can be used to stream a file to a Dropbox location.
@@ -8455,7 +8455,7 @@ impl ::serde::ser::Serialize for GetTemporaryUploadLinkResult {
 }
 
 /// Arguments for [`get_thumbnail_batch()`](get_thumbnail_batch).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetThumbnailBatchArg {
     /// List of files to get thumbnails.
@@ -8546,7 +8546,7 @@ impl ::serde::ser::Serialize for GetThumbnailBatchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetThumbnailBatchError {
     /// The operation involves more than 25 files.
@@ -8984,7 +8984,7 @@ impl ::serde::ser::Serialize for GpsCoordinates {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct HighlightSpan {
     /// String to be determined whether it should be highlighted or not.
@@ -9089,7 +9089,7 @@ impl ::serde::ser::Serialize for HighlightSpan {
 }
 
 /// The import format of the incoming Paper doc content.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ImportFormat {
     /// The provided data is interpreted as standard HTML.
@@ -9164,7 +9164,7 @@ impl ::serde::ser::Serialize for ImportFormat {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderArg {
     /// A unique identifier for the file.
@@ -9435,7 +9435,7 @@ impl ::serde::ser::Serialize for ListFolderArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderContinueArg {
     /// The cursor returned by your last call to [`list_folder()`](list_folder) or
@@ -9527,7 +9527,7 @@ impl ::serde::ser::Serialize for ListFolderContinueArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFolderContinueError {
     Path(LookupError),
@@ -9617,7 +9617,7 @@ impl ::std::fmt::Display for ListFolderContinueError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFolderError {
     Path(LookupError),
@@ -9714,7 +9714,7 @@ impl ::std::fmt::Display for ListFolderError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderGetLatestCursorResult {
     /// Pass the cursor into [`list_folder_continue()`](list_folder_continue) to see what's changed
@@ -9806,7 +9806,7 @@ impl ::serde::ser::Serialize for ListFolderGetLatestCursorResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderLongpollArg {
     /// A cursor as returned by [`list_folder()`](list_folder) or
@@ -9919,7 +9919,7 @@ impl ::serde::ser::Serialize for ListFolderLongpollArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFolderLongpollError {
     /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
@@ -9984,7 +9984,7 @@ impl ::std::fmt::Display for ListFolderLongpollError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderLongpollResult {
     /// Indicates whether new changes are available. If true, call
@@ -10216,7 +10216,7 @@ impl ::serde::ser::Serialize for ListFolderResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListRevisionsArg {
     /// The path to the file you want to see the revisions of.
@@ -10343,7 +10343,7 @@ impl ::serde::ser::Serialize for ListRevisionsArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListRevisionsError {
     Path(LookupError),
@@ -10422,7 +10422,7 @@ impl ::std::fmt::Display for ListRevisionsError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListRevisionsMode {
     /// Returns revisions with the same file path as identified by the latest file entry at the
@@ -10613,7 +10613,7 @@ impl ::serde::ser::Serialize for ListRevisionsResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LockConflictError {
     /// The lock that caused the conflict.
@@ -10704,7 +10704,7 @@ impl ::serde::ser::Serialize for LockConflictError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LockFileArg {
     /// Path in the user's Dropbox to a file.
@@ -10795,7 +10795,7 @@ impl ::serde::ser::Serialize for LockFileArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LockFileBatchArg {
     /// List of 'entries'. Each 'entry' contains a path of the file which will be locked or queried.
@@ -10979,7 +10979,7 @@ impl ::serde::ser::Serialize for LockFileBatchResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LockFileError {
     /// Could not find the specified resource.
@@ -11307,7 +11307,7 @@ impl ::serde::ser::Serialize for LockFileResultEntry {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LookupError {
     /// The given path does not satisfy the required path format. Please refer to the [Path formats
@@ -11734,7 +11734,7 @@ impl ::serde::ser::Serialize for MetadataV2 {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MinimalFileLinkMetadata {
     /// URL of the shared link.
@@ -11880,7 +11880,7 @@ impl ::serde::ser::Serialize for MinimalFileLinkMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MoveBatchArg {
     /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
@@ -12009,7 +12009,7 @@ impl ::serde::ser::Serialize for MoveBatchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MoveIntoFamilyError {
     /// Moving shared folder into Family Room folder is not allowed.
@@ -12076,7 +12076,7 @@ impl ::std::fmt::Display for MoveIntoFamilyError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MoveIntoVaultError {
     /// Moving shared folder into Vault is not allowed.
@@ -12143,7 +12143,7 @@ impl ::std::fmt::Display for MoveIntoVaultError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperContentError {
     /// Your account does not have permissions to edit Paper docs.
@@ -12244,7 +12244,7 @@ impl ::std::fmt::Display for PaperContentError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperCreateArg {
     /// The fully qualified path to the location in the user's Dropbox where the Paper Doc should be
@@ -12349,7 +12349,7 @@ impl ::serde::ser::Serialize for PaperCreateArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperCreateError {
     /// Your account does not have permissions to edit Paper docs.
@@ -12494,7 +12494,7 @@ impl ::std::fmt::Display for PaperCreateError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperCreateResult {
     /// URL to open the Paper Doc.
@@ -12624,7 +12624,7 @@ impl ::serde::ser::Serialize for PaperCreateResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdatePolicy {
     /// Sets the doc content to the provided content if the provided paper_revision matches the
@@ -12710,7 +12710,7 @@ impl ::serde::ser::Serialize for PaperDocUpdatePolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperUpdateArg {
     /// Path in the user's Dropbox to update. The path must correspond to a Paper doc or an error
@@ -12853,7 +12853,7 @@ impl ::serde::ser::Serialize for PaperUpdateArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperUpdateError {
     /// Your account does not have permissions to edit Paper docs.
@@ -13010,7 +13010,7 @@ impl ::std::fmt::Display for PaperUpdateError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperUpdateResult {
     /// The current doc revision.
@@ -13101,7 +13101,7 @@ impl ::serde::ser::Serialize for PaperUpdateResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PathOrLink {
     Path(ReadPath),
@@ -13172,7 +13172,7 @@ impl ::serde::ser::Serialize for PathOrLink {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PathToTags {
     /// Path of the item.
@@ -13396,7 +13396,7 @@ impl ::serde::ser::Serialize for PhotoMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PreviewArg {
     /// The path of the file to preview.
@@ -13507,7 +13507,7 @@ impl ::serde::ser::Serialize for PreviewArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PreviewError {
     /// An error occurs when downloading metadata for the file.
     Path(LookupError),
@@ -13715,7 +13715,7 @@ impl ::serde::ser::Serialize for PreviewResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationArg {
     /// Path in the user's Dropbox to be copied or moved.
@@ -13875,7 +13875,7 @@ impl ::serde::ser::Serialize for RelocationArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArg {
     /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
@@ -14022,7 +14022,7 @@ impl ::serde::ser::Serialize for RelocationBatchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArgBase {
     /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
@@ -14132,7 +14132,7 @@ impl ::serde::ser::Serialize for RelocationBatchArgBase {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchError {
     FromLookup(LookupError),
@@ -14397,7 +14397,7 @@ impl ::std::fmt::Display for RelocationBatchError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchErrorEntry {
     /// User errors that retry won't help.
@@ -15114,7 +15114,7 @@ impl ::serde::ser::Serialize for RelocationBatchV2Result {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelocationError {
     FromLookup(LookupError),
@@ -15368,7 +15368,7 @@ impl ::std::fmt::Display for RelocationError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationPath {
     /// Path in the user's Dropbox to be copied or moved.
@@ -15563,7 +15563,7 @@ impl ::serde::ser::Serialize for RelocationResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveTagArg {
     /// Path to the item to tag.
@@ -15667,7 +15667,7 @@ impl ::serde::ser::Serialize for RemoveTagArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RemoveTagError {
     Path(LookupError),
@@ -15757,7 +15757,7 @@ impl ::std::fmt::Display for RemoveTagError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RestoreArg {
     /// The path to save the restored file.
@@ -15861,7 +15861,7 @@ impl ::serde::ser::Serialize for RestoreArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RestoreError {
     /// An error occurs when downloading metadata for the file.
@@ -15982,7 +15982,7 @@ impl ::std::fmt::Display for RestoreError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SaveCopyReferenceArg {
     /// A copy reference returned by [`copy_reference_get()`](copy_reference_get).
@@ -16086,7 +16086,7 @@ impl ::serde::ser::Serialize for SaveCopyReferenceArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SaveCopyReferenceError {
     Path(WriteError),
@@ -16301,7 +16301,7 @@ impl ::serde::ser::Serialize for SaveCopyReferenceResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SaveUrlArg {
     /// The path in Dropbox where the URL will be saved to.
@@ -16405,7 +16405,7 @@ impl ::serde::ser::Serialize for SaveUrlArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SaveUrlError {
     Path(WriteError),
@@ -16662,7 +16662,7 @@ impl ::serde::ser::Serialize for SaveUrlResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchArg {
     /// The path in the user's Dropbox to search. Should probably be a folder.
@@ -16823,7 +16823,7 @@ impl ::serde::ser::Serialize for SearchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SearchError {
     Path(LookupError),
@@ -17038,7 +17038,7 @@ impl ::serde::ser::Serialize for SearchMatch {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchMatchFieldOptions {
     /// Whether to include highlight span from file title.
@@ -17118,7 +17118,7 @@ impl ::serde::ser::Serialize for SearchMatchFieldOptions {
 }
 
 /// Indicates what type of match was found for a given item.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SearchMatchType {
     /// This item was matched on its file or folder name.
     Filename,
@@ -17188,7 +17188,7 @@ impl ::serde::ser::Serialize for SearchMatchType {
 }
 
 /// Indicates what type of match was found for a given item.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SearchMatchTypeV2 {
     /// This item was matched on its file or folder name.
@@ -17404,7 +17404,7 @@ impl ::serde::ser::Serialize for SearchMatchV2 {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SearchMode {
     /// Search file and folder names.
     Filename,
@@ -17473,7 +17473,7 @@ impl ::serde::ser::Serialize for SearchMode {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchOptions {
     /// Scopes the search to a path in the user's Dropbox. Searches the entire Dropbox if not
@@ -17679,7 +17679,7 @@ impl ::serde::ser::Serialize for SearchOptions {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SearchOrderBy {
     Relevance,
@@ -17861,7 +17861,7 @@ impl ::serde::ser::Serialize for SearchResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchV2Arg {
     /// The string to search for. May match across multiple fields based on the request arguments.
@@ -18012,7 +18012,7 @@ impl ::serde::ser::Serialize for SearchV2Arg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchV2ContinueArg {
     /// The cursor returned by your last call to [`search_v2()`](search_v2). Used to fetch the next
@@ -18230,7 +18230,7 @@ impl ::serde::ser::Serialize for SearchV2Result {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedLink {
     /// Shared link url.
@@ -18341,7 +18341,7 @@ impl ::serde::ser::Serialize for SharedLink {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedLinkFileInfo {
     /// The shared link corresponding to either a file or shared link to a folder. If it is for a
@@ -18477,7 +18477,7 @@ impl ::serde::ser::Serialize for SharedLinkFileInfo {
 }
 
 /// Sharing info for a file or folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharingInfo {
     /// True if the file or folder is inside a read-only shared folder.
@@ -18568,7 +18568,7 @@ impl ::serde::ser::Serialize for SharingInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SingleUserLock {
     /// The time the lock was created.
@@ -18695,7 +18695,7 @@ impl ::serde::ser::Serialize for SingleUserLock {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SymlinkInfo {
     /// The target this symlink points to.
@@ -18786,7 +18786,7 @@ impl ::serde::ser::Serialize for SymlinkInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SyncSetting {
     /// On first sync to members' computers, the specified folder will follow its parent folder's
@@ -18864,7 +18864,7 @@ impl ::serde::ser::Serialize for SyncSetting {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SyncSettingArg {
     /// On first sync to members' computers, the specified folder will follow its parent folder's
@@ -18931,7 +18931,7 @@ impl ::serde::ser::Serialize for SyncSettingArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SyncSettingsError {
     Path(LookupError),
@@ -19033,7 +19033,7 @@ impl ::std::fmt::Display for SyncSettingsError {
 }
 
 /// Tag that can be added in multiple ways.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum Tag {
     /// Tag generated by the user.
@@ -19089,7 +19089,7 @@ impl ::serde::ser::Serialize for Tag {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ThumbnailArg {
     /// The path to the image file you want to thumbnail.
@@ -19235,7 +19235,7 @@ impl ::serde::ser::Serialize for ThumbnailArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ThumbnailError {
     /// An error occurs when downloading metadata for the image.
     Path(LookupError),
@@ -19341,7 +19341,7 @@ impl ::std::fmt::Display for ThumbnailError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ThumbnailFormat {
     Jpeg,
     Png,
@@ -19398,7 +19398,7 @@ impl ::serde::ser::Serialize for ThumbnailFormat {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ThumbnailMode {
     /// Scale down the image to fit within the given size.
     Strict,
@@ -19467,7 +19467,7 @@ impl ::serde::ser::Serialize for ThumbnailMode {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ThumbnailSize {
     /// 32 by 32 px.
     W32h32,
@@ -19596,7 +19596,7 @@ impl ::serde::ser::Serialize for ThumbnailSize {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ThumbnailV2Arg {
     /// Information specifying which file to preview. This could be a path to a file, a shared link
@@ -19743,7 +19743,7 @@ impl ::serde::ser::Serialize for ThumbnailV2Arg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ThumbnailV2Error {
     /// An error occurred when downloading metadata for the image.
@@ -19878,7 +19878,7 @@ impl ::std::fmt::Display for ThumbnailV2Error {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnlockFileArg {
     /// Path in the user's Dropbox to a file.
@@ -19969,7 +19969,7 @@ impl ::serde::ser::Serialize for UnlockFileArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnlockFileBatchArg {
     /// List of 'entries'. Each 'entry' contains a path of the file which will be unlocked.
@@ -20061,7 +20061,7 @@ impl ::serde::ser::Serialize for UnlockFileBatchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
@@ -20164,7 +20164,7 @@ impl ::std::fmt::Display for UploadError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadErrorWithProperties {
     /// Unable to save the uploaded contents to a file.
@@ -20267,7 +20267,7 @@ impl ::std::fmt::Display for UploadErrorWithProperties {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionAppendArg {
     /// Contains the upload session ID and the offset.
@@ -20377,7 +20377,7 @@ impl ::serde::ser::Serialize for UploadSessionAppendArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionCursor {
     /// The upload session ID (returned by [`upload_session_start()`](upload_session_start)).
@@ -20482,7 +20482,7 @@ impl ::serde::ser::Serialize for UploadSessionCursor {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionFinishArg {
     /// Contains the upload session ID and the offset.
@@ -20586,7 +20586,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionFinishBatchArg {
     /// Commit information for each file in the batch.
@@ -20970,7 +20970,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionFinishError {
     /// The session arguments are incorrect; the value explains the reason.
@@ -21157,7 +21157,7 @@ impl ::std::fmt::Display for UploadSessionFinishError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionLookupError {
     /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
@@ -21307,7 +21307,7 @@ impl ::std::fmt::Display for UploadSessionLookupError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionOffsetError {
     /// The offset up to which data has been collected.
@@ -21398,7 +21398,7 @@ impl ::serde::ser::Serialize for UploadSessionOffsetError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionStartArg {
     /// If true, the current session will be closed, at which point you won't be able to call
@@ -21498,7 +21498,7 @@ impl ::serde::ser::Serialize for UploadSessionStartArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionStartError {
     /// Uploading data not allowed when starting concurrent upload session.
@@ -21587,7 +21587,7 @@ impl ::std::fmt::Display for UploadSessionStartError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionStartResult {
     /// A unique identifier for the upload session. Pass this to
@@ -21680,7 +21680,7 @@ impl ::serde::ser::Serialize for UploadSessionStartResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionType {
     /// Pieces of data are uploaded sequentially one after another. This is the default behavior.
@@ -21745,7 +21745,7 @@ impl ::serde::ser::Serialize for UploadSessionType {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadWriteFailed {
     /// The reason why the file couldn't be saved.
@@ -21851,7 +21851,7 @@ impl ::serde::ser::Serialize for UploadWriteFailed {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserGeneratedTag {
     pub tag_text: TagText,
@@ -22080,7 +22080,7 @@ impl ::serde::ser::Serialize for VideoMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum WriteConflictError {
     /// There's a file in the way.
@@ -22169,7 +22169,7 @@ impl ::std::fmt::Display for WriteConflictError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum WriteError {
     /// The given path does not satisfy the required path format. Please refer to the [Path formats
@@ -22345,7 +22345,7 @@ impl ::std::fmt::Display for WriteError {
 /// path refers to a file with identical contents, nothing gets written; no conflict. The conflict
 /// checking differs in the case where there's a file at the target path with contents different
 /// from the contents you're trying to write.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum WriteMode {
     /// Do not overwrite an existing file if there is a conflict. The autorename strategy is to
     /// append a number to the file name. For example, "document.txt" might become "document

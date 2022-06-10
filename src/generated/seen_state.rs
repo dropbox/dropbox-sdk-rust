@@ -8,7 +8,7 @@
 )]
 
 /// Possible platforms on which a user may view content.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PlatformType {
     /// The content was viewed on the web.

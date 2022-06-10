@@ -19,7 +19,7 @@ pub type OptionalNamePart = String;
 pub type SessionId = String;
 pub type SharedFolderId = NamespaceId;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PathRoot {
     /// Paths are relative to the authenticating user's home namespace, whether or not that user
@@ -113,7 +113,7 @@ impl ::serde::ser::Serialize for PathRoot {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PathRootError {
     /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error
@@ -200,7 +200,7 @@ impl ::std::fmt::Display for PathRootError {
 }
 
 /// Information about current user's root.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RootInfo {
     Team(TeamRootInfo),
@@ -267,7 +267,7 @@ impl ::serde::ser::Serialize for RootInfo {
 }
 
 /// Root info when user is member of a team with a separate root namespace ID.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
@@ -392,7 +392,7 @@ impl ::serde::ser::Serialize for TeamRootInfo {
 
 /// Root info when user is not member of a team or the user is a member of a team and the team does
 /// not have a separate root namespace.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team

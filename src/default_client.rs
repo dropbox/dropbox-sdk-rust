@@ -16,6 +16,7 @@ use crate::auth::AuthError;
 use crate::client_trait::*;
 use crate::oauth2::{Authorization, TokenCache};
 use std::borrow::Cow;
+use std::fmt::Write;
 use std::sync::Arc;
 
 const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
@@ -396,7 +397,7 @@ fn json_escape_header(s: &str) -> Cow<'_, str> {
                 }
                 Cow::Owned(ref mut m) => m,
             };
-            mstr.push_str(&format!("\\u{:04x}", c as u32));
+            write!(mstr, "\\u{:04x}", c as u32).unwrap();
         } else if let Cow::Owned(ref mut o) = out {
             o.push(c);
         }

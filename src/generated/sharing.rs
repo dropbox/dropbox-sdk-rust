@@ -674,7 +674,7 @@ pub fn update_folder_policy(
 }
 
 /// Information about the inheritance policy of a shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AccessInheritance {
     /// The shared folder inherits its members from the parent folder.
@@ -740,7 +740,7 @@ impl ::serde::ser::Serialize for AccessInheritance {
 }
 
 /// Defines the access levels for collaborators.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AccessLevel {
     /// The collaborator is the owner of the shared folder. Owners can view and edit the shared
@@ -829,7 +829,7 @@ impl ::serde::ser::Serialize for AccessLevel {
 
 /// Who can change a shared folder's access control list (ACL). In other words, who can add, remove,
 /// or change the privileges of members.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AclUpdatePolicy {
     /// Only the owner can update the ACL.
@@ -895,7 +895,7 @@ impl ::serde::ser::Serialize for AclUpdatePolicy {
 }
 
 /// Arguments for [`add_file_member()`](add_file_member).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddFileMemberArgs {
     /// File to which to add members.
@@ -1076,7 +1076,7 @@ impl ::serde::ser::Serialize for AddFileMemberArgs {
 }
 
 /// Errors for [`add_file_member()`](add_file_member).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AddFileMemberError {
     UserError(SharingUserError),
@@ -1195,7 +1195,7 @@ impl ::std::fmt::Display for AddFileMemberError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddFolderMemberArg {
     /// The ID for the shared folder.
@@ -1338,7 +1338,7 @@ impl ::serde::ser::Serialize for AddFolderMemberArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AddFolderMemberError {
     /// Unable to access shared folder.
@@ -1576,7 +1576,7 @@ impl ::std::fmt::Display for AddFolderMemberError {
 }
 
 /// The member and type of access the member should have when added to a shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddMember {
     /// The member to add to the shared folder.
@@ -1686,7 +1686,7 @@ impl ::serde::ser::Serialize for AddMember {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AddMemberSelectorError {
     /// Automatically created groups can only be added to team folders.
@@ -1831,7 +1831,7 @@ impl ::std::fmt::Display for AddMemberSelectorError {
 }
 
 /// check documentation for ResolvedVisibility.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AlphaResolvedVisibility {
     /// Anyone who has received the link can access it. No login required.
@@ -1951,7 +1951,7 @@ impl ::serde::ser::Serialize for AlphaResolvedVisibility {
 }
 
 /// Information about the content that has a link audience different than that of this folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AudienceExceptionContentInfo {
     /// The name of the content, which is either a file or a folder.
@@ -2044,7 +2044,7 @@ impl ::serde::ser::Serialize for AudienceExceptionContentInfo {
 
 /// The total count and truncated list of information of content inside this folder that has a
 /// different audience than the link on this folder. This is only returned for folders.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AudienceExceptions {
     pub count: u32,
@@ -2151,7 +2151,7 @@ impl ::serde::ser::Serialize for AudienceExceptions {
 
 /// Information about the shared folder that prevents the link audience for this link from being
 /// more restrictive.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AudienceRestrictingSharedFolder {
     /// The ID of the shared folder.
@@ -2273,7 +2273,7 @@ impl ::serde::ser::Serialize for AudienceRestrictingSharedFolder {
 }
 
 /// Metadata for a collection-based shared link.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CollectionLinkMetadata {
     /// URL of the shared link.
@@ -2397,7 +2397,7 @@ impl ::serde::ser::Serialize for CollectionLinkMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateSharedLinkArg {
     /// The path to share.
@@ -2528,7 +2528,7 @@ impl ::serde::ser::Serialize for CreateSharedLinkArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CreateSharedLinkError {
     Path(super::files::LookupError),
@@ -2607,7 +2607,7 @@ impl ::std::fmt::Display for CreateSharedLinkError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateSharedLinkWithSettingsArg {
     /// The path to be shared by the shared link.
@@ -2718,7 +2718,7 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CreateSharedLinkWithSettingsError {
     Path(super::files::LookupError),
     /// This user's email address is not verified. This functionality is only available on accounts
@@ -2856,7 +2856,7 @@ impl ::std::fmt::Display for CreateSharedLinkWithSettingsError {
 
 /// The expected metadata of a shared link for a file or folder when a link is first created for the
 /// content. Absent if the link already exists.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExpectedSharedContentLinkMetadata {
     /// The audience options that are available for the content. Some audience options may be
@@ -3059,7 +3059,7 @@ impl ::serde::ser::Serialize for ExpectedSharedContentLinkMetadata {
 }
 
 /// Sharing actions that may be taken on files.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileAction {
     /// Disable viewer information on the file.
@@ -3224,7 +3224,7 @@ impl ::serde::ser::Serialize for FileAction {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileErrorResult {
     /// File specified by id was not found.
@@ -3321,7 +3321,7 @@ impl ::serde::ser::Serialize for FileErrorResult {
 }
 
 /// The metadata of a file shared link.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileLinkMetadata {
     /// URL of the shared link.
@@ -3606,7 +3606,7 @@ impl ::serde::ser::Serialize for FileLinkMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileMemberActionError {
     /// Specified member was not found.
@@ -3722,7 +3722,7 @@ impl ::std::fmt::Display for FileMemberActionError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum FileMemberActionIndividualResult {
     /// Member was successfully removed from this file. If AccessLevel is given, the member still
     /// has access via a parent shared folder.
@@ -3797,7 +3797,7 @@ impl ::serde::ser::Serialize for FileMemberActionIndividualResult {
 }
 
 /// Per-member result for [`add_file_member()`](add_file_member).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileMemberActionResult {
     /// One of specified input members.
@@ -3901,7 +3901,7 @@ impl ::serde::ser::Serialize for FileMemberActionResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileMemberRemoveActionResult {
     /// Member was successfully removed from this file.
@@ -3975,7 +3975,7 @@ impl ::serde::ser::Serialize for FileMemberRemoveActionResult {
 }
 
 /// Whether the user is allowed to take the sharing action on the file.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FilePermission {
     /// The action that the user may wish to take on the file.
@@ -4100,7 +4100,7 @@ impl ::serde::ser::Serialize for FilePermission {
 }
 
 /// Actions that may be taken on shared folders.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FolderAction {
     /// Change folder options, such as who can be invited to join the folder.
@@ -4286,7 +4286,7 @@ impl ::serde::ser::Serialize for FolderAction {
 }
 
 /// The metadata of a folder shared link.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderLinkMetadata {
     /// URL of the shared link.
@@ -4508,7 +4508,7 @@ impl ::serde::ser::Serialize for FolderLinkMetadata {
 }
 
 /// Whether the user is allowed to take the action on the shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderPermission {
     /// The action that the user may wish to take on the folder.
@@ -4634,7 +4634,7 @@ impl ::serde::ser::Serialize for FolderPermission {
 }
 
 /// A set of policies governing membership and privileges for a shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderPolicy {
     /// Who can add and remove members from this shared folder.
@@ -4803,7 +4803,7 @@ impl ::serde::ser::Serialize for FolderPolicy {
 }
 
 /// Arguments of [`get_file_metadata()`](get_file_metadata).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataArg {
     /// The file to query.
@@ -4917,7 +4917,7 @@ impl ::serde::ser::Serialize for GetFileMetadataArg {
 }
 
 /// Arguments of [`get_file_metadata_batch()`](get_file_metadata_batch).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataBatchArg {
     /// The files to query.
@@ -5031,7 +5031,7 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchArg {
 }
 
 /// Per file results of [`get_file_metadata_batch()`](get_file_metadata_batch).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataBatchResult {
     /// This is the input file identifier corresponding to one of
@@ -5137,7 +5137,7 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchResult {
 }
 
 /// Error result for [`get_file_metadata()`](get_file_metadata).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetFileMetadataError {
     UserError(SharingUserError),
@@ -5234,7 +5234,7 @@ impl ::std::fmt::Display for GetFileMetadataError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetFileMetadataIndividualResult {
     /// The result for this file if it was successful.
@@ -5307,7 +5307,7 @@ impl ::serde::ser::Serialize for GetFileMetadataIndividualResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMetadataArgs {
     /// The ID for the shared folder.
@@ -5420,7 +5420,7 @@ impl ::serde::ser::Serialize for GetMetadataArgs {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetSharedLinkFileError {
     /// The shared link wasn't found.
@@ -5519,7 +5519,7 @@ impl ::std::fmt::Display for GetSharedLinkFileError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinkMetadataArg {
     /// URL of the shared link.
@@ -5651,7 +5651,7 @@ impl ::serde::ser::Serialize for GetSharedLinkMetadataArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinksArg {
     /// See [`get_shared_links()`](get_shared_links) description.
@@ -5732,7 +5732,7 @@ impl ::serde::ser::Serialize for GetSharedLinksArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetSharedLinksError {
     Path(super::files::MalformedPathError),
@@ -5808,7 +5808,7 @@ impl ::std::fmt::Display for GetSharedLinksError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinksResult {
     /// Shared links applicable to the path argument.
@@ -5901,7 +5901,7 @@ impl ::serde::ser::Serialize for GetSharedLinksResult {
 
 /// The information about a group. Groups is a way to manage a list of users  who need same access
 /// permission to the shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupInfo {
     pub group_name: String,
@@ -6117,7 +6117,7 @@ impl ::serde::ser::Serialize for GroupInfo {
 }
 
 /// The information about a group member of the shared content.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
@@ -6281,7 +6281,7 @@ impl ::serde::ser::Serialize for GroupMembershipInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct InsufficientPlan {
     /// A message to tell the user to upgrade in order to support expected action.
@@ -6393,7 +6393,7 @@ impl ::serde::ser::Serialize for InsufficientPlan {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct InsufficientQuotaAmounts {
     /// The amount of space needed to add the item (the size of the item).
@@ -6511,7 +6511,7 @@ impl ::serde::ser::Serialize for InsufficientQuotaAmounts {
 }
 
 /// Information about the recipient of a shared content invitation.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum InviteeInfo {
     /// Email address of invited user.
@@ -6574,7 +6574,7 @@ impl ::serde::ser::Serialize for InviteeInfo {
 }
 
 /// Information about an invited member of a shared content.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct InviteeMembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
@@ -6760,7 +6760,7 @@ impl ::serde::ser::Serialize for InviteeMembershipInfo {
 
 /// Error occurred while performing an asynchronous job from [`unshare_folder()`](unshare_folder) or
 /// [`remove_folder_member()`](remove_folder_member).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum JobError {
     /// Error occurred while performing [`unshare_folder()`](unshare_folder) action.
@@ -6879,7 +6879,7 @@ impl ::std::fmt::Display for JobError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum JobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
@@ -6955,7 +6955,7 @@ impl ::serde::ser::Serialize for JobStatus {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkAccessLevel {
     /// Users who use the link can view and comment on the content.
@@ -7021,7 +7021,7 @@ impl ::serde::ser::Serialize for LinkAccessLevel {
 }
 
 /// Actions that can be performed on a link.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkAction {
     /// Change the access level of the link.
@@ -7126,7 +7126,7 @@ impl ::serde::ser::Serialize for LinkAction {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkAudience {
     /// Link is accessible by anyone.
@@ -7225,7 +7225,7 @@ impl ::serde::ser::Serialize for LinkAudience {
 }
 
 /// check documentation for VisibilityPolicyDisallowedReason.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkAudienceDisallowedReason {
     /// The user needs to delete and recreate the link to change the visibility policy.
@@ -7331,7 +7331,7 @@ impl ::serde::ser::Serialize for LinkAudienceDisallowedReason {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkAudienceOption {
     /// Specifies who can access the link.
@@ -7456,7 +7456,7 @@ impl ::serde::ser::Serialize for LinkAudienceOption {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkExpiry {
     /// Remove the currently set expiry for the link.
@@ -7530,7 +7530,7 @@ impl ::serde::ser::Serialize for LinkExpiry {
 
 /// Metadata for a shared link. This can be either a [`PathLinkMetadata`](PathLinkMetadata) or
 /// [`CollectionLinkMetadata`](CollectionLinkMetadata).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkMetadata {
     Path(PathLinkMetadata),
@@ -7598,7 +7598,7 @@ impl ::serde::ser::Serialize for LinkMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkPassword {
     /// Remove the currently set password for the link.
@@ -7671,7 +7671,7 @@ impl ::serde::ser::Serialize for LinkPassword {
 }
 
 /// Permissions for actions that can be performed on a link.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkPermission {
     pub action: LinkAction,
@@ -7792,7 +7792,7 @@ impl ::serde::ser::Serialize for LinkPermission {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkPermissions {
     /// Whether the caller can revoke the shared link.
@@ -8216,7 +8216,7 @@ impl ::serde::ser::Serialize for LinkPermissions {
 }
 
 /// Settings that apply to a link.
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkSettings {
     /// The access level on the link for this file. Currently, it only accepts 'viewer' and
@@ -8356,7 +8356,7 @@ impl ::serde::ser::Serialize for LinkSettings {
 }
 
 /// Arguments for [`list_file_members()`](list_file_members).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersArg {
     /// The file for which you want to see members.
@@ -8504,7 +8504,7 @@ impl ::serde::ser::Serialize for ListFileMembersArg {
 }
 
 /// Arguments for [`list_file_members_batch()`](list_file_members_batch).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersBatchArg {
     /// Files for which to return members.
@@ -8614,7 +8614,7 @@ impl ::serde::ser::Serialize for ListFileMembersBatchArg {
 }
 
 /// Per-file result for [`list_file_members_batch()`](list_file_members_batch).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersBatchResult {
     /// This is the input file identifier, whether an ID or a path.
@@ -8719,7 +8719,7 @@ impl ::serde::ser::Serialize for ListFileMembersBatchResult {
 }
 
 /// Arguments for [`list_file_members_continue()`](list_file_members_continue).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersContinueArg {
     /// The cursor returned by your last call to [`list_file_members()`](list_file_members),
@@ -8813,7 +8813,7 @@ impl ::serde::ser::Serialize for ListFileMembersContinueArg {
 }
 
 /// Error for [`list_file_members_continue()`](list_file_members_continue).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFileMembersContinueError {
     UserError(SharingUserError),
@@ -8920,7 +8920,7 @@ impl ::std::fmt::Display for ListFileMembersContinueError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersCountResult {
     /// A list of members on this file.
@@ -9025,7 +9025,7 @@ impl ::serde::ser::Serialize for ListFileMembersCountResult {
 }
 
 /// Error for [`list_file_members()`](list_file_members).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFileMembersError {
     UserError(SharingUserError),
@@ -9122,7 +9122,7 @@ impl ::std::fmt::Display for ListFileMembersError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFileMembersIndividualResult {
     /// The results of the query for this file if it was successful.
@@ -9196,7 +9196,7 @@ impl ::serde::ser::Serialize for ListFileMembersIndividualResult {
 }
 
 /// Arguments for [`list_received_files()`](list_received_files).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesArg {
     /// Number of files to return max per query. Defaults to 100 if no limit is specified.
@@ -9306,7 +9306,7 @@ impl ::serde::ser::Serialize for ListFilesArg {
 }
 
 /// Arguments for [`list_received_files_continue()`](list_received_files_continue).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesContinueArg {
     /// Cursor in [`ListFilesResult::cursor`](ListFilesResult).
@@ -9398,7 +9398,7 @@ impl ::serde::ser::Serialize for ListFilesContinueArg {
 }
 
 /// Error results for [`list_received_files_continue()`](list_received_files_continue).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFilesContinueError {
     /// User account had a problem.
@@ -9489,7 +9489,7 @@ impl ::std::fmt::Display for ListFilesContinueError {
 }
 
 /// Success results for [`list_received_files()`](list_received_files).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesResult {
     /// Information about the files shared with current user.
@@ -9600,7 +9600,7 @@ impl ::serde::ser::Serialize for ListFilesResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersArgs {
     /// The ID for the shared folder.
@@ -9732,7 +9732,7 @@ impl ::serde::ser::Serialize for ListFolderMembersArgs {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersContinueArg {
     /// The cursor returned by your last call to [`list_folder_members()`](list_folder_members) or
@@ -9824,7 +9824,7 @@ impl ::serde::ser::Serialize for ListFolderMembersContinueArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFolderMembersContinueError {
     AccessError(SharedFolderAccessError),
@@ -9913,7 +9913,7 @@ impl ::std::fmt::Display for ListFolderMembersContinueError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersCursorArg {
     /// This is a list indicating whether each returned member will include a boolean value
@@ -10023,7 +10023,7 @@ impl ::serde::ser::Serialize for ListFolderMembersCursorArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFoldersArgs {
     /// The maximum number of results to return per request.
@@ -10132,7 +10132,7 @@ impl ::serde::ser::Serialize for ListFoldersArgs {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFoldersContinueArg {
     /// The cursor returned by the previous API call specified in the endpoint description.
@@ -10223,7 +10223,7 @@ impl ::serde::ser::Serialize for ListFoldersContinueArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFoldersContinueError {
     /// [`ListFoldersContinueArg::cursor`](ListFoldersContinueArg) is invalid.
@@ -10291,7 +10291,7 @@ impl ::std::fmt::Display for ListFoldersContinueError {
 /// [`list_mountable_folders()`](list_mountable_folders), depending on which endpoint was requested.
 /// Unmounted shared folders can be identified by the absence of
 /// [`SharedFolderMetadata::path_lower`](SharedFolderMetadata).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFoldersResult {
     /// List of all shared folders the authenticated user has access to.
@@ -10406,7 +10406,7 @@ impl ::serde::ser::Serialize for ListFoldersResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListSharedLinksArg {
     /// See [`list_shared_links()`](list_shared_links) description.
@@ -10525,7 +10525,7 @@ impl ::serde::ser::Serialize for ListSharedLinksArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListSharedLinksError {
     Path(super::files::LookupError),
@@ -10615,7 +10615,7 @@ impl ::std::fmt::Display for ListSharedLinksError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListSharedLinksResult {
     /// Shared links applicable to the path argument.
@@ -10742,7 +10742,7 @@ impl ::serde::ser::Serialize for ListSharedLinksResult {
 }
 
 /// Contains information about a member's access level to content after an operation.
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAccessLevelResult {
     /// The member still has this level of access to the content through a parent folder.
@@ -10864,7 +10864,7 @@ impl ::serde::ser::Serialize for MemberAccessLevelResult {
 }
 
 /// Actions that may be taken on members of a shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MemberAction {
     /// Allow the member to keep a copy of the folder when removing.
@@ -10970,7 +10970,7 @@ impl ::serde::ser::Serialize for MemberAction {
 }
 
 /// Whether the user is allowed to take the action on the associated member.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberPermission {
     /// The action that the user may wish to take on the member.
@@ -11096,7 +11096,7 @@ impl ::serde::ser::Serialize for MemberPermission {
 
 /// Policy governing who can be a member of a shared folder. Only applicable to folders owned by a
 /// user on a team.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MemberPolicy {
     /// Only a teammate can become a member.
@@ -11162,7 +11162,7 @@ impl ::serde::ser::Serialize for MemberPolicy {
 }
 
 /// Includes different ways to identify a member of a shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MemberSelector {
     /// Dropbox account, team member, or group ID of member.
@@ -11242,7 +11242,7 @@ impl ::serde::ser::Serialize for MemberSelector {
 }
 
 /// The information about a member of the shared content.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
@@ -11393,7 +11393,7 @@ impl ::serde::ser::Serialize for MembershipInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ModifySharedLinkSettingsArgs {
     /// URL of the shared link to change its settings.
@@ -11515,7 +11515,7 @@ impl ::serde::ser::Serialize for ModifySharedLinkSettingsArgs {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ModifySharedLinkSettingsError {
     /// The shared link wasn't found.
@@ -11639,7 +11639,7 @@ impl ::std::fmt::Display for ModifySharedLinkSettingsError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MountFolderArg {
     /// The ID of the shared folder to mount.
@@ -11730,7 +11730,7 @@ impl ::serde::ser::Serialize for MountFolderArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MountFolderError {
     AccessError(SharedFolderAccessError),
@@ -11867,7 +11867,7 @@ impl ::std::fmt::Display for MountFolderError {
 }
 
 /// Contains information about a parent folder that a member has access to.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ParentFolderAccessInfo {
     /// Display name for the folder.
@@ -12003,7 +12003,7 @@ impl ::serde::ser::Serialize for ParentFolderAccessInfo {
 }
 
 /// Metadata for a path-based shared link.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PathLinkMetadata {
     /// URL of the shared link.
@@ -12141,7 +12141,7 @@ impl ::serde::ser::Serialize for PathLinkMetadata {
 }
 
 /// Flag to indicate pending upload default (for linking to not-yet-existing paths).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PendingUploadMode {
     /// Assume pending uploads are files.
     File,
@@ -12201,7 +12201,7 @@ impl ::serde::ser::Serialize for PendingUploadMode {
 }
 
 /// Possible reasons the user is denied a permission.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PermissionDeniedReason {
     /// User is not on the same team as the folder owner.
@@ -12396,7 +12396,7 @@ impl ::serde::ser::Serialize for PermissionDeniedReason {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelinquishFileMembershipArg {
     /// The path or id for the file.
@@ -12487,7 +12487,7 @@ impl ::serde::ser::Serialize for RelinquishFileMembershipArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelinquishFileMembershipError {
     AccessError(SharingFileAccessError),
@@ -12589,7 +12589,7 @@ impl ::std::fmt::Display for RelinquishFileMembershipError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelinquishFolderMembershipArg {
     /// The ID for the shared folder.
@@ -12699,7 +12699,7 @@ impl ::serde::ser::Serialize for RelinquishFolderMembershipArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelinquishFolderMembershipError {
     AccessError(SharedFolderAccessError),
@@ -12849,7 +12849,7 @@ impl ::std::fmt::Display for RelinquishFolderMembershipError {
 }
 
 /// Arguments for [`remove_file_member_2()`](remove_file_member_2).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveFileMemberArg {
     /// File from which to remove members.
@@ -12956,7 +12956,7 @@ impl ::serde::ser::Serialize for RemoveFileMemberArg {
 }
 
 /// Errors for [`remove_file_member_2()`](remove_file_member_2).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RemoveFileMemberError {
     UserError(SharingUserError),
@@ -13066,7 +13066,7 @@ impl ::std::fmt::Display for RemoveFileMemberError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveFolderMemberArg {
     /// The ID for the shared folder.
@@ -13189,7 +13189,7 @@ impl ::serde::ser::Serialize for RemoveFolderMemberArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RemoveFolderMemberError {
     AccessError(SharedFolderAccessError),
@@ -13343,7 +13343,7 @@ impl ::std::fmt::Display for RemoveFolderMemberError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RemoveMemberJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
@@ -13420,7 +13420,7 @@ impl ::serde::ser::Serialize for RemoveMemberJobStatus {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RequestedLinkAccessLevel {
     /// Users who use the link can view and comment on the content.
@@ -13500,7 +13500,7 @@ impl ::serde::ser::Serialize for RequestedLinkAccessLevel {
 /// final resolved visibility of the shared link takes into account other aspects, such as team and
 /// shared folder settings. Check the [`ResolvedVisibility`](ResolvedVisibility) for more info on
 /// the possible resolved visibility values of shared links.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RequestedVisibility {
     /// Anyone who has received the link can access it. No login required.
     Public,
@@ -13572,7 +13572,7 @@ impl ::serde::ser::Serialize for RequestedVisibility {
 /// The actual access permissions values of shared links after taking into account user preferences
 /// and the team and shared folder settings. Check the [`RequestedVisibility`](RequestedVisibility)
 /// for more info on the possible visibility values that can be set by the shared link's owner.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ResolvedVisibility {
     /// Anyone who has received the link can access it. No login required.
@@ -13691,7 +13691,7 @@ impl ::serde::ser::Serialize for ResolvedVisibility {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeSharedLinkArg {
     /// URL of the shared link.
@@ -13782,7 +13782,7 @@ impl ::serde::ser::Serialize for RevokeSharedLinkArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RevokeSharedLinkError {
     /// The shared link wasn't found.
@@ -13881,7 +13881,7 @@ impl ::std::fmt::Display for RevokeSharedLinkError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetAccessInheritanceArg {
     /// The ID for the shared folder.
@@ -13990,7 +13990,7 @@ impl ::serde::ser::Serialize for SetAccessInheritanceArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SetAccessInheritanceError {
     /// Unable to access shared folder.
@@ -14081,7 +14081,7 @@ impl ::std::fmt::Display for SetAccessInheritanceError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ShareFolderArg {
     /// The path to the folder to share. If it does not exist, then a new one is created.
@@ -14332,7 +14332,7 @@ impl ::serde::ser::Serialize for ShareFolderArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ShareFolderArgBase {
     /// The path to the folder to share. If it does not exist, then a new one is created.
@@ -14541,7 +14541,7 @@ impl ::serde::ser::Serialize for ShareFolderArgBase {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ShareFolderError {
     /// This user's email address is not verified. This functionality is only available on accounts
@@ -14665,7 +14665,7 @@ impl ::std::fmt::Display for ShareFolderError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ShareFolderErrorBase {
     /// This user's email address is not verified. This functionality is only available on accounts
@@ -14760,7 +14760,7 @@ impl ::serde::ser::Serialize for ShareFolderErrorBase {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ShareFolderJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
@@ -14836,7 +14836,7 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ShareFolderLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
@@ -14903,7 +14903,7 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharePathError {
     /// A file is at the specified path.
@@ -15137,7 +15137,7 @@ impl ::std::fmt::Display for SharePathError {
 }
 
 /// Metadata of a shared link for a file or folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedContentLinkMetadata {
     /// The audience options that are available for the content. Some audience options may be
@@ -15375,7 +15375,7 @@ impl ::serde::ser::Serialize for SharedContentLinkMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedContentLinkMetadataBase {
     /// The audience options that are available for the content. Some audience options may be
@@ -15581,7 +15581,7 @@ impl ::serde::ser::Serialize for SharedContentLinkMetadataBase {
 /// [`list_file_members()`](list_file_members) and
 /// [`list_file_members_continue()`](list_file_members_continue), and used as part of the results
 /// for [`list_file_members_batch()`](list_file_members_batch).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFileMembers {
     /// The list of user members of the shared file.
@@ -15725,7 +15725,7 @@ impl ::serde::ser::Serialize for SharedFileMembers {
 }
 
 /// Properties of the shared file.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFileMetadata {
     /// The ID of the file.
@@ -16075,7 +16075,7 @@ impl ::serde::ser::Serialize for SharedFileMetadata {
 }
 
 /// There is an error accessing the shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedFolderAccessError {
     /// This shared folder ID is invalid.
@@ -16175,7 +16175,7 @@ impl ::std::fmt::Display for SharedFolderAccessError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedFolderMemberError {
     /// The target dropbox_id is invalid.
@@ -16266,7 +16266,7 @@ impl ::std::fmt::Display for SharedFolderMemberError {
 }
 
 /// Shared folder user and group membership.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFolderMembers {
     /// The list of user members of the shared folder.
@@ -16410,7 +16410,7 @@ impl ::serde::ser::Serialize for SharedFolderMembers {
 }
 
 /// The metadata which includes basic information about the shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFolderMetadata {
     /// The current user's access level for this shared folder.
@@ -16766,7 +16766,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadata {
 }
 
 /// Properties of the shared folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFolderMetadataBase {
     /// The current user's access level for this shared folder.
@@ -16991,7 +16991,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadataBase {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkAccessFailureReason {
     /// User is not logged in.
@@ -17088,7 +17088,7 @@ impl ::serde::ser::Serialize for SharedLinkAccessFailureReason {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkAlreadyExistsMetadata {
     /// Metadata of the shared link that already exists.
@@ -17150,7 +17150,7 @@ impl ::serde::ser::Serialize for SharedLinkAlreadyExistsMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkError {
     /// The shared link wasn't found.
@@ -17239,7 +17239,7 @@ impl ::std::fmt::Display for SharedLinkError {
 }
 
 /// The metadata of a shared link.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkMetadata {
     File(FileLinkMetadata),
@@ -17321,7 +17321,7 @@ impl ::serde::ser::Serialize for SharedLinkMetadata {
 }
 
 /// Who can view shared links in this folder.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkPolicy {
     /// Links can be shared with anyone.
@@ -17396,7 +17396,7 @@ impl ::serde::ser::Serialize for SharedLinkPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedLinkSettings {
     /// Boolean flag to enable or disable password protection.
@@ -17595,7 +17595,7 @@ impl ::serde::ser::Serialize for SharedLinkSettings {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SharedLinkSettingsError {
     /// The given settings are invalid (for example, all attributes of the
     /// [`SharedLinkSettings`](SharedLinkSettings) are empty, the requested visibility is
@@ -17671,7 +17671,7 @@ impl ::std::fmt::Display for SharedLinkSettingsError {
 }
 
 /// User could not access this file.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharingFileAccessError {
     /// Current user does not have sufficient privileges to perform the desired action.
@@ -17783,7 +17783,7 @@ impl ::std::fmt::Display for SharingFileAccessError {
 }
 
 /// User account had a problem preventing this action.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharingUserError {
     /// This user's email address is not verified. This functionality is only available on accounts
@@ -17850,7 +17850,7 @@ impl ::std::fmt::Display for SharingUserError {
 }
 
 /// Information about a team member.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamMemberInfo {
     /// Information about the member's team.
@@ -17975,7 +17975,7 @@ impl ::serde::ser::Serialize for TeamMemberInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TransferFolderArg {
     /// The ID for the shared folder.
@@ -18079,7 +18079,7 @@ impl ::serde::ser::Serialize for TransferFolderArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TransferFolderError {
     AccessError(SharedFolderAccessError),
@@ -18224,7 +18224,7 @@ impl ::std::fmt::Display for TransferFolderError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnmountFolderArg {
     /// The ID for the shared folder.
@@ -18315,7 +18315,7 @@ impl ::serde::ser::Serialize for UnmountFolderArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UnmountFolderError {
     AccessError(SharedFolderAccessError),
@@ -18418,7 +18418,7 @@ impl ::std::fmt::Display for UnmountFolderError {
 }
 
 /// Arguments for [`unshare_file()`](unshare_file).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnshareFileArg {
     /// The file to unshare.
@@ -18510,7 +18510,7 @@ impl ::serde::ser::Serialize for UnshareFileArg {
 }
 
 /// Error result for [`unshare_file()`](unshare_file).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UnshareFileError {
     UserError(SharingUserError),
@@ -18607,7 +18607,7 @@ impl ::std::fmt::Display for UnshareFileError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnshareFolderArg {
     /// The ID for the shared folder.
@@ -18718,7 +18718,7 @@ impl ::serde::ser::Serialize for UnshareFolderArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UnshareFolderError {
     AccessError(SharedFolderAccessError),
@@ -18831,7 +18831,7 @@ impl ::std::fmt::Display for UnshareFolderError {
 }
 
 /// Arguments for [`update_file_member()`](update_file_member).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFileMemberArgs {
     /// File for which we are changing a member's access.
@@ -18948,7 +18948,7 @@ impl ::serde::ser::Serialize for UpdateFileMemberArgs {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFolderMemberArg {
     /// The ID for the shared folder.
@@ -19070,7 +19070,7 @@ impl ::serde::ser::Serialize for UpdateFolderMemberArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UpdateFolderMemberError {
     AccessError(SharedFolderAccessError),
@@ -19212,7 +19212,7 @@ impl ::std::fmt::Display for UpdateFolderMemberError {
 }
 
 /// If any of the policies are unset, then they retain their current setting.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFolderPolicyArg {
     /// The ID for the shared folder.
@@ -19427,7 +19427,7 @@ impl ::serde::ser::Serialize for UpdateFolderPolicyArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UpdateFolderPolicyError {
     AccessError(SharedFolderAccessError),
@@ -19561,7 +19561,7 @@ impl ::std::fmt::Display for UpdateFolderPolicyError {
 }
 
 /// The information about a user member of the shared content with an appended last seen timestamp.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserFileMembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
@@ -19769,7 +19769,7 @@ impl ::serde::ser::Serialize for UserFileMembershipInfo {
 /// Basic information about a user. Use [`users::get_account()`](super::users::get_account) and
 /// [`users::get_account_batch()`](super::users::get_account_batch) to obtain more detailed
 /// information.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfo {
     /// The account ID of the user.
@@ -19925,7 +19925,7 @@ impl ::serde::ser::Serialize for UserInfo {
 }
 
 /// The information about a user member of the shared content.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserMembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
@@ -20089,7 +20089,7 @@ impl ::serde::ser::Serialize for UserMembershipInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ViewerInfoPolicy {
     /// Viewer information is available on this file.
@@ -20156,7 +20156,7 @@ impl ::serde::ser::Serialize for ViewerInfoPolicy {
 
 /// Who can access a shared link. The most open visibility is [`Public`](Visibility::Public). The
 /// default depends on many aspects, such as team and user preferences and shared folder settings.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum Visibility {
     /// Anyone who has received the link can access it. No login required.
@@ -20252,7 +20252,7 @@ impl ::serde::ser::Serialize for Visibility {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct VisibilityPolicy {
     /// This is the value to submit when saving the visibility setting.
@@ -20396,7 +20396,7 @@ impl ::serde::ser::Serialize for VisibilityPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum VisibilityPolicyDisallowedReason {
     /// The user needs to delete and recreate the link to change the visibility policy.

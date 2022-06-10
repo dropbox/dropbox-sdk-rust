@@ -81,7 +81,7 @@ pub fn get_space_usage(
 
 /// The amount of detail revealed about an account depends on the user being queried and the user
 /// making the query.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct Account {
     /// The user's unique Dropbox ID.
@@ -252,7 +252,7 @@ impl ::serde::ser::Serialize for Account {
 }
 
 /// Basic information about any account.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct BasicAccount {
     /// The user's unique Dropbox ID.
@@ -459,7 +459,7 @@ impl ::serde::ser::Serialize for BasicAccount {
 }
 
 /// The value for [`UserFeature::FileLocking`](UserFeature::FileLocking).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileLockingValue {
     /// When this value is True, the user can lock files in shared directories. When the value is
@@ -524,7 +524,7 @@ impl ::serde::ser::Serialize for FileLockingValue {
 }
 
 /// Detailed information about the current user's account.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FullAccount {
     /// The user's unique Dropbox ID.
@@ -828,7 +828,7 @@ impl ::serde::ser::Serialize for FullAccount {
 }
 
 /// Detailed information about a team.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FullTeam {
     /// The team's unique ID.
@@ -963,7 +963,7 @@ impl ::serde::ser::Serialize for FullTeam {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetAccountArg {
     /// A user's account identifier.
@@ -1054,7 +1054,7 @@ impl ::serde::ser::Serialize for GetAccountArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetAccountBatchArg {
     /// List of user account identifiers.  Should not contain any duplicate account IDs.
@@ -1145,7 +1145,7 @@ impl ::serde::ser::Serialize for GetAccountBatchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetAccountBatchError {
     /// The value is an account ID specified in
@@ -1220,7 +1220,7 @@ impl ::std::fmt::Display for GetAccountBatchError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetAccountError {
     /// The specified [`GetAccountArg::account_id`](GetAccountArg) does not exist.
@@ -1284,7 +1284,7 @@ impl ::std::fmt::Display for GetAccountError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct IndividualSpaceAllocation {
     /// The total space allocated to the user's account (bytes).
@@ -1376,7 +1376,7 @@ impl ::serde::ser::Serialize for IndividualSpaceAllocation {
 }
 
 /// Representations for a person's name to assist with internationalization.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct Name {
     /// Also known as a first name.
@@ -1527,7 +1527,7 @@ impl ::serde::ser::Serialize for Name {
 }
 
 /// The value for [`UserFeature::PaperAsFiles`](UserFeature::PaperAsFiles).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperAsFilesValue {
     /// When this value is true, the user's Paper docs are accessible in Dropbox with the .paper
@@ -1593,7 +1593,7 @@ impl ::serde::ser::Serialize for PaperAsFilesValue {
 }
 
 /// Space is allocated differently based on the type of account.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SpaceAllocation {
     /// The user's space allocation applies only to their individual account.
@@ -1661,7 +1661,7 @@ impl ::serde::ser::Serialize for SpaceAllocation {
 }
 
 /// Information about a user's space usage and quota.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SpaceUsage {
     /// The user's total space usage (bytes).
@@ -1766,7 +1766,7 @@ impl ::serde::ser::Serialize for SpaceUsage {
 }
 
 /// Information about a team.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct Team {
     /// The team's unique ID.
@@ -1870,7 +1870,7 @@ impl ::serde::ser::Serialize for Team {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamSpaceAllocation {
     /// The total space currently used by the user's team (bytes).
@@ -2021,7 +2021,7 @@ impl ::serde::ser::Serialize for TeamSpaceAllocation {
 }
 
 /// A set of features that a Dropbox User account may have configured.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserFeature {
     /// This feature contains information about how the user's Paper files are stored.
@@ -2087,7 +2087,7 @@ impl ::serde::ser::Serialize for UserFeature {
 }
 
 /// Values that correspond to entries in [`UserFeature`](UserFeature).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserFeatureValue {
     PaperAsFiles(PaperAsFilesValue),
@@ -2164,7 +2164,7 @@ impl ::serde::ser::Serialize for UserFeatureValue {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserFeaturesGetValuesBatchArg {
     /// A list of features in [`UserFeature`](UserFeature). If the list is empty, this route will
@@ -2256,7 +2256,7 @@ impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchArg {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserFeaturesGetValuesBatchError {
     /// At least one [`UserFeature`](UserFeature) must be included in the
@@ -2321,7 +2321,7 @@ impl ::std::fmt::Display for UserFeaturesGetValuesBatchError {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserFeaturesGetValuesBatchResult {
     pub values: Vec<UserFeatureValue>,

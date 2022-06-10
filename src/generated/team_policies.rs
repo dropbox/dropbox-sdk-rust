@@ -7,7 +7,7 @@
     clippy::doc_markdown,
 )]
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CameraUploadsPolicyState {
     /// Background camera uploads are disabled.
@@ -72,7 +72,7 @@ impl ::serde::ser::Serialize for CameraUploadsPolicyState {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ComputerBackupPolicyState {
     /// Computer Backup feature is disabled.
@@ -147,7 +147,7 @@ impl ::serde::ser::Serialize for ComputerBackupPolicyState {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum EmmState {
     /// Emm token is disabled.
@@ -222,7 +222,7 @@ impl ::serde::ser::Serialize for EmmState {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ExternalDriveBackupPolicyState {
     /// External Drive Backup feature is disabled.
@@ -297,7 +297,7 @@ impl ::serde::ser::Serialize for ExternalDriveBackupPolicyState {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileLockingPolicyState {
     /// File locking feature is disabled.
@@ -362,7 +362,7 @@ impl ::serde::ser::Serialize for FileLockingPolicyState {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupCreation {
     /// Team admins and members can create groups.
     AdminsAndMembers,
@@ -421,7 +421,7 @@ impl ::serde::ser::Serialize for GroupCreation {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum OfficeAddInPolicy {
     /// Office Add-In is disabled.
@@ -486,7 +486,7 @@ impl ::serde::ser::Serialize for OfficeAddInPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDefaultFolderPolicy {
     /// Everyone in team will be the default option when creating a folder in Paper.
@@ -551,7 +551,7 @@ impl ::serde::ser::Serialize for PaperDefaultFolderPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDeploymentPolicy {
     /// All team members have access to Paper.
@@ -617,7 +617,7 @@ impl ::serde::ser::Serialize for PaperDeploymentPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDesktopPolicy {
     /// Do not allow team members to use Paper Desktop.
@@ -682,7 +682,7 @@ impl ::serde::ser::Serialize for PaperDesktopPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperEnabledPolicy {
     /// Paper is disabled.
@@ -757,7 +757,7 @@ impl ::serde::ser::Serialize for PaperEnabledPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PasswordControlMode {
     /// Password is disabled.
@@ -822,7 +822,7 @@ impl ::serde::ser::Serialize for PasswordControlMode {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PasswordStrengthPolicy {
     /// User passwords will adhere to the minimal password strength policy.
@@ -897,7 +897,7 @@ impl ::serde::ser::Serialize for PasswordStrengthPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RolloutMethod {
     /// Unlink all.
     UnlinkAll,
@@ -967,7 +967,7 @@ impl ::serde::ser::Serialize for RolloutMethod {
 }
 
 /// Policy governing which shared folders a team member can join.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedFolderJoinPolicy {
     /// Team members can only join folders shared by teammates.
@@ -1033,7 +1033,7 @@ impl ::serde::ser::Serialize for SharedFolderJoinPolicy {
 }
 
 /// Policy governing who can be a member of a folder shared by a team member.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedFolderMemberPolicy {
     /// Only a teammate can be a member of a folder shared by a team member.
@@ -1100,7 +1100,7 @@ impl ::serde::ser::Serialize for SharedFolderMemberPolicy {
 
 /// Policy governing the visibility of shared links. This policy can apply to newly created shared
 /// links, or all shared links.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkCreatePolicy {
     /// By default, anyone can access newly created shared links. No login will be required to
@@ -1189,7 +1189,7 @@ impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ShowcaseDownloadPolicy {
     /// Do not allow files to be downloaded from Showcases.
@@ -1254,7 +1254,7 @@ impl ::serde::ser::Serialize for ShowcaseDownloadPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ShowcaseEnabledPolicy {
     /// Showcase is disabled.
@@ -1319,7 +1319,7 @@ impl ::serde::ser::Serialize for ShowcaseEnabledPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ShowcaseExternalSharingPolicy {
     /// Do not allow showcases to be shared with people not on the team.
@@ -1384,7 +1384,7 @@ impl ::serde::ser::Serialize for ShowcaseExternalSharingPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SmartSyncPolicy {
     /// The specified content will be synced as local files by default.
@@ -1449,7 +1449,7 @@ impl ::serde::ser::Serialize for SmartSyncPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SmarterSmartSyncPolicyState {
     /// Smarter Smart Sync feature is disabled.
@@ -1514,7 +1514,7 @@ impl ::serde::ser::Serialize for SmarterSmartSyncPolicyState {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SsoPolicy {
     /// Users will be able to sign in with their Dropbox credentials.
@@ -1589,7 +1589,7 @@ impl ::serde::ser::Serialize for SsoPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SuggestMembersPolicy {
     /// Suggest members is disabled.
@@ -1655,7 +1655,7 @@ impl ::serde::ser::Serialize for SuggestMembersPolicy {
 }
 
 /// Policies governing team members.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamMemberPolicies {
     /// Policies governing sharing.
@@ -1796,7 +1796,7 @@ impl ::serde::ser::Serialize for TeamMemberPolicies {
 }
 
 /// Policies governing sharing within and outside of the team.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamSharingPolicies {
     /// Who can join folders shared by team members.
@@ -1917,7 +1917,7 @@ impl ::serde::ser::Serialize for TeamSharingPolicies {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TwoStepVerificationPolicy {
     /// Enabled require two factor authorization.
@@ -1982,7 +1982,7 @@ impl ::serde::ser::Serialize for TwoStepVerificationPolicy {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TwoStepVerificationState {
     /// Enabled require two factor authorization.
