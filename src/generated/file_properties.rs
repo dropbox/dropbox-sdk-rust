@@ -1363,8 +1363,8 @@ pub enum LookupError {
     NotFile,
     /// We were expecting a folder, but the given path refers to something that isn't a folder.
     NotFolder,
-    /// The file cannot be transferred because the content is restricted.  For example, sometimes
-    /// there are legal restrictions due to copyright claims.
+    /// The file cannot be transferred because the content is restricted. For example, we might
+    /// restrict a file due to legal requirements.
     RestrictedContent,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -1465,7 +1465,7 @@ impl ::std::fmt::Display for LookupError {
             LookupError::NotFound => f.write_str("There is nothing at the given path."),
             LookupError::NotFile => f.write_str("We were expecting a file, but the given path refers to something that isn't a file."),
             LookupError::NotFolder => f.write_str("We were expecting a folder, but the given path refers to something that isn't a folder."),
-            LookupError::RestrictedContent => f.write_str("The file cannot be transferred because the content is restricted.  For example, sometimes there are legal restrictions due to copyright claims."),
+            LookupError::RestrictedContent => f.write_str("The file cannot be transferred because the content is restricted. For example, we might restrict a file due to legal requirements."),
             _ => write!(f, "{:?}", *self),
         }
     }

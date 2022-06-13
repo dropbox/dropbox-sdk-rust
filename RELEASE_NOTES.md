@@ -1,5 +1,16 @@
-# v0.14.2
+# v0.15.0
 xxxx-yy-zz
+* API spec update 2022-02-09, 2022-03-02, 2022-03-30, 2022-04-20, 2022-05-18
+    * semver incompatible changes in files:
+        * upload: arg type changed from CommitInfo to UploadArg
+        * upload, upload_session_append_v2, upload_session_append: error type changed from
+            UploadSessionLookupError to UploadSessionAppendError
+        * CommitInfoWithProperties removed (use UploadArg instead)
+        * UploadErrorWithProperties removed (use UploadError instead)
+    * files: new route upload_session_start_batch
+    * files: upload routes can now take a content hash to validate upload contents
+    * sharing: new route get_shared_link_metadata_app_auth
+    * documentation, team_log updates
 
 # v0.14.1
 2022-02-09

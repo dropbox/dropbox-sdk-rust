@@ -26,7 +26,7 @@ pub fn create_files(
         let c = client.clone();
         threadpool.execute(move || {
             let path = file_path(i);
-            let arg = files::CommitInfo::new(path.clone())
+            let arg = files::UploadArg::new(path.clone())
                 .with_mode(files::WriteMode::Overwrite);
             loop {
                 println!("{}: writing", path);

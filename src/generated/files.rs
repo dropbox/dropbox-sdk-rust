@@ -48,21 +48,20 @@ pub fn alpha_get_metadata(
         None)
 }
 
-/// Create a new file with the contents provided in the request. Note that this endpoint is part of
-/// the properties API alpha and is slightly different from [`upload()`](upload). Do not use this to
-/// upload a file larger than 150 MB. Instead, create an upload session with
-/// [`upload_session_start()`](upload_session_start).
+/// Create a new file with the contents provided in the request. Note that the behavior of this
+/// alpha endpoint is unstable and subject to change. Do not use this to upload a file larger than
+/// 150 MB. Instead, create an upload session with [`upload_session_start()`](upload_session_start).
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
 #[cfg(feature = "unstable")]
 #[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
-#[deprecated(note = "replaced by alpha_upload")]
+#[deprecated(note = "replaced by upload")]
 pub fn alpha_upload(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &CommitInfoWithProperties,
+    arg: &UploadArg,
     body: &[u8],
-) -> crate::Result<Result<FileMetadata, UploadErrorWithProperties>> {
+) -> crate::Result<Result<FileMetadata, UploadError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Content,
@@ -351,7 +350,7 @@ pub fn download(
 /// Download a folder from the user's Dropbox, as a zip file. The folder must be less than 20 GB in
 /// size and any single file within must be less than 4 GB in size. The resulting zip must have
 /// fewer than 10,000 total file and folder entries, including the top level folder. The input
-/// cannot be a single file.
+/// cannot be a single file. Note: this endpoint does not support HTTP range requests.
 pub fn download_zip(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DownloadZipArg,
@@ -1091,7 +1090,8 @@ pub fn search_continue_v2(
         None)
 }
 
-/// Add a tag to an item. A tag is a string. No more than 20 tags can be added to a given item.
+/// Add a tag to an item. A tag is a string. The strings are automatically converted to lowercase
+/// letters. No more than 20 tags can be added to a given item.
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -1172,7 +1172,7 @@ pub fn unlock_file_batch(
 /// page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &CommitInfo,
+    arg: &UploadArg,
     body: &[u8],
 ) -> crate::Result<Result<FileMetadata, UploadError>> {
     crate::client_helpers::request(
@@ -1194,7 +1194,7 @@ pub fn upload_session_append_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionAppendArg,
     body: &[u8],
-) -> crate::Result<Result<(), UploadSessionLookupError>> {
+) -> crate::Result<Result<(), UploadSessionAppendError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Content,
@@ -1214,7 +1214,7 @@ pub fn upload_session_append(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionCursor,
     body: &[u8],
-) -> crate::Result<Result<(), UploadSessionLookupError>> {
+) -> crate::Result<Result<(), UploadSessionAppendError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Content,
@@ -1363,6 +1363,20 @@ pub fn upload_session_start(
         "files/upload_session/start",
         arg,
         Some(body))
+}
+
+/// This route starts batch of upload_sessions. Please refer to `upload_session/start` usage.
+pub fn upload_session_start_batch(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &UploadSessionStartBatchArg,
+) -> crate::Result<Result<UploadSessionStartBatchResult, crate::NoError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/upload_session/start_batch",
+        arg,
+        None)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2133,222 +2147,6 @@ impl ::serde::ser::Serialize for CommitInfo {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("CommitInfo", 7)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[non_exhaustive] // structs may have more fields added in the future.
-pub struct CommitInfoWithProperties {
-    /// Path in the user's Dropbox to save the file.
-    pub path: WritePathOrId,
-    /// Selects what to do if the file already exists.
-    pub mode: WriteMode,
-    /// If there's a conflict, as determined by `mode`, have the Dropbox server try to autorename
-    /// the file to avoid conflict.
-    pub autorename: bool,
-    /// The value to store as the `client_modified` timestamp. Dropbox automatically records the
-    /// time at which the file was written to the Dropbox servers. It can also record an additional
-    /// timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of when the
-    /// file was actually created or modified.
-    pub client_modified: Option<super::common::DropboxTimestamp>,
-    /// Normally, users are made aware of any file modifications in their Dropbox account via
-    /// notifications in the client software. If `true`, this tells the clients that this
-    /// modification shouldn't result in a user notification.
-    pub mute: bool,
-    /// List of custom properties to add to file.
-    pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
-    /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
-    /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
-    /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
-    /// This also forces a conflict even when the target path refers to a file with identical
-    /// contents.
-    pub strict_conflict: bool,
-}
-
-impl CommitInfoWithProperties {
-    pub fn new(path: WritePathOrId) -> Self {
-        CommitInfoWithProperties {
-            path,
-            mode: WriteMode::Add,
-            autorename: false,
-            client_modified: None,
-            mute: false,
-            property_groups: None,
-            strict_conflict: false,
-        }
-    }
-
-    pub fn with_mode(mut self, value: WriteMode) -> Self {
-        self.mode = value;
-        self
-    }
-
-    pub fn with_autorename(mut self, value: bool) -> Self {
-        self.autorename = value;
-        self
-    }
-
-    pub fn with_client_modified(mut self, value: super::common::DropboxTimestamp) -> Self {
-        self.client_modified = Some(value);
-        self
-    }
-
-    pub fn with_mute(mut self, value: bool) -> Self {
-        self.mute = value;
-        self
-    }
-
-    pub fn with_property_groups(
-        mut self,
-        value: Vec<super::file_properties::PropertyGroup>,
-    ) -> Self {
-        self.property_groups = Some(value);
-        self
-    }
-
-    pub fn with_strict_conflict(mut self, value: bool) -> Self {
-        self.strict_conflict = value;
-        self
-    }
-}
-
-const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &[&str] = &["path",
-                                                      "mode",
-                                                      "autorename",
-                                                      "client_modified",
-                                                      "mute",
-                                                      "property_groups",
-                                                      "strict_conflict"];
-impl CommitInfoWithProperties {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        map: V,
-    ) -> Result<CommitInfoWithProperties, V::Error> {
-        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
-    }
-
-    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-        optional: bool,
-    ) -> Result<Option<CommitInfoWithProperties>, V::Error> {
-        let mut field_path = None;
-        let mut field_mode = None;
-        let mut field_autorename = None;
-        let mut field_client_modified = None;
-        let mut field_mute = None;
-        let mut field_property_groups = None;
-        let mut field_strict_conflict = None;
-        let mut nothing = true;
-        while let Some(key) = map.next_key::<&str>()? {
-            nothing = false;
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "mode" => {
-                    if field_mode.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("mode"));
-                    }
-                    field_mode = Some(map.next_value()?);
-                }
-                "autorename" => {
-                    if field_autorename.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("autorename"));
-                    }
-                    field_autorename = Some(map.next_value()?);
-                }
-                "client_modified" => {
-                    if field_client_modified.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("client_modified"));
-                    }
-                    field_client_modified = Some(map.next_value()?);
-                }
-                "mute" => {
-                    if field_mute.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("mute"));
-                    }
-                    field_mute = Some(map.next_value()?);
-                }
-                "property_groups" => {
-                    if field_property_groups.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("property_groups"));
-                    }
-                    field_property_groups = Some(map.next_value()?);
-                }
-                "strict_conflict" => {
-                    if field_strict_conflict.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("strict_conflict"));
-                    }
-                    field_strict_conflict = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        if optional && nothing {
-            return Ok(None);
-        }
-        let result = CommitInfoWithProperties {
-            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            mode: field_mode.unwrap_or(WriteMode::Add),
-            autorename: field_autorename.unwrap_or(false),
-            client_modified: field_client_modified,
-            mute: field_mute.unwrap_or(false),
-            property_groups: field_property_groups,
-            strict_conflict: field_strict_conflict.unwrap_or(false),
-        };
-        Ok(Some(result))
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        if let Some(val) = &self.client_modified {
-            s.serialize_field("client_modified", val)?;
-        }
-        s.serialize_field("mute", &self.mute)?;
-        if let Some(val) = &self.property_groups {
-            s.serialize_field("property_groups", val)?;
-        }
-        s.serialize_field("strict_conflict", &self.strict_conflict)?;
-        Ok(())
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for CommitInfoWithProperties {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = CommitInfoWithProperties;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a CommitInfoWithProperties struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                CommitInfoWithProperties::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("CommitInfoWithProperties", COMMIT_INFO_WITH_PROPERTIES_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for CommitInfoWithProperties {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CommitInfoWithProperties", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -4418,6 +4216,8 @@ pub struct DeletedMetadata {
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
+    /// The preview URL of the file.
+    pub preview_url: Option<String>,
 }
 
 impl DeletedMetadata {
@@ -4427,6 +4227,7 @@ impl DeletedMetadata {
             path_lower: None,
             path_display: None,
             parent_shared_folder_id: None,
+            preview_url: None,
         }
     }
 
@@ -4444,12 +4245,18 @@ impl DeletedMetadata {
         self.parent_shared_folder_id = Some(value);
         self
     }
+
+    pub fn with_preview_url(mut self, value: String) -> Self {
+        self.preview_url = Some(value);
+        self
+    }
 }
 
 const DELETED_METADATA_FIELDS: &[&str] = &["name",
                                            "path_lower",
                                            "path_display",
-                                           "parent_shared_folder_id"];
+                                           "parent_shared_folder_id",
+                                           "preview_url"];
 impl DeletedMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -4465,6 +4272,7 @@ impl DeletedMetadata {
         let mut field_path_lower = None;
         let mut field_path_display = None;
         let mut field_parent_shared_folder_id = None;
+        let mut field_preview_url = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -4493,6 +4301,12 @@ impl DeletedMetadata {
                     }
                     field_parent_shared_folder_id = Some(map.next_value()?);
                 }
+                "preview_url" => {
+                    if field_preview_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("preview_url"));
+                    }
+                    field_preview_url = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -4507,6 +4321,7 @@ impl DeletedMetadata {
             path_lower: field_path_lower,
             path_display: field_path_display,
             parent_shared_folder_id: field_parent_shared_folder_id,
+            preview_url: field_preview_url,
         };
         Ok(Some(result))
     }
@@ -4525,6 +4340,9 @@ impl DeletedMetadata {
         }
         if let Some(val) = &self.parent_shared_folder_id {
             s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.preview_url {
+            s.serialize_field("preview_url", val)?;
         }
         Ok(())
     }
@@ -4552,7 +4370,7 @@ impl ::serde::ser::Serialize for DeletedMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeletedMetadata", 4)?;
+        let mut s = serializer.serialize_struct("DeletedMetadata", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -6194,6 +6012,8 @@ pub struct FileMetadata {
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
+    /// The preview URL of the file.
+    pub preview_url: Option<String>,
     /// Additional information if the file is a photo or video. This field will not be set on
     /// entries returned by [`list_folder()`](list_folder),
     /// [`list_folder_continue()`](list_folder_continue), or
@@ -6244,6 +6064,7 @@ impl FileMetadata {
             path_lower: None,
             path_display: None,
             parent_shared_folder_id: None,
+            preview_url: None,
             media_info: None,
             symlink_info: None,
             sharing_info: None,
@@ -6268,6 +6089,11 @@ impl FileMetadata {
 
     pub fn with_parent_shared_folder_id(mut self, value: super::common::SharedFolderId) -> Self {
         self.parent_shared_folder_id = Some(value);
+        self
+    }
+
+    pub fn with_preview_url(mut self, value: String) -> Self {
+        self.preview_url = Some(value);
         self
     }
 
@@ -6329,6 +6155,7 @@ const FILE_METADATA_FIELDS: &[&str] = &["name",
                                         "path_lower",
                                         "path_display",
                                         "parent_shared_folder_id",
+                                        "preview_url",
                                         "media_info",
                                         "symlink_info",
                                         "sharing_info",
@@ -6358,6 +6185,7 @@ impl FileMetadata {
         let mut field_path_lower = None;
         let mut field_path_display = None;
         let mut field_parent_shared_folder_id = None;
+        let mut field_preview_url = None;
         let mut field_media_info = None;
         let mut field_symlink_info = None;
         let mut field_sharing_info = None;
@@ -6424,6 +6252,12 @@ impl FileMetadata {
                         return Err(::serde::de::Error::duplicate_field("parent_shared_folder_id"));
                     }
                     field_parent_shared_folder_id = Some(map.next_value()?);
+                }
+                "preview_url" => {
+                    if field_preview_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("preview_url"));
+                    }
+                    field_preview_url = Some(map.next_value()?);
                 }
                 "media_info" => {
                     if field_media_info.is_some() {
@@ -6498,6 +6332,7 @@ impl FileMetadata {
             path_lower: field_path_lower,
             path_display: field_path_display,
             parent_shared_folder_id: field_parent_shared_folder_id,
+            preview_url: field_preview_url,
             media_info: field_media_info,
             symlink_info: field_symlink_info,
             sharing_info: field_sharing_info,
@@ -6530,6 +6365,9 @@ impl FileMetadata {
         }
         if let Some(val) = &self.parent_shared_folder_id {
             s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.preview_url {
+            s.serialize_field("preview_url", val)?;
         }
         if let Some(val) = &self.media_info {
             s.serialize_field("media_info", val)?;
@@ -6582,7 +6420,7 @@ impl ::serde::ser::Serialize for FileMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileMetadata", 18)?;
+        let mut s = serializer.serialize_struct("FileMetadata", 19)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -6840,6 +6678,8 @@ pub struct FolderMetadata {
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
+    /// The preview URL of the file.
+    pub preview_url: Option<String>,
     /// Please use `sharing_info` instead.
     pub shared_folder_id: Option<super::common::SharedFolderId>,
     /// Set if the folder is contained in a shared folder or is a shared folder mount point.
@@ -6858,6 +6698,7 @@ impl FolderMetadata {
             path_lower: None,
             path_display: None,
             parent_shared_folder_id: None,
+            preview_url: None,
             shared_folder_id: None,
             sharing_info: None,
             property_groups: None,
@@ -6876,6 +6717,11 @@ impl FolderMetadata {
 
     pub fn with_parent_shared_folder_id(mut self, value: super::common::SharedFolderId) -> Self {
         self.parent_shared_folder_id = Some(value);
+        self
+    }
+
+    pub fn with_preview_url(mut self, value: String) -> Self {
+        self.preview_url = Some(value);
         self
     }
 
@@ -6903,6 +6749,7 @@ const FOLDER_METADATA_FIELDS: &[&str] = &["name",
                                           "path_lower",
                                           "path_display",
                                           "parent_shared_folder_id",
+                                          "preview_url",
                                           "shared_folder_id",
                                           "sharing_info",
                                           "property_groups"];
@@ -6922,6 +6769,7 @@ impl FolderMetadata {
         let mut field_path_lower = None;
         let mut field_path_display = None;
         let mut field_parent_shared_folder_id = None;
+        let mut field_preview_url = None;
         let mut field_shared_folder_id = None;
         let mut field_sharing_info = None;
         let mut field_property_groups = None;
@@ -6959,6 +6807,12 @@ impl FolderMetadata {
                     }
                     field_parent_shared_folder_id = Some(map.next_value()?);
                 }
+                "preview_url" => {
+                    if field_preview_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("preview_url"));
+                    }
+                    field_preview_url = Some(map.next_value()?);
+                }
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
                         return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
@@ -6992,6 +6846,7 @@ impl FolderMetadata {
             path_lower: field_path_lower,
             path_display: field_path_display,
             parent_shared_folder_id: field_parent_shared_folder_id,
+            preview_url: field_preview_url,
             shared_folder_id: field_shared_folder_id,
             sharing_info: field_sharing_info,
             property_groups: field_property_groups,
@@ -7014,6 +6869,9 @@ impl FolderMetadata {
         }
         if let Some(val) = &self.parent_shared_folder_id {
             s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.preview_url {
+            s.serialize_field("preview_url", val)?;
         }
         if let Some(val) = &self.shared_folder_id {
             s.serialize_field("shared_folder_id", val)?;
@@ -7050,7 +6908,7 @@ impl ::serde::ser::Serialize for FolderMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FolderMetadata", 8)?;
+        let mut s = serializer.serialize_struct("FolderMetadata", 9)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -11320,8 +11178,8 @@ pub enum LookupError {
     NotFile,
     /// We were expecting a folder, but the given path refers to something that isn't a folder.
     NotFolder,
-    /// The file cannot be transferred because the content is restricted.  For example, sometimes
-    /// there are legal restrictions due to copyright claims.
+    /// The file cannot be transferred because the content is restricted. For example, we might
+    /// restrict a file due to legal requirements.
     RestrictedContent,
     /// This operation is not supported for this content type.
     UnsupportedContentType,
@@ -11445,7 +11303,7 @@ impl ::std::fmt::Display for LookupError {
             LookupError::NotFound => f.write_str("There is nothing at the given path."),
             LookupError::NotFile => f.write_str("We were expecting a file, but the given path refers to something that isn't a file."),
             LookupError::NotFolder => f.write_str("We were expecting a folder, but the given path refers to something that isn't a folder."),
-            LookupError::RestrictedContent => f.write_str("The file cannot be transferred because the content is restricted.  For example, sometimes there are legal restrictions due to copyright claims."),
+            LookupError::RestrictedContent => f.write_str("The file cannot be transferred because the content is restricted. For example, we might restrict a file due to legal requirements."),
             LookupError::UnsupportedContentType => f.write_str("This operation is not supported for this content type."),
             LookupError::Locked => f.write_str("The given path is locked."),
             _ => write!(f, "{:?}", *self),
@@ -11624,7 +11482,7 @@ impl ::serde::ser::Serialize for Metadata {
         use serde::ser::SerializeStruct;
         match *self {
             Metadata::File(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 19)?;
+                let mut s = serializer.serialize_struct("Metadata", 20)?;
                 s.serialize_field(".tag", "file")?;
                 s.serialize_field("name", &x.name)?;
                 s.serialize_field("id", &x.id)?;
@@ -11635,6 +11493,7 @@ impl ::serde::ser::Serialize for Metadata {
                 s.serialize_field("path_lower", &x.path_lower)?;
                 s.serialize_field("path_display", &x.path_display)?;
                 s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
+                s.serialize_field("preview_url", &x.preview_url)?;
                 s.serialize_field("media_info", &x.media_info)?;
                 s.serialize_field("symlink_info", &x.symlink_info)?;
                 s.serialize_field("sharing_info", &x.sharing_info)?;
@@ -11647,25 +11506,27 @@ impl ::serde::ser::Serialize for Metadata {
                 s.end()
             }
             Metadata::Folder(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 9)?;
+                let mut s = serializer.serialize_struct("Metadata", 10)?;
                 s.serialize_field(".tag", "folder")?;
                 s.serialize_field("name", &x.name)?;
                 s.serialize_field("id", &x.id)?;
                 s.serialize_field("path_lower", &x.path_lower)?;
                 s.serialize_field("path_display", &x.path_display)?;
                 s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
+                s.serialize_field("preview_url", &x.preview_url)?;
                 s.serialize_field("shared_folder_id", &x.shared_folder_id)?;
                 s.serialize_field("sharing_info", &x.sharing_info)?;
                 s.serialize_field("property_groups", &x.property_groups)?;
                 s.end()
             }
             Metadata::Deleted(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 5)?;
+                let mut s = serializer.serialize_struct("Metadata", 6)?;
                 s.serialize_field(".tag", "deleted")?;
                 s.serialize_field("name", &x.name)?;
                 s.serialize_field("path_lower", &x.path_lower)?;
                 s.serialize_field("path_display", &x.path_display)?;
                 s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
+                s.serialize_field("preview_url", &x.preview_url)?;
                 s.end()
             }
         }
@@ -16578,7 +16439,7 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
             }
             SaveUrlJobStatus::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 19)?;
+                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 20)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -16653,7 +16514,7 @@ impl ::serde::ser::Serialize for SaveUrlResult {
             }
             SaveUrlResult::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlResult", 19)?;
+                let mut s = serializer.serialize_struct("SaveUrlResult", 20)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -20062,6 +19923,244 @@ impl ::serde::ser::Serialize for UnlockFileBatchArg {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UploadArg {
+    /// Path in the user's Dropbox to save the file.
+    pub path: WritePathOrId,
+    /// Selects what to do if the file already exists.
+    pub mode: WriteMode,
+    /// If there's a conflict, as determined by `mode`, have the Dropbox server try to autorename
+    /// the file to avoid conflict.
+    pub autorename: bool,
+    /// The value to store as the `client_modified` timestamp. Dropbox automatically records the
+    /// time at which the file was written to the Dropbox servers. It can also record an additional
+    /// timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of when the
+    /// file was actually created or modified.
+    pub client_modified: Option<super::common::DropboxTimestamp>,
+    /// Normally, users are made aware of any file modifications in their Dropbox account via
+    /// notifications in the client software. If `true`, this tells the clients that this
+    /// modification shouldn't result in a user notification.
+    pub mute: bool,
+    /// List of custom properties to add to file.
+    pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
+    /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
+    /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
+    /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
+    /// This also forces a conflict even when the target path refers to a file with identical
+    /// contents.
+    pub strict_conflict: bool,
+    /// A hash of the file content uploaded in this call. If provided and the uploaded content does
+    /// not match this hash, an error will be returned. For more information see our [Content
+    /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
+    pub content_hash: Option<Sha256HexHash>,
+}
+
+impl UploadArg {
+    pub fn new(path: WritePathOrId) -> Self {
+        UploadArg {
+            path,
+            mode: WriteMode::Add,
+            autorename: false,
+            client_modified: None,
+            mute: false,
+            property_groups: None,
+            strict_conflict: false,
+            content_hash: None,
+        }
+    }
+
+    pub fn with_mode(mut self, value: WriteMode) -> Self {
+        self.mode = value;
+        self
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+    pub fn with_client_modified(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.client_modified = Some(value);
+        self
+    }
+
+    pub fn with_mute(mut self, value: bool) -> Self {
+        self.mute = value;
+        self
+    }
+
+    pub fn with_property_groups(
+        mut self,
+        value: Vec<super::file_properties::PropertyGroup>,
+    ) -> Self {
+        self.property_groups = Some(value);
+        self
+    }
+
+    pub fn with_strict_conflict(mut self, value: bool) -> Self {
+        self.strict_conflict = value;
+        self
+    }
+
+    pub fn with_content_hash(mut self, value: Sha256HexHash) -> Self {
+        self.content_hash = Some(value);
+        self
+    }
+}
+
+const UPLOAD_ARG_FIELDS: &[&str] = &["path",
+                                     "mode",
+                                     "autorename",
+                                     "client_modified",
+                                     "mute",
+                                     "property_groups",
+                                     "strict_conflict",
+                                     "content_hash"];
+impl UploadArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UploadArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UploadArg>, V::Error> {
+        let mut field_path = None;
+        let mut field_mode = None;
+        let mut field_autorename = None;
+        let mut field_client_modified = None;
+        let mut field_mute = None;
+        let mut field_property_groups = None;
+        let mut field_strict_conflict = None;
+        let mut field_content_hash = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "mode" => {
+                    if field_mode.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("mode"));
+                    }
+                    field_mode = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                "client_modified" => {
+                    if field_client_modified.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("client_modified"));
+                    }
+                    field_client_modified = Some(map.next_value()?);
+                }
+                "mute" => {
+                    if field_mute.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("mute"));
+                    }
+                    field_mute = Some(map.next_value()?);
+                }
+                "property_groups" => {
+                    if field_property_groups.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("property_groups"));
+                    }
+                    field_property_groups = Some(map.next_value()?);
+                }
+                "strict_conflict" => {
+                    if field_strict_conflict.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("strict_conflict"));
+                    }
+                    field_strict_conflict = Some(map.next_value()?);
+                }
+                "content_hash" => {
+                    if field_content_hash.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("content_hash"));
+                    }
+                    field_content_hash = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UploadArg {
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            mode: field_mode.unwrap_or(WriteMode::Add),
+            autorename: field_autorename.unwrap_or(false),
+            client_modified: field_client_modified,
+            mute: field_mute.unwrap_or(false),
+            property_groups: field_property_groups,
+            strict_conflict: field_strict_conflict.unwrap_or(false),
+            content_hash: field_content_hash,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("mode", &self.mode)?;
+        s.serialize_field("autorename", &self.autorename)?;
+        if let Some(val) = &self.client_modified {
+            s.serialize_field("client_modified", val)?;
+        }
+        s.serialize_field("mute", &self.mute)?;
+        if let Some(val) = &self.property_groups {
+            s.serialize_field("property_groups", val)?;
+        }
+        s.serialize_field("strict_conflict", &self.strict_conflict)?;
+        if let Some(val) = &self.content_hash {
+            s.serialize_field("content_hash", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadArg", UPLOAD_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadArg", 8)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
@@ -20070,6 +20169,9 @@ pub enum UploadError {
     PropertiesError(super::file_properties::InvalidPropertyGroupError),
     /// The request payload must be at most 150 MB.
     PayloadTooLarge,
+    /// The content received by the Dropbox server in this call does not match the provided content
+    /// hash.
+    ContentHashMismatch,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -20100,6 +20202,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
                         }
                     }
                     "payload_too_large" => UploadError::PayloadTooLarge,
+                    "content_hash_mismatch" => UploadError::ContentHashMismatch,
                     _ => UploadError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -20109,6 +20212,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
         const VARIANTS: &[&str] = &["path",
                                     "properties_error",
                                     "payload_too_large",
+                                    "content_hash_mismatch",
                                     "other"];
         deserializer.deserialize_struct("UploadError", VARIANTS, EnumVisitor)
     }
@@ -20139,6 +20243,12 @@ impl ::serde::ser::Serialize for UploadError {
                 s.serialize_field(".tag", "payload_too_large")?;
                 s.end()
             }
+            UploadError::ContentHashMismatch => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadError", 1)?;
+                s.serialize_field(".tag", "content_hash_mismatch")?;
+                s.end()
+            }
             UploadError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -20159,109 +20269,7 @@ impl ::std::fmt::Display for UploadError {
             UploadError::Path(inner) => write!(f, "Unable to save the uploaded contents to a file: {:?}", inner),
             UploadError::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
             UploadError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
-            _ => write!(f, "{:?}", *self),
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[non_exhaustive] // variants may be added in the future
-pub enum UploadErrorWithProperties {
-    /// Unable to save the uploaded contents to a file.
-    Path(UploadWriteFailed),
-    /// The supplied property group is invalid. The file has uploaded without property groups.
-    PropertiesError(super::file_properties::InvalidPropertyGroupError),
-    /// The request payload must be at most 150 MB.
-    PayloadTooLarge,
-    /// Catch-all used for unrecognized values returned from the server. Encountering this value
-    /// typically indicates that this SDK version is out of date.
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = UploadErrorWithProperties;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a UploadErrorWithProperties structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                let value = match tag {
-                    "path" => UploadErrorWithProperties::Path(UploadWriteFailed::internal_deserialize(&mut map)?),
-                    "properties_error" => {
-                        match map.next_key()? {
-                            Some("properties_error") => UploadErrorWithProperties::PropertiesError(map.next_value()?),
-                            None => return Err(de::Error::missing_field("properties_error")),
-                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "payload_too_large" => UploadErrorWithProperties::PayloadTooLarge,
-                    _ => UploadErrorWithProperties::Other,
-                };
-                crate::eat_json_fields(&mut map)?;
-                Ok(value)
-            }
-        }
-        const VARIANTS: &[&str] = &["path",
-                                    "properties_error",
-                                    "payload_too_large",
-                                    "other"];
-        deserializer.deserialize_struct("UploadErrorWithProperties", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadErrorWithProperties {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            UploadErrorWithProperties::Path(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("UploadErrorWithProperties", 3)?;
-                s.serialize_field(".tag", "path")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            UploadErrorWithProperties::PropertiesError(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("UploadErrorWithProperties", 2)?;
-                s.serialize_field(".tag", "properties_error")?;
-                s.serialize_field("properties_error", x)?;
-                s.end()
-            }
-            UploadErrorWithProperties::PayloadTooLarge => {
-                // unit
-                let mut s = serializer.serialize_struct("UploadErrorWithProperties", 1)?;
-                s.serialize_field(".tag", "payload_too_large")?;
-                s.end()
-            }
-            UploadErrorWithProperties::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for UploadErrorWithProperties {
-    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
-        match self {
-            UploadErrorWithProperties::PropertiesError(inner) => Some(inner),
-            _ => None,
-        }
-    }
-}
-
-impl ::std::fmt::Display for UploadErrorWithProperties {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        match self {
-            UploadErrorWithProperties::Path(inner) => write!(f, "Unable to save the uploaded contents to a file: {:?}", inner),
-            UploadErrorWithProperties::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
-            UploadErrorWithProperties::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -20275,6 +20283,10 @@ pub struct UploadSessionAppendArg {
     /// If true, the current session will be closed, at which point you won't be able to call
     /// [`upload_session_append_v2()`](upload_session_append_v2) anymore with the current session.
     pub close: bool,
+    /// A hash of the file content uploaded in this call. If provided and the uploaded content does
+    /// not match this hash, an error will be returned. For more information see our [Content
+    /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
+    pub content_hash: Option<Sha256HexHash>,
 }
 
 impl UploadSessionAppendArg {
@@ -20282,6 +20294,7 @@ impl UploadSessionAppendArg {
         UploadSessionAppendArg {
             cursor,
             close: false,
+            content_hash: None,
         }
     }
 
@@ -20289,10 +20302,16 @@ impl UploadSessionAppendArg {
         self.close = value;
         self
     }
+
+    pub fn with_content_hash(mut self, value: Sha256HexHash) -> Self {
+        self.content_hash = Some(value);
+        self
+    }
 }
 
 const UPLOAD_SESSION_APPEND_ARG_FIELDS: &[&str] = &["cursor",
-                                                    "close"];
+                                                    "close",
+                                                    "content_hash"];
 impl UploadSessionAppendArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -20306,6 +20325,7 @@ impl UploadSessionAppendArg {
     ) -> Result<Option<UploadSessionAppendArg>, V::Error> {
         let mut field_cursor = None;
         let mut field_close = None;
+        let mut field_content_hash = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -20322,6 +20342,12 @@ impl UploadSessionAppendArg {
                     }
                     field_close = Some(map.next_value()?);
                 }
+                "content_hash" => {
+                    if field_content_hash.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("content_hash"));
+                    }
+                    field_content_hash = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -20334,6 +20360,7 @@ impl UploadSessionAppendArg {
         let result = UploadSessionAppendArg {
             cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
             close: field_close.unwrap_or(false),
+            content_hash: field_content_hash,
         };
         Ok(Some(result))
     }
@@ -20345,6 +20372,9 @@ impl UploadSessionAppendArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
         s.serialize_field("close", &self.close)?;
+        if let Some(val) = &self.content_hash {
+            s.serialize_field("content_hash", val)?;
+        }
         Ok(())
     }
 }
@@ -20371,9 +20401,171 @@ impl ::serde::ser::Serialize for UploadSessionAppendArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionAppendArg", 2)?;
+        let mut s = serializer.serialize_struct("UploadSessionAppendArg", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum UploadSessionAppendError {
+    /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
+    NotFound,
+    /// The specified offset was incorrect. See the value for the correct offset. This error may
+    /// occur when a previous request was received and processed successfully but the client did not
+    /// receive the response, e.g. due to a network error.
+    IncorrectOffset(UploadSessionOffsetError),
+    /// You are attempting to append data to an upload session that has already been closed (i.e.
+    /// committed).
+    Closed,
+    /// The session must be closed before calling upload_session/finish_batch.
+    NotClosed,
+    /// You can not append to the upload session because the size of a file should not reach the max
+    /// file size limit (i.e. 350GB).
+    TooLarge,
+    /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+    ConcurrentSessionInvalidOffset,
+    /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be
+    /// uploaded.
+    ConcurrentSessionInvalidDataSize,
+    /// The request payload must be at most 150 MB.
+    PayloadTooLarge,
+    /// The content received by the Dropbox server in this call does not match the provided content
+    /// hash.
+    ContentHashMismatch,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UploadSessionAppendError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionAppendError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "not_found" => UploadSessionAppendError::NotFound,
+                    "incorrect_offset" => UploadSessionAppendError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(&mut map)?),
+                    "closed" => UploadSessionAppendError::Closed,
+                    "not_closed" => UploadSessionAppendError::NotClosed,
+                    "too_large" => UploadSessionAppendError::TooLarge,
+                    "concurrent_session_invalid_offset" => UploadSessionAppendError::ConcurrentSessionInvalidOffset,
+                    "concurrent_session_invalid_data_size" => UploadSessionAppendError::ConcurrentSessionInvalidDataSize,
+                    "payload_too_large" => UploadSessionAppendError::PayloadTooLarge,
+                    "content_hash_mismatch" => UploadSessionAppendError::ContentHashMismatch,
+                    _ => UploadSessionAppendError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["not_found",
+                                    "incorrect_offset",
+                                    "closed",
+                                    "not_closed",
+                                    "too_large",
+                                    "concurrent_session_invalid_offset",
+                                    "concurrent_session_invalid_data_size",
+                                    "payload_too_large",
+                                    "other",
+                                    "content_hash_mismatch"];
+        deserializer.deserialize_struct("UploadSessionAppendError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionAppendError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UploadSessionAppendError::NotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
+                s.serialize_field(".tag", "not_found")?;
+                s.end()
+            }
+            UploadSessionAppendError::IncorrectOffset(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 2)?;
+                s.serialize_field(".tag", "incorrect_offset")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            UploadSessionAppendError::Closed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
+                s.serialize_field(".tag", "closed")?;
+                s.end()
+            }
+            UploadSessionAppendError::NotClosed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
+                s.serialize_field(".tag", "not_closed")?;
+                s.end()
+            }
+            UploadSessionAppendError::TooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
+                s.serialize_field(".tag", "too_large")?;
+                s.end()
+            }
+            UploadSessionAppendError::ConcurrentSessionInvalidOffset => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_invalid_offset")?;
+                s.end()
+            }
+            UploadSessionAppendError::ConcurrentSessionInvalidDataSize => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_invalid_data_size")?;
+                s.end()
+            }
+            UploadSessionAppendError::PayloadTooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
+                s.serialize_field(".tag", "payload_too_large")?;
+                s.end()
+            }
+            UploadSessionAppendError::ContentHashMismatch => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
+                s.serialize_field(".tag", "content_hash_mismatch")?;
+                s.end()
+            }
+            UploadSessionAppendError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UploadSessionAppendError {
+}
+
+impl ::std::fmt::Display for UploadSessionAppendError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            UploadSessionAppendError::NotFound => f.write_str("The upload session ID was not found or has expired. Upload sessions are valid for 7 days."),
+            UploadSessionAppendError::IncorrectOffset(inner) => write!(f, "The specified offset was incorrect. See the value for the correct offset. This error may occur when a previous request was received and processed successfully but the client did not receive the response, e.g. due to a network error: {:?}", inner),
+            UploadSessionAppendError::Closed => f.write_str("You are attempting to append data to an upload session that has already been closed (i.e. committed)."),
+            UploadSessionAppendError::NotClosed => f.write_str("The session must be closed before calling upload_session/finish_batch."),
+            UploadSessionAppendError::TooLarge => f.write_str("You can not append to the upload session because the size of a file should not reach the max file size limit (i.e. 350GB)."),
+            UploadSessionAppendError::ConcurrentSessionInvalidOffset => f.write_str("For concurrent upload sessions, offset needs to be multiple of 4194304 bytes."),
+            UploadSessionAppendError::ConcurrentSessionInvalidDataSize => f.write_str("For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded."),
+            UploadSessionAppendError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadSessionAppendError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -20489,6 +20681,10 @@ pub struct UploadSessionFinishArg {
     pub cursor: UploadSessionCursor,
     /// Contains the path and other optional modifiers for the commit.
     pub commit: CommitInfo,
+    /// A hash of the file content uploaded in this call. If provided and the uploaded content does
+    /// not match this hash, an error will be returned. For more information see our [Content
+    /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
+    pub content_hash: Option<Sha256HexHash>,
 }
 
 impl UploadSessionFinishArg {
@@ -20496,12 +20692,19 @@ impl UploadSessionFinishArg {
         UploadSessionFinishArg {
             cursor,
             commit,
+            content_hash: None,
         }
+    }
+
+    pub fn with_content_hash(mut self, value: Sha256HexHash) -> Self {
+        self.content_hash = Some(value);
+        self
     }
 }
 
 const UPLOAD_SESSION_FINISH_ARG_FIELDS: &[&str] = &["cursor",
-                                                    "commit"];
+                                                    "commit",
+                                                    "content_hash"];
 impl UploadSessionFinishArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -20515,6 +20718,7 @@ impl UploadSessionFinishArg {
     ) -> Result<Option<UploadSessionFinishArg>, V::Error> {
         let mut field_cursor = None;
         let mut field_commit = None;
+        let mut field_content_hash = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -20531,6 +20735,12 @@ impl UploadSessionFinishArg {
                     }
                     field_commit = Some(map.next_value()?);
                 }
+                "content_hash" => {
+                    if field_content_hash.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("content_hash"));
+                    }
+                    field_content_hash = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -20543,6 +20753,7 @@ impl UploadSessionFinishArg {
         let result = UploadSessionFinishArg {
             cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
             commit: field_commit.ok_or_else(|| ::serde::de::Error::missing_field("commit"))?,
+            content_hash: field_content_hash,
         };
         Ok(Some(result))
     }
@@ -20554,6 +20765,9 @@ impl UploadSessionFinishArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
         s.serialize_field("commit", &self.commit)?;
+        if let Some(val) = &self.content_hash {
+            s.serialize_field("content_hash", val)?;
+        }
         Ok(())
     }
 }
@@ -20580,7 +20794,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionFinishArg", 2)?;
+        let mut s = serializer.serialize_struct("UploadSessionFinishArg", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -20954,7 +21168,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
         match *self {
             UploadSessionFinishBatchResultEntry::Success(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 19)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 20)?;
                 s.serialize_field(".tag", "success")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -20994,6 +21208,9 @@ pub enum UploadSessionFinishError {
     ConcurrentSessionMissingData,
     /// The request payload must be at most 150 MB.
     PayloadTooLarge,
+    /// The content received by the Dropbox server in this call does not match the provided content
+    /// hash.
+    ContentHashMismatch,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -21042,6 +21259,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                     "concurrent_session_not_closed" => UploadSessionFinishError::ConcurrentSessionNotClosed,
                     "concurrent_session_missing_data" => UploadSessionFinishError::ConcurrentSessionMissingData,
                     "payload_too_large" => UploadSessionFinishError::PayloadTooLarge,
+                    "content_hash_mismatch" => UploadSessionFinishError::ContentHashMismatch,
                     _ => UploadSessionFinishError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -21057,6 +21275,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                                     "concurrent_session_not_closed",
                                     "concurrent_session_missing_data",
                                     "payload_too_large",
+                                    "content_hash_mismatch",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionFinishError", VARIANTS, EnumVisitor)
     }
@@ -21124,6 +21343,12 @@ impl ::serde::ser::Serialize for UploadSessionFinishError {
                 s.serialize_field(".tag", "payload_too_large")?;
                 s.end()
             }
+            UploadSessionFinishError::ContentHashMismatch => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
+                s.serialize_field(".tag", "content_hash_mismatch")?;
+                s.end()
+            }
             UploadSessionFinishError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -21152,6 +21377,7 @@ impl ::std::fmt::Display for UploadSessionFinishError {
             UploadSessionFinishError::ConcurrentSessionNotClosed => f.write_str("Concurrent upload sessions need to be closed before finishing."),
             UploadSessionFinishError::ConcurrentSessionMissingData => f.write_str("Not all pieces of data were uploaded before trying to finish the session."),
             UploadSessionFinishError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadSessionFinishError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -21407,6 +21633,10 @@ pub struct UploadSessionStartArg {
     /// Type of upload session you want to start. If not specified, default is
     /// [`UploadSessionType::Sequential`](UploadSessionType::Sequential).
     pub session_type: Option<UploadSessionType>,
+    /// A hash of the file content uploaded in this call. If provided and the uploaded content does
+    /// not match this hash, an error will be returned. For more information see our [Content
+    /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
+    pub content_hash: Option<Sha256HexHash>,
 }
 
 impl UploadSessionStartArg {
@@ -21419,10 +21649,16 @@ impl UploadSessionStartArg {
         self.session_type = Some(value);
         self
     }
+
+    pub fn with_content_hash(mut self, value: Sha256HexHash) -> Self {
+        self.content_hash = Some(value);
+        self
+    }
 }
 
 const UPLOAD_SESSION_START_ARG_FIELDS: &[&str] = &["close",
-                                                   "session_type"];
+                                                   "session_type",
+                                                   "content_hash"];
 impl UploadSessionStartArg {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -21430,6 +21666,7 @@ impl UploadSessionStartArg {
     ) -> Result<UploadSessionStartArg, V::Error> {
         let mut field_close = None;
         let mut field_session_type = None;
+        let mut field_content_hash = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "close" => {
@@ -21444,6 +21681,12 @@ impl UploadSessionStartArg {
                     }
                     field_session_type = Some(map.next_value()?);
                 }
+                "content_hash" => {
+                    if field_content_hash.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("content_hash"));
+                    }
+                    field_content_hash = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -21453,6 +21696,7 @@ impl UploadSessionStartArg {
         let result = UploadSessionStartArg {
             close: field_close.unwrap_or(false),
             session_type: field_session_type,
+            content_hash: field_content_hash,
         };
         Ok(result)
     }
@@ -21465,6 +21709,9 @@ impl UploadSessionStartArg {
         s.serialize_field("close", &self.close)?;
         if let Some(val) = &self.session_type {
             s.serialize_field("session_type", val)?;
+        }
+        if let Some(val) = &self.content_hash {
+            s.serialize_field("content_hash", val)?;
         }
         Ok(())
     }
@@ -21492,7 +21739,212 @@ impl ::serde::ser::Serialize for UploadSessionStartArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionStartArg", 2)?;
+        let mut s = serializer.serialize_struct("UploadSessionStartArg", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UploadSessionStartBatchArg {
+    /// The number of upload sessions to start.
+    pub num_sessions: u64,
+    /// Type of upload session you want to start. If not specified, default is
+    /// [`UploadSessionType::Sequential`](UploadSessionType::Sequential).
+    pub session_type: Option<UploadSessionType>,
+}
+
+impl UploadSessionStartBatchArg {
+    pub fn new(num_sessions: u64) -> Self {
+        UploadSessionStartBatchArg {
+            num_sessions,
+            session_type: None,
+        }
+    }
+
+    pub fn with_session_type(mut self, value: UploadSessionType) -> Self {
+        self.session_type = Some(value);
+        self
+    }
+}
+
+const UPLOAD_SESSION_START_BATCH_ARG_FIELDS: &[&str] = &["num_sessions",
+                                                         "session_type"];
+impl UploadSessionStartBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UploadSessionStartBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UploadSessionStartBatchArg>, V::Error> {
+        let mut field_num_sessions = None;
+        let mut field_session_type = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "num_sessions" => {
+                    if field_num_sessions.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("num_sessions"));
+                    }
+                    field_num_sessions = Some(map.next_value()?);
+                }
+                "session_type" => {
+                    if field_session_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("session_type"));
+                    }
+                    field_session_type = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UploadSessionStartBatchArg {
+            num_sessions: field_num_sessions.ok_or_else(|| ::serde::de::Error::missing_field("num_sessions"))?,
+            session_type: field_session_type,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("num_sessions", &self.num_sessions)?;
+        if let Some(val) = &self.session_type {
+            s.serialize_field("session_type", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionStartBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionStartBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionStartBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionStartBatchArg", UPLOAD_SESSION_START_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionStartBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionStartBatchArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UploadSessionStartBatchResult {
+    /// A List of unique identifiers for the upload session. Pass each session_id to
+    /// [`upload_session_append_v2()`](upload_session_append_v2) and
+    /// [`upload_session_finish()`](upload_session_finish).
+    pub session_ids: Vec<String>,
+}
+
+impl UploadSessionStartBatchResult {
+    pub fn new(session_ids: Vec<String>) -> Self {
+        UploadSessionStartBatchResult {
+            session_ids,
+        }
+    }
+}
+
+const UPLOAD_SESSION_START_BATCH_RESULT_FIELDS: &[&str] = &["session_ids"];
+impl UploadSessionStartBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UploadSessionStartBatchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UploadSessionStartBatchResult>, V::Error> {
+        let mut field_session_ids = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "session_ids" => {
+                    if field_session_ids.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("session_ids"));
+                    }
+                    field_session_ids = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UploadSessionStartBatchResult {
+            session_ids: field_session_ids.ok_or_else(|| ::serde::de::Error::missing_field("session_ids"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("session_ids", &self.session_ids)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartBatchResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionStartBatchResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionStartBatchResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionStartBatchResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionStartBatchResult", UPLOAD_SESSION_START_BATCH_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionStartBatchResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionStartBatchResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -21507,6 +21959,9 @@ pub enum UploadSessionStartError {
     ConcurrentSessionCloseNotAllowed,
     /// The request payload must be at most 150 MB.
     PayloadTooLarge,
+    /// The content received by the Dropbox server in this call does not match the provided content
+    /// hash.
+    ContentHashMismatch,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -21531,6 +21986,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartError {
                     "concurrent_session_data_not_allowed" => UploadSessionStartError::ConcurrentSessionDataNotAllowed,
                     "concurrent_session_close_not_allowed" => UploadSessionStartError::ConcurrentSessionCloseNotAllowed,
                     "payload_too_large" => UploadSessionStartError::PayloadTooLarge,
+                    "content_hash_mismatch" => UploadSessionStartError::ContentHashMismatch,
                     _ => UploadSessionStartError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -21540,6 +21996,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartError {
         const VARIANTS: &[&str] = &["concurrent_session_data_not_allowed",
                                     "concurrent_session_close_not_allowed",
                                     "payload_too_large",
+                                    "content_hash_mismatch",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionStartError", VARIANTS, EnumVisitor)
     }
@@ -21568,6 +22025,12 @@ impl ::serde::ser::Serialize for UploadSessionStartError {
                 s.serialize_field(".tag", "payload_too_large")?;
                 s.end()
             }
+            UploadSessionStartError::ContentHashMismatch => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionStartError", 1)?;
+                s.serialize_field(".tag", "content_hash_mismatch")?;
+                s.end()
+            }
             UploadSessionStartError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -21582,6 +22045,7 @@ impl ::std::fmt::Display for UploadSessionStartError {
             UploadSessionStartError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when starting concurrent upload session."),
             UploadSessionStartError::ConcurrentSessionCloseNotAllowed => f.write_str("Can not start a closed concurrent upload session."),
             UploadSessionStartError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadSessionStartError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
             _ => write!(f, "{:?}", *self),
         }
     }

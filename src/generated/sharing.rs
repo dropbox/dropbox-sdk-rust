@@ -200,6 +200,20 @@ pub fn get_shared_link_metadata(
         None)
 }
 
+/// Get the shared link's metadata.
+pub fn get_shared_link_metadata_app_auth(
+    client: &impl crate::client_trait::AppAuthClient,
+    arg: &GetSharedLinkMetadataArg,
+) -> crate::Result<Result<SharedLinkMetadata, SharedLinkError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "sharing/get_shared_link_metadata",
+        arg,
+        None)
+}
+
 /// Returns a list of [`LinkMetadata`](LinkMetadata) objects for this user, including collection
 /// links. If no path is given, returns a list of all shared links for the current user, including
 /// collection links, up to a maximum of 1000 links. If a non-empty path is given, returns a list of
@@ -753,6 +767,8 @@ pub enum AccessLevel {
     Viewer,
     /// The collaborator can only view the shared folder and does not have any access to comments.
     ViewerNoComment,
+    /// The collaborator can only view the shared folder that they have access to.
+    Traverse,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -778,6 +794,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessLevel {
                     "editor" => AccessLevel::Editor,
                     "viewer" => AccessLevel::Viewer,
                     "viewer_no_comment" => AccessLevel::ViewerNoComment,
+                    "traverse" => AccessLevel::Traverse,
                     _ => AccessLevel::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -788,6 +805,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessLevel {
                                     "editor",
                                     "viewer",
                                     "viewer_no_comment",
+                                    "traverse",
                                     "other"];
         deserializer.deserialize_struct("AccessLevel", VARIANTS, EnumVisitor)
     }
@@ -820,6 +838,12 @@ impl ::serde::ser::Serialize for AccessLevel {
                 // unit
                 let mut s = serializer.serialize_struct("AccessLevel", 1)?;
                 s.serialize_field(".tag", "viewer_no_comment")?;
+                s.end()
+            }
+            AccessLevel::Traverse => {
+                // unit
+                let mut s = serializer.serialize_struct("AccessLevel", 1)?;
+                s.serialize_field(".tag", "traverse")?;
                 s.end()
             }
             AccessLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
