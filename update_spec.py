@@ -38,7 +38,6 @@ def main():
         else:
             subprocess.run(["git", "checkout", args.spec_rev], check=True)
 
-
     generate_code(args.spec_path, gen_rust=True, gen_test=False)
     update_manifest(args.spec_path)
 

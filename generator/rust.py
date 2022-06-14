@@ -43,9 +43,9 @@ class RustHelperBackend(CodeBackend):
             return self.cur_indent
 
     def _arg_list(self, args):
-        arg_list = u''
+        arg_list = ''
         for arg in args:
-            arg_list += (u', ' if arg_list != u'' else u'') + arg
+            arg_list += (', ' if arg_list != '' else '') + arg
         return arg_list
 
     @contextmanager
@@ -54,11 +54,11 @@ class RustHelperBackend(CodeBackend):
         A Rust function definition context manager.
         """
         if access is None:
-            access = u''
+            access = ''
         else:
-            access += u' '
-        ret = u' -> {}'.format(return_type) if return_type is not None else u''
-        one_line = u'{}fn {}({}){} {{'.format(
+            access += ' '
+        ret = ' -> {}'.format(return_type) if return_type is not None else ''
+        one_line = '{}fn {}({}){} {{'.format(
             access,
             name,
             self._arg_list(args),
@@ -68,15 +68,15 @@ class RustHelperBackend(CodeBackend):
             self.emit(one_line)
         else:
             # one arg per line
-            self.emit(u'{}fn {}('.format(access, name))
+            self.emit('{}fn {}('.format(access, name))
             with self.indent():
                 for arg in args:
                     self.emit(arg + ',')
-            self.emit(u'){} {{'.format(ret))
+            self.emit('){} {{'.format(ret))
 
         with self.indent():
             yield
-        self.emit(u'}')
+        self.emit('}')
 
     def emit_rust_fn_call(self, func_name, args, end=None):
         """
@@ -84,15 +84,15 @@ class RustHelperBackend(CodeBackend):
         If `end` is None, the call ends without any semicolon.
         """
         if end is None:
-            end = u''
-        one_line = u'{}({}){}'.format(
+            end = ''
+        one_line = '{}({}){}'.format(
             func_name,
             self._arg_list(args),
             end)
         if self._dent_len() + len(one_line) < 100:
             self.emit(one_line)
         else:
-            self.emit(func_name + u'(')
+            self.emit(func_name + '(')
             with self.indent():
                 for i, arg in enumerate(args):
                     self.emit(arg + (',' if i+1 < len(args) else (')' + end)))
@@ -175,40 +175,40 @@ class RustHelperBackend(CodeBackend):
 
     def rust_type(self, typ, current_namespace, no_qualify=False, crate='crate'):
         if isinstance(typ, ir.Nullable):
-            return u'Option<{}>'.format(self.rust_type(typ.data_type, current_namespace, no_qualify, crate))
+            return 'Option<{}>'.format(self.rust_type(typ.data_type, current_namespace, no_qualify, crate))
         elif isinstance(typ, ir.Void):
-            return u'()'
+            return '()'
         elif isinstance(typ, ir.Bytes):
-            return u'Vec<u8>'
+            return 'Vec<u8>'
         elif isinstance(typ, ir.Int32):
-            return u'i32'
+            return 'i32'
         elif isinstance(typ, ir.UInt32):
-            return u'u32'
+            return 'u32'
         elif isinstance(typ, ir.Int64):
-            return u'i64'
+            return 'i64'
         elif isinstance(typ, ir.UInt64):
-            return u'u64'
+            return 'u64'
         elif isinstance(typ, ir.Float32):
-            return u'f32'
+            return 'f32'
         elif isinstance(typ, ir.Float64):
-            return u'f64'
+            return 'f64'
         elif isinstance(typ, ir.Boolean):
-            return u'bool'
+            return 'bool'
         elif isinstance(typ, ir.String):
-            return u'String'
+            return 'String'
         elif isinstance(typ, ir.Timestamp):
-            return u'String /*Timestamp*/'  # TODO
+            return 'String /*Timestamp*/'  # TODO
         elif isinstance(typ, ir.List):
-            return u'Vec<{}>'.format(self.rust_type(typ.data_type, current_namespace, no_qualify, crate))
+            return 'Vec<{}>'.format(self.rust_type(typ.data_type, current_namespace, no_qualify, crate))
         elif isinstance(typ, ir.Map):
-            return u'::std::collections::HashMap<{}, {}>'.format(
+            return '::std::collections::HashMap<{}, {}>'.format(
                 self.rust_type(typ.key_data_type, current_namespace, no_qualify, crate),
                 self.rust_type(typ.value_data_type, current_namespace, no_qualify, crate))
         elif isinstance(typ, ir.Alias):
             if typ.namespace.name == current_namespace or no_qualify:
                 return self.alias_name(typ)
             else:
-                return u'{}::{}::{}'.format(
+                return '{}::{}::{}'.format(
                     crate,
                     self.namespace_name(typ.namespace),
                     self.alias_name(typ))
@@ -218,14 +218,14 @@ class RustHelperBackend(CodeBackend):
             elif isinstance(typ, ir.Union):
                 name = self.enum_name(typ)
             else:
-                raise RuntimeError(u'ERROR: user-defined type "{}" is neither Struct nor Union???'
+                raise RuntimeError('ERROR: user-defined type "{}" is neither Struct nor Union???'
                                    .format(typ))
             if typ.namespace.name == current_namespace or no_qualify:
                 return name
             else:
-                return u'{}::{}::{}'.format(
+                return '{}::{}::{}'.format(
                     crate,
                     self.namespace_name(typ.namespace),
                     name)
         else:
-            raise RuntimeError(u'ERROR: unhandled type "{}"'.format(typ))
+            raise RuntimeError('ERROR: unhandled type "{}"'.format(typ))

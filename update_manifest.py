@@ -7,6 +7,7 @@ from typing import Dict, Set
 
 from generate import spec_files
 
+
 def update_manifest(stone_root: str):
     stone_files = spec_files(stone_root)
 
