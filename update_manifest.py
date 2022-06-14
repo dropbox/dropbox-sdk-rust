@@ -23,7 +23,7 @@ def update_manifest(stone_root: str):
             # this can happen if the stone file is empty
             print('unknown namespace for ' + filepath)
             continue
-        print('{} = {}'.format(filepath, module))
+        print(f'{filepath} = {module}')
         if module == "stone_cfg":
             continue
         if not module in deps:
@@ -38,11 +38,10 @@ def update_manifest(stone_root: str):
         dot.write('digraph deps {\n')
         for module, imports in sorted(deps.items()):
             if not imports:
-                dot.write('    {};\n'.format(module))
+                dot.write(f'    {module};\n')
             else:
-                dot.write('    {} -> {{ {} }};\n'.format(
-                    module,
-                    ' '.join(sorted(imports))))
+                deps_list = ' '.join(sorted(imports))
+                dot.write(f'    {module} -> {{ {deps_list} }};\n')
         dot.write('}\n')
 
     # super hacky toml reader and editor
@@ -58,7 +57,7 @@ def update_manifest(stone_root: str):
                     # found the end
                     # write an indented list of features
                     for module in sorted(deps):
-                        new.write('    "dbx_{}",\n'.format(module))
+                        new.write(f'    "dbx_{module}",\n')
 
                     in_features = False
                     in_default = False
@@ -69,9 +68,8 @@ def update_manifest(stone_root: str):
                     # found the end of the features list.
                     # write out the new features list
                     for module in sorted(deps):
-                        new.write('dbx_{} = [{}]\n'.format(
-                            module,
-                            ', '.join(['"dbx_{}"'.format(x) for x in sorted(deps[module])])))
+                        deps_list = ', '.join([f'"dbx_{x}"' for x in sorted(deps[module])])
+                        new.write(f'dbx_{module} = [{deps_list}]\n')
                     in_features = False
             else:
                 if line.startswith('dbx_'):
