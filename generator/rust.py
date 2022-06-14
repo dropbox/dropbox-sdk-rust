@@ -172,3 +172,60 @@ class RustHelperBackend(CodeBackend):
         if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
             name += 'Alias'
         return name
+
+    def rust_type(self, typ, current_namespace, no_qualify=False, crate='crate'):
+        if isinstance(typ, ir.Nullable):
+            return u'Option<{}>'.format(self.rust_type(typ.data_type, current_namespace, no_qualify, crate))
+        elif isinstance(typ, ir.Void):
+            return u'()'
+        elif isinstance(typ, ir.Bytes):
+            return u'Vec<u8>'
+        elif isinstance(typ, ir.Int32):
+            return u'i32'
+        elif isinstance(typ, ir.UInt32):
+            return u'u32'
+        elif isinstance(typ, ir.Int64):
+            return u'i64'
+        elif isinstance(typ, ir.UInt64):
+            return u'u64'
+        elif isinstance(typ, ir.Float32):
+            return u'f32'
+        elif isinstance(typ, ir.Float64):
+            return u'f64'
+        elif isinstance(typ, ir.Boolean):
+            return u'bool'
+        elif isinstance(typ, ir.String):
+            return u'String'
+        elif isinstance(typ, ir.Timestamp):
+            return u'String /*Timestamp*/'  # TODO
+        elif isinstance(typ, ir.List):
+            return u'Vec<{}>'.format(self.rust_type(typ.data_type, current_namespace, no_qualify, crate))
+        elif isinstance(typ, ir.Map):
+            return u'::std::collections::HashMap<{}, {}>'.format(
+                self.rust_type(typ.key_data_type, current_namespace, no_qualify, crate),
+                self.rust_type(typ.value_data_type, current_namespace, no_qualify, crate))
+        elif isinstance(typ, ir.Alias):
+            if typ.namespace.name == current_namespace or no_qualify:
+                return self.alias_name(typ)
+            else:
+                return u'{}::{}::{}'.format(
+                    crate,
+                    self.namespace_name(typ.namespace),
+                    self.alias_name(typ))
+        elif isinstance(typ, ir.UserDefined):
+            if isinstance(typ, ir.Struct):
+                name = self.struct_name(typ)
+            elif isinstance(typ, ir.Union):
+                name = self.enum_name(typ)
+            else:
+                raise RuntimeError(u'ERROR: user-defined type "{}" is neither Struct nor Union???'
+                                   .format(typ))
+            if typ.namespace.name == current_namespace or no_qualify:
+                return name
+            else:
+                return u'{}::{}::{}'.format(
+                    crate,
+                    self.namespace_name(typ.namespace),
+                    name)
+        else:
+            raise RuntimeError(u'ERROR: unhandled type "{}"'.format(typ))

@@ -85,7 +85,7 @@ pub fn get_space_usage(
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct Account {
     /// The user's unique Dropbox ID.
-    pub account_id: super::users_common::AccountId,
+    pub account_id: crate::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
     /// The user's email address. Do not rely on this without checking the `email_verified` field.
@@ -101,7 +101,7 @@ pub struct Account {
 
 impl Account {
     pub fn new(
-        account_id: super::users_common::AccountId,
+        account_id: crate::users_common::AccountId,
         name: Name,
         email: String,
         email_verified: bool,
@@ -256,7 +256,7 @@ impl ::serde::ser::Serialize for Account {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct BasicAccount {
     /// The user's unique Dropbox ID.
-    pub account_id: super::users_common::AccountId,
+    pub account_id: crate::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
     /// The user's email address. Do not rely on this without checking the `email_verified` field.
@@ -278,7 +278,7 @@ pub struct BasicAccount {
 
 impl BasicAccount {
     pub fn new(
-        account_id: super::users_common::AccountId,
+        account_id: crate::users_common::AccountId,
         name: Name,
         email: String,
         email_verified: bool,
@@ -528,7 +528,7 @@ impl ::serde::ser::Serialize for FileLockingValue {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FullAccount {
     /// The user's unique Dropbox ID.
-    pub account_id: super::users_common::AccountId,
+    pub account_id: crate::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
     /// The user's email address. Do not rely on this without checking the `email_verified` field.
@@ -547,9 +547,9 @@ pub struct FullAccount {
     /// `team` will always be `None`, but `is_paired` will indicate if a work account is linked.
     pub is_paired: bool,
     /// What type of account this user has.
-    pub account_type: super::users_common::AccountType,
+    pub account_type: crate::users_common::AccountType,
     /// The root info for this account.
-    pub root_info: super::common::RootInfo,
+    pub root_info: crate::common::RootInfo,
     /// URL for the photo representing the user, if one is set.
     pub profile_photo_url: Option<String>,
     /// The user's two-letter country code, if available. Country codes are based on [ISO
@@ -563,7 +563,7 @@ pub struct FullAccount {
 
 impl FullAccount {
     pub fn new(
-        account_id: super::users_common::AccountId,
+        account_id: crate::users_common::AccountId,
         name: Name,
         email: String,
         email_verified: bool,
@@ -571,8 +571,8 @@ impl FullAccount {
         locale: String,
         referral_link: String,
         is_paired: bool,
-        account_type: super::users_common::AccountType,
-        root_info: super::common::RootInfo,
+        account_type: crate::users_common::AccountType,
+        root_info: crate::common::RootInfo,
     ) -> Self {
         FullAccount {
             account_id,
@@ -836,17 +836,17 @@ pub struct FullTeam {
     /// The name of the team.
     pub name: String,
     /// Team policies governing sharing.
-    pub sharing_policies: super::team_policies::TeamSharingPolicies,
+    pub sharing_policies: crate::team_policies::TeamSharingPolicies,
     /// Team policy governing the use of the Office Add-In.
-    pub office_addin_policy: super::team_policies::OfficeAddInPolicy,
+    pub office_addin_policy: crate::team_policies::OfficeAddInPolicy,
 }
 
 impl FullTeam {
     pub fn new(
         id: String,
         name: String,
-        sharing_policies: super::team_policies::TeamSharingPolicies,
-        office_addin_policy: super::team_policies::OfficeAddInPolicy,
+        sharing_policies: crate::team_policies::TeamSharingPolicies,
+        office_addin_policy: crate::team_policies::OfficeAddInPolicy,
     ) -> Self {
         FullTeam {
             id,
@@ -967,11 +967,11 @@ impl ::serde::ser::Serialize for FullTeam {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetAccountArg {
     /// A user's account identifier.
-    pub account_id: super::users_common::AccountId,
+    pub account_id: crate::users_common::AccountId,
 }
 
 impl GetAccountArg {
-    pub fn new(account_id: super::users_common::AccountId) -> Self {
+    pub fn new(account_id: crate::users_common::AccountId) -> Self {
         GetAccountArg {
             account_id,
         }
@@ -1058,11 +1058,11 @@ impl ::serde::ser::Serialize for GetAccountArg {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetAccountBatchArg {
     /// List of user account identifiers.  Should not contain any duplicate account IDs.
-    pub account_ids: Vec<super::users_common::AccountId>,
+    pub account_ids: Vec<crate::users_common::AccountId>,
 }
 
 impl GetAccountBatchArg {
-    pub fn new(account_ids: Vec<super::users_common::AccountId>) -> Self {
+    pub fn new(account_ids: Vec<crate::users_common::AccountId>) -> Self {
         GetAccountBatchArg {
             account_ids,
         }
@@ -1150,7 +1150,7 @@ impl ::serde::ser::Serialize for GetAccountBatchArg {
 pub enum GetAccountBatchError {
     /// The value is an account ID specified in
     /// [`GetAccountBatchArg::account_ids`](GetAccountBatchArg) that does not exist.
-    NoAccount(super::users_common::AccountId),
+    NoAccount(crate::users_common::AccountId),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1881,7 +1881,7 @@ pub struct TeamSpaceAllocation {
     /// restriction is imposed on the user's quota within its team).
     pub user_within_team_space_allocated: u64,
     /// The type of the space limit imposed on the team member (off, alert_only, stop_sync).
-    pub user_within_team_space_limit_type: super::team_common::MemberSpaceLimitType,
+    pub user_within_team_space_limit_type: crate::team_common::MemberSpaceLimitType,
     /// An accurate cached calculation of a team member's total space usage (bytes).
     pub user_within_team_space_used_cached: u64,
 }
@@ -1891,7 +1891,7 @@ impl TeamSpaceAllocation {
         used: u64,
         allocated: u64,
         user_within_team_space_allocated: u64,
-        user_within_team_space_limit_type: super::team_common::MemberSpaceLimitType,
+        user_within_team_space_limit_type: crate::team_common::MemberSpaceLimitType,
         user_within_team_space_used_cached: u64,
     ) -> Self {
         TeamSpaceAllocation {

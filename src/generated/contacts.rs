@@ -39,11 +39,11 @@ pub fn delete_manual_contacts_batch(
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteManualContactsArg {
     /// List of manually added contacts to be deleted.
-    pub email_addresses: Vec<super::common::EmailAddress>,
+    pub email_addresses: Vec<crate::common::EmailAddress>,
 }
 
 impl DeleteManualContactsArg {
-    pub fn new(email_addresses: Vec<super::common::EmailAddress>) -> Self {
+    pub fn new(email_addresses: Vec<crate::common::EmailAddress>) -> Self {
         DeleteManualContactsArg {
             email_addresses,
         }
@@ -131,7 +131,7 @@ impl ::serde::ser::Serialize for DeleteManualContactsArg {
 pub enum DeleteManualContactsError {
     /// Can't delete contacts from this list. Make sure the list only has manually added contacts.
     /// The deletion was cancelled.
-    ContactsNotFound(Vec<super::common::EmailAddress>),
+    ContactsNotFound(Vec<crate::common::EmailAddress>),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
