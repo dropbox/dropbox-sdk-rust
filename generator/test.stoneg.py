@@ -48,8 +48,7 @@ class TestBackend(RustHelperBackend):
             return [TestUnion(self, typ, self.reference_impls, variant)
                 for variant in typ.all_fields]
         else:
-            raise RuntimeError('ERROR: type {} is neither struct nor union'
-                                .format(typ))
+            raise RuntimeError(f'ERROR: type {typ} is neither struct nor union')
 
     def generate(self, api):
         print('Generating Python reference code')
@@ -90,8 +89,8 @@ class TestBackend(RustHelperBackend):
             self.emit()
             for ns in api.namespaces:
                 if ns not in REQUIRED_NAMESPACES:
-                    self.emit('#[cfg(feature = "dbx_{}")]'.format(ns))
-                self.emit('mod {};'.format(self.namespace_name_raw(ns)))
+                    self.emit(f'#[cfg(feature = "dbx_{ns}")]')
+                self.emit(f'mod {self.namespace_name_raw(ns)};')
                 self.emit()
 
     def _emit_header(self):
@@ -122,6 +121,7 @@ class TestBackend(RustHelperBackend):
 
         for test_value in self.make_test_value(typ):
             pyname = fmt_py_class(typ.name)
+            rsname = self.struct_name(typ)
 
             json = json_encode(
                 self.reference_impls[ns.name].__dict__[pyname + '_validator'],
@@ -139,10 +139,8 @@ class TestBackend(RustHelperBackend):
                     '{".tag": "dropbox-sdk-rust-bogus-test-variant"')
 
             with self._test_fn(type_name + test_value.test_suffix()):
-                self.emit('let json = r#"{}"#;'.format(json))
-                self.emit('let x = ::serde_json::from_str::<::dropbox_sdk::{}::{}>(json).unwrap();'
-                        .format(ns_name,
-                                self.struct_name(typ)))
+                self.emit(f'let json = r#"{json}"#;')
+                self.emit(f'let x = ::serde_json::from_str::<::dropbox_sdk::{ns_name}::{rsname}>(json).unwrap();')
                 test_value.emit_asserts(self, 'x')
                 self.emit('assert_eq!(x, x.clone());')
 
@@ -151,16 +149,14 @@ class TestBackend(RustHelperBackend):
                     # test it again.
                     self.emit()
                     self.emit('let json2 = ::serde_json::to_string(&x).unwrap();')
-                    de = '::serde_json::from_str::<::dropbox_sdk::{}::{}>(&json2).unwrap()' \
-                        .format(ns_name,
-                                self.struct_name(typ))
+                    de = f'::serde_json::from_str::<::dropbox_sdk::{ns_name}::{rsname}>(&json2).unwrap()'
 
                     if typ.all_fields:
-                        self.emit('let x2 = {};'.format(de))
+                        self.emit(f'let x2 = {de};')
                         test_value.emit_asserts(self, 'x2')
                         self.emit('assert_eq!(x, x2);')
                     else:
-                        self.emit('{};'.format(de))
+                        self.emit(f'{de};')
                 else:
                     # assert that serializing it returns an error
                     self.emit('assert!(::serde_json::to_string(&x).is_err());')
@@ -171,21 +167,19 @@ class TestBackend(RustHelperBackend):
         type_name = self.struct_name(typ)
         with self._test_fn("ClosedUnion_" + type_name):
             self.emit('// This test ensures that an exhaustive match compiles.')
-            self.emit('let x: Option<::dropbox_sdk::{}::{}> = None;'.format(
-                ns_name, self.enum_name(typ)))
+            self.emit(f'let x: Option<::dropbox_sdk::{ns_name}::{self.enum_name(typ)}> = None;')
             self.emit('match x {')
             with self.indent():
                 var_exps = []
                 for variant in self.get_enum_variants(typ):
                     v_name = self.enum_variant_name(variant)
-                    var_exp = '::dropbox_sdk::{}::{}::{}'.format(
-                        ns_name, type_name, v_name)
+                    var_exp = f'::dropbox_sdk::{ns_name}::{type_name}::{v_name}'
                     if not ir.is_void_type(variant.data_type):
                         var_exp += '(_)'
                     var_exps += [var_exp]
 
                 self.generate_multiline_list(
-                    ['None'] + ['Some({})'.format(exp) for exp in var_exps],
+                    ['None'] + [f'Some({exp})' for exp in var_exps],
                     sep=' | ',
                     skip_last_sep=True,
                     delim=('', ''),
@@ -193,7 +187,7 @@ class TestBackend(RustHelperBackend):
             self.emit('}')
         self.emit()
 
-    def _emit_route_test(self, ns, route, json_encode, auth_type = None):
+    def _emit_route_test(self, ns, route, json_encode, auth_type=None):
         arg_typ = self.rust_type(route.arg_data_type, '', crate='dropbox_sdk')
         if arg_typ == '()':
             json = "{}"
@@ -287,23 +281,18 @@ class TestField(object):
         if isinstance(self.test_value, TestValue):
             self.test_value.emit_asserts(codegen, expression)
         elif ir.is_string_type(self.typ):
-            codegen.emit('assert_eq!({}.as_str(), r#"{}"#);'.format(
-                expression, self.value))
+            codegen.emit(f'assert_eq!({expression}.as_str(), r#"{self.value}"#);')
         elif ir.is_numeric_type(self.typ):
-            codegen.emit('assert_eq!({}, {});'.format(
-                expression, self.value))
+            codegen.emit(f'assert_eq!({expression}, {self.value});')
         elif ir.is_boolean_type(self.typ):
-            codegen.emit('assert_eq!({}, {});'.format(
-                expression, 'true' if self.value else 'false'))
+            codegen.emit(f'assert_eq!({expression}, {"true" if self.value else "false"});')
         elif ir.is_timestamp_type(self.typ):
-            codegen.emit('assert_eq!({}.as_str(), "{}");'.format(
-                expression, self.value.strftime(self.typ.format)))
+            codegen.emit(f'assert_eq!({expression}.as_str(), "{self.value.strftime(self.typ.format)}");')
         elif ir.is_bytes_type(self.typ):
-            codegen.emit('assert_eq!(&{}, &[{}]);'.format(
-                expression, ",".join(str(x) for x in self.value)))
+            codegen.emit(f'assert_eq!(&{expression}, &[{",".join(str(x) for x in self.value)}]);')
         else:
-            raise RuntimeError('Error: assetion unhandled for type {} of field {} with value {}'
-                               .format(self.typ, self.name, self.value))
+            raise RuntimeError(f'Error: assetion unhandled for type {self.typ}'
+                               f' of field {self.name} with value {self.value}')
 
 
 class TestValue(object):
@@ -338,19 +327,18 @@ class TestStruct(TestValue):
         try:
             self.value = reference_impls[stone_type.namespace.name].__dict__[py_name]()
         except Exception as e:
-            raise RuntimeError('Error instantiating value for {}: {}'.format(stone_type.name, e))
+            raise RuntimeError(f'Error instantiating value for {stone_type.name}: {e}')
 
         for field in (stone_type.all_required_fields if no_optional_fields else stone_type.all_fields):
             field_value = make_test_field(
                     field.name, field.data_type, rust_generator, reference_impls)
             if field_value is None:
-                raise RuntimeError('Error: incomplete type generated: {}'.format(stone_type.name))
+                raise RuntimeError(f'Error: incomplete type generated: {stone_type.name}')
             self.fields.append(field_value)
             try:
                 setattr(self.value, field.name, field_value.value)
             except Exception as e:
-                raise RuntimeError('Error generating value for {}.{}: {}'
-                                   .format(stone_type.name, field.name, e))
+                raise RuntimeError(f'Error generating value for {stone_type.name}.{field.name}: {e}')
 
     def emit_asserts(self, codegen, expression_path):
         for field in self.fields:
@@ -379,8 +367,7 @@ class TestUnion(TestValue):
             None, self._variant.data_type, rust_generator, reference_impls)
 
         if self._inner_value is None:
-            raise RuntimeError('Error generating union variant value for {}.{}'
-                               .format(stone_type.name, variant.name))
+            raise RuntimeError(f'Error generating union variant value for {stone_type.name}.{variant.name}')
 
         self.value = self.get_from_inner_value(variant.name, self._inner_value)
 
@@ -390,8 +377,7 @@ class TestUnion(TestValue):
             return self._reference_impls[self._stone_type.namespace.name] \
                     .__dict__[pyname](variant_name, generated_field.value)
         except Exception as e:
-            raise RuntimeError('Error generating value for {}.{}: {}'
-                               .format(self._stone_type.name, variant_name, e))
+            raise RuntimeError(f'Error generating value for {self._stone_type.name}.{variant_name}: {e}')
 
     def has_other_variants(self):
         return len(self._stone_type.all_fields) > 1 or not self._stone_type.closed
@@ -400,22 +386,14 @@ class TestUnion(TestValue):
         if expression_path[0] == '(' and expression_path[-1] == ')':
                 expression_path = expression_path[1:-1]  # strip off superfluous parens
 
-        with codegen.block('match {}'.format(expression_path)):
+        with codegen.block(f'match {expression_path}'):
+            path = f'::dropbox_sdk::{self._rust_namespace_name}::{self._rust_name}::{self._rust_variant_name}'
             if ir.is_void_type(self._variant.data_type):
-                codegen.emit('::dropbox_sdk::{}::{}::{} => (),'.format(
-                    self._rust_namespace_name,
-                    self._rust_name,
-                    self._rust_variant_name))
+                codegen.emit(f'{path} => (),')
             elif codegen.is_nullary_struct(self._variant.data_type):
-                codegen.emit('::dropbox_sdk::{}::{}::{}(..) => (), // nullary struct'.format(
-                    self._rust_namespace_name,
-                    self._rust_name,
-                    self._rust_variant_name))
+                codegen.emit(f'{path}(..) => (), // nullary struct')
             else:
-                with codegen.block('::dropbox_sdk::{}::{}::{}(ref v) =>'.format(
-                        self._rust_namespace_name,
-                        self._rust_name,
-                        self._rust_variant_name)):
+                with codegen.block(f'{path}(ref v) =>'):
                     self._inner_value.emit_assert(codegen, '(*v)')
 
             if self.has_other_variants():
@@ -445,7 +423,7 @@ class TestList(TestValue):
 
         self._inner_value = make_test_field(None, stone_type, rust_generator, reference_impls)
         if self._inner_value is None:
-            raise RuntimeError('Error generating value for list of {}'.format(stone_type.name))
+            raise RuntimeError(f'Error generating value for list of {stone_type.name}')
 
         self.value = self._inner_value.value
 
@@ -465,7 +443,7 @@ class TestMap(TestValue):
         self.value = {self._key_value.value: self._val_value.value}
 
     def emit_asserts(self, codegen, expression_path):
-        key_str = '["{}"]'.format(self._key_value.value)
+        key_str = f'["{self._key_value.value}"]'
         self._val_value.emit_assert(codegen, expression_path + key_str)
 
 
@@ -515,7 +493,7 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
     elif ir.is_bytes_type(typ):
         value = bytes([0, 1, 2, 3, 4, 5])
     elif not ir.is_void_type(typ):
-        raise RuntimeError('Error: unhandled field type of {}: {}'.format(field_name, typ))
+        raise RuntimeError(f'Error: unhandled field type of {field_name}: {typ}')
     return TestField(rust_name, value, inner, typ, option)
 
 
@@ -582,13 +560,13 @@ class Unregex(object):
                 elif argument == 'category_not_space':
                     result += '!'
                 else:
-                    raise NotImplementedError('category {}'.format(argument))
+                    raise NotImplementedError(f'category {argument}')
             elif opcode == 'assert_not':
                 # let's just hope for the best...
                 pass
             elif opcode == 'assert' or opcode == 'negate':
                 # note: 'negate' is handled in the 'in' opcode
-                raise NotImplementedError('regex opcode {} not implemented'.format(opcode))
+                raise NotImplementedError(f'regex opcode {opcode} not implemented')
             else:
-                raise NotImplementedError('unknown regex opcode: {}'.format(opcode))
+                raise NotImplementedError(f'unknown regex opcode: {opcode}')
         return result

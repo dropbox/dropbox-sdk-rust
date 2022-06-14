@@ -35,7 +35,7 @@ def generate_code(spec_root: str, gen_rust: bool, gen_test: bool):
     targets = ["rust"] if gen_rust else []
     targets += ["test"] if gen_test else []
 
-    print("Generating [{}] from {}".format(", ".join(targets), spec_root))
+    print(f"Generating [{', '.join(targets)}] from {spec_root}")
 
     specs = []
     for path in spec_files(spec_root):
@@ -45,18 +45,18 @@ def generate_code(spec_root: str, gen_rust: bool, gen_test: bool):
     try:
         api = specs_to_ir(specs)
     except InvalidSpec as e:
-        print("{}:{}: error: {}".format(e.path, e.lineno, e.msg), file=sys.stderr)
+        print(f"{e.path}:{e.lineno}: error: {e.msg}", file=sys.stderr)
         raise CodegenFailed
 
     sys.path.append("generator")
     for target in targets:
-        print("Running generator for {}".format(target))
+        print(f"Running generator for {target}")
         try:
             backend_module = imp.load_source(
-                '{}_backend'.format(target), join("generator", "{}.stoneg.py".format(target)))
+                f'{target}_backend', join("generator", f"{target}.stoneg.py"))
         except Exception:
-            print("error: Importing backend \"{}\" module raised an exception: ".format(
-                target), file=sys.stderr)
+            print(f"error: Importing backend \"{target}\" module raised an exception: ",
+                  file=sys.stderr)
             raise
 
         destination = {
@@ -70,7 +70,7 @@ def generate_code(spec_root: str, gen_rust: bool, gen_test: bool):
         try:
             c.build()
         except BackendException as e:
-            print("error: {} raised an exception:\n{}".format(e.backend_name, e.traceback),
+            print(f"error: {e.backend_name} raised an exception:\n{e.traceback}",
                   file=sys.stderr)
             raise CodegenFailed
 

@@ -49,30 +49,28 @@ class RustHelperBackend(CodeBackend):
         return arg_list
 
     @contextmanager
-    def emit_rust_function_def(self, name, args=[], return_type=None, access=None):
+    def emit_rust_function_def(self, name, args=None, return_type=None, access=None):
         """
         A Rust function definition context manager.
         """
+        if args is None:
+            args = []
         if access is None:
             access = ''
         else:
             access += ' '
-        ret = ' -> {}'.format(return_type) if return_type is not None else ''
-        one_line = '{}fn {}({}){} {{'.format(
-            access,
-            name,
-            self._arg_list(args),
-            ret)
+        ret = f' -> {return_type}' if return_type is not None else ''
+        one_line = f'{access}fn {name}({self._arg_list(args)}){ret} {{'
         if self._dent_len() + len(one_line) < 100:
             # one-line version
             self.emit(one_line)
         else:
             # one arg per line
-            self.emit('{}fn {}('.format(access, name))
+            self.emit(f'{access}fn {name}(')
             with self.indent():
                 for arg in args:
                     self.emit(arg + ',')
-            self.emit('){} {{'.format(ret))
+            self.emit(f'){ret} {{')
 
         with self.indent():
             yield
@@ -85,10 +83,7 @@ class RustHelperBackend(CodeBackend):
         """
         if end is None:
             end = ''
-        one_line = '{}({}){}'.format(
-            func_name,
-            self._arg_list(args),
-            end)
+        one_line = f'{func_name}({self._arg_list(args)}){end}'
         if self._dent_len() + len(one_line) < 100:
             self.emit(one_line)
         else:
@@ -106,7 +101,7 @@ class RustHelperBackend(CodeBackend):
 
     def is_closed_union(self, typ):
         return (isinstance(typ, ir.Union) and typ.closed) \
-            or (isinstance(typ, ir.Struct) \
+            or (isinstance(typ, ir.Struct)
                 and typ.has_enumerated_subtypes() and not typ.is_catch_all())
 
     def get_enum_variants(self, typ):
@@ -162,7 +157,7 @@ class RustHelperBackend(CodeBackend):
     def route_name_raw(self, name, version):
         name = fmt_underscores(name)
         if version > 1:
-            name = '{}_v{}'.format(name, version)
+            name = f'{name}_v{version}'
         if name in RUST_RESERVED_WORDS:
             name = 'do_' + name
         return name
@@ -175,7 +170,8 @@ class RustHelperBackend(CodeBackend):
 
     def rust_type(self, typ, current_namespace, no_qualify=False, crate='crate'):
         if isinstance(typ, ir.Nullable):
-            return 'Option<{}>'.format(self.rust_type(typ.data_type, current_namespace, no_qualify, crate))
+            t = self.rust_type(typ.data_type, current_namespace, no_qualify, crate)
+            return f'Option<{t}>'
         elif isinstance(typ, ir.Void):
             return '()'
         elif isinstance(typ, ir.Bytes):
@@ -199,33 +195,27 @@ class RustHelperBackend(CodeBackend):
         elif isinstance(typ, ir.Timestamp):
             return 'String /*Timestamp*/'  # TODO
         elif isinstance(typ, ir.List):
-            return 'Vec<{}>'.format(self.rust_type(typ.data_type, current_namespace, no_qualify, crate))
+            t = self.rust_type(typ.data_type, current_namespace, no_qualify, crate)
+            return f'Vec<{t}>'
         elif isinstance(typ, ir.Map):
-            return '::std::collections::HashMap<{}, {}>'.format(
-                self.rust_type(typ.key_data_type, current_namespace, no_qualify, crate),
-                self.rust_type(typ.value_data_type, current_namespace, no_qualify, crate))
+            k = self.rust_type(typ.key_data_type, current_namespace, no_qualify, crate)
+            v = self.rust_type(typ.value_data_type, current_namespace, no_qualify, crate)
+            return f'::std::collections::HashMap<{k}, {v}>'
         elif isinstance(typ, ir.Alias):
             if typ.namespace.name == current_namespace or no_qualify:
                 return self.alias_name(typ)
             else:
-                return '{}::{}::{}'.format(
-                    crate,
-                    self.namespace_name(typ.namespace),
-                    self.alias_name(typ))
+                return f'{crate}::{self.namespace_name(typ.namespace)}::{self.alias_name(typ)}'
         elif isinstance(typ, ir.UserDefined):
             if isinstance(typ, ir.Struct):
                 name = self.struct_name(typ)
             elif isinstance(typ, ir.Union):
                 name = self.enum_name(typ)
             else:
-                raise RuntimeError('ERROR: user-defined type "{}" is neither Struct nor Union???'
-                                   .format(typ))
+                raise RuntimeError(f'ERROR: user-defined type "{typ}" is neither Struct nor Union???')
             if typ.namespace.name == current_namespace or no_qualify:
                 return name
             else:
-                return '{}::{}::{}'.format(
-                    crate,
-                    self.namespace_name(typ.namespace),
-                    name)
+                return f'{crate}::{self.namespace_name(typ.namespace)}::{name}'
         else:
-            raise RuntimeError('ERROR: unhandled type "{}"'.format(typ))
+            raise RuntimeError(f'ERROR: unhandled type "{typ}"')
