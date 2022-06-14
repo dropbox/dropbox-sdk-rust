@@ -9,7 +9,7 @@ from shutil import rmtree
 import sys
 from typing import List
 
-sys.path.append("stone")
+sys.path.insert(0, "stone")
 from stone.compiler import BackendException, Compiler
 from stone.frontend.exception import InvalidSpec
 from stone.frontend.frontend import specs_to_ir
