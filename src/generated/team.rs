@@ -18,7 +18,7 @@ pub type ListHeldRevisionCursor = String;
 pub type MembersGetInfoResult = Vec<MembersGetInfoItem>;
 pub type NumberPerDay = Vec<Option<u64>>;
 pub type Path = String;
-pub type SecondaryEmail = super::secondary_emails::SecondaryEmail;
+pub type SecondaryEmail = crate::secondary_emails::SecondaryEmail;
 pub type TeamMemberRoleId = String;
 pub type UserQuota = u32;
 
@@ -142,7 +142,7 @@ pub fn groups_create(
 pub fn groups_delete(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupSelector,
-) -> crate::Result<Result<super::dbx_async::LaunchEmptyResult, GroupDeleteError>> {
+) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, GroupDeleteError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -175,8 +175,8 @@ pub fn groups_get_info(
 /// management.
 pub fn groups_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::dbx_async::PollArg,
-) -> crate::Result<Result<super::dbx_async::PollEmptyResult, GroupsPollError>> {
+    arg: &crate::dbx_async::PollArg,
+) -> crate::Result<Result<crate::dbx_async::PollEmptyResult, GroupsPollError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -633,8 +633,8 @@ pub fn members_add(
 /// the status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get_v2(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::dbx_async::PollArg,
-) -> crate::Result<Result<MembersAddJobStatusV2Result, super::dbx_async::PollError>> {
+    arg: &crate::dbx_async::PollArg,
+) -> crate::Result<Result<MembersAddJobStatusV2Result, crate::dbx_async::PollError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -648,8 +648,8 @@ pub fn members_add_job_status_get_v2(
 /// status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::dbx_async::PollArg,
-) -> crate::Result<Result<MembersAddJobStatus, super::dbx_async::PollError>> {
+    arg: &crate::dbx_async::PollArg,
+) -> crate::Result<Result<MembersAddJobStatus, crate::dbx_async::PollError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -799,7 +799,7 @@ pub fn members_list_continue(
 pub fn members_move_former_member_files(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersDataTransferArg,
-) -> crate::Result<Result<super::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>> {
+) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -814,8 +814,8 @@ pub fn members_move_former_member_files(
 /// status of the asynchronous request. Permission : Team member management.
 pub fn members_move_former_member_files_job_status_check(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::dbx_async::PollArg,
-) -> crate::Result<Result<super::dbx_async::PollEmptyResult, super::dbx_async::PollError>> {
+    arg: &crate::dbx_async::PollArg,
+) -> crate::Result<Result<crate::dbx_async::PollEmptyResult, crate::dbx_async::PollError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -853,7 +853,7 @@ pub fn members_recover(
 pub fn members_remove(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersRemoveArg,
-) -> crate::Result<Result<super::dbx_async::LaunchEmptyResult, MembersRemoveError>> {
+) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, MembersRemoveError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -867,8 +867,8 @@ pub fn members_remove(
 /// the status of the asynchronous request. Permission : Team member management.
 pub fn members_remove_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::dbx_async::PollArg,
-) -> crate::Result<Result<super::dbx_async::PollEmptyResult, super::dbx_async::PollError>> {
+    arg: &crate::dbx_async::PollArg,
+) -> crate::Result<Result<crate::dbx_async::PollEmptyResult, crate::dbx_async::PollError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1089,8 +1089,8 @@ pub fn namespaces_list_continue(
 #[deprecated]
 pub fn properties_template_add(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::file_properties::AddTemplateArg,
-) -> crate::Result<Result<super::file_properties::AddTemplateResult, super::file_properties::ModifyTemplateError>> {
+    arg: &crate::file_properties::AddTemplateArg,
+) -> crate::Result<Result<crate::file_properties::AddTemplateResult, crate::file_properties::ModifyTemplateError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1104,8 +1104,8 @@ pub fn properties_template_add(
 #[deprecated]
 pub fn properties_template_get(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::file_properties::GetTemplateArg,
-) -> crate::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
+    arg: &crate::file_properties::GetTemplateArg,
+) -> crate::Result<Result<crate::file_properties::GetTemplateResult, crate::file_properties::TemplateError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1119,7 +1119,7 @@ pub fn properties_template_get(
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
+) -> crate::Result<Result<crate::file_properties::ListTemplateResult, crate::file_properties::TemplateError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1133,8 +1133,8 @@ pub fn properties_template_list(
 #[deprecated]
 pub fn properties_template_update(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::file_properties::UpdateTemplateArg,
-) -> crate::Result<Result<super::file_properties::UpdateTemplateResult, super::file_properties::ModifyTemplateError>> {
+    arg: &crate::file_properties::UpdateTemplateArg,
+) -> crate::Result<Result<crate::file_properties::UpdateTemplateResult, crate::file_properties::ModifyTemplateError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1242,8 +1242,8 @@ pub fn team_folder_archive(
 /// file access.
 pub fn team_folder_archive_check(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &super::dbx_async::PollArg,
-) -> crate::Result<Result<TeamFolderArchiveJobStatus, super::dbx_async::PollError>> {
+    arg: &crate::dbx_async::PollArg,
+) -> crate::Result<Result<TeamFolderArchiveJobStatus, crate::dbx_async::PollError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1386,11 +1386,11 @@ pub struct ActiveWebSession {
     /// The country from which the last activity from this session was made.
     pub country: Option<String>,
     /// The time this session was created.
-    pub created: Option<super::common::DropboxTimestamp>,
+    pub created: Option<crate::common::DropboxTimestamp>,
     /// The time of the last activity from this session.
-    pub updated: Option<super::common::DropboxTimestamp>,
+    pub updated: Option<crate::common::DropboxTimestamp>,
     /// The time this session expires.
-    pub expires: Option<super::common::DropboxTimestamp>,
+    pub expires: Option<crate::common::DropboxTimestamp>,
 }
 
 impl ActiveWebSession {
@@ -1418,17 +1418,17 @@ impl ActiveWebSession {
         self
     }
 
-    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_created(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.created = Some(value);
         self
     }
 
-    pub fn with_updated(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_updated(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.updated = Some(value);
         self
     }
 
-    pub fn with_expires(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_expires(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.expires = Some(value);
         self
     }
@@ -1609,21 +1609,21 @@ pub enum AddSecondaryEmailResult {
     /// Describes a secondary email that was successfully added to a user.
     Success(SecondaryEmail),
     /// Secondary email is not available to be claimed by the user.
-    Unavailable(super::common::EmailAddress),
+    Unavailable(crate::common::EmailAddress),
     /// Secondary email is already a pending email for the user.
-    AlreadyPending(super::common::EmailAddress),
+    AlreadyPending(crate::common::EmailAddress),
     /// Secondary email is already a verified email for the user.
-    AlreadyOwnedByUser(super::common::EmailAddress),
+    AlreadyOwnedByUser(crate::common::EmailAddress),
     /// User already has the maximum number of secondary emails allowed.
-    ReachedLimit(super::common::EmailAddress),
+    ReachedLimit(crate::common::EmailAddress),
     /// A transient error occurred. Please try again later.
-    TransientError(super::common::EmailAddress),
+    TransientError(crate::common::EmailAddress),
     /// An error occurred due to conflicting updates. Please try again later.
-    TooManyUpdates(super::common::EmailAddress),
+    TooManyUpdates(crate::common::EmailAddress),
     /// An unknown error occurred.
-    UnknownError(super::common::EmailAddress),
+    UnknownError(crate::common::EmailAddress),
     /// Too many emails are being sent to this email address. Please try again later.
-    RateLimited(super::common::EmailAddress),
+    RateLimited(crate::common::EmailAddress),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2152,7 +2152,7 @@ pub struct ApiApp {
     /// The publisher's URL.
     pub publisher_url: Option<String>,
     /// The time this application was linked.
-    pub linked: Option<super::common::DropboxTimestamp>,
+    pub linked: Option<crate::common::DropboxTimestamp>,
 }
 
 impl ApiApp {
@@ -2177,7 +2177,7 @@ impl ApiApp {
         self
     }
 
-    pub fn with_linked(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_linked(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.linked = Some(value);
         self
     }
@@ -2762,18 +2762,18 @@ impl ::serde::ser::Serialize for CustomQuotaUsersArg {
 pub struct DateRange {
     /// Optional starting date (inclusive). If start_date is None or too long ago, this field will
     /// be set to 6 months ago.
-    pub start_date: Option<super::common::Date>,
+    pub start_date: Option<crate::common::Date>,
     /// Optional ending date (exclusive).
-    pub end_date: Option<super::common::Date>,
+    pub end_date: Option<crate::common::Date>,
 }
 
 impl DateRange {
-    pub fn with_start_date(mut self, value: super::common::Date) -> Self {
+    pub fn with_start_date(mut self, value: crate::common::Date) -> Self {
         self.start_date = Some(value);
         self
     }
 
-    pub fn with_end_date(mut self, value: super::common::Date) -> Self {
+    pub fn with_end_date(mut self, value: crate::common::Date) -> Self {
         self.end_date = Some(value);
         self
     }
@@ -2917,11 +2917,11 @@ impl ::std::fmt::Display for DateRangeError {
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteSecondaryEmailResult {
     /// The secondary email was successfully deleted.
-    Success(super::common::EmailAddress),
+    Success(crate::common::EmailAddress),
     /// The email address was not found for the user.
-    NotFound(super::common::EmailAddress),
+    NotFound(crate::common::EmailAddress),
     /// The email address is the primary email address of the user, and cannot be removed.
-    CannotRemovePrimary(super::common::EmailAddress),
+    CannotRemovePrimary(crate::common::EmailAddress),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -3211,9 +3211,9 @@ pub struct DesktopClientSession {
     /// The country from which the last activity from this session was made.
     pub country: Option<String>,
     /// The time this session was created.
-    pub created: Option<super::common::DropboxTimestamp>,
+    pub created: Option<crate::common::DropboxTimestamp>,
     /// The time of the last activity from this session.
-    pub updated: Option<super::common::DropboxTimestamp>,
+    pub updated: Option<crate::common::DropboxTimestamp>,
 }
 
 impl DesktopClientSession {
@@ -3249,12 +3249,12 @@ impl DesktopClientSession {
         self
     }
 
-    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_created(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.created = Some(value);
         self
     }
 
-    pub fn with_updated(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_updated(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.updated = Some(value);
         self
     }
@@ -3519,9 +3519,9 @@ pub struct DeviceSession {
     /// The country from which the last activity from this session was made.
     pub country: Option<String>,
     /// The time this session was created.
-    pub created: Option<super::common::DropboxTimestamp>,
+    pub created: Option<crate::common::DropboxTimestamp>,
     /// The time of the last activity from this session.
-    pub updated: Option<super::common::DropboxTimestamp>,
+    pub updated: Option<crate::common::DropboxTimestamp>,
 }
 
 impl DeviceSession {
@@ -3545,12 +3545,12 @@ impl DeviceSession {
         self
     }
 
-    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_created(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.created = Some(value);
         self
     }
 
-    pub fn with_updated(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_updated(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.updated = Some(value);
         self
     }
@@ -5995,9 +5995,9 @@ pub struct GroupCreateArg {
     /// Automatically add the creator of the group.
     pub add_creator_as_owner: bool,
     /// The creator of a team can associate an arbitrary external ID to the group.
-    pub group_external_id: Option<super::team_common::GroupExternalId>,
+    pub group_external_id: Option<crate::team_common::GroupExternalId>,
     /// Whether the team can be managed by selected users, or only by team admins.
-    pub group_management_type: Option<super::team_common::GroupManagementType>,
+    pub group_management_type: Option<crate::team_common::GroupManagementType>,
 }
 
 impl GroupCreateArg {
@@ -6015,14 +6015,14 @@ impl GroupCreateArg {
         self
     }
 
-    pub fn with_group_external_id(mut self, value: super::team_common::GroupExternalId) -> Self {
+    pub fn with_group_external_id(mut self, value: crate::team_common::GroupExternalId) -> Self {
         self.group_external_id = Some(value);
         self
     }
 
     pub fn with_group_management_type(
         mut self,
-        value: super::team_common::GroupManagementType,
+        value: crate::team_common::GroupManagementType,
     ) -> Self {
         self.group_management_type = Some(value);
         self
@@ -6333,13 +6333,13 @@ impl ::std::fmt::Display for GroupDeleteError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupFullInfo {
     pub group_name: String,
-    pub group_id: super::team_common::GroupId,
+    pub group_id: crate::team_common::GroupId,
     /// Who is allowed to manage the group.
-    pub group_management_type: super::team_common::GroupManagementType,
+    pub group_management_type: crate::team_common::GroupManagementType,
     /// The group creation time as a UTC timestamp in milliseconds since the Unix epoch.
     pub created: u64,
     /// External ID of group. This is an arbitrary ID that an admin can attach to a group.
-    pub group_external_id: Option<super::team_common::GroupExternalId>,
+    pub group_external_id: Option<crate::team_common::GroupExternalId>,
     /// The number of members in the group.
     pub member_count: Option<u32>,
     /// List of group members.
@@ -6349,8 +6349,8 @@ pub struct GroupFullInfo {
 impl GroupFullInfo {
     pub fn new(
         group_name: String,
-        group_id: super::team_common::GroupId,
-        group_management_type: super::team_common::GroupManagementType,
+        group_id: crate::team_common::GroupId,
+        group_management_type: crate::team_common::GroupManagementType,
         created: u64,
     ) -> Self {
         GroupFullInfo {
@@ -6364,7 +6364,7 @@ impl GroupFullInfo {
         }
     }
 
-    pub fn with_group_external_id(mut self, value: super::team_common::GroupExternalId) -> Self {
+    pub fn with_group_external_id(mut self, value: crate::team_common::GroupExternalId) -> Self {
         self.group_external_id = Some(value);
         self
     }
@@ -7225,11 +7225,11 @@ pub struct GroupMembersChangeResult {
     /// For legacy purposes async_job_id will always return one space ' '. Formerly, it was an ID
     /// that was used to obtain the status of granting/revoking group-owned resources. It's no
     /// longer necessary because the async processing now happens automatically.
-    pub async_job_id: super::dbx_async::AsyncJobId,
+    pub async_job_id: crate::dbx_async::AsyncJobId,
 }
 
 impl GroupMembersChangeResult {
-    pub fn new(group_info: GroupFullInfo, async_job_id: super::dbx_async::AsyncJobId) -> Self {
+    pub fn new(group_info: GroupFullInfo, async_job_id: crate::dbx_async::AsyncJobId) -> Self {
         GroupMembersChangeResult {
             group_info,
             async_job_id,
@@ -7921,9 +7921,9 @@ impl ::serde::ser::Serialize for GroupMembersSetAccessTypeArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupSelector {
     /// Group ID.
-    GroupId(super::team_common::GroupId),
+    GroupId(crate::team_common::GroupId),
     /// External ID of the group.
-    GroupExternalId(super::team_common::GroupExternalId),
+    GroupExternalId(crate::team_common::GroupExternalId),
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupSelector {
@@ -8152,9 +8152,9 @@ pub struct GroupUpdateArgs {
     pub new_group_name: Option<String>,
     /// Optional argument. New group external ID. If the argument is None, the group's external_id
     /// won't be updated. If the argument is empty string, the group's external id will be cleared.
-    pub new_group_external_id: Option<super::team_common::GroupExternalId>,
+    pub new_group_external_id: Option<crate::team_common::GroupExternalId>,
     /// Set new group management type, if provided.
-    pub new_group_management_type: Option<super::team_common::GroupManagementType>,
+    pub new_group_management_type: Option<crate::team_common::GroupManagementType>,
 }
 
 impl GroupUpdateArgs {
@@ -8180,7 +8180,7 @@ impl GroupUpdateArgs {
 
     pub fn with_new_group_external_id(
         mut self,
-        value: super::team_common::GroupExternalId,
+        value: crate::team_common::GroupExternalId,
     ) -> Self {
         self.new_group_external_id = Some(value);
         self
@@ -8188,7 +8188,7 @@ impl GroupUpdateArgs {
 
     pub fn with_new_group_management_type(
         mut self,
-        value: super::team_common::GroupManagementType,
+        value: crate::team_common::GroupManagementType,
     ) -> Self {
         self.new_group_management_type = Some(value);
         self
@@ -8812,7 +8812,7 @@ impl ::std::fmt::Display for GroupsListContinueError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsListResult {
-    pub groups: Vec<super::team_common::GroupSummary>,
+    pub groups: Vec<crate::team_common::GroupSummary>,
     /// Pass the cursor into [`groups_list_continue()`](groups_list_continue) to obtain the
     /// additional groups.
     pub cursor: String,
@@ -8823,7 +8823,7 @@ pub struct GroupsListResult {
 
 impl GroupsListResult {
     pub fn new(
-        groups: Vec<super::team_common::GroupSummary>,
+        groups: Vec<crate::team_common::GroupSummary>,
         cursor: String,
         has_more: bool,
     ) -> Self {
@@ -9410,7 +9410,7 @@ impl ::std::fmt::Display for GroupsPollError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupsSelector {
     /// List of group IDs.
-    GroupIds(Vec<super::team_common::GroupId>),
+    GroupIds(Vec<crate::team_common::GroupId>),
     /// List of external IDs of groups.
     GroupExternalIds(Vec<String>),
 }
@@ -9764,17 +9764,17 @@ pub struct LegalHoldHeldRevisionMetadata {
     /// The held revision filename.
     pub new_filename: String,
     /// The id of the held revision.
-    pub original_revision_id: super::files::Rev,
+    pub original_revision_id: crate::files::Rev,
     /// The original path of the held revision.
     pub original_file_path: Path,
     /// The last time the file was modified on Dropbox.
-    pub server_modified: super::common::DropboxTimestamp,
+    pub server_modified: crate::common::DropboxTimestamp,
     /// The member id of the revision's author.
-    pub author_member_id: super::team_common::TeamMemberId,
+    pub author_member_id: crate::team_common::TeamMemberId,
     /// The member status of the revision's author.
     pub author_member_status: TeamMemberStatus,
     /// The email address of the held revision author.
-    pub author_email: super::common::EmailAddress,
+    pub author_email: crate::common::EmailAddress,
     /// The type of the held revision's file.
     pub file_type: String,
     /// The file size in bytes.
@@ -9782,21 +9782,21 @@ pub struct LegalHoldHeldRevisionMetadata {
     /// A hash of the file content. This field can be used to verify data integrity. For more
     /// information see our [Content
     /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
-    pub content_hash: super::files::Sha256HexHash,
+    pub content_hash: crate::files::Sha256HexHash,
 }
 
 impl LegalHoldHeldRevisionMetadata {
     pub fn new(
         new_filename: String,
-        original_revision_id: super::files::Rev,
+        original_revision_id: crate::files::Rev,
         original_file_path: Path,
-        server_modified: super::common::DropboxTimestamp,
-        author_member_id: super::team_common::TeamMemberId,
+        server_modified: crate::common::DropboxTimestamp,
+        author_member_id: crate::team_common::TeamMemberId,
         author_member_status: TeamMemberStatus,
-        author_email: super::common::EmailAddress,
+        author_email: crate::common::EmailAddress,
         file_type: String,
         size: u64,
-        content_hash: super::files::Sha256HexHash,
+        content_hash: crate::files::Sha256HexHash,
     ) -> Self {
         LegalHoldHeldRevisionMetadata {
             new_filename,
@@ -9991,13 +9991,13 @@ pub struct LegalHoldPolicy {
     /// The current state of the hold.
     pub status: LegalHoldStatus,
     /// Start date of the legal hold policy.
-    pub start_date: super::common::DropboxTimestamp,
+    pub start_date: crate::common::DropboxTimestamp,
     /// A description of the legal hold policy.
     pub description: Option<LegalHoldPolicyDescription>,
     /// The time at which the legal hold was activated.
-    pub activation_time: Option<super::common::DropboxTimestamp>,
+    pub activation_time: Option<crate::common::DropboxTimestamp>,
     /// End date of the legal hold policy.
-    pub end_date: Option<super::common::DropboxTimestamp>,
+    pub end_date: Option<crate::common::DropboxTimestamp>,
 }
 
 impl LegalHoldPolicy {
@@ -10006,7 +10006,7 @@ impl LegalHoldPolicy {
         name: LegalHoldPolicyName,
         members: MembersInfo,
         status: LegalHoldStatus,
-        start_date: super::common::DropboxTimestamp,
+        start_date: crate::common::DropboxTimestamp,
     ) -> Self {
         LegalHoldPolicy {
             id,
@@ -10025,12 +10025,12 @@ impl LegalHoldPolicy {
         self
     }
 
-    pub fn with_activation_time(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_activation_time(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.activation_time = Some(value);
         self
     }
 
-    pub fn with_end_date(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_end_date(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.end_date = Some(value);
         self
     }
@@ -11345,17 +11345,17 @@ pub struct LegalHoldsPolicyCreateArg {
     /// Policy name.
     pub name: LegalHoldPolicyName,
     /// List of team member IDs added to the hold.
-    pub members: Vec<super::team_common::TeamMemberId>,
+    pub members: Vec<crate::team_common::TeamMemberId>,
     /// A description of the legal hold policy.
     pub description: Option<LegalHoldPolicyDescription>,
     /// start date of the legal hold policy.
-    pub start_date: Option<super::common::DropboxTimestamp>,
+    pub start_date: Option<crate::common::DropboxTimestamp>,
     /// end date of the legal hold policy.
-    pub end_date: Option<super::common::DropboxTimestamp>,
+    pub end_date: Option<crate::common::DropboxTimestamp>,
 }
 
 impl LegalHoldsPolicyCreateArg {
-    pub fn new(name: LegalHoldPolicyName, members: Vec<super::team_common::TeamMemberId>) -> Self {
+    pub fn new(name: LegalHoldPolicyName, members: Vec<crate::team_common::TeamMemberId>) -> Self {
         LegalHoldsPolicyCreateArg {
             name,
             members,
@@ -11370,12 +11370,12 @@ impl LegalHoldsPolicyCreateArg {
         self
     }
 
-    pub fn with_start_date(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_start_date(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.start_date = Some(value);
         self
     }
 
-    pub fn with_end_date(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_end_date(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.end_date = Some(value);
         self
     }
@@ -11881,7 +11881,7 @@ pub struct LegalHoldsPolicyUpdateArg {
     /// Policy new description.
     pub description: Option<LegalHoldPolicyDescription>,
     /// List of team member IDs to apply the policy on.
-    pub members: Option<Vec<super::team_common::TeamMemberId>>,
+    pub members: Option<Vec<crate::team_common::TeamMemberId>>,
 }
 
 impl LegalHoldsPolicyUpdateArg {
@@ -11904,7 +11904,7 @@ impl LegalHoldsPolicyUpdateArg {
         self
     }
 
-    pub fn with_members(mut self, value: Vec<super::team_common::TeamMemberId>) -> Self {
+    pub fn with_members(mut self, value: Vec<crate::team_common::TeamMemberId>) -> Self {
         self.members = Some(value);
         self
     }
@@ -14121,13 +14121,13 @@ impl ::serde::ser::Serialize for MemberAccess {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAddArg {
-    pub member_email: super::common::EmailAddress,
+    pub member_email: crate::common::EmailAddress,
     /// Member's first name.
-    pub member_given_name: Option<super::common::OptionalNamePart>,
+    pub member_given_name: Option<crate::common::OptionalNamePart>,
     /// Member's last name.
-    pub member_surname: Option<super::common::OptionalNamePart>,
+    pub member_surname: Option<crate::common::OptionalNamePart>,
     /// External ID for member.
-    pub member_external_id: Option<super::team_common::MemberExternalId>,
+    pub member_external_id: Option<crate::team_common::MemberExternalId>,
     /// Persistent ID for member. This field is only available to teams using persistent ID SAML
     /// configuration.
     pub member_persistent_id: Option<String>,
@@ -14141,7 +14141,7 @@ pub struct MemberAddArg {
 }
 
 impl MemberAddArg {
-    pub fn new(member_email: super::common::EmailAddress) -> Self {
+    pub fn new(member_email: crate::common::EmailAddress) -> Self {
         MemberAddArg {
             member_email,
             member_given_name: None,
@@ -14154,17 +14154,17 @@ impl MemberAddArg {
         }
     }
 
-    pub fn with_member_given_name(mut self, value: super::common::OptionalNamePart) -> Self {
+    pub fn with_member_given_name(mut self, value: crate::common::OptionalNamePart) -> Self {
         self.member_given_name = Some(value);
         self
     }
 
-    pub fn with_member_surname(mut self, value: super::common::OptionalNamePart) -> Self {
+    pub fn with_member_surname(mut self, value: crate::common::OptionalNamePart) -> Self {
         self.member_surname = Some(value);
         self
     }
 
-    pub fn with_member_external_id(mut self, value: super::team_common::MemberExternalId) -> Self {
+    pub fn with_member_external_id(mut self, value: crate::team_common::MemberExternalId) -> Self {
         self.member_external_id = Some(value);
         self
     }
@@ -14349,13 +14349,13 @@ impl ::serde::ser::Serialize for MemberAddArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAddArgBase {
-    pub member_email: super::common::EmailAddress,
+    pub member_email: crate::common::EmailAddress,
     /// Member's first name.
-    pub member_given_name: Option<super::common::OptionalNamePart>,
+    pub member_given_name: Option<crate::common::OptionalNamePart>,
     /// Member's last name.
-    pub member_surname: Option<super::common::OptionalNamePart>,
+    pub member_surname: Option<crate::common::OptionalNamePart>,
     /// External ID for member.
-    pub member_external_id: Option<super::team_common::MemberExternalId>,
+    pub member_external_id: Option<crate::team_common::MemberExternalId>,
     /// Persistent ID for member. This field is only available to teams using persistent ID SAML
     /// configuration.
     pub member_persistent_id: Option<String>,
@@ -14368,7 +14368,7 @@ pub struct MemberAddArgBase {
 }
 
 impl MemberAddArgBase {
-    pub fn new(member_email: super::common::EmailAddress) -> Self {
+    pub fn new(member_email: crate::common::EmailAddress) -> Self {
         MemberAddArgBase {
             member_email,
             member_given_name: None,
@@ -14380,17 +14380,17 @@ impl MemberAddArgBase {
         }
     }
 
-    pub fn with_member_given_name(mut self, value: super::common::OptionalNamePart) -> Self {
+    pub fn with_member_given_name(mut self, value: crate::common::OptionalNamePart) -> Self {
         self.member_given_name = Some(value);
         self
     }
 
-    pub fn with_member_surname(mut self, value: super::common::OptionalNamePart) -> Self {
+    pub fn with_member_surname(mut self, value: crate::common::OptionalNamePart) -> Self {
         self.member_surname = Some(value);
         self
     }
 
-    pub fn with_member_external_id(mut self, value: super::team_common::MemberExternalId) -> Self {
+    pub fn with_member_external_id(mut self, value: crate::team_common::MemberExternalId) -> Self {
         self.member_external_id = Some(value);
         self
     }
@@ -14563,30 +14563,30 @@ impl ::serde::ser::Serialize for MemberAddArgBase {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MemberAddResult {
     /// Team is already full. The organization has no available licenses.
-    TeamLicenseLimit(super::common::EmailAddress),
+    TeamLicenseLimit(crate::common::EmailAddress),
     /// Team is already full. The free team member limit has been reached.
-    FreeTeamMemberLimitReached(super::common::EmailAddress),
+    FreeTeamMemberLimitReached(crate::common::EmailAddress),
     /// User is already on this team. The provided email address is associated with a user who is
     /// already a member of (including in recoverable state) or invited to the team.
-    UserAlreadyOnTeam(super::common::EmailAddress),
+    UserAlreadyOnTeam(crate::common::EmailAddress),
     /// User is already on another team. The provided email address is associated with a user that
     /// is already a member or invited to another team.
-    UserOnAnotherTeam(super::common::EmailAddress),
+    UserOnAnotherTeam(crate::common::EmailAddress),
     /// User is already paired.
-    UserAlreadyPaired(super::common::EmailAddress),
+    UserAlreadyPaired(crate::common::EmailAddress),
     /// User migration has failed.
-    UserMigrationFailed(super::common::EmailAddress),
+    UserMigrationFailed(crate::common::EmailAddress),
     /// A user with the given external member ID already exists on the team (including in
     /// recoverable state).
-    DuplicateExternalMemberId(super::common::EmailAddress),
+    DuplicateExternalMemberId(crate::common::EmailAddress),
     /// A user with the given persistent ID already exists on the team (including in recoverable
     /// state).
-    DuplicateMemberPersistentId(super::common::EmailAddress),
+    DuplicateMemberPersistentId(crate::common::EmailAddress),
     /// Persistent ID is only available to teams with persistent ID SAML configuration. Please
     /// contact Dropbox for more information.
-    PersistentIdDisabled(super::common::EmailAddress),
+    PersistentIdDisabled(crate::common::EmailAddress),
     /// User creation has failed.
-    UserCreationFailed(super::common::EmailAddress),
+    UserCreationFailed(crate::common::EmailAddress),
     /// Describes a user that was successfully added to the team.
     Success(TeamMemberInfo),
 }
@@ -14788,30 +14788,30 @@ impl ::serde::ser::Serialize for MemberAddResult {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MemberAddResultBase {
     /// Team is already full. The organization has no available licenses.
-    TeamLicenseLimit(super::common::EmailAddress),
+    TeamLicenseLimit(crate::common::EmailAddress),
     /// Team is already full. The free team member limit has been reached.
-    FreeTeamMemberLimitReached(super::common::EmailAddress),
+    FreeTeamMemberLimitReached(crate::common::EmailAddress),
     /// User is already on this team. The provided email address is associated with a user who is
     /// already a member of (including in recoverable state) or invited to the team.
-    UserAlreadyOnTeam(super::common::EmailAddress),
+    UserAlreadyOnTeam(crate::common::EmailAddress),
     /// User is already on another team. The provided email address is associated with a user that
     /// is already a member or invited to another team.
-    UserOnAnotherTeam(super::common::EmailAddress),
+    UserOnAnotherTeam(crate::common::EmailAddress),
     /// User is already paired.
-    UserAlreadyPaired(super::common::EmailAddress),
+    UserAlreadyPaired(crate::common::EmailAddress),
     /// User migration has failed.
-    UserMigrationFailed(super::common::EmailAddress),
+    UserMigrationFailed(crate::common::EmailAddress),
     /// A user with the given external member ID already exists on the team (including in
     /// recoverable state).
-    DuplicateExternalMemberId(super::common::EmailAddress),
+    DuplicateExternalMemberId(crate::common::EmailAddress),
     /// A user with the given persistent ID already exists on the team (including in recoverable
     /// state).
-    DuplicateMemberPersistentId(super::common::EmailAddress),
+    DuplicateMemberPersistentId(crate::common::EmailAddress),
     /// Persistent ID is only available to teams with persistent ID SAML configuration. Please
     /// contact Dropbox for more information.
-    PersistentIdDisabled(super::common::EmailAddress),
+    PersistentIdDisabled(crate::common::EmailAddress),
     /// User creation has failed.
-    UserCreationFailed(super::common::EmailAddress),
+    UserCreationFailed(crate::common::EmailAddress),
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberAddResultBase {
@@ -15002,13 +15002,13 @@ impl ::serde::ser::Serialize for MemberAddResultBase {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAddV2Arg {
-    pub member_email: super::common::EmailAddress,
+    pub member_email: crate::common::EmailAddress,
     /// Member's first name.
-    pub member_given_name: Option<super::common::OptionalNamePart>,
+    pub member_given_name: Option<crate::common::OptionalNamePart>,
     /// Member's last name.
-    pub member_surname: Option<super::common::OptionalNamePart>,
+    pub member_surname: Option<crate::common::OptionalNamePart>,
     /// External ID for member.
-    pub member_external_id: Option<super::team_common::MemberExternalId>,
+    pub member_external_id: Option<crate::team_common::MemberExternalId>,
     /// Persistent ID for member. This field is only available to teams using persistent ID SAML
     /// configuration.
     pub member_persistent_id: Option<String>,
@@ -15022,7 +15022,7 @@ pub struct MemberAddV2Arg {
 }
 
 impl MemberAddV2Arg {
-    pub fn new(member_email: super::common::EmailAddress) -> Self {
+    pub fn new(member_email: crate::common::EmailAddress) -> Self {
         MemberAddV2Arg {
             member_email,
             member_given_name: None,
@@ -15035,17 +15035,17 @@ impl MemberAddV2Arg {
         }
     }
 
-    pub fn with_member_given_name(mut self, value: super::common::OptionalNamePart) -> Self {
+    pub fn with_member_given_name(mut self, value: crate::common::OptionalNamePart) -> Self {
         self.member_given_name = Some(value);
         self
     }
 
-    pub fn with_member_surname(mut self, value: super::common::OptionalNamePart) -> Self {
+    pub fn with_member_surname(mut self, value: crate::common::OptionalNamePart) -> Self {
         self.member_surname = Some(value);
         self
     }
 
-    pub fn with_member_external_id(mut self, value: super::team_common::MemberExternalId) -> Self {
+    pub fn with_member_external_id(mut self, value: crate::team_common::MemberExternalId) -> Self {
         self.member_external_id = Some(value);
         self
     }
@@ -15236,30 +15236,30 @@ impl ::serde::ser::Serialize for MemberAddV2Arg {
 #[non_exhaustive] // variants may be added in the future
 pub enum MemberAddV2Result {
     /// Team is already full. The organization has no available licenses.
-    TeamLicenseLimit(super::common::EmailAddress),
+    TeamLicenseLimit(crate::common::EmailAddress),
     /// Team is already full. The free team member limit has been reached.
-    FreeTeamMemberLimitReached(super::common::EmailAddress),
+    FreeTeamMemberLimitReached(crate::common::EmailAddress),
     /// User is already on this team. The provided email address is associated with a user who is
     /// already a member of (including in recoverable state) or invited to the team.
-    UserAlreadyOnTeam(super::common::EmailAddress),
+    UserAlreadyOnTeam(crate::common::EmailAddress),
     /// User is already on another team. The provided email address is associated with a user that
     /// is already a member or invited to another team.
-    UserOnAnotherTeam(super::common::EmailAddress),
+    UserOnAnotherTeam(crate::common::EmailAddress),
     /// User is already paired.
-    UserAlreadyPaired(super::common::EmailAddress),
+    UserAlreadyPaired(crate::common::EmailAddress),
     /// User migration has failed.
-    UserMigrationFailed(super::common::EmailAddress),
+    UserMigrationFailed(crate::common::EmailAddress),
     /// A user with the given external member ID already exists on the team (including in
     /// recoverable state).
-    DuplicateExternalMemberId(super::common::EmailAddress),
+    DuplicateExternalMemberId(crate::common::EmailAddress),
     /// A user with the given persistent ID already exists on the team (including in recoverable
     /// state).
-    DuplicateMemberPersistentId(super::common::EmailAddress),
+    DuplicateMemberPersistentId(crate::common::EmailAddress),
     /// Persistent ID is only available to teams with persistent ID SAML configuration. Please
     /// contact Dropbox for more information.
-    PersistentIdDisabled(super::common::EmailAddress),
+    PersistentIdDisabled(crate::common::EmailAddress),
     /// User creation has failed.
-    UserCreationFailed(super::common::EmailAddress),
+    UserCreationFailed(crate::common::EmailAddress),
     /// Describes a user that was successfully added to the team.
     Success(TeamMemberInfoV2),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -15725,7 +15725,7 @@ impl ::serde::ser::Serialize for MemberLinkedApps {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberProfile {
     /// ID of user as a member of a team.
-    pub team_member_id: super::team_common::TeamMemberId,
+    pub team_member_id: crate::team_common::TeamMemberId,
     /// Email address of user.
     pub email: String,
     /// Is true if the user's email is verified to be owned by the user.
@@ -15733,7 +15733,7 @@ pub struct MemberProfile {
     /// The user's status as a member of a specific team.
     pub status: TeamMemberStatus,
     /// Representations for a person's name.
-    pub name: super::users::Name,
+    pub name: crate::users::Name,
     /// The user's membership type: full (normal team member) vs limited (does not use a license; no
     /// access to the team's shared quota).
     pub membership_type: TeamMembershipType,
@@ -15741,17 +15741,17 @@ pub struct MemberProfile {
     /// easier to use their own IDs instead of Dropbox IDs like account_id or team_member_id.
     pub external_id: Option<String>,
     /// A user's account identifier.
-    pub account_id: Option<super::users_common::AccountId>,
+    pub account_id: Option<crate::users_common::AccountId>,
     /// Secondary emails of a user.
-    pub secondary_emails: Option<Vec<super::secondary_emails::SecondaryEmail>>,
+    pub secondary_emails: Option<Vec<crate::secondary_emails::SecondaryEmail>>,
     /// The date and time the user was invited to the team (contains value only when the member's
     /// status matches [`TeamMemberStatus::Invited`](TeamMemberStatus::Invited)).
-    pub invited_on: Option<super::common::DropboxTimestamp>,
+    pub invited_on: Option<crate::common::DropboxTimestamp>,
     /// The date and time the user joined as a member of a specific team.
-    pub joined_on: Option<super::common::DropboxTimestamp>,
+    pub joined_on: Option<crate::common::DropboxTimestamp>,
     /// The date and time the user was suspended from the team (contains value only when the
     /// member's status matches [`TeamMemberStatus::Suspended`](TeamMemberStatus::Suspended)).
-    pub suspended_on: Option<super::common::DropboxTimestamp>,
+    pub suspended_on: Option<crate::common::DropboxTimestamp>,
     /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used
     /// for SAML authentication.
     pub persistent_id: Option<String>,
@@ -15763,11 +15763,11 @@ pub struct MemberProfile {
 
 impl MemberProfile {
     pub fn new(
-        team_member_id: super::team_common::TeamMemberId,
+        team_member_id: crate::team_common::TeamMemberId,
         email: String,
         email_verified: bool,
         status: TeamMemberStatus,
-        name: super::users::Name,
+        name: crate::users::Name,
         membership_type: TeamMembershipType,
     ) -> Self {
         MemberProfile {
@@ -15794,30 +15794,30 @@ impl MemberProfile {
         self
     }
 
-    pub fn with_account_id(mut self, value: super::users_common::AccountId) -> Self {
+    pub fn with_account_id(mut self, value: crate::users_common::AccountId) -> Self {
         self.account_id = Some(value);
         self
     }
 
     pub fn with_secondary_emails(
         mut self,
-        value: Vec<super::secondary_emails::SecondaryEmail>,
+        value: Vec<crate::secondary_emails::SecondaryEmail>,
     ) -> Self {
         self.secondary_emails = Some(value);
         self
     }
 
-    pub fn with_invited_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_invited_on(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.invited_on = Some(value);
         self
     }
 
-    pub fn with_joined_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_joined_on(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.joined_on = Some(value);
         self
     }
 
-    pub fn with_suspended_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_suspended_on(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.suspended_on = Some(value);
         self
     }
@@ -16512,7 +16512,7 @@ impl ::serde::ser::Serialize for MembersAddJobStatusV2Result {
 pub enum MembersAddLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::dbx_async::AsyncJobId),
+    AsyncJobId(crate::dbx_async::AsyncJobId),
     Complete(Vec<MemberAddResult>),
 }
 
@@ -16586,7 +16586,7 @@ impl ::serde::ser::Serialize for MembersAddLaunch {
 pub enum MembersAddLaunchV2Result {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::dbx_async::AsyncJobId),
+    AsyncJobId(crate::dbx_async::AsyncJobId),
     Complete(Vec<MemberAddV2Result>),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -17983,14 +17983,14 @@ impl ::serde::ser::Serialize for MembersGetInfoV2Result {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersInfo {
     /// Team member IDs of the users under this hold.
-    pub team_member_ids: Vec<super::team_common::TeamMemberId>,
+    pub team_member_ids: Vec<crate::team_common::TeamMemberId>,
     /// The number of permanently deleted users that were under this hold.
     pub permanently_deleted_users: u64,
 }
 
 impl MembersInfo {
     pub fn new(
-        team_member_ids: Vec<super::team_common::TeamMemberId>,
+        team_member_ids: Vec<crate::team_common::TeamMemberId>,
         permanently_deleted_users: u64,
     ) -> Self {
         MembersInfo {
@@ -19637,13 +19637,13 @@ impl ::std::fmt::Display for MembersSetPermissions2Error {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetPermissions2Result {
     /// The member ID of the user to which the change was applied.
-    pub team_member_id: super::team_common::TeamMemberId,
+    pub team_member_id: crate::team_common::TeamMemberId,
     /// The roles after the change. Empty in case the user become a non-admin.
     pub roles: Option<Vec<TeamMemberRole>>,
 }
 
 impl MembersSetPermissions2Result {
-    pub fn new(team_member_id: super::team_common::TeamMemberId) -> Self {
+    pub fn new(team_member_id: crate::team_common::TeamMemberId) -> Self {
         MembersSetPermissions2Result {
             team_member_id,
             roles: None,
@@ -19966,13 +19966,13 @@ impl ::std::fmt::Display for MembersSetPermissionsError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetPermissionsResult {
     /// The member ID of the user to which the change was applied.
-    pub team_member_id: super::team_common::TeamMemberId,
+    pub team_member_id: crate::team_common::TeamMemberId,
     /// The role after the change.
     pub role: AdminTier,
 }
 
 impl MembersSetPermissionsResult {
-    pub fn new(team_member_id: super::team_common::TeamMemberId, role: AdminTier) -> Self {
+    pub fn new(team_member_id: crate::team_common::TeamMemberId, role: AdminTier) -> Self {
         MembersSetPermissionsResult {
             team_member_id,
             role,
@@ -20075,13 +20075,13 @@ pub struct MembersSetProfileArg {
     /// Identity of user whose profile will be set.
     pub user: UserSelectorArg,
     /// New email for member.
-    pub new_email: Option<super::common::EmailAddress>,
+    pub new_email: Option<crate::common::EmailAddress>,
     /// New external ID for member.
-    pub new_external_id: Option<super::team_common::MemberExternalId>,
+    pub new_external_id: Option<crate::team_common::MemberExternalId>,
     /// New given name for member.
-    pub new_given_name: Option<super::common::OptionalNamePart>,
+    pub new_given_name: Option<crate::common::OptionalNamePart>,
     /// New surname for member.
-    pub new_surname: Option<super::common::OptionalNamePart>,
+    pub new_surname: Option<crate::common::OptionalNamePart>,
     /// New persistent ID. This field only available to teams using persistent ID SAML
     /// configuration.
     pub new_persistent_id: Option<String>,
@@ -20102,22 +20102,22 @@ impl MembersSetProfileArg {
         }
     }
 
-    pub fn with_new_email(mut self, value: super::common::EmailAddress) -> Self {
+    pub fn with_new_email(mut self, value: crate::common::EmailAddress) -> Self {
         self.new_email = Some(value);
         self
     }
 
-    pub fn with_new_external_id(mut self, value: super::team_common::MemberExternalId) -> Self {
+    pub fn with_new_external_id(mut self, value: crate::team_common::MemberExternalId) -> Self {
         self.new_external_id = Some(value);
         self
     }
 
-    pub fn with_new_given_name(mut self, value: super::common::OptionalNamePart) -> Self {
+    pub fn with_new_given_name(mut self, value: crate::common::OptionalNamePart) -> Self {
         self.new_given_name = Some(value);
         self
     }
 
-    pub fn with_new_surname(mut self, value: super::common::OptionalNamePart) -> Self {
+    pub fn with_new_surname(mut self, value: crate::common::OptionalNamePart) -> Self {
         self.new_surname = Some(value);
         self
     }
@@ -20466,11 +20466,11 @@ pub struct MembersSetProfilePhotoArg {
     /// Identity of the user whose profile photo will be set.
     pub user: UserSelectorArg,
     /// Image to set as the member's new profile photo.
-    pub photo: super::account::PhotoSourceArg,
+    pub photo: crate::account::PhotoSourceArg,
 }
 
 impl MembersSetProfilePhotoArg {
-    pub fn new(user: UserSelectorArg, photo: super::account::PhotoSourceArg) -> Self {
+    pub fn new(user: UserSelectorArg, photo: crate::account::PhotoSourceArg) -> Self {
         MembersSetProfilePhotoArg {
             user,
             photo,
@@ -20574,7 +20574,7 @@ pub enum MembersSetProfilePhotoError {
     UserNotInTeam,
     /// Modifying deleted users is not allowed.
     SetProfileDisallowed,
-    PhotoError(super::account::SetProfilePhotoError),
+    PhotoError(crate::account::SetProfilePhotoError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -21493,9 +21493,9 @@ pub struct MobileClientSession {
     /// The country from which the last activity from this session was made.
     pub country: Option<String>,
     /// The time this session was created.
-    pub created: Option<super::common::DropboxTimestamp>,
+    pub created: Option<crate::common::DropboxTimestamp>,
     /// The time of the last activity from this session.
-    pub updated: Option<super::common::DropboxTimestamp>,
+    pub updated: Option<crate::common::DropboxTimestamp>,
     /// The dropbox client version.
     pub client_version: Option<String>,
     /// The hosting OS version.
@@ -21534,12 +21534,12 @@ impl MobileClientSession {
         self
     }
 
-    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_created(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.created = Some(value);
         self
     }
 
-    pub fn with_updated(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_updated(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.updated = Some(value);
         self
     }
@@ -21747,18 +21747,18 @@ pub struct NamespaceMetadata {
     /// The name of this namespace.
     pub name: String,
     /// The ID of this namespace.
-    pub namespace_id: super::common::SharedFolderId,
+    pub namespace_id: crate::common::SharedFolderId,
     /// The type of this namespace.
     pub namespace_type: NamespaceType,
     /// If this is a team member or app folder, the ID of the owning team member. Otherwise, this
     /// field is not present.
-    pub team_member_id: Option<super::team_common::TeamMemberId>,
+    pub team_member_id: Option<crate::team_common::TeamMemberId>,
 }
 
 impl NamespaceMetadata {
     pub fn new(
         name: String,
-        namespace_id: super::common::SharedFolderId,
+        namespace_id: crate::common::SharedFolderId,
         namespace_type: NamespaceType,
     ) -> Self {
         NamespaceMetadata {
@@ -21769,7 +21769,7 @@ impl NamespaceMetadata {
         }
     }
 
-    pub fn with_team_member_id(mut self, value: super::team_common::TeamMemberId) -> Self {
+    pub fn with_team_member_id(mut self, value: crate::team_common::TeamMemberId) -> Self {
         self.team_member_id = Some(value);
         self
     }
@@ -22159,11 +22159,11 @@ impl ::serde::ser::Serialize for RemovedStatus {
 #[non_exhaustive] // variants may be added in the future
 pub enum ResendSecondaryEmailResult {
     /// A verification email was successfully sent to the secondary email address.
-    Success(super::common::EmailAddress),
+    Success(crate::common::EmailAddress),
     /// This secondary email address is not pending for the user.
-    NotPending(super::common::EmailAddress),
+    NotPending(crate::common::EmailAddress),
     /// Too many emails are being sent to this email address. Please try again later.
-    RateLimited(super::common::EmailAddress),
+    RateLimited(crate::common::EmailAddress),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -24080,13 +24080,13 @@ impl ::std::fmt::Display for TeamFolderActivateError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderArchiveArg {
     /// The ID of the team folder.
-    pub team_folder_id: super::common::SharedFolderId,
+    pub team_folder_id: crate::common::SharedFolderId,
     /// Whether to force the archive to happen synchronously.
     pub force_async_off: bool,
 }
 
 impl TeamFolderArchiveArg {
-    pub fn new(team_folder_id: super::common::SharedFolderId) -> Self {
+    pub fn new(team_folder_id: crate::common::SharedFolderId) -> Self {
         TeamFolderArchiveArg {
             team_folder_id,
             force_async_off: false,
@@ -24383,7 +24383,7 @@ impl ::serde::ser::Serialize for TeamFolderArchiveJobStatus {
 pub enum TeamFolderArchiveLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::dbx_async::AsyncJobId),
+    AsyncJobId(crate::dbx_async::AsyncJobId),
     Complete(TeamFolderMetadata),
 }
 
@@ -24453,7 +24453,7 @@ pub struct TeamFolderCreateArg {
     pub name: String,
     /// The sync setting to apply to this team folder. Only permitted if the team has team selective
     /// sync enabled.
-    pub sync_setting: Option<super::files::SyncSettingArg>,
+    pub sync_setting: Option<crate::files::SyncSettingArg>,
 }
 
 impl TeamFolderCreateArg {
@@ -24464,7 +24464,7 @@ impl TeamFolderCreateArg {
         }
     }
 
-    pub fn with_sync_setting(mut self, value: super::files::SyncSettingArg) -> Self {
+    pub fn with_sync_setting(mut self, value: crate::files::SyncSettingArg) -> Self {
         self.sync_setting = Some(value);
         self
     }
@@ -24568,7 +24568,7 @@ pub enum TeamFolderCreateError {
     /// The provided name cannot be used because it is reserved.
     FolderNameReserved,
     /// An error occurred setting the sync settings.
-    SyncSettingsError(super::files::SyncSettingsError),
+    SyncSettingsError(crate::files::SyncSettingsError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -24743,11 +24743,11 @@ impl ::serde::ser::Serialize for TeamFolderGetInfoItem {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderIdArg {
     /// The ID of the team folder.
-    pub team_folder_id: super::common::SharedFolderId,
+    pub team_folder_id: crate::common::SharedFolderId,
 }
 
 impl TeamFolderIdArg {
-    pub fn new(team_folder_id: super::common::SharedFolderId) -> Self {
+    pub fn new(team_folder_id: crate::common::SharedFolderId) -> Self {
         TeamFolderIdArg {
             team_folder_id,
         }
@@ -24834,11 +24834,11 @@ impl ::serde::ser::Serialize for TeamFolderIdArg {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderIdListArg {
     /// The list of team folder IDs.
-    pub team_folder_ids: Vec<super::common::SharedFolderId>,
+    pub team_folder_ids: Vec<crate::common::SharedFolderId>,
 }
 
 impl TeamFolderIdListArg {
-    pub fn new(team_folder_ids: Vec<super::common::SharedFolderId>) -> Self {
+    pub fn new(team_folder_ids: Vec<crate::common::SharedFolderId>) -> Self {
         TeamFolderIdListArg {
             team_folder_ids,
         }
@@ -25480,7 +25480,7 @@ impl ::serde::ser::Serialize for TeamFolderListResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderMetadata {
     /// The ID of the team folder.
-    pub team_folder_id: super::common::SharedFolderId,
+    pub team_folder_id: crate::common::SharedFolderId,
     /// The name of the team folder.
     pub name: String,
     /// The status of the team folder.
@@ -25488,19 +25488,19 @@ pub struct TeamFolderMetadata {
     /// True if this team folder is a shared team root.
     pub is_team_shared_dropbox: bool,
     /// The sync setting applied to this team folder.
-    pub sync_setting: super::files::SyncSetting,
+    pub sync_setting: crate::files::SyncSetting,
     /// Sync settings applied to contents of this team folder.
-    pub content_sync_settings: Vec<super::files::ContentSyncSetting>,
+    pub content_sync_settings: Vec<crate::files::ContentSyncSetting>,
 }
 
 impl TeamFolderMetadata {
     pub fn new(
-        team_folder_id: super::common::SharedFolderId,
+        team_folder_id: crate::common::SharedFolderId,
         name: String,
         status: TeamFolderStatus,
         is_team_shared_dropbox: bool,
-        sync_setting: super::files::SyncSetting,
-        content_sync_settings: Vec<super::files::ContentSyncSetting>,
+        sync_setting: crate::files::SyncSetting,
+        content_sync_settings: Vec<crate::files::ContentSyncSetting>,
     ) -> Self {
         TeamFolderMetadata {
             team_folder_id,
@@ -25759,13 +25759,13 @@ impl ::std::fmt::Display for TeamFolderPermanentlyDeleteError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderRenameArg {
     /// The ID of the team folder.
-    pub team_folder_id: super::common::SharedFolderId,
+    pub team_folder_id: crate::common::SharedFolderId,
     /// New team folder name.
     pub name: String,
 }
 
 impl TeamFolderRenameArg {
-    pub fn new(team_folder_id: super::common::SharedFolderId, name: String) -> Self {
+    pub fn new(team_folder_id: crate::common::SharedFolderId, name: String) -> Self {
         TeamFolderRenameArg {
             team_folder_id,
             name,
@@ -26153,16 +26153,16 @@ impl ::std::fmt::Display for TeamFolderTeamSharedDropboxError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderUpdateSyncSettingsArg {
     /// The ID of the team folder.
-    pub team_folder_id: super::common::SharedFolderId,
+    pub team_folder_id: crate::common::SharedFolderId,
     /// Sync setting to apply to the team folder itself. Only meaningful if the team folder is not a
     /// shared team root.
-    pub sync_setting: Option<super::files::SyncSettingArg>,
+    pub sync_setting: Option<crate::files::SyncSettingArg>,
     /// Sync settings to apply to contents of this team folder.
-    pub content_sync_settings: Option<Vec<super::files::ContentSyncSettingArg>>,
+    pub content_sync_settings: Option<Vec<crate::files::ContentSyncSettingArg>>,
 }
 
 impl TeamFolderUpdateSyncSettingsArg {
-    pub fn new(team_folder_id: super::common::SharedFolderId) -> Self {
+    pub fn new(team_folder_id: crate::common::SharedFolderId) -> Self {
         TeamFolderUpdateSyncSettingsArg {
             team_folder_id,
             sync_setting: None,
@@ -26170,14 +26170,14 @@ impl TeamFolderUpdateSyncSettingsArg {
         }
     }
 
-    pub fn with_sync_setting(mut self, value: super::files::SyncSettingArg) -> Self {
+    pub fn with_sync_setting(mut self, value: crate::files::SyncSettingArg) -> Self {
         self.sync_setting = Some(value);
         self
     }
 
     pub fn with_content_sync_settings(
         mut self,
-        value: Vec<super::files::ContentSyncSettingArg>,
+        value: Vec<crate::files::ContentSyncSettingArg>,
     ) -> Self {
         self.content_sync_settings = Some(value);
         self
@@ -26291,7 +26291,7 @@ pub enum TeamFolderUpdateSyncSettingsError {
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
     /// An error occurred setting the sync settings.
-    SyncSettingsError(super::files::SyncSettingsError),
+    SyncSettingsError(crate::files::SyncSettingsError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -26429,7 +26429,7 @@ pub struct TeamGetInfoResult {
     pub num_licensed_users: u32,
     /// The number of accounts that have been invited or are already active members of the team.
     pub num_provisioned_users: u32,
-    pub policies: super::team_policies::TeamMemberPolicies,
+    pub policies: crate::team_policies::TeamMemberPolicies,
 }
 
 impl TeamGetInfoResult {
@@ -26438,7 +26438,7 @@ impl TeamGetInfoResult {
         team_id: String,
         num_licensed_users: u32,
         num_provisioned_users: u32,
-        policies: super::team_policies::TeamMemberPolicies,
+        policies: crate::team_policies::TeamMemberPolicies,
     ) -> Self {
         TeamGetInfoResult {
             name,
@@ -26881,7 +26881,7 @@ impl ::serde::ser::Serialize for TeamMemberInfoV2Result {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamMemberProfile {
     /// ID of user as a member of a team.
-    pub team_member_id: super::team_common::TeamMemberId,
+    pub team_member_id: crate::team_common::TeamMemberId,
     /// Email address of user.
     pub email: String,
     /// Is true if the user's email is verified to be owned by the user.
@@ -26889,29 +26889,29 @@ pub struct TeamMemberProfile {
     /// The user's status as a member of a specific team.
     pub status: TeamMemberStatus,
     /// Representations for a person's name.
-    pub name: super::users::Name,
+    pub name: crate::users::Name,
     /// The user's membership type: full (normal team member) vs limited (does not use a license; no
     /// access to the team's shared quota).
     pub membership_type: TeamMembershipType,
     /// List of group IDs of groups that the user belongs to.
-    pub groups: Vec<super::team_common::GroupId>,
+    pub groups: Vec<crate::team_common::GroupId>,
     /// The namespace id of the user's root folder.
-    pub member_folder_id: super::common::NamespaceId,
+    pub member_folder_id: crate::common::NamespaceId,
     /// External ID that a team can attach to the user. An application using the API may find it
     /// easier to use their own IDs instead of Dropbox IDs like account_id or team_member_id.
     pub external_id: Option<String>,
     /// A user's account identifier.
-    pub account_id: Option<super::users_common::AccountId>,
+    pub account_id: Option<crate::users_common::AccountId>,
     /// Secondary emails of a user.
-    pub secondary_emails: Option<Vec<super::secondary_emails::SecondaryEmail>>,
+    pub secondary_emails: Option<Vec<crate::secondary_emails::SecondaryEmail>>,
     /// The date and time the user was invited to the team (contains value only when the member's
     /// status matches [`TeamMemberStatus::Invited`](TeamMemberStatus::Invited)).
-    pub invited_on: Option<super::common::DropboxTimestamp>,
+    pub invited_on: Option<crate::common::DropboxTimestamp>,
     /// The date and time the user joined as a member of a specific team.
-    pub joined_on: Option<super::common::DropboxTimestamp>,
+    pub joined_on: Option<crate::common::DropboxTimestamp>,
     /// The date and time the user was suspended from the team (contains value only when the
     /// member's status matches [`TeamMemberStatus::Suspended`](TeamMemberStatus::Suspended)).
-    pub suspended_on: Option<super::common::DropboxTimestamp>,
+    pub suspended_on: Option<crate::common::DropboxTimestamp>,
     /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used
     /// for SAML authentication.
     pub persistent_id: Option<String>,
@@ -26923,14 +26923,14 @@ pub struct TeamMemberProfile {
 
 impl TeamMemberProfile {
     pub fn new(
-        team_member_id: super::team_common::TeamMemberId,
+        team_member_id: crate::team_common::TeamMemberId,
         email: String,
         email_verified: bool,
         status: TeamMemberStatus,
-        name: super::users::Name,
+        name: crate::users::Name,
         membership_type: TeamMembershipType,
-        groups: Vec<super::team_common::GroupId>,
-        member_folder_id: super::common::NamespaceId,
+        groups: Vec<crate::team_common::GroupId>,
+        member_folder_id: crate::common::NamespaceId,
     ) -> Self {
         TeamMemberProfile {
             team_member_id,
@@ -26958,30 +26958,30 @@ impl TeamMemberProfile {
         self
     }
 
-    pub fn with_account_id(mut self, value: super::users_common::AccountId) -> Self {
+    pub fn with_account_id(mut self, value: crate::users_common::AccountId) -> Self {
         self.account_id = Some(value);
         self
     }
 
     pub fn with_secondary_emails(
         mut self,
-        value: Vec<super::secondary_emails::SecondaryEmail>,
+        value: Vec<crate::secondary_emails::SecondaryEmail>,
     ) -> Self {
         self.secondary_emails = Some(value);
         self
     }
 
-    pub fn with_invited_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_invited_on(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.invited_on = Some(value);
         self
     }
 
-    pub fn with_joined_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_joined_on(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.joined_on = Some(value);
         self
     }
 
-    pub fn with_suspended_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_suspended_on(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.suspended_on = Some(value);
         self
     }
@@ -28971,11 +28971,11 @@ impl ::serde::ser::Serialize for UserResendResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserSecondaryEmailsArg {
     pub user: UserSelectorArg,
-    pub secondary_emails: Vec<super::common::EmailAddress>,
+    pub secondary_emails: Vec<crate::common::EmailAddress>,
 }
 
 impl UserSecondaryEmailsArg {
-    pub fn new(user: UserSelectorArg, secondary_emails: Vec<super::common::EmailAddress>) -> Self {
+    pub fn new(user: UserSelectorArg, secondary_emails: Vec<crate::common::EmailAddress>) -> Self {
         UserSecondaryEmailsArg {
             user,
             secondary_emails,
@@ -29174,9 +29174,9 @@ impl ::serde::ser::Serialize for UserSecondaryEmailsResult {
 /// Argument for selecting a single user, either by team_member_id, external_id or email.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UserSelectorArg {
-    TeamMemberId(super::team_common::TeamMemberId),
-    ExternalId(super::team_common::MemberExternalId),
-    Email(super::common::EmailAddress),
+    TeamMemberId(crate::team_common::TeamMemberId),
+    ExternalId(crate::team_common::MemberExternalId),
+    Email(crate::common::EmailAddress),
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UserSelectorArg {
@@ -29326,11 +29326,11 @@ impl ::std::fmt::Display for UserSelectorError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UsersSelectorArg {
     /// List of member IDs.
-    TeamMemberIds(Vec<super::team_common::TeamMemberId>),
+    TeamMemberIds(Vec<crate::team_common::TeamMemberId>),
     /// List of external user IDs.
-    ExternalIds(Vec<super::team_common::MemberExternalId>),
+    ExternalIds(Vec<crate::team_common::MemberExternalId>),
     /// List of email addresses.
-    Emails(Vec<super::common::EmailAddress>),
+    Emails(Vec<crate::common::EmailAddress>),
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UsersSelectorArg {

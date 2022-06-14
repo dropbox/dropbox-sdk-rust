@@ -391,13 +391,13 @@ pub fn folders_create(
 pub struct AddMember {
     /// User which should be added to the Paper doc. Specify only email address or Dropbox account
     /// ID.
-    pub member: super::sharing::MemberSelector,
+    pub member: crate::sharing::MemberSelector,
     /// Permission for the user.
     pub permission_level: PaperDocPermissionLevel,
 }
 
 impl AddMember {
-    pub fn new(member: super::sharing::MemberSelector) -> Self {
+    pub fn new(member: crate::sharing::MemberSelector) -> Self {
         AddMember {
             member,
             permission_level: PaperDocPermissionLevel::Edit,
@@ -644,13 +644,13 @@ impl ::serde::ser::Serialize for AddPaperDocUser {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddPaperDocUserMemberResult {
     /// One of specified input members.
-    pub member: super::sharing::MemberSelector,
+    pub member: crate::sharing::MemberSelector,
     /// The outcome of the action on this member.
     pub result: AddPaperDocUserResult,
 }
 
 impl AddPaperDocUserMemberResult {
-    pub fn new(member: super::sharing::MemberSelector, result: AddPaperDocUserResult) -> Self {
+    pub fn new(member: crate::sharing::MemberSelector, result: AddPaperDocUserResult) -> Self {
         AddPaperDocUserMemberResult {
             member,
             result,
@@ -874,7 +874,7 @@ pub struct Cursor {
     /// the other hand, listing docs sorted by the last modified time will have a very short
     /// expiration as docs do get modified very often and the modified time can be changed while the
     /// iteration is happening thus altering the results.
-    pub expiration: Option<super::common::DropboxTimestamp>,
+    pub expiration: Option<crate::common::DropboxTimestamp>,
 }
 
 impl Cursor {
@@ -885,7 +885,7 @@ impl Cursor {
         }
     }
 
-    pub fn with_expiration(mut self, value: super::common::DropboxTimestamp) -> Self {
+    pub fn with_expiration(mut self, value: crate::common::DropboxTimestamp) -> Self {
         self.expiration = Some(value);
         self
     }
@@ -1634,14 +1634,14 @@ impl ::serde::ser::Serialize for ImportFormat {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct InviteeInfoWithPermissionLevel {
     /// Email address invited to the Paper doc.
-    pub invitee: super::sharing::InviteeInfo,
+    pub invitee: crate::sharing::InviteeInfo,
     /// Permission level for the invitee.
     pub permission_level: PaperDocPermissionLevel,
 }
 
 impl InviteeInfoWithPermissionLevel {
     pub fn new(
-        invitee: super::sharing::InviteeInfo,
+        invitee: crate::sharing::InviteeInfo,
         permission_level: PaperDocPermissionLevel,
     ) -> Self {
         InviteeInfoWithPermissionLevel {
@@ -2702,9 +2702,9 @@ impl ::serde::ser::Serialize for ListUsersOnFolderContinueArgs {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderResponse {
     /// List of email addresses that are invited on the Paper folder.
-    pub invitees: Vec<super::sharing::InviteeInfo>,
+    pub invitees: Vec<crate::sharing::InviteeInfo>,
     /// List of users that are invited on the Paper folder.
-    pub users: Vec<super::sharing::UserInfo>,
+    pub users: Vec<crate::sharing::UserInfo>,
     /// Pass the cursor into [`docs_folder_users_list_continue()`](docs_folder_users_list_continue)
     /// to paginate through all users. The cursor preserves all properties as specified in the
     /// original call to [`docs_folder_users_list()`](docs_folder_users_list).
@@ -2718,8 +2718,8 @@ pub struct ListUsersOnFolderResponse {
 
 impl ListUsersOnFolderResponse {
     pub fn new(
-        invitees: Vec<super::sharing::InviteeInfo>,
-        users: Vec<super::sharing::UserInfo>,
+        invitees: Vec<crate::sharing::InviteeInfo>,
+        users: Vec<crate::sharing::UserInfo>,
         cursor: Cursor,
         has_more: bool,
     ) -> Self {
@@ -3080,7 +3080,7 @@ pub struct ListUsersOnPaperDocResponse {
     /// List of users with their respective permission levels that are invited on the Paper folder.
     pub users: Vec<UserInfoWithPermissionLevel>,
     /// The Paper doc owner. This field is populated on every single response.
-    pub doc_owner: super::sharing::UserInfo,
+    pub doc_owner: crate::sharing::UserInfo,
     /// Pass the cursor into [`docs_users_list_continue()`](docs_users_list_continue) to paginate
     /// through all users. The cursor preserves all properties as specified in the original call to
     /// [`docs_users_list()`](docs_users_list).
@@ -3096,7 +3096,7 @@ impl ListUsersOnPaperDocResponse {
     pub fn new(
         invitees: Vec<InviteeInfoWithPermissionLevel>,
         users: Vec<UserInfoWithPermissionLevel>,
-        doc_owner: super::sharing::UserInfo,
+        doc_owner: crate::sharing::UserInfo,
         cursor: Cursor,
         has_more: bool,
     ) -> Self {
@@ -4914,11 +4914,11 @@ pub struct RemovePaperDocUser {
     pub doc_id: PaperDocId,
     /// User which should be removed from the Paper doc. Specify only email address or Dropbox
     /// account ID.
-    pub member: super::sharing::MemberSelector,
+    pub member: crate::sharing::MemberSelector,
 }
 
 impl RemovePaperDocUser {
-    pub fn new(doc_id: PaperDocId, member: super::sharing::MemberSelector) -> Self {
+    pub fn new(doc_id: PaperDocId, member: crate::sharing::MemberSelector) -> Self {
         RemovePaperDocUser {
             doc_id,
             member,
@@ -5266,13 +5266,13 @@ impl ::serde::ser::Serialize for SharingTeamPolicyType {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfoWithPermissionLevel {
     /// User shared on the Paper doc.
-    pub user: super::sharing::UserInfo,
+    pub user: crate::sharing::UserInfo,
     /// Permission level for the user.
     pub permission_level: PaperDocPermissionLevel,
 }
 
 impl UserInfoWithPermissionLevel {
-    pub fn new(user: super::sharing::UserInfo, permission_level: PaperDocPermissionLevel) -> Self {
+    pub fn new(user: crate::sharing::UserInfo, permission_level: PaperDocPermissionLevel) -> Self {
         UserInfoWithPermissionLevel {
             user,
             permission_level,

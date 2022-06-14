@@ -80,8 +80,14 @@ class TestBackend(RustHelperBackend):
                     if self.is_closed_union(typ):
                         self._emit_closed_union_test(ns, typ)
 
+                for route in ns.routes:
+                    self._emit_route_test(ns, route, json_encode)
+
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
+            self.emit(u'#[path = "../noop_client.rs"]')
+            self.emit(u'pub mod noop_client;')
+            self.emit()
             for ns in api.namespaces:
                 if ns not in REQUIRED_NAMESPACES:
                     self.emit(u'#[cfg(feature = "dbx_{}")]'.format(ns))
@@ -187,9 +193,80 @@ class TestBackend(RustHelperBackend):
             self.emit(u'}')
         self.emit()
 
+    def _emit_route_test(self, ns, route, json_encode, auth_type = None):
+        arg_typ = self.rust_type(route.arg_data_type, '', crate='dropbox_sdk')
+        if arg_typ == '()':
+            json = "{}"
+        else:
+            arg_value = self.make_test_value(route.arg_data_type)[0]
+            pyname = fmt_py_class(route.arg_data_type.name)
+            json = json_encode(
+                self.reference_impls[route.arg_data_type.namespace.name].__dict__[pyname + '_validator'],
+                arg_value.value,
+                Permissions())
+
+        style = route.attrs.get('style', 'rpc')
+        ok_typ = self.rust_type(_typ_or_void(route.result_data_type), '', crate='dropbox_sdk')
+        if style == 'download':
+            ok_typ = f'dropbox_sdk::client_trait::HttpRequestResult<{ok_typ}>'
+        err_typ = self.rust_type(_typ_or_void(route.error_data_type), '', crate='dropbox_sdk')
+        if err_typ == '()':
+            err_typ = 'dropbox_sdk::NoError'
+        ns_path = 'dropbox_sdk::' + self.namespace_name(ns)
+        fn_name = self.route_name(route)
+
+        if auth_type is None:
+            auths_str = route.attrs.get('auth', 'user')
+            auths = list(map(lambda s: s.strip(), auths_str.split(',')))
+            auths.sort()
+            # See _emit_route() in rust.stoneg.py which enumerates all supported kinds
+            if auths == ['app', 'user']:
+                # This is the only kind of multi-auth supported.
+                # Do the same shenanigans as when emitting the route code
+                self._emit_route_test(ns, route, json_encode, 'user')
+
+                fn_name += '_app_auth'
+                auth_type = 'app'
+            else:
+                auth_type = auths[0]
+
+        if route.attrs.get('is_preview'):
+            self.emit(u'#[cfg(feature = "unstable")]')
+
+        if route.deprecated:
+            self.emit(u'#[allow(deprecated)]')
+
+        with self._test_fn(f'route_{fn_name}'):
+            if arg_typ != '()':
+                self.emit(f'let arg: {arg_typ} = serde_json::from_str(r#"{json}"#).unwrap();')
+            self.emit(f'let ret: dropbox_sdk::Result<Result<{ok_typ}, {err_typ}>>')
+            with self.indent():
+                self.emit(f'= {ns_path}::{fn_name}(')
+                with self.indent():
+                    self.emit(f'&super::noop_client::{auth_type}::Client,')
+                    if arg_typ == '()':
+                        self.emit(u'/* no args */')
+                    else:
+                        self.emit(u'&arg,')
+                    if style == 'upload':
+                        self.emit(u'&[]')
+                    elif style == 'download':
+                        self.emit(u'None,')
+                        self.emit(u'None,')
+                self.emit(u');')
+            self.emit(u'assert!(matches!(ret, Err(dropbox_sdk::Error::HttpClient(..))));')
+        self.emit()
+
     def _test_fn(self, name):
         self.emit(u'#[test]')
         return self.emit_rust_function_def(u'test_' + name)
+
+
+def _typ_or_void(typ):
+    if typ is None:
+        return ir.Void
+    else:
+        return typ
 
 
 class TestField(object):
