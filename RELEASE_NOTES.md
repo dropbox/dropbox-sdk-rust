@@ -1,5 +1,5 @@
 # v0.15.0
-xxxx-yy-zz
+2022-06-14
 * API spec update 2022-02-09, 2022-03-02, 2022-03-30, 2022-04-20, 2022-05-18
     * semver incompatible changes in files:
         * upload: arg type changed from CommitInfo to UploadArg
@@ -11,6 +11,7 @@ xxxx-yy-zz
     * files: upload routes can now take a content hash to validate upload contents
     * sharing: new route get_shared_link_metadata_app_auth
     * documentation, team_log updates
+* Test improvements: routes (functions) all now have basic type signature checking tests
 
 # v0.14.1
 2022-02-09
