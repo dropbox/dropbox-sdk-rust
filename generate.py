@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-import imp
+import importlib.util
 import logging
 import os
 from os.path import join
@@ -17,6 +17,15 @@ from stone.frontend.frontend import specs_to_ir
 
 class CodegenFailed(Exception):
     pass
+
+
+def load_source(module_name, path):
+    "Reimplementation of the deprecated imp.load_source() function"
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 def spec_files(spec_root: str) -> List[str]:
@@ -52,8 +61,8 @@ def generate_code(spec_root: str, gen_rust: bool, gen_test: bool):
     for target in targets:
         print(f"Running generator for {target}")
         try:
-            backend_module = imp.load_source(
-                f'{target}_backend', join("generator", f"{target}.stoneg.py"))
+            backend_module = load_source(
+                f'{target}_backend', join('generator', f'{target}.stoneg.py'))
         except Exception:
             print(f"error: Importing backend \"{target}\" module raised an exception: ",
                   file=sys.stderr)
