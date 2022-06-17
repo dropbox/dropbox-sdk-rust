@@ -1365,7 +1365,10 @@ pub fn upload_session_start(
         Some(body))
 }
 
-/// This route starts batch of upload_sessions. Please refer to `upload_session/start` usage.
+/// This route starts batch of upload_sessions. Please refer to `upload_session/start` usage. Calls
+/// to this endpoint will count as data transport calls for any Dropbox Business teams with a limit
+/// on the number of data transport calls allowed per month. For more information, see the [Data
+/// transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_start_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionStartBatchArg,
@@ -17354,6 +17357,8 @@ pub struct SearchOptions {
     /// Restricts search to only the file categories specified. Only supported for active file
     /// search.
     pub file_categories: Option<Vec<FileCategory>>,
+    /// Restricts results to the given account id.
+    pub account_id: Option<crate::users_common::AccountId>,
 }
 
 impl Default for SearchOptions {
@@ -17366,6 +17371,7 @@ impl Default for SearchOptions {
             filename_only: false,
             file_extensions: None,
             file_categories: None,
+            account_id: None,
         }
     }
 }
@@ -17405,6 +17411,11 @@ impl SearchOptions {
         self.file_categories = Some(value);
         self
     }
+
+    pub fn with_account_id(mut self, value: crate::users_common::AccountId) -> Self {
+        self.account_id = Some(value);
+        self
+    }
 }
 
 const SEARCH_OPTIONS_FIELDS: &[&str] = &["path",
@@ -17413,7 +17424,8 @@ const SEARCH_OPTIONS_FIELDS: &[&str] = &["path",
                                          "file_status",
                                          "filename_only",
                                          "file_extensions",
-                                         "file_categories"];
+                                         "file_categories",
+                                         "account_id"];
 impl SearchOptions {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -17426,6 +17438,7 @@ impl SearchOptions {
         let mut field_filename_only = None;
         let mut field_file_extensions = None;
         let mut field_file_categories = None;
+        let mut field_account_id = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "path" => {
@@ -17470,6 +17483,12 @@ impl SearchOptions {
                     }
                     field_file_categories = Some(map.next_value()?);
                 }
+                "account_id" => {
+                    if field_account_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("account_id"));
+                    }
+                    field_account_id = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -17484,6 +17503,7 @@ impl SearchOptions {
             filename_only: field_filename_only.unwrap_or(false),
             file_extensions: field_file_extensions,
             file_categories: field_file_categories,
+            account_id: field_account_id,
         };
         Ok(result)
     }
@@ -17507,6 +17527,9 @@ impl SearchOptions {
         }
         if let Some(val) = &self.file_categories {
             s.serialize_field("file_categories", val)?;
+        }
+        if let Some(val) = &self.account_id {
+            s.serialize_field("account_id", val)?;
         }
         Ok(())
     }
@@ -17534,7 +17557,7 @@ impl ::serde::ser::Serialize for SearchOptions {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SearchOptions", 7)?;
+        let mut s = serializer.serialize_struct("SearchOptions", 8)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
