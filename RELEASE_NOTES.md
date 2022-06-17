@@ -1,5 +1,7 @@
 # v0.15.1
 xxxx-yy-zz
+* API spec update 2022-06-15
+    * files: SearchOptions has new field account_id
 
 # v0.15.0
 2022-06-14
