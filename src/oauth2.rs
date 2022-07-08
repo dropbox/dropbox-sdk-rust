@@ -289,6 +289,7 @@ enum AuthorizationState {
     },
     Refresh {
         client_id: String,
+        client_secret: String,
         refresh_token: String,
     },
     AccessToken(String),
@@ -328,7 +329,7 @@ impl Authorization {
             AuthorizationState::InitialAuth { .. } => None,
             AuthorizationState::AccessToken(access_token) =>
                 Some(format!("1&{}", access_token)),
-            AuthorizationState::Refresh { client_id: _, refresh_token } =>
+            AuthorizationState::Refresh { client_id: _, refresh_token, .. } =>
                 Some(format!("2&{}", refresh_token)),
         }
     }
@@ -341,11 +342,12 @@ impl Authorization {
     /// Note that a loaded authorization state is not necessarily still valid and may produce
     /// [`Authentication`](crate::Error::Authentication) errors. In such a case you should also
     /// start the authorization procedure from scratch.
-    pub fn load(client_id: String, saved: &str) -> Option<Self> {
+    pub fn load(client_id: String, client_secret: String, saved: &str) -> Option<Self> {
         let state = match saved.get(0..2) {
             Some("1&") => AuthorizationState::AccessToken(saved[2..].to_owned()),
             Some("2&") => AuthorizationState::Refresh {
                 client_id,
+                client_secret,
                 refresh_token: saved[2..].to_owned(),
             },
             _ => {
@@ -359,9 +361,10 @@ impl Authorization {
     /// Recreate the authorization from an authorization code and refresh token.
     pub fn from_refresh_token(
         client_id: String,
+        client_secret: String,
         refresh_token: String,
     ) -> Self {
-        Self { state: AuthorizationState::Refresh { client_id, refresh_token } }
+        Self { state: AuthorizationState::Refresh { client_id, client_secret, refresh_token } }
     }
 
     /// Recreate the authorization from a long-lived access token. This token cannot be refreshed;
@@ -406,8 +409,9 @@ impl Authorization {
                 auth_code = Some(code);
                 redirect_uri = uri;
             }
-            AuthorizationState::Refresh { client_id: id, refresh_token: refresh } => {
+            AuthorizationState::Refresh { client_id: id, client_secret: secret, refresh_token: refresh } => {
                 client_id = id;
+                client_secret = Some(secret);
                 refresh_token = Some(refresh);
             }
         }
@@ -424,13 +428,14 @@ impl Authorization {
 
         params.append_pair("client_id", &client_id);
 
-        if refresh_token.is_none() {
-            if let Some(pkce) = pkce_code {
+        match pkce_code {
+            Some(pkce) => {
                 params.append_pair("code_verifier", &pkce);
-            } else {
+            }
+            None => {
                 params.append_pair(
                     "client_secret",
-                    &client_secret.expect("need either PKCE code or client secret"));
+                    client_secret.as_ref().expect("need either PKCE code or client secret"));
             }
         }
 
@@ -475,7 +480,8 @@ impl Authorization {
 
         match refresh_token {
             Some(refresh) => {
-                self.state = AuthorizationState::Refresh { client_id, refresh_token: refresh };
+                // NOTE: currently breaks on PKCE flow
+                self.state = AuthorizationState::Refresh { client_id, client_secret: client_secret.unwrap(), refresh_token: refresh };
             }
             None => {
                 self.state = AuthorizationState::AccessToken(access_token.clone());
@@ -551,11 +557,11 @@ pub fn get_auth_from_env_or_prompt() -> Authorization {
         return Authorization::from_access_token(long_lived);
     }
 
-    if let (Ok(client_id), Ok(saved))
-        = (env::var("DBX_CLIENT_ID"), env::var("DBX_OAUTH"))
+    if let (Ok(client_id), Ok(client_secret), Ok(saved))
+        = (env::var("DBX_CLIENT_ID"), env::var("DBX_CLIENT_SECRET"), env::var("DBX_OAUTH"))
         // important! see the above warning about using environment variables for this
     {
-        match Authorization::load(client_id, &saved) {
+        match Authorization::load(client_id, client_secret, &saved) {
             Some(auth) => return auth,
             None => {
                 eprintln!("saved authorization in DBX_CLIENT_ID and DBX_OAUTH are invalid");
