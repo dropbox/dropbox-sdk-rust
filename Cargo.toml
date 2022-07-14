@@ -52,6 +52,7 @@ dbx_contacts = ["dbx_common"]
 dbx_file_properties = []
 dbx_file_requests = ["dbx_common", "dbx_files"]
 dbx_files = ["dbx_async", "dbx_auth", "dbx_common", "dbx_file_properties", "dbx_users_common"]
+dbx_openid = ["dbx_common"]
 dbx_paper = ["dbx_common", "dbx_sharing"]
 dbx_secondary_emails = ["dbx_common"]
 dbx_seen_state = []
@@ -79,6 +80,7 @@ default = [
     "dbx_file_properties",
     "dbx_file_requests",
     "dbx_files",
+    "dbx_openid",
     "dbx_paper",
     "dbx_secondary_emails",
     "dbx_seen_state",

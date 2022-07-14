@@ -27,6 +27,8 @@ if_feature! { "dbx_file_requests", pub mod file_requests; }
 
 if_feature! { "dbx_files", pub mod files; }
 
+if_feature! { "dbx_openid", pub mod openid; }
+
 if_feature! { "dbx_paper", pub mod paper; }
 
 if_feature! { "dbx_secondary_emails", pub mod secondary_emails; }
