@@ -104,7 +104,8 @@ class TestBackend(RustHelperBackend):
         self.emit('    clippy::unreadable_literal,')
         self.emit('    clippy::cognitive_complexity,')
         self.emit('    clippy::collapsible_match,')
-        self.emit('    clippy::bool_assert_comparison')
+        self.emit('    clippy::bool_assert_comparison,')
+        self.emit('    clippy::explicit_auto_deref,')
         self.emit(')]')
         self.emit()
 
