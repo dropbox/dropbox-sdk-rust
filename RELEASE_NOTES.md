@@ -1,7 +1,9 @@
 # v0.15.1
 xxxx-yy-zz
-* API spec update 2022-06-15
+* API spec update 2022-06-15, 2022-07-13
     * files: SearchOptions has new field account_id
+    * sharing, team_log, team_policies additions
+    * new namespace: openid
 
 # v0.15.0
 2022-06-14

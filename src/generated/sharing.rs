@@ -3828,6 +3828,11 @@ pub struct FileMemberActionResult {
     pub member: MemberSelector,
     /// The outcome of the action on this member.
     pub result: FileMemberActionIndividualResult,
+    /// The SHA-1 encrypted shared content key.
+    pub sckey_sha1: Option<String>,
+    /// The sharing sender-recipient invitation signatures for the input member_id. A member_id can
+    /// be a group and thus have multiple users and multiple invitation signatures.
+    pub invitation_signature: Option<Vec<String>>,
 }
 
 impl FileMemberActionResult {
@@ -3835,12 +3840,26 @@ impl FileMemberActionResult {
         FileMemberActionResult {
             member,
             result,
+            sckey_sha1: None,
+            invitation_signature: None,
         }
+    }
+
+    pub fn with_sckey_sha1(mut self, value: String) -> Self {
+        self.sckey_sha1 = Some(value);
+        self
+    }
+
+    pub fn with_invitation_signature(mut self, value: Vec<String>) -> Self {
+        self.invitation_signature = Some(value);
+        self
     }
 }
 
 const FILE_MEMBER_ACTION_RESULT_FIELDS: &[&str] = &["member",
-                                                    "result"];
+                                                    "result",
+                                                    "sckey_sha1",
+                                                    "invitation_signature"];
 impl FileMemberActionResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -3854,6 +3873,8 @@ impl FileMemberActionResult {
     ) -> Result<Option<FileMemberActionResult>, V::Error> {
         let mut field_member = None;
         let mut field_result = None;
+        let mut field_sckey_sha1 = None;
+        let mut field_invitation_signature = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -3870,6 +3891,18 @@ impl FileMemberActionResult {
                     }
                     field_result = Some(map.next_value()?);
                 }
+                "sckey_sha1" => {
+                    if field_sckey_sha1.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("sckey_sha1"));
+                    }
+                    field_sckey_sha1 = Some(map.next_value()?);
+                }
+                "invitation_signature" => {
+                    if field_invitation_signature.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("invitation_signature"));
+                    }
+                    field_invitation_signature = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -3882,6 +3915,8 @@ impl FileMemberActionResult {
         let result = FileMemberActionResult {
             member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
             result: field_result.ok_or_else(|| ::serde::de::Error::missing_field("result"))?,
+            sckey_sha1: field_sckey_sha1,
+            invitation_signature: field_invitation_signature,
         };
         Ok(Some(result))
     }
@@ -3893,6 +3928,12 @@ impl FileMemberActionResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
         s.serialize_field("result", &self.result)?;
+        if let Some(val) = &self.sckey_sha1 {
+            s.serialize_field("sckey_sha1", val)?;
+        }
+        if let Some(val) = &self.invitation_signature {
+            s.serialize_field("invitation_signature", val)?;
+        }
         Ok(())
     }
 }
@@ -3919,7 +3960,7 @@ impl ::serde::ser::Serialize for FileMemberActionResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileMemberActionResult", 2)?;
+        let mut s = serializer.serialize_struct("FileMemberActionResult", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

@@ -8,6 +8,7 @@ digraph deps {
     file_properties;
     file_requests -> { common files };
     files -> { async auth common file_properties users_common };
+    openid -> { common };
     paper -> { common sharing };
     secondary_emails -> { common };
     seen_state;

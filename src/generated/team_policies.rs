@@ -363,6 +363,81 @@ impl ::serde::ser::Serialize for FileLockingPolicyState {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum FileProviderMigrationPolicyState {
+    /// Team admin has opted out of File Provider Migration for team members.
+    Disabled,
+    /// Team admin has not opted out of File Provider Migration for team members.
+    Enabled,
+    /// Team admin has default value based on team tier.
+    Default,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileProviderMigrationPolicyState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = FileProviderMigrationPolicyState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileProviderMigrationPolicyState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "disabled" => FileProviderMigrationPolicyState::Disabled,
+                    "enabled" => FileProviderMigrationPolicyState::Enabled,
+                    "default" => FileProviderMigrationPolicyState::Default,
+                    _ => FileProviderMigrationPolicyState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "default",
+                                    "other"];
+        deserializer.deserialize_struct("FileProviderMigrationPolicyState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileProviderMigrationPolicyState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            FileProviderMigrationPolicyState::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("FileProviderMigrationPolicyState", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            FileProviderMigrationPolicyState::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("FileProviderMigrationPolicyState", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            FileProviderMigrationPolicyState::Default => {
+                // unit
+                let mut s = serializer.serialize_struct("FileProviderMigrationPolicyState", 1)?;
+                s.serialize_field(".tag", "default")?;
+                s.end()
+            }
+            FileProviderMigrationPolicyState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupCreation {
     /// Team admins and members can create groups.
     AdminsAndMembers,
