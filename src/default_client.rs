@@ -13,6 +13,7 @@
 
 use crate::Error;
 use crate::auth::AuthError;
+use crate::client_helpers::TopLevelError;
 use crate::client_trait::*;
 use crate::oauth2::{Authorization, TokenCache};
 use std::borrow::Cow;
@@ -281,6 +282,12 @@ impl UreqClient {
             Err(ureq::Error::Status(code, resp)) => {
                 let status = resp.status_text().to_owned();
                 let json = resp.into_string()?;
+                // return Authentication errors so that we can retry the request with a fresh token
+                if code == 401 {
+                    if let Ok(err) = serde_json::from_str::<TopLevelError<AuthError>>(&json) {
+                        return Err(Error::Authentication(err.error))
+                    }
+                }
                 return Err(Error::UnexpectedHttpError {
                     code,
                     status,
