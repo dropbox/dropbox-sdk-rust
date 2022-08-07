@@ -459,7 +459,6 @@ impl Authorization {
         debug!("OAuth2 response: {:?}", result_json);
 
         let access_token: String;
-        let refresh_token: Option<String>;
 
         match result_json {
             serde_json::Value::Object(mut map) => {
@@ -472,7 +471,7 @@ impl Authorization {
                     Some(_) => {
                         return Err(Error::UnexpectedResponse("refresh token is not a string!"));
                     },
-                    None => refresh_token = None,
+                    _ => {}
                 }
             },
             _ => return Err(Error::UnexpectedResponse("response is not a JSON object")),
