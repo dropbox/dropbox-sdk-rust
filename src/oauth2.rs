@@ -286,6 +286,7 @@ enum AuthorizationState {
         flow_type: Oauth2Type,
         auth_code: String,
         redirect_uri: Option<String>,
+        client_secret: Option<String>,
     },
     Refresh {
         client_id: String,
@@ -306,17 +307,18 @@ impl Authorization {
     /// (or via manual user entry if not using a redirect URI) after the user logs in.
     ///
     /// Requires the client ID; the type of OAuth2 flow being used (including the client secret or
-    /// the PKCE challenge); the authorization code; and the redirect URI used for the original
-    /// authorization request, if any.
+    /// the PKCE challenge); the authorization code; the redirect URI used for the original
+    /// authorization request, if any; and the client_secret if using PKCE flow.
     pub fn from_auth_code(
         client_id: String,
         flow_type: Oauth2Type,
         auth_code: String,
         redirect_uri: Option<String>,
+        client_secret: Option<String>,
     ) -> Self {
         Self {
             state: AuthorizationState::InitialAuth {
-                client_id, flow_type, auth_code, redirect_uri },
+                client_id, flow_type, auth_code, redirect_uri, client_secret },
         }
     }
 
@@ -380,8 +382,8 @@ impl Authorization {
     /// updated token when a short-lived access token has expired.
     pub fn obtain_access_token(&mut self, client: impl NoauthClient) -> crate::Result<String> {
         let client_id: String;
+        let client_secret: Option<String>;
         let mut redirect_uri = None;
-        let mut client_secret = None;
         let mut pkce_code = None;
         let mut refresh_token = None;
         let mut auth_code = None;
@@ -391,7 +393,7 @@ impl Authorization {
                 return Ok(token);
             }
             AuthorizationState::InitialAuth {
-                client_id: id, flow_type, auth_code: code, redirect_uri: uri } =>
+                client_id: id, flow_type, auth_code: code, redirect_uri: uri, client_secret: secret } =>
             {
                 match flow_type {
                     Oauth2Type::ImplicitGrant(_secret) => {
@@ -399,10 +401,18 @@ impl Authorization {
                         return Ok(code);
                     }
                     Oauth2Type::AuthorizationCode(secret) => {
+                        // use the OAuth2 flow client_secret, in which case the InitialAuth secret
+                        // may be none
                         client_secret = Some(secret);
                     }
                     Oauth2Type::PKCE(pkce) => {
                         pkce_code = Some(pkce.code);
+                        // use the InitialAuth secret, which is required to use the refresh token
+                        // returned from the OAuth2 token endpoint
+                        if secret.is_none() {
+                            panic!("need client secret to use refresh token returned by PKCE flow");
+                        }
+                        client_secret = secret;
                     }
                 }
                 client_id = id;
@@ -475,7 +485,6 @@ impl Authorization {
 
         match refresh_token {
             Some(refresh) => {
-                // NOTE: currently breaks on PKCE flow
                 self.state = AuthorizationState::Refresh { client_id, client_secret: client_secret.unwrap(), refresh_token: refresh };
             }
             None => {
@@ -530,8 +539,9 @@ impl TokenCache {
     }
 }
 
-/// Get an [`Authorization`] instance from environment variables `DBX_CLIENT_ID` and `DBX_OAUTH`
-/// (containing a refresh token) or `DBX_OAUTH_TOKEN` (containing a legacy long-lived token).
+/// Get an [`Authorization`] instance from environment variables `DBX_CLIENT_ID`,
+/// `DBX_CLIENT_SECRET`, and `DBX_OAUTH` (containing a refresh token) or `DBX_OAUTH_TOKEN`
+/// (containing a legacy long-lived token).
 ///
 /// If environment variables are not set, and stdin is a terminal, prompt interactively for
 /// authorization.
@@ -566,7 +576,7 @@ pub fn get_auth_from_env_or_prompt() -> Authorization {
     }
 
     if !atty::is(atty::Stream::Stdin) {
-        panic!("DBX_CLIENT_ID and/or DBX_OAUTH not set, and stdin not a TTY; cannot authorize");
+        panic!("DBX_CLIENT_ID, DBX_CLIENT_SECRET, and/or DBX_OAUTH not set, and stdin not a TTY; cannot authorize");
     }
 
     fn prompt(msg: &str) -> String {
@@ -578,6 +588,7 @@ pub fn get_auth_from_env_or_prompt() -> Authorization {
     }
 
     let client_id = prompt("Give me a Dropbox API app key");
+    let client_secret = prompt("Give me a Dropbox API app secret");
 
     let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
     let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
@@ -592,5 +603,6 @@ pub fn get_auth_from_env_or_prompt() -> Authorization {
         oauth2_flow,
         auth_code.trim().to_owned(),
         None,
+        Some(client_secret),
     )
 }
