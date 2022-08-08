@@ -331,7 +331,7 @@ impl Authorization {
             AuthorizationState::InitialAuth { .. } => None,
             AuthorizationState::AccessToken(access_token) =>
                 Some(format!("1&{}", access_token)),
-            AuthorizationState::Refresh { client_id: _, refresh_token, .. } =>
+            AuthorizationState::Refresh { refresh_token, .. } =>
                 Some(format!("2&{}", refresh_token)),
         }
     }
