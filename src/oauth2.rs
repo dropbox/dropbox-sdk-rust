@@ -455,26 +455,22 @@ impl Authorization {
             None,
         )?;
 
-        let result_json = serde_json::from_str(&resp.result_json)?;
+        let mut result_json: serde_json::Value = serde_json::from_str(&resp.result_json)?;
         debug!("OAuth2 response: {:?}", result_json);
 
-        let access_token: String;
+        let map = result_json.as_object_mut()
+            .ok_or(Error::UnexpectedResponse("response is not a JSON object"))?;
 
-        match result_json {
-            serde_json::Value::Object(mut map) => {
-                match map.remove("access_token") {
-                    Some(serde_json::Value::String(token)) => access_token = token,
-                    _ => return Err(Error::UnexpectedResponse("no access token in response!")),
-                }
-                match map.remove("refresh_token") {
-                    Some(serde_json::Value::String(refresh)) => refresh_token = Some(refresh),
-                    Some(_) => {
-                        return Err(Error::UnexpectedResponse("refresh token is not a string!"));
-                    },
-                    _ => {}
-                }
-            },
-            _ => return Err(Error::UnexpectedResponse("response is not a JSON object")),
+        let access_token = match map.remove("access_token") {
+            Some(serde_json::Value::String(token)) => token,
+            _ => return Err(Error::UnexpectedResponse("no access token in response!")),
+        };
+
+        if let Some(value) = map.remove("refresh_token") {
+            match value {
+                serde_json::Value::String(refresh) => refresh_token = Some(refresh),
+                _ => return Err(Error::UnexpectedResponse("refresh token is not a string!"))
+            }
         }
 
         match refresh_token {
