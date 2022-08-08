@@ -382,7 +382,7 @@ impl Authorization {
     /// updated token when a short-lived access token has expired.
     pub fn obtain_access_token(&mut self, client: impl NoauthClient) -> crate::Result<String> {
         let client_id: String;
-        let client_secret: Option<String>;
+        let client_secret: String;
         let mut redirect_uri = None;
         let mut pkce_code = None;
         let mut refresh_token = None;
@@ -403,16 +403,14 @@ impl Authorization {
                     Oauth2Type::AuthorizationCode(secret) => {
                         // use the OAuth2 flow client_secret, in which case the InitialAuth secret
                         // may be none
-                        client_secret = Some(secret);
+                        client_secret = secret;
                     }
                     Oauth2Type::PKCE(pkce) => {
                         pkce_code = Some(pkce.code);
                         // use the InitialAuth secret, which is required to use the refresh token
                         // returned from the OAuth2 token endpoint
-                        if secret.is_none() {
-                            panic!("need client secret to use refresh token returned by PKCE flow");
-                        }
-                        client_secret = secret;
+                        client_secret = secret
+                            .expect("need client secret to use refresh token returned by PKCE flow");
                     }
                 }
                 client_id = id;
@@ -421,7 +419,7 @@ impl Authorization {
             }
             AuthorizationState::Refresh { client_id: id, client_secret: secret, refresh_token: refresh } => {
                 client_id = id;
-                client_secret = Some(secret);
+                client_secret = secret;
                 refresh_token = Some(refresh);
             }
         }
@@ -443,9 +441,7 @@ impl Authorization {
                 params.append_pair("code_verifier", &pkce);
             }
             None => {
-                params.append_pair(
-                    "client_secret",
-                    client_secret.as_ref().expect("need either PKCE code or client secret"));
+                params.append_pair("client_secret", &client_secret);
             }
         }
 
@@ -485,7 +481,7 @@ impl Authorization {
 
         match refresh_token {
             Some(refresh) => {
-                self.state = AuthorizationState::Refresh { client_id, client_secret: client_secret.unwrap(), refresh_token: refresh };
+                self.state = AuthorizationState::Refresh { client_id, client_secret, refresh_token: refresh };
             }
             None => {
                 self.state = AuthorizationState::AccessToken(access_token.clone());
