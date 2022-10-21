@@ -1387,7 +1387,7 @@ pub fn upload_session_start_batch(
 pub struct AddTagArg {
     /// Path to the item to be tagged.
     pub path: Path,
-    /// The value of the tag to add.
+    /// The value of the tag to add. Will be automatically converted to lowercase letters.
     pub tag_text: TagText,
 }
 
@@ -15432,7 +15432,7 @@ impl ::serde::ser::Serialize for RelocationResult {
 pub struct RemoveTagArg {
     /// Path to the item to tag.
     pub path: Path,
-    /// The tag to remove.
+    /// The tag to remove. Will be automatically converted to lowercase letters.
     pub tag_text: TagText,
 }
 

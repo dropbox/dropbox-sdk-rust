@@ -1880,6 +1880,8 @@ pub struct TeamSharingPolicies {
     pub shared_folder_join_policy: SharedFolderJoinPolicy,
     /// Who can view shared links owned by team members.
     pub shared_link_create_policy: SharedLinkCreatePolicy,
+    /// Who can create groups.
+    pub group_creation_policy: GroupCreation,
 }
 
 impl TeamSharingPolicies {
@@ -1887,18 +1889,21 @@ impl TeamSharingPolicies {
         shared_folder_member_policy: SharedFolderMemberPolicy,
         shared_folder_join_policy: SharedFolderJoinPolicy,
         shared_link_create_policy: SharedLinkCreatePolicy,
+        group_creation_policy: GroupCreation,
     ) -> Self {
         TeamSharingPolicies {
             shared_folder_member_policy,
             shared_folder_join_policy,
             shared_link_create_policy,
+            group_creation_policy,
         }
     }
 }
 
 const TEAM_SHARING_POLICIES_FIELDS: &[&str] = &["shared_folder_member_policy",
                                                 "shared_folder_join_policy",
-                                                "shared_link_create_policy"];
+                                                "shared_link_create_policy",
+                                                "group_creation_policy"];
 impl TeamSharingPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1913,6 +1918,7 @@ impl TeamSharingPolicies {
         let mut field_shared_folder_member_policy = None;
         let mut field_shared_folder_join_policy = None;
         let mut field_shared_link_create_policy = None;
+        let mut field_group_creation_policy = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -1935,6 +1941,12 @@ impl TeamSharingPolicies {
                     }
                     field_shared_link_create_policy = Some(map.next_value()?);
                 }
+                "group_creation_policy" => {
+                    if field_group_creation_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("group_creation_policy"));
+                    }
+                    field_group_creation_policy = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -1948,6 +1960,7 @@ impl TeamSharingPolicies {
             shared_folder_member_policy: field_shared_folder_member_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_member_policy"))?,
             shared_folder_join_policy: field_shared_folder_join_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_join_policy"))?,
             shared_link_create_policy: field_shared_link_create_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_link_create_policy"))?,
+            group_creation_policy: field_group_creation_policy.ok_or_else(|| ::serde::de::Error::missing_field("group_creation_policy"))?,
         };
         Ok(Some(result))
     }
@@ -1960,6 +1973,7 @@ impl TeamSharingPolicies {
         s.serialize_field("shared_folder_member_policy", &self.shared_folder_member_policy)?;
         s.serialize_field("shared_folder_join_policy", &self.shared_folder_join_policy)?;
         s.serialize_field("shared_link_create_policy", &self.shared_link_create_policy)?;
+        s.serialize_field("group_creation_policy", &self.group_creation_policy)?;
         Ok(())
     }
 }
@@ -1986,7 +2000,7 @@ impl ::serde::ser::Serialize for TeamSharingPolicies {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamSharingPolicies", 3)?;
+        let mut s = serializer.serialize_struct("TeamSharingPolicies", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

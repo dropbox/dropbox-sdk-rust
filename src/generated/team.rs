@@ -1208,6 +1208,92 @@ pub fn reports_get_storage(
         None)
 }
 
+/// Endpoint adds Approve List entries. Changes are effective immediately. Changes are committed in
+/// transaction. In case of single validation error - all entries are rejected. Valid domains
+/// (RFC-1034/5) and emails (RFC-5322/822) are accepted. Added entries cannot overflow limit of
+/// 10000 entries per team. Maximum 100 entries per call is allowed.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn sharing_allowlist_add(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &SharingAllowlistAddArgs,
+) -> crate::Result<Result<SharingAllowlistAddResponse, SharingAllowlistAddError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/sharing_allowlist/add",
+        arg,
+        None)
+}
+
+/// Lists Approve List entries for given team, from newest to oldest, returning up to `limit`
+/// entries at a time. If there are more than `limit` entries associated with the current team, more
+/// can be fetched by passing the returned `cursor` to
+/// [`sharing_allowlist_list_continue()`](sharing_allowlist_list_continue).
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn sharing_allowlist_list(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &SharingAllowlistListArg,
+) -> crate::Result<Result<SharingAllowlistListResponse, SharingAllowlistListError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/sharing_allowlist/list",
+        arg,
+        None)
+}
+
+/// Lists entries associated with given team, starting from a the cursor. See
+/// [`sharing_allowlist_list()`](sharing_allowlist_list).
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn sharing_allowlist_list_continue(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &SharingAllowlistListContinueArg,
+) -> crate::Result<Result<SharingAllowlistListResponse, SharingAllowlistListContinueError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/sharing_allowlist/list/continue",
+        arg,
+        None)
+}
+
+/// Endpoint removes Approve List entries. Changes are effective immediately. Changes are committed
+/// in transaction. In case of single validation error - all entries are rejected. Valid domains
+/// (RFC-1034/5) and emails (RFC-5322/822) are accepted. Entries being removed have to be present on
+/// the list. Maximum 1000 entries per call is allowed.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn sharing_allowlist_remove(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &SharingAllowlistRemoveArgs,
+) -> crate::Result<Result<SharingAllowlistRemoveResponse, SharingAllowlistRemoveError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/sharing_allowlist/remove",
+        arg,
+        None)
+}
+
 /// Sets an archived team folder's status to active. Permission : Team member file access.
 pub fn team_folder_activate(
     client: &impl crate::client_trait::TeamAuthClient,
@@ -23773,6 +23859,1002 @@ impl ::std::fmt::Display for SetCustomQuotaError {
             SetCustomQuotaError::SomeUsersAreExcluded => f.write_str("Some of the users are on the excluded users list and can't have custom quota set."),
             _ => write!(f, "{:?}", *self),
         }
+    }
+}
+
+/// Structure representing Approve List entries. Domain and emails are supported. At least one entry
+/// of any supported type is required.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct SharingAllowlistAddArgs {
+    /// List of domains represented by valid string representation (RFC-1034/5).
+    pub domains: Option<Vec<String>>,
+    /// List of emails represented by valid string representation (RFC-5322/822).
+    pub emails: Option<Vec<String>>,
+}
+
+impl SharingAllowlistAddArgs {
+    pub fn with_domains(mut self, value: Vec<String>) -> Self {
+        self.domains = Some(value);
+        self
+    }
+
+    pub fn with_emails(mut self, value: Vec<String>) -> Self {
+        self.emails = Some(value);
+        self
+    }
+}
+
+const SHARING_ALLOWLIST_ADD_ARGS_FIELDS: &[&str] = &["domains",
+                                                     "emails"];
+impl SharingAllowlistAddArgs {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingAllowlistAddArgs, V::Error> {
+        let mut field_domains = None;
+        let mut field_emails = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "domains" => {
+                    if field_domains.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("domains"));
+                    }
+                    field_domains = Some(map.next_value()?);
+                }
+                "emails" => {
+                    if field_emails.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("emails"));
+                    }
+                    field_emails = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = SharingAllowlistAddArgs {
+            domains: field_domains,
+            emails: field_emails,
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.domains {
+            s.serialize_field("domains", val)?;
+        }
+        if let Some(val) = &self.emails {
+            s.serialize_field("emails", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistAddArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingAllowlistAddArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistAddArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingAllowlistAddArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingAllowlistAddArgs", SHARING_ALLOWLIST_ADD_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistAddArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharingAllowlistAddArgs", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum SharingAllowlistAddError {
+    /// One of provided values is not valid.
+    MalformedEntry(String),
+    /// Neither single domain nor email provided.
+    NoEntriesProvided,
+    /// Too many entries provided within one call.
+    TooManyEntriesProvided,
+    /// Team entries limit reached.
+    TeamLimitReached,
+    /// Unknown error.
+    UnknownError,
+    /// Entries already exists.
+    EntriesAlreadyExist(String),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistAddError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharingAllowlistAddError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistAddError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "malformed_entry" => {
+                        match map.next_key()? {
+                            Some("malformed_entry") => SharingAllowlistAddError::MalformedEntry(map.next_value()?),
+                            None => return Err(de::Error::missing_field("malformed_entry")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "no_entries_provided" => SharingAllowlistAddError::NoEntriesProvided,
+                    "too_many_entries_provided" => SharingAllowlistAddError::TooManyEntriesProvided,
+                    "team_limit_reached" => SharingAllowlistAddError::TeamLimitReached,
+                    "unknown_error" => SharingAllowlistAddError::UnknownError,
+                    "entries_already_exist" => {
+                        match map.next_key()? {
+                            Some("entries_already_exist") => SharingAllowlistAddError::EntriesAlreadyExist(map.next_value()?),
+                            None => return Err(de::Error::missing_field("entries_already_exist")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => SharingAllowlistAddError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["malformed_entry",
+                                    "no_entries_provided",
+                                    "too_many_entries_provided",
+                                    "team_limit_reached",
+                                    "unknown_error",
+                                    "entries_already_exist",
+                                    "other"];
+        deserializer.deserialize_struct("SharingAllowlistAddError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistAddError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SharingAllowlistAddError::MalformedEntry(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("SharingAllowlistAddError", 2)?;
+                s.serialize_field(".tag", "malformed_entry")?;
+                s.serialize_field("malformed_entry", x)?;
+                s.end()
+            }
+            SharingAllowlistAddError::NoEntriesProvided => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingAllowlistAddError", 1)?;
+                s.serialize_field(".tag", "no_entries_provided")?;
+                s.end()
+            }
+            SharingAllowlistAddError::TooManyEntriesProvided => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingAllowlistAddError", 1)?;
+                s.serialize_field(".tag", "too_many_entries_provided")?;
+                s.end()
+            }
+            SharingAllowlistAddError::TeamLimitReached => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingAllowlistAddError", 1)?;
+                s.serialize_field(".tag", "team_limit_reached")?;
+                s.end()
+            }
+            SharingAllowlistAddError::UnknownError => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingAllowlistAddError", 1)?;
+                s.serialize_field(".tag", "unknown_error")?;
+                s.end()
+            }
+            SharingAllowlistAddError::EntriesAlreadyExist(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("SharingAllowlistAddError", 2)?;
+                s.serialize_field(".tag", "entries_already_exist")?;
+                s.serialize_field("entries_already_exist", x)?;
+                s.end()
+            }
+            SharingAllowlistAddError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SharingAllowlistAddError {
+}
+
+impl ::std::fmt::Display for SharingAllowlistAddError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            SharingAllowlistAddError::MalformedEntry(inner) => write!(f, "One of provided values is not valid: {:?}", inner),
+            SharingAllowlistAddError::NoEntriesProvided => f.write_str("Neither single domain nor email provided."),
+            SharingAllowlistAddError::TooManyEntriesProvided => f.write_str("Too many entries provided within one call."),
+            SharingAllowlistAddError::TeamLimitReached => f.write_str("Team entries limit reached."),
+            SharingAllowlistAddError::UnknownError => f.write_str("Unknown error."),
+            SharingAllowlistAddError::EntriesAlreadyExist(inner) => write!(f, "Entries already exists: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with
+/// Stone.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct SharingAllowlistAddResponse {
+}
+
+const SHARING_ALLOWLIST_ADD_RESPONSE_FIELDS: &[&str] = &[];
+impl SharingAllowlistAddResponse {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingAllowlistAddResponse, V::Error> {
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharingAllowlistAddResponse {})
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistAddResponse {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingAllowlistAddResponse;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistAddResponse struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingAllowlistAddResponse::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingAllowlistAddResponse", SHARING_ALLOWLIST_ADD_RESPONSE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistAddResponse {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SharingAllowlistAddResponse", 0)?.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct SharingAllowlistListArg {
+    /// The number of entries to fetch at one time.
+    pub limit: u32,
+}
+
+impl Default for SharingAllowlistListArg {
+    fn default() -> Self {
+        SharingAllowlistListArg {
+            limit: 1000,
+        }
+    }
+}
+
+impl SharingAllowlistListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
+const SHARING_ALLOWLIST_LIST_ARG_FIELDS: &[&str] = &["limit"];
+impl SharingAllowlistListArg {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingAllowlistListArg, V::Error> {
+        let mut field_limit = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "limit" => {
+                    if field_limit.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("limit"));
+                    }
+                    field_limit = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = SharingAllowlistListArg {
+            limit: field_limit.unwrap_or(1000),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("limit", &self.limit)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistListArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingAllowlistListArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistListArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingAllowlistListArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingAllowlistListArg", SHARING_ALLOWLIST_LIST_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistListArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharingAllowlistListArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct SharingAllowlistListContinueArg {
+    /// The cursor returned from a previous call to
+    /// [`sharing_allowlist_list()`](sharing_allowlist_list) or
+    /// [`sharing_allowlist_list_continue()`](sharing_allowlist_list_continue).
+    pub cursor: String,
+}
+
+impl SharingAllowlistListContinueArg {
+    pub fn new(cursor: String) -> Self {
+        SharingAllowlistListContinueArg {
+            cursor,
+        }
+    }
+}
+
+const SHARING_ALLOWLIST_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
+impl SharingAllowlistListContinueArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SharingAllowlistListContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SharingAllowlistListContinueArg>, V::Error> {
+        let mut field_cursor = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SharingAllowlistListContinueArg {
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistListContinueArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingAllowlistListContinueArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistListContinueArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingAllowlistListContinueArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingAllowlistListContinueArg", SHARING_ALLOWLIST_LIST_CONTINUE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistListContinueArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharingAllowlistListContinueArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum SharingAllowlistListContinueError {
+    /// Provided cursor is not valid.
+    InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistListContinueError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharingAllowlistListContinueError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistListContinueError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "invalid_cursor" => SharingAllowlistListContinueError::InvalidCursor,
+                    _ => SharingAllowlistListContinueError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["invalid_cursor",
+                                    "other"];
+        deserializer.deserialize_struct("SharingAllowlistListContinueError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistListContinueError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SharingAllowlistListContinueError::InvalidCursor => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingAllowlistListContinueError", 1)?;
+                s.serialize_field(".tag", "invalid_cursor")?;
+                s.end()
+            }
+            SharingAllowlistListContinueError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SharingAllowlistListContinueError {
+}
+
+impl ::std::fmt::Display for SharingAllowlistListContinueError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            SharingAllowlistListContinueError::InvalidCursor => f.write_str("Provided cursor is not valid."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with
+/// Stone.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct SharingAllowlistListError {
+}
+
+const SHARING_ALLOWLIST_LIST_ERROR_FIELDS: &[&str] = &[];
+impl SharingAllowlistListError {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingAllowlistListError, V::Error> {
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharingAllowlistListError {})
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistListError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingAllowlistListError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistListError struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingAllowlistListError::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingAllowlistListError", SHARING_ALLOWLIST_LIST_ERROR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistListError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SharingAllowlistListError", 0)?.end()
+    }
+}
+
+impl ::std::error::Error for SharingAllowlistListError {
+}
+
+impl ::std::fmt::Display for SharingAllowlistListError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct SharingAllowlistListResponse {
+    /// List of domains represented by valid string representation (RFC-1034/5).
+    pub domains: Vec<String>,
+    /// List of emails represented by valid string representation (RFC-5322/822).
+    pub emails: Vec<String>,
+    /// If this is nonempty, there are more entries that can be fetched with
+    /// [`sharing_allowlist_list_continue()`](sharing_allowlist_list_continue).
+    pub cursor: String,
+    /// if true indicates that more entries can be fetched with
+    /// [`sharing_allowlist_list_continue()`](sharing_allowlist_list_continue).
+    pub has_more: bool,
+}
+
+impl SharingAllowlistListResponse {
+    pub fn new(domains: Vec<String>, emails: Vec<String>) -> Self {
+        SharingAllowlistListResponse {
+            domains,
+            emails,
+            cursor: String::new(),
+            has_more: false,
+        }
+    }
+
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = value;
+        self
+    }
+
+    pub fn with_has_more(mut self, value: bool) -> Self {
+        self.has_more = value;
+        self
+    }
+}
+
+const SHARING_ALLOWLIST_LIST_RESPONSE_FIELDS: &[&str] = &["domains",
+                                                          "emails",
+                                                          "cursor",
+                                                          "has_more"];
+impl SharingAllowlistListResponse {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SharingAllowlistListResponse, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SharingAllowlistListResponse>, V::Error> {
+        let mut field_domains = None;
+        let mut field_emails = None;
+        let mut field_cursor = None;
+        let mut field_has_more = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "domains" => {
+                    if field_domains.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("domains"));
+                    }
+                    field_domains = Some(map.next_value()?);
+                }
+                "emails" => {
+                    if field_emails.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("emails"));
+                    }
+                    field_emails = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SharingAllowlistListResponse {
+            domains: field_domains.ok_or_else(|| ::serde::de::Error::missing_field("domains"))?,
+            emails: field_emails.ok_or_else(|| ::serde::de::Error::missing_field("emails"))?,
+            cursor: field_cursor.unwrap_or_default(),
+            has_more: field_has_more.unwrap_or(false),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("domains", &self.domains)?;
+        s.serialize_field("emails", &self.emails)?;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("has_more", &self.has_more)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistListResponse {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingAllowlistListResponse;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistListResponse struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingAllowlistListResponse::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingAllowlistListResponse", SHARING_ALLOWLIST_LIST_RESPONSE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistListResponse {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharingAllowlistListResponse", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct SharingAllowlistRemoveArgs {
+    /// List of domains represented by valid string representation (RFC-1034/5).
+    pub domains: Option<Vec<String>>,
+    /// List of emails represented by valid string representation (RFC-5322/822).
+    pub emails: Option<Vec<String>>,
+}
+
+impl SharingAllowlistRemoveArgs {
+    pub fn with_domains(mut self, value: Vec<String>) -> Self {
+        self.domains = Some(value);
+        self
+    }
+
+    pub fn with_emails(mut self, value: Vec<String>) -> Self {
+        self.emails = Some(value);
+        self
+    }
+}
+
+const SHARING_ALLOWLIST_REMOVE_ARGS_FIELDS: &[&str] = &["domains",
+                                                        "emails"];
+impl SharingAllowlistRemoveArgs {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingAllowlistRemoveArgs, V::Error> {
+        let mut field_domains = None;
+        let mut field_emails = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "domains" => {
+                    if field_domains.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("domains"));
+                    }
+                    field_domains = Some(map.next_value()?);
+                }
+                "emails" => {
+                    if field_emails.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("emails"));
+                    }
+                    field_emails = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = SharingAllowlistRemoveArgs {
+            domains: field_domains,
+            emails: field_emails,
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.domains {
+            s.serialize_field("domains", val)?;
+        }
+        if let Some(val) = &self.emails {
+            s.serialize_field("emails", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistRemoveArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingAllowlistRemoveArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistRemoveArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingAllowlistRemoveArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingAllowlistRemoveArgs", SHARING_ALLOWLIST_REMOVE_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistRemoveArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharingAllowlistRemoveArgs", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum SharingAllowlistRemoveError {
+    /// One of provided values is not valid.
+    MalformedEntry(String),
+    /// One or more provided values do not exist.
+    EntriesDoNotExist(String),
+    /// Neither single domain nor email provided.
+    NoEntriesProvided,
+    /// Too many entries provided within one call.
+    TooManyEntriesProvided,
+    /// Unknown error.
+    UnknownError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistRemoveError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharingAllowlistRemoveError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistRemoveError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "malformed_entry" => {
+                        match map.next_key()? {
+                            Some("malformed_entry") => SharingAllowlistRemoveError::MalformedEntry(map.next_value()?),
+                            None => return Err(de::Error::missing_field("malformed_entry")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "entries_do_not_exist" => {
+                        match map.next_key()? {
+                            Some("entries_do_not_exist") => SharingAllowlistRemoveError::EntriesDoNotExist(map.next_value()?),
+                            None => return Err(de::Error::missing_field("entries_do_not_exist")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "no_entries_provided" => SharingAllowlistRemoveError::NoEntriesProvided,
+                    "too_many_entries_provided" => SharingAllowlistRemoveError::TooManyEntriesProvided,
+                    "unknown_error" => SharingAllowlistRemoveError::UnknownError,
+                    _ => SharingAllowlistRemoveError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["malformed_entry",
+                                    "entries_do_not_exist",
+                                    "no_entries_provided",
+                                    "too_many_entries_provided",
+                                    "unknown_error",
+                                    "other"];
+        deserializer.deserialize_struct("SharingAllowlistRemoveError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistRemoveError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SharingAllowlistRemoveError::MalformedEntry(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("SharingAllowlistRemoveError", 2)?;
+                s.serialize_field(".tag", "malformed_entry")?;
+                s.serialize_field("malformed_entry", x)?;
+                s.end()
+            }
+            SharingAllowlistRemoveError::EntriesDoNotExist(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("SharingAllowlistRemoveError", 2)?;
+                s.serialize_field(".tag", "entries_do_not_exist")?;
+                s.serialize_field("entries_do_not_exist", x)?;
+                s.end()
+            }
+            SharingAllowlistRemoveError::NoEntriesProvided => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingAllowlistRemoveError", 1)?;
+                s.serialize_field(".tag", "no_entries_provided")?;
+                s.end()
+            }
+            SharingAllowlistRemoveError::TooManyEntriesProvided => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingAllowlistRemoveError", 1)?;
+                s.serialize_field(".tag", "too_many_entries_provided")?;
+                s.end()
+            }
+            SharingAllowlistRemoveError::UnknownError => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingAllowlistRemoveError", 1)?;
+                s.serialize_field(".tag", "unknown_error")?;
+                s.end()
+            }
+            SharingAllowlistRemoveError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SharingAllowlistRemoveError {
+}
+
+impl ::std::fmt::Display for SharingAllowlistRemoveError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            SharingAllowlistRemoveError::MalformedEntry(inner) => write!(f, "One of provided values is not valid: {:?}", inner),
+            SharingAllowlistRemoveError::EntriesDoNotExist(inner) => write!(f, "One or more provided values do not exist: {:?}", inner),
+            SharingAllowlistRemoveError::NoEntriesProvided => f.write_str("Neither single domain nor email provided."),
+            SharingAllowlistRemoveError::TooManyEntriesProvided => f.write_str("Too many entries provided within one call."),
+            SharingAllowlistRemoveError::UnknownError => f.write_str("Unknown error."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with
+/// Stone.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct SharingAllowlistRemoveResponse {
+}
+
+const SHARING_ALLOWLIST_REMOVE_RESPONSE_FIELDS: &[&str] = &[];
+impl SharingAllowlistRemoveResponse {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingAllowlistRemoveResponse, V::Error> {
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharingAllowlistRemoveResponse {})
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingAllowlistRemoveResponse {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingAllowlistRemoveResponse;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharingAllowlistRemoveResponse struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingAllowlistRemoveResponse::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingAllowlistRemoveResponse", SHARING_ALLOWLIST_REMOVE_RESPONSE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingAllowlistRemoveResponse {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SharingAllowlistRemoveResponse", 0)?.end()
     }
 }
 
