@@ -7,25 +7,46 @@
     clippy::doc_markdown,
 )]
 
+/// This route is used for refreshing the info that is found in the id_token during the OIDC flow.
+/// This route doesn't require any arguments and will use the scopes approved for the given access
+/// token.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn userinfo(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &UserInfoArgs,
+) -> crate::Result<Result<UserInfoResult, UserInfoError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "openid/userinfo",
+        arg,
+        None)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
-pub enum AuthError {
-    InvalidToken,
-    NoOpenidAuth,
+pub enum OpenIdError {
+    /// Missing openid claims for the associated access token.
+    IncorrectOpenidScopes,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for AuthError {
+impl<'de> ::serde::de::Deserialize<'de> for OpenIdError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = AuthError;
+            type Value = OpenIdError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a AuthError structure")
+                f.write_str("a OpenIdError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -33,54 +54,48 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 let value = match tag {
-                    "invalid_token" => AuthError::InvalidToken,
-                    "no_openid_auth" => AuthError::NoOpenidAuth,
-                    _ => AuthError::Other,
+                    "incorrect_openid_scopes" => OpenIdError::IncorrectOpenidScopes,
+                    _ => OpenIdError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
                 Ok(value)
             }
         }
-        const VARIANTS: &[&str] = &["invalid_token",
-                                    "no_openid_auth",
+        const VARIANTS: &[&str] = &["incorrect_openid_scopes",
                                     "other"];
-        deserializer.deserialize_struct("AuthError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("OpenIdError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for AuthError {
+impl ::serde::ser::Serialize for OpenIdError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            AuthError::InvalidToken => {
+            OpenIdError::IncorrectOpenidScopes => {
                 // unit
-                let mut s = serializer.serialize_struct("AuthError", 1)?;
-                s.serialize_field(".tag", "invalid_token")?;
+                let mut s = serializer.serialize_struct("OpenIdError", 1)?;
+                s.serialize_field(".tag", "incorrect_openid_scopes")?;
                 s.end()
             }
-            AuthError::NoOpenidAuth => {
-                // unit
-                let mut s = serializer.serialize_struct("AuthError", 1)?;
-                s.serialize_field(".tag", "no_openid_auth")?;
-                s.end()
-            }
-            AuthError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            OpenIdError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-impl ::std::error::Error for AuthError {
+impl ::std::error::Error for OpenIdError {
 }
 
-impl ::std::fmt::Display for AuthError {
+impl ::std::fmt::Display for OpenIdError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            OpenIdError::IncorrectOpenidScopes => f.write_str("Missing openid claims for the associated access token."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
-/// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with
-/// Stone.
+/// No Parameters
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfoArgs {
@@ -124,110 +139,100 @@ impl ::serde::ser::Serialize for UserInfoArgs {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
-#[non_exhaustive] // structs may have more fields added in the future.
-pub struct UserInfoError {
-    pub err: Option<ErrUnion>,
-    pub error_message: String,
-}
-
-impl UserInfoError {
-    pub fn with_err(mut self, value: ErrUnion) -> Self {
-        self.err = Some(value);
-        self
-    }
-
-    pub fn with_error_message(mut self, value: String) -> Self {
-        self.error_message = value;
-        self
-    }
-}
-
-const USER_INFO_ERROR_FIELDS: &[&str] = &["err",
-                                          "error_message"];
-impl UserInfoError {
-    // no _opt deserializer
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<UserInfoError, V::Error> {
-        let mut field_err = None;
-        let mut field_error_message = None;
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                "err" => {
-                    if field_err.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("err"));
-                    }
-                    field_err = Some(map.next_value()?);
-                }
-                "error_message" => {
-                    if field_error_message.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("error_message"));
-                    }
-                    field_error_message = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = UserInfoError {
-            err: field_err,
-            error_message: field_error_message.unwrap_or_default(),
-        };
-        Ok(result)
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        if let Some(val) = &self.err {
-            s.serialize_field("err", val)?;
-        }
-        s.serialize_field("error_message", &self.error_message)?;
-        Ok(())
-    }
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum UserInfoError {
+    OpenidError(OpenIdError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UserInfoError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
             type Value = UserInfoError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a UserInfoError struct")
+                f.write_str("a UserInfoError structure")
             }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UserInfoError::internal_deserialize(map)
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "openid_error" => {
+                        match map.next_key()? {
+                            Some("openid_error") => UserInfoError::OpenidError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("openid_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => UserInfoError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
-        deserializer.deserialize_struct("UserInfoError", USER_INFO_ERROR_FIELDS, StructVisitor)
+        const VARIANTS: &[&str] = &["openid_error",
+                                    "other"];
+        deserializer.deserialize_struct("UserInfoError", VARIANTS, EnumVisitor)
     }
 }
 
 impl ::serde::ser::Serialize for UserInfoError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
+        // union serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UserInfoError", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        match *self {
+            UserInfoError::OpenidError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("UserInfoError", 2)?;
+                s.serialize_field(".tag", "openid_error")?;
+                s.serialize_field("openid_error", x)?;
+                s.end()
+            }
+            UserInfoError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UserInfoError {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UserInfoError::OpenidError(inner) => Some(inner),
+            _ => None,
+        }
+    }
+}
+
+impl ::std::fmt::Display for UserInfoError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            UserInfoError::OpenidError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfoResult {
+    /// Last name of user.
     pub family_name: Option<String>,
+    /// First name of user.
     pub given_name: Option<String>,
+    /// Email address of user.
     pub email: Option<String>,
+    /// If user is email verified.
     pub email_verified: Option<bool>,
+    /// Issuer of token (in this case Dropbox).
     pub iss: String,
+    /// An identifier for the user. This is the Dropbox account_id, a string value such as
+    /// dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc.
     pub sub: String,
 }
 
@@ -383,67 +388,6 @@ impl ::serde::ser::Serialize for UserInfoResult {
         let mut s = serializer.serialize_struct("UserInfoResult", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[non_exhaustive] // variants may be added in the future
-pub enum ErrUnion {
-    AuthError(AuthError),
-    /// Catch-all used for unrecognized values returned from the server. Encountering this value
-    /// typically indicates that this SDK version is out of date.
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ErrUnion {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ErrUnion;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a err_union structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                let value = match tag {
-                    "auth_error" => {
-                        match map.next_key()? {
-                            Some("auth_error") => ErrUnion::AuthError(map.next_value()?),
-                            None => return Err(de::Error::missing_field("auth_error")),
-                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    _ => ErrUnion::Other,
-                };
-                crate::eat_json_fields(&mut map)?;
-                Ok(value)
-            }
-        }
-        const VARIANTS: &[&str] = &["auth_error",
-                                    "other"];
-        deserializer.deserialize_struct("err_union", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ErrUnion {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ErrUnion::AuthError(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("err_union", 2)?;
-                s.serialize_field(".tag", "auth_error")?;
-                s.serialize_field("auth_error", x)?;
-                s.end()
-            }
-            ErrUnion::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
     }
 }
 
