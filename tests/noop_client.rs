@@ -20,7 +20,7 @@ macro_rules! noop_client {
                     _range_start: Option<u64>,
                     _range_end: Option<u64>,
                 ) -> dropbox_sdk::Result<HttpRequestResultRaw> {
-                    Err(dropbox_sdk::Error::HttpClient(Box::new(super::ErrMsg(format!("noop client called on {function}")))))
+                    Err(dropbox_sdk::Error::HttpClient(Box::new(super::ErrMsg(format!("noop client called on {}", function)))))
                 }
             }
         }

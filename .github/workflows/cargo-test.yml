@@ -28,6 +28,18 @@ jobs:
       - name: Check generated files against repo
         run: if [[ ! -z `git status --porcelain=v1` ]]; then echo "::error::Workspace is dirty after running generator. Did you remember to check in the generated files?"; exit 1; fi
 
+      - name: Install MSRV toolchain
+        uses: actions-rs/toolchain@v1.0.7
+        with:
+          profile: minimal
+          toolchain: 1.56.1
+          override: true
+
+      - name: Run cargo test
+        uses: actions-rs/cargo@v1.0.3
+        with:
+          command: test
+
       - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1.0.7
         with:
@@ -41,15 +53,3 @@ jobs:
         with:
           command: clippy
           args: --all-targets --all-features -- --deny warnings
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1.0.7
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-
-      - name: Run cargo test
-        uses: actions-rs/cargo@v1.0.3
-        with:
-          command: test
