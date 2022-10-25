@@ -4,6 +4,7 @@ xxxx-yy-zz
     * files: SearchOptions has new field account_id
     * sharing, team_log, team_policies additions
     * new namespace: openid
+* Established 1.56.1 as the MSRV (minimum supported Rust version)
 
 # v0.15.0
 2022-06-14

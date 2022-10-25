@@ -1,2 +1,5 @@
 # Additional words to be allowed without backticks by the `doc_markdown` lint.
 doc-valid-idents = ["OAuth2"]
+
+# Don't warn about things that can't be used in this version.
+msrv = "1.56.1"
