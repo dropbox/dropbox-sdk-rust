@@ -73,7 +73,7 @@ fn main() {
                                 break 'download;
                             }
                             Ok(len) => {
-                                bytes_out += len as u64;
+                                bytes_out += len;
                                 if let Some(total) = download_result.content_length {
                                     eprint!("\r{:.01}%",
                                         bytes_out as f64 / total as f64 * 100.);
