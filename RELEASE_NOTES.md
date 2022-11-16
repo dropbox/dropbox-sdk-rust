@@ -1,9 +1,6 @@
 # v0.16.0
 xxxx-yy-zz
-* API spec update 2022-06-15, 2022-07-13, 2022-10-11
-    * files: SearchOptions has new field account_id
-    * sharing, team_log, team_policies additions
-    * new namespace: openid
+* API spec update 2022-06-15, 2022-07-13, 2022-10-11, 2022-11-09
 * Established 1.56.1 as the MSRV (minimum supported Rust version)
 
 # v0.15.0
