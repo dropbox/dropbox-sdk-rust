@@ -459,7 +459,8 @@ fn iso8601(t: SystemTime) -> String {
         Err(e) => -(e.duration().as_secs() as i64),
     };
 
-    chrono::NaiveDateTime::from_timestamp(timestamp, 0 /* nsecs */)
+    chrono::NaiveDateTime::from_timestamp_opt(timestamp, 0 /* nsecs */)
+        .expect("invalid or out-of-range timestamp")
         .format("%Y-%m-%dT%H:%M:%SZ").to_string()
 }
 
