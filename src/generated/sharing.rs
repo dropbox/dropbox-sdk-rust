@@ -13497,6 +13497,8 @@ pub enum RequestedLinkAccessLevel {
     Editor,
     /// Request for the maximum access level you can set the link to.
     Max,
+    /// Request for the default access level the user has set.
+    Default,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -13521,6 +13523,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RequestedLinkAccessLevel {
                     "viewer" => RequestedLinkAccessLevel::Viewer,
                     "editor" => RequestedLinkAccessLevel::Editor,
                     "max" => RequestedLinkAccessLevel::Max,
+                    "default" => RequestedLinkAccessLevel::Default,
                     _ => RequestedLinkAccessLevel::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -13530,6 +13533,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RequestedLinkAccessLevel {
         const VARIANTS: &[&str] = &["viewer",
                                     "editor",
                                     "max",
+                                    "default",
                                     "other"];
         deserializer.deserialize_struct("RequestedLinkAccessLevel", VARIANTS, EnumVisitor)
     }
@@ -13556,6 +13560,12 @@ impl ::serde::ser::Serialize for RequestedLinkAccessLevel {
                 // unit
                 let mut s = serializer.serialize_struct("RequestedLinkAccessLevel", 1)?;
                 s.serialize_field(".tag", "max")?;
+                s.end()
+            }
+            RequestedLinkAccessLevel::Default => {
+                // unit
+                let mut s = serializer.serialize_struct("RequestedLinkAccessLevel", 1)?;
+                s.serialize_field(".tag", "default")?;
                 s.end()
             }
             RequestedLinkAccessLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

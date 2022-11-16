@@ -27511,6 +27511,8 @@ pub struct TeamGetInfoResult {
     pub num_licensed_users: u32,
     /// The number of accounts that have been invited or are already active members of the team.
     pub num_provisioned_users: u32,
+    /// The number of licenses used on the team.
+    pub num_used_licenses: u32,
     pub policies: crate::team_policies::TeamMemberPolicies,
 }
 
@@ -27520,6 +27522,7 @@ impl TeamGetInfoResult {
         team_id: String,
         num_licensed_users: u32,
         num_provisioned_users: u32,
+        num_used_licenses: u32,
         policies: crate::team_policies::TeamMemberPolicies,
     ) -> Self {
         TeamGetInfoResult {
@@ -27527,6 +27530,7 @@ impl TeamGetInfoResult {
             team_id,
             num_licensed_users,
             num_provisioned_users,
+            num_used_licenses,
             policies,
         }
     }
@@ -27536,6 +27540,7 @@ const TEAM_GET_INFO_RESULT_FIELDS: &[&str] = &["name",
                                                "team_id",
                                                "num_licensed_users",
                                                "num_provisioned_users",
+                                               "num_used_licenses",
                                                "policies"];
 impl TeamGetInfoResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -27552,6 +27557,7 @@ impl TeamGetInfoResult {
         let mut field_team_id = None;
         let mut field_num_licensed_users = None;
         let mut field_num_provisioned_users = None;
+        let mut field_num_used_licenses = None;
         let mut field_policies = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -27581,6 +27587,12 @@ impl TeamGetInfoResult {
                     }
                     field_num_provisioned_users = Some(map.next_value()?);
                 }
+                "num_used_licenses" => {
+                    if field_num_used_licenses.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("num_used_licenses"));
+                    }
+                    field_num_used_licenses = Some(map.next_value()?);
+                }
                 "policies" => {
                     if field_policies.is_some() {
                         return Err(::serde::de::Error::duplicate_field("policies"));
@@ -27601,6 +27613,7 @@ impl TeamGetInfoResult {
             team_id: field_team_id.ok_or_else(|| ::serde::de::Error::missing_field("team_id"))?,
             num_licensed_users: field_num_licensed_users.ok_or_else(|| ::serde::de::Error::missing_field("num_licensed_users"))?,
             num_provisioned_users: field_num_provisioned_users.ok_or_else(|| ::serde::de::Error::missing_field("num_provisioned_users"))?,
+            num_used_licenses: field_num_used_licenses.ok_or_else(|| ::serde::de::Error::missing_field("num_used_licenses"))?,
             policies: field_policies.ok_or_else(|| ::serde::de::Error::missing_field("policies"))?,
         };
         Ok(Some(result))
@@ -27615,6 +27628,7 @@ impl TeamGetInfoResult {
         s.serialize_field("team_id", &self.team_id)?;
         s.serialize_field("num_licensed_users", &self.num_licensed_users)?;
         s.serialize_field("num_provisioned_users", &self.num_provisioned_users)?;
+        s.serialize_field("num_used_licenses", &self.num_used_licenses)?;
         s.serialize_field("policies", &self.policies)?;
         Ok(())
     }
@@ -27642,7 +27656,7 @@ impl ::serde::ser::Serialize for TeamGetInfoResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamGetInfoResult", 5)?;
+        let mut s = serializer.serialize_struct("TeamGetInfoResult", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
