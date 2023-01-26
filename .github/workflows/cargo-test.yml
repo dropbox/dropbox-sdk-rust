@@ -32,7 +32,7 @@ jobs:
         uses: actions-rs/toolchain@v1.0.7
         with:
           profile: minimal
-          toolchain: 1.56.1
+          toolchain: 1.57.0
           override: true
 
       - name: Run cargo test
