@@ -12,8 +12,7 @@ readme = "README.md"
 
 [package.metadata]
 # Keep this at least 1 year old.
-# 1.56 is the first version with support for 2021 edition
-msrv = "1.56.1" # October 21, 2021
+msrv = "1.57.0" # Dec 2, 2021
 
 [dependencies]
 atty = "0.2.14"
