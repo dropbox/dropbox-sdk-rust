@@ -12,6 +12,8 @@
 //! [Dropbox OAuth Guide]: https://developers.dropbox.com/oauth-guide
 //! [OAuth types summary]: https://developers.dropbox.com/oauth-guide#summary
 
+use base64::Engine;
+use base64::engine::general_purpose::{URL_SAFE, URL_SAFE_NO_PAD};
 use crate::Error;
 use crate::client_trait::*;
 use ring::rand::{SecureRandom, SystemRandom};
@@ -101,14 +103,14 @@ impl PkceCode {
         let mut bytes = [0u8; 93];
         // not expecting this to ever actually fail:
         SystemRandom::new().fill(&mut bytes).expect("failed to get random bytes for PKCE");
-        let code = base64::encode_config(bytes, base64::URL_SAFE);
+        let code = URL_SAFE.encode(bytes);
         Self { code }
     }
 
     /// Get the SHA-256 hash as a base64-encoded string.
     pub fn s256(&self) -> String {
         let digest = ring::digest::digest(&ring::digest::SHA256, self.code.as_bytes());
-        base64::encode_config(digest.as_ref(), base64::URL_SAFE_NO_PAD)
+        URL_SAFE_NO_PAD.encode(digest.as_ref())
     }
 }
 
