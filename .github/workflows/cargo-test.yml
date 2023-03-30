@@ -29,22 +29,15 @@ jobs:
         run: if [[ ! -z `git status --porcelain=v1` ]]; then echo "::error::Workspace is dirty after running generator. Did you remember to check in the generated files?"; exit 1; fi
 
       - name: Install MSRV toolchain
-        uses: actions-rs/toolchain@v1.0.7
-        with:
-          profile: minimal
-          toolchain: 1.57.0
-          override: true
+        run: rustup install 1.57.0 --profile minimal
 
       - name: Run cargo test
-        run: cargo test
+        run: rustup run 1.57.0 cargo test
 
       - name: Install nightly toolchain
-        uses: actions-rs/toolchain@v1.0.7
-        with:
-          profile: minimal
-          components: clippy
-          toolchain: nightly
-          override: true
+        run: |
+          rustup install nightly --profile minimal
+          rustup component add clippy --toolchain nightly
 
       - name: Run clippy
-        run: cargo clippy --all-targets --all-features -- --deny warnings
+        run: rustup run nightly cargo clippy --all-targets --all-features -- --deny warnings
