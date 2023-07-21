@@ -103,14 +103,8 @@ pub use generated::*;
 
 /// A special error type for a method that doesn't have any defined error return. You can't
 /// actually encounter a value of this type in real life; it's here to satisfy type requirements.
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub enum NoError {}
-
-impl Clone for NoError {
-    fn clone(&self) -> NoError {
-        unreachable(*self)
-    }
-}
 
 impl std::cmp::PartialEq<NoError> for NoError {
     fn eq(&self, _: &NoError) -> bool {

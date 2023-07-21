@@ -181,7 +181,7 @@ impl<'a, T: UserAuthClient> Iterator for DirectoryIterator<'a, T> {
         } else if let Some(cursor) = self.cursor.take() {
             match files::list_folder_continue(self.client, &files::ListFolderContinueArg::new(cursor)) {
                 Ok(Ok(result)) => {
-                    self.buffer.extend(result.entries.into_iter());
+                    self.buffer.extend(result.entries);
                     if result.has_more {
                         self.cursor = Some(result.cursor);
                     }
