@@ -4,6 +4,12 @@ import re
 import string
 import sys
 
+try:
+    import re._parser as sre_parse
+except ImportError:    # Python < 3.11
+    import sre_parse
+
+
 from rust import RustHelperBackend, REQUIRED_NAMESPACES
 from stone import ir
 from stone.backends.python_helpers import fmt_class as fmt_py_class
@@ -506,7 +512,7 @@ class Unregex(object):
     def __init__(self, regex_string, min_len=None):
         self._min_len = min_len
         self._group_refs = {}
-        self._tokens = re.sre_parse.parse(regex_string)
+        self._tokens = sre_parse.parse(regex_string)
 
     def generate(self):
         return self._generate(self._tokens)
