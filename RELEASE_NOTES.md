@@ -2,6 +2,7 @@
 xxxx-yy-zz
 * API spec update 2022-06-15, 2022-07-13, 2022-10-11, 2022-11-09
 * Established 1.56.1 as the MSRV (minimum supported Rust version)
+* Fix test generator under Python 3.11
 
 # v0.15.0
 2022-06-14
