@@ -83,11 +83,6 @@ pub fn get(
 
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
 /// this will only return file requests with destinations in the app folder.
-///
-/// # Stability
-/// *PREVIEW*: This function may change or disappear without notice.
-#[cfg(feature = "unstable")]
-#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn list_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsArg,
@@ -118,11 +113,6 @@ pub fn list(
 /// Once a cursor has been retrieved from [`list_v2()`](list_v2), use this to paginate through all
 /// file requests. The cursor must come from a previous call to [`list_v2()`](list_v2) or
 /// [`list_continue()`](list_continue).
-///
-/// # Stability
-/// *PREVIEW*: This function may change or disappear without notice.
-#[cfg(feature = "unstable")]
-#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
 pub fn list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsContinueArg,

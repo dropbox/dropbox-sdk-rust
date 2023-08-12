@@ -769,6 +769,10 @@ pub enum AccessLevel {
     ViewerNoComment,
     /// The collaborator can only view the shared folder that they have access to.
     Traverse,
+    /// If there is a Righteous Link on the folder which grants access and the user has visited such
+    /// link, they are allowed to perform certain action (i.e. add themselves to the folder) via the
+    /// link access even though the user themselves are not a member on the shared folder yet.
+    NoAccess,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -795,6 +799,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessLevel {
                     "viewer" => AccessLevel::Viewer,
                     "viewer_no_comment" => AccessLevel::ViewerNoComment,
                     "traverse" => AccessLevel::Traverse,
+                    "no_access" => AccessLevel::NoAccess,
                     _ => AccessLevel::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -806,6 +811,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessLevel {
                                     "viewer",
                                     "viewer_no_comment",
                                     "traverse",
+                                    "no_access",
                                     "other"];
         deserializer.deserialize_struct("AccessLevel", VARIANTS, EnumVisitor)
     }
@@ -844,6 +850,12 @@ impl ::serde::ser::Serialize for AccessLevel {
                 // unit
                 let mut s = serializer.serialize_struct("AccessLevel", 1)?;
                 s.serialize_field(".tag", "traverse")?;
+                s.end()
+            }
+            AccessLevel::NoAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("AccessLevel", 1)?;
+                s.serialize_field(".tag", "no_access")?;
                 s.end()
             }
             AccessLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -14161,8 +14173,9 @@ impl ::std::fmt::Display for SetAccessInheritanceError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ShareFolderArg {
-    /// The path to the folder to share. If it does not exist, then a new one is created.
-    pub path: crate::files::WritePath,
+    /// The path or the file id to the folder to share. If it does not exist, then a new one is
+    /// created.
+    pub path: crate::files::WritePathOrId,
     /// Who can add and remove members of this shared folder.
     pub acl_update_policy: Option<AclUpdatePolicy>,
     /// Whether to force the share to happen asynchronously.
@@ -14186,7 +14199,7 @@ pub struct ShareFolderArg {
 }
 
 impl ShareFolderArg {
-    pub fn new(path: crate::files::WritePath) -> Self {
+    pub fn new(path: crate::files::WritePathOrId) -> Self {
         ShareFolderArg {
             path,
             acl_update_policy: None,
@@ -14412,8 +14425,9 @@ impl ::serde::ser::Serialize for ShareFolderArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ShareFolderArgBase {
-    /// The path to the folder to share. If it does not exist, then a new one is created.
-    pub path: crate::files::WritePath,
+    /// The path or the file id to the folder to share. If it does not exist, then a new one is
+    /// created.
+    pub path: crate::files::WritePathOrId,
     /// Who can add and remove members of this shared folder.
     pub acl_update_policy: Option<AclUpdatePolicy>,
     /// Whether to force the share to happen asynchronously.
@@ -14431,7 +14445,7 @@ pub struct ShareFolderArgBase {
 }
 
 impl ShareFolderArgBase {
-    pub fn new(path: crate::files::WritePath) -> Self {
+    pub fn new(path: crate::files::WritePathOrId) -> Self {
         ShareFolderArgBase {
             path,
             acl_update_policy: None,
@@ -14897,7 +14911,7 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
             }
             ShareFolderJobStatus::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ShareFolderJobStatus", 17)?;
+                let mut s = serializer.serialize_struct("ShareFolderJobStatus", 18)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -14971,7 +14985,7 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
             }
             ShareFolderLaunch::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ShareFolderLaunch", 17)?;
+                let mut s = serializer.serialize_struct("ShareFolderLaunch", 18)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -15140,7 +15154,7 @@ impl ::serde::ser::Serialize for SharePathError {
             }
             SharePathError::AlreadyShared(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SharePathError", 17)?;
+                let mut s = serializer.serialize_struct("SharePathError", 18)?;
                 s.serialize_field(".tag", "already_shared")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -16159,6 +16173,8 @@ pub enum SharedFolderAccessError {
     InvalidId,
     /// The user is not a member of the shared folder thus cannot access it.
     NotAMember,
+    /// The user does not exist or their account is disabled.
+    InvalidMember,
     /// Never set.
     EmailUnverified,
     /// The shared folder is unmounted.
@@ -16186,6 +16202,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderAccessError {
                 let value = match tag {
                     "invalid_id" => SharedFolderAccessError::InvalidId,
                     "not_a_member" => SharedFolderAccessError::NotAMember,
+                    "invalid_member" => SharedFolderAccessError::InvalidMember,
                     "email_unverified" => SharedFolderAccessError::EmailUnverified,
                     "unmounted" => SharedFolderAccessError::Unmounted,
                     _ => SharedFolderAccessError::Other,
@@ -16196,6 +16213,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderAccessError {
         }
         const VARIANTS: &[&str] = &["invalid_id",
                                     "not_a_member",
+                                    "invalid_member",
                                     "email_unverified",
                                     "unmounted",
                                     "other"];
@@ -16218,6 +16236,12 @@ impl ::serde::ser::Serialize for SharedFolderAccessError {
                 // unit
                 let mut s = serializer.serialize_struct("SharedFolderAccessError", 1)?;
                 s.serialize_field(".tag", "not_a_member")?;
+                s.end()
+            }
+            SharedFolderAccessError::InvalidMember => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedFolderAccessError", 1)?;
+                s.serialize_field(".tag", "invalid_member")?;
                 s.end()
             }
             SharedFolderAccessError::EmailUnverified => {
@@ -16245,6 +16269,7 @@ impl ::std::fmt::Display for SharedFolderAccessError {
         match self {
             SharedFolderAccessError::InvalidId => f.write_str("This shared folder ID is invalid."),
             SharedFolderAccessError::NotAMember => f.write_str("The user is not a member of the shared folder thus cannot access it."),
+            SharedFolderAccessError::InvalidMember => f.write_str("The user does not exist or their account is disabled."),
             SharedFolderAccessError::EmailUnverified => f.write_str("Never set."),
             SharedFolderAccessError::Unmounted => f.write_str("The shared folder is unmounted."),
             _ => write!(f, "{:?}", *self),
@@ -16516,6 +16541,8 @@ pub struct SharedFolderMetadata {
     /// The ID of the parent shared folder. This field is present only if the folder is contained
     /// within another shared folder.
     pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    /// The full path of this shared folder. Absent for unmounted folders.
+    pub path_display: Option<String>,
     /// The lower-cased full path of this shared folder. Absent for unmounted folders.
     pub path_lower: Option<String>,
     /// Display name for the parent folder.
@@ -16553,6 +16580,7 @@ impl SharedFolderMetadata {
             owner_display_names: None,
             owner_team: None,
             parent_shared_folder_id: None,
+            path_display: None,
             path_lower: None,
             parent_folder_name: None,
             link_metadata: None,
@@ -16573,6 +16601,11 @@ impl SharedFolderMetadata {
 
     pub fn with_parent_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
         self.parent_shared_folder_id = Some(value);
+        self
+    }
+
+    pub fn with_path_display(mut self, value: String) -> Self {
+        self.path_display = Some(value);
         self
     }
 
@@ -16613,6 +16646,7 @@ const SHARED_FOLDER_METADATA_FIELDS: &[&str] = &["access_type",
                                                  "owner_display_names",
                                                  "owner_team",
                                                  "parent_shared_folder_id",
+                                                 "path_display",
                                                  "path_lower",
                                                  "parent_folder_name",
                                                  "link_metadata",
@@ -16640,6 +16674,7 @@ impl SharedFolderMetadata {
         let mut field_owner_display_names = None;
         let mut field_owner_team = None;
         let mut field_parent_shared_folder_id = None;
+        let mut field_path_display = None;
         let mut field_path_lower = None;
         let mut field_parent_folder_name = None;
         let mut field_link_metadata = None;
@@ -16715,6 +16750,12 @@ impl SharedFolderMetadata {
                     }
                     field_parent_shared_folder_id = Some(map.next_value()?);
                 }
+                "path_display" => {
+                    if field_path_display.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path_display"));
+                    }
+                    field_path_display = Some(map.next_value()?);
+                }
                 "path_lower" => {
                     if field_path_lower.is_some() {
                         return Err(::serde::de::Error::duplicate_field("path_lower"));
@@ -16766,6 +16807,7 @@ impl SharedFolderMetadata {
             owner_display_names: field_owner_display_names,
             owner_team: field_owner_team,
             parent_shared_folder_id: field_parent_shared_folder_id,
+            path_display: field_path_display,
             path_lower: field_path_lower,
             parent_folder_name: field_parent_folder_name,
             link_metadata: field_link_metadata,
@@ -16796,6 +16838,9 @@ impl SharedFolderMetadata {
         }
         if let Some(val) = &self.parent_shared_folder_id {
             s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.path_display {
+            s.serialize_field("path_display", val)?;
         }
         if let Some(val) = &self.path_lower {
             s.serialize_field("path_lower", val)?;
@@ -16836,7 +16881,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderMetadata", 16)?;
+        let mut s = serializer.serialize_struct("SharedFolderMetadata", 17)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -16862,6 +16907,8 @@ pub struct SharedFolderMetadataBase {
     /// The ID of the parent shared folder. This field is present only if the folder is contained
     /// within another shared folder.
     pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    /// The full path of this shared folder. Absent for unmounted folders.
+    pub path_display: Option<String>,
     /// The lower-cased full path of this shared folder. Absent for unmounted folders.
     pub path_lower: Option<String>,
     /// Display name for the parent folder.
@@ -16881,6 +16928,7 @@ impl SharedFolderMetadataBase {
             owner_display_names: None,
             owner_team: None,
             parent_shared_folder_id: None,
+            path_display: None,
             path_lower: None,
             parent_folder_name: None,
         }
@@ -16901,6 +16949,11 @@ impl SharedFolderMetadataBase {
         self
     }
 
+    pub fn with_path_display(mut self, value: String) -> Self {
+        self.path_display = Some(value);
+        self
+    }
+
     pub fn with_path_lower(mut self, value: String) -> Self {
         self.path_lower = Some(value);
         self
@@ -16918,6 +16971,7 @@ const SHARED_FOLDER_METADATA_BASE_FIELDS: &[&str] = &["access_type",
                                                       "owner_display_names",
                                                       "owner_team",
                                                       "parent_shared_folder_id",
+                                                      "path_display",
                                                       "path_lower",
                                                       "parent_folder_name"];
 impl SharedFolderMetadataBase {
@@ -16937,6 +16991,7 @@ impl SharedFolderMetadataBase {
         let mut field_owner_display_names = None;
         let mut field_owner_team = None;
         let mut field_parent_shared_folder_id = None;
+        let mut field_path_display = None;
         let mut field_path_lower = None;
         let mut field_parent_folder_name = None;
         let mut nothing = true;
@@ -16979,6 +17034,12 @@ impl SharedFolderMetadataBase {
                     }
                     field_parent_shared_folder_id = Some(map.next_value()?);
                 }
+                "path_display" => {
+                    if field_path_display.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path_display"));
+                    }
+                    field_path_display = Some(map.next_value()?);
+                }
                 "path_lower" => {
                     if field_path_lower.is_some() {
                         return Err(::serde::de::Error::duplicate_field("path_lower"));
@@ -17007,6 +17068,7 @@ impl SharedFolderMetadataBase {
             owner_display_names: field_owner_display_names,
             owner_team: field_owner_team,
             parent_shared_folder_id: field_parent_shared_folder_id,
+            path_display: field_path_display,
             path_lower: field_path_lower,
             parent_folder_name: field_parent_folder_name,
         };
@@ -17029,6 +17091,9 @@ impl SharedFolderMetadataBase {
         }
         if let Some(val) = &self.parent_shared_folder_id {
             s.serialize_field("parent_shared_folder_id", val)?;
+        }
+        if let Some(val) = &self.path_display {
+            s.serialize_field("path_display", val)?;
         }
         if let Some(val) = &self.path_lower {
             s.serialize_field("path_lower", val)?;
@@ -17062,7 +17127,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadataBase {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderMetadataBase", 8)?;
+        let mut s = serializer.serialize_struct("SharedFolderMetadataBase", 9)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

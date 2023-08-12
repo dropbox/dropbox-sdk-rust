@@ -541,8 +541,9 @@ pub fn member_space_limits_excluded_users_remove(
         None)
 }
 
-/// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000
-/// members can be specified in a single call.
+/// Get users custom quota. A maximum of 1000 members can be specified in a single call. Note: to
+/// apply a custom space limit, a team admin needs to set a member space limit for the team first.
+/// (the team admin can check the settings here: https://www.dropbox.com/team/admin/settings/space).
 pub fn member_space_limits_get_custom_quota(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &CustomQuotaUsersArg,
@@ -556,7 +557,9 @@ pub fn member_space_limits_get_custom_quota(
         None)
 }
 
-/// Remove users custom quota. A maximum of 1000 members can be specified in a single call.
+/// Remove users custom quota. A maximum of 1000 members can be specified in a single call. Note: to
+/// apply a custom space limit, a team admin needs to set a member space limit for the team first.
+/// (the team admin can check the settings here: https://www.dropbox.com/team/admin/settings/space).
 pub fn member_space_limits_remove_custom_quota(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &CustomQuotaUsersArg,
@@ -571,7 +574,9 @@ pub fn member_space_limits_remove_custom_quota(
 }
 
 /// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be
-/// specified in a single call.
+/// specified in a single call. Note: to apply a custom space limit, a team admin needs to set a
+/// member space limit for the team first. (the team admin can check the settings here:
+/// https://www.dropbox.com/team/admin/settings/space).
 pub fn member_space_limits_set_custom_quota(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &SetCustomQuotaArg,
@@ -27511,9 +27516,9 @@ pub struct TeamGetInfoResult {
     pub num_licensed_users: u32,
     /// The number of accounts that have been invited or are already active members of the team.
     pub num_provisioned_users: u32,
+    pub policies: crate::team_policies::TeamMemberPolicies,
     /// The number of licenses used on the team.
     pub num_used_licenses: u32,
-    pub policies: crate::team_policies::TeamMemberPolicies,
 }
 
 impl TeamGetInfoResult {
@@ -27522,7 +27527,6 @@ impl TeamGetInfoResult {
         team_id: String,
         num_licensed_users: u32,
         num_provisioned_users: u32,
-        num_used_licenses: u32,
         policies: crate::team_policies::TeamMemberPolicies,
     ) -> Self {
         TeamGetInfoResult {
@@ -27530,9 +27534,14 @@ impl TeamGetInfoResult {
             team_id,
             num_licensed_users,
             num_provisioned_users,
-            num_used_licenses,
             policies,
+            num_used_licenses: 0,
         }
+    }
+
+    pub fn with_num_used_licenses(mut self, value: u32) -> Self {
+        self.num_used_licenses = value;
+        self
     }
 }
 
@@ -27540,8 +27549,8 @@ const TEAM_GET_INFO_RESULT_FIELDS: &[&str] = &["name",
                                                "team_id",
                                                "num_licensed_users",
                                                "num_provisioned_users",
-                                               "num_used_licenses",
-                                               "policies"];
+                                               "policies",
+                                               "num_used_licenses"];
 impl TeamGetInfoResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -27557,8 +27566,8 @@ impl TeamGetInfoResult {
         let mut field_team_id = None;
         let mut field_num_licensed_users = None;
         let mut field_num_provisioned_users = None;
-        let mut field_num_used_licenses = None;
         let mut field_policies = None;
+        let mut field_num_used_licenses = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -27587,17 +27596,17 @@ impl TeamGetInfoResult {
                     }
                     field_num_provisioned_users = Some(map.next_value()?);
                 }
-                "num_used_licenses" => {
-                    if field_num_used_licenses.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("num_used_licenses"));
-                    }
-                    field_num_used_licenses = Some(map.next_value()?);
-                }
                 "policies" => {
                     if field_policies.is_some() {
                         return Err(::serde::de::Error::duplicate_field("policies"));
                     }
                     field_policies = Some(map.next_value()?);
+                }
+                "num_used_licenses" => {
+                    if field_num_used_licenses.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("num_used_licenses"));
+                    }
+                    field_num_used_licenses = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -27613,8 +27622,8 @@ impl TeamGetInfoResult {
             team_id: field_team_id.ok_or_else(|| ::serde::de::Error::missing_field("team_id"))?,
             num_licensed_users: field_num_licensed_users.ok_or_else(|| ::serde::de::Error::missing_field("num_licensed_users"))?,
             num_provisioned_users: field_num_provisioned_users.ok_or_else(|| ::serde::de::Error::missing_field("num_provisioned_users"))?,
-            num_used_licenses: field_num_used_licenses.ok_or_else(|| ::serde::de::Error::missing_field("num_used_licenses"))?,
             policies: field_policies.ok_or_else(|| ::serde::de::Error::missing_field("policies"))?,
+            num_used_licenses: field_num_used_licenses.unwrap_or(0),
         };
         Ok(Some(result))
     }
@@ -27628,8 +27637,8 @@ impl TeamGetInfoResult {
         s.serialize_field("team_id", &self.team_id)?;
         s.serialize_field("num_licensed_users", &self.num_licensed_users)?;
         s.serialize_field("num_provisioned_users", &self.num_provisioned_users)?;
-        s.serialize_field("num_used_licenses", &self.num_used_licenses)?;
         s.serialize_field("policies", &self.policies)?;
+        s.serialize_field("num_used_licenses", &self.num_used_licenses)?;
         Ok(())
     }
 }
