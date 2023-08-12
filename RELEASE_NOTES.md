@@ -1,6 +1,9 @@
 # v0.16.0
 xxxx-yy-zz
-* API spec update 2022-06-15, 2022-07-13, 2022-10-11, 2022-11-09
+* API spec update 2022-06-15, 2022-07-13, 2022-10-11, 2022-11-09, 2023-04-26
+    * semver incompatible changes to structs:
+      * files: TeamGetInfoResult, TeamMemberPolicies, TeamSharingPolicies
+      * users: FullTeam, FullAccount
 * Established 1.56.1 as the MSRV (minimum supported Rust version)
 * Fix test generator under Python 3.11
 

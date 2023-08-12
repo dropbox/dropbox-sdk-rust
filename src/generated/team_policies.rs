@@ -1041,6 +1041,72 @@ impl ::serde::ser::Serialize for RolloutMethod {
     }
 }
 
+/// Policy governing whether shared folder membership is required to access shared links.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum SharedFolderBlanketLinkRestrictionPolicy {
+    /// Only members of shared folders can access folder content via shared link.
+    Members,
+    /// Anyone can access folder content via shared link.
+    Anyone,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderBlanketLinkRestrictionPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharedFolderBlanketLinkRestrictionPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharedFolderBlanketLinkRestrictionPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "members" => SharedFolderBlanketLinkRestrictionPolicy::Members,
+                    "anyone" => SharedFolderBlanketLinkRestrictionPolicy::Anyone,
+                    _ => SharedFolderBlanketLinkRestrictionPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["members",
+                                    "anyone",
+                                    "other"];
+        deserializer.deserialize_struct("SharedFolderBlanketLinkRestrictionPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedFolderBlanketLinkRestrictionPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SharedFolderBlanketLinkRestrictionPolicy::Members => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedFolderBlanketLinkRestrictionPolicy", 1)?;
+                s.serialize_field(".tag", "members")?;
+                s.end()
+            }
+            SharedFolderBlanketLinkRestrictionPolicy::Anyone => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedFolderBlanketLinkRestrictionPolicy", 1)?;
+                s.serialize_field(".tag", "anyone")?;
+                s.end()
+            }
+            SharedFolderBlanketLinkRestrictionPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Policy governing which shared folders a team member can join.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -1882,6 +1948,8 @@ pub struct TeamSharingPolicies {
     pub shared_link_create_policy: SharedLinkCreatePolicy,
     /// Who can create groups.
     pub group_creation_policy: GroupCreation,
+    /// Who can view links to content in shared folders.
+    pub shared_folder_link_restriction_policy: SharedFolderBlanketLinkRestrictionPolicy,
 }
 
 impl TeamSharingPolicies {
@@ -1890,12 +1958,14 @@ impl TeamSharingPolicies {
         shared_folder_join_policy: SharedFolderJoinPolicy,
         shared_link_create_policy: SharedLinkCreatePolicy,
         group_creation_policy: GroupCreation,
+        shared_folder_link_restriction_policy: SharedFolderBlanketLinkRestrictionPolicy,
     ) -> Self {
         TeamSharingPolicies {
             shared_folder_member_policy,
             shared_folder_join_policy,
             shared_link_create_policy,
             group_creation_policy,
+            shared_folder_link_restriction_policy,
         }
     }
 }
@@ -1903,7 +1973,8 @@ impl TeamSharingPolicies {
 const TEAM_SHARING_POLICIES_FIELDS: &[&str] = &["shared_folder_member_policy",
                                                 "shared_folder_join_policy",
                                                 "shared_link_create_policy",
-                                                "group_creation_policy"];
+                                                "group_creation_policy",
+                                                "shared_folder_link_restriction_policy"];
 impl TeamSharingPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1919,6 +1990,7 @@ impl TeamSharingPolicies {
         let mut field_shared_folder_join_policy = None;
         let mut field_shared_link_create_policy = None;
         let mut field_group_creation_policy = None;
+        let mut field_shared_folder_link_restriction_policy = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -1947,6 +2019,12 @@ impl TeamSharingPolicies {
                     }
                     field_group_creation_policy = Some(map.next_value()?);
                 }
+                "shared_folder_link_restriction_policy" => {
+                    if field_shared_folder_link_restriction_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_link_restriction_policy"));
+                    }
+                    field_shared_folder_link_restriction_policy = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -1961,6 +2039,7 @@ impl TeamSharingPolicies {
             shared_folder_join_policy: field_shared_folder_join_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_join_policy"))?,
             shared_link_create_policy: field_shared_link_create_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_link_create_policy"))?,
             group_creation_policy: field_group_creation_policy.ok_or_else(|| ::serde::de::Error::missing_field("group_creation_policy"))?,
+            shared_folder_link_restriction_policy: field_shared_folder_link_restriction_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_link_restriction_policy"))?,
         };
         Ok(Some(result))
     }
@@ -1974,6 +2053,7 @@ impl TeamSharingPolicies {
         s.serialize_field("shared_folder_join_policy", &self.shared_folder_join_policy)?;
         s.serialize_field("shared_link_create_policy", &self.shared_link_create_policy)?;
         s.serialize_field("group_creation_policy", &self.group_creation_policy)?;
+        s.serialize_field("shared_folder_link_restriction_policy", &self.shared_folder_link_restriction_policy)?;
         Ok(())
     }
 }
@@ -2000,7 +2080,7 @@ impl ::serde::ser::Serialize for TeamSharingPolicies {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamSharingPolicies", 4)?;
+        let mut s = serializer.serialize_struct("TeamSharingPolicies", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

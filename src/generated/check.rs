@@ -52,7 +52,7 @@ pub fn user(
         None)
 }
 
-/// EchoArg contains the arguments to be sent to the Dropbox servers.
+/// Contains the arguments to be sent to the Dropbox servers.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct EchoArg {

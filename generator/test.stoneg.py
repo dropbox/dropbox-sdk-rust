@@ -562,10 +562,8 @@ class Unregex(object):
                 sub_result = self._generate(sub_tokens) if n != 0 else ''
                 result += str(sub_result) * n
             elif opcode == 'category':
-                if argument == 'category_digit':
-                    result += '0'
-                elif argument == 'category_not_space':
-                    result += '!'
+                if argument == sre_parse.CATEGORY_WORD:
+                    result += 'A'
                 else:
                     raise NotImplementedError(f'category {argument}')
             elif opcode == 'assert_not':

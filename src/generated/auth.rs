@@ -8,6 +8,7 @@
 )]
 
 /// Creates an OAuth 2.0 access token from the supplied OAuth 1.0 access token.
+#[deprecated]
 pub fn token_from_oauth1(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &TokenFromOAuth1Arg,
