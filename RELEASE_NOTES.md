@@ -1,5 +1,5 @@
 # v0.16.0
-xxxx-yy-zz
+2023-08-13
 * API spec update 2022-06-15, 2022-07-13, 2022-10-11, 2022-11-09, 2023-04-26
     * semver incompatible changes to structs:
       * files: TeamGetInfoResult, TeamMemberPolicies, TeamSharingPolicies
