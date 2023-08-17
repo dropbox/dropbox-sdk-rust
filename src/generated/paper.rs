@@ -463,7 +463,9 @@ impl AddMember {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("permission_level", &self.permission_level)?;
+        if self.permission_level != PaperDocPermissionLevel::Edit {
+            s.serialize_field("permission_level", &self.permission_level)?;
+        }
         Ok(())
     }
 }
@@ -606,7 +608,9 @@ impl AddPaperDocUser {
         if let Some(val) = &self.custom_message {
             s.serialize_field("custom_message", val)?;
         }
-        s.serialize_field("quiet", &self.quiet)?;
+        if self.quiet {
+            s.serialize_field("quiet", &self.quiet)?;
+        }
         Ok(())
     }
 }
@@ -1922,10 +1926,18 @@ impl ListPaperDocsArgs {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("filter_by", &self.filter_by)?;
-        s.serialize_field("sort_by", &self.sort_by)?;
-        s.serialize_field("sort_order", &self.sort_order)?;
-        s.serialize_field("limit", &self.limit)?;
+        if self.filter_by != ListPaperDocsFilterBy::DocsAccessed {
+            s.serialize_field("filter_by", &self.filter_by)?;
+        }
+        if self.sort_by != ListPaperDocsSortBy::Accessed {
+            s.serialize_field("sort_by", &self.sort_by)?;
+        }
+        if self.sort_order != ListPaperDocsSortOrder::Ascending {
+            s.serialize_field("sort_order", &self.sort_order)?;
+        }
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -2559,7 +2571,9 @@ impl ListUsersOnFolderArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -2932,8 +2946,12 @@ impl ListUsersOnPaperDocArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("limit", &self.limit)?;
-        s.serialize_field("filter_by", &self.filter_by)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
+        if self.filter_by != UserOnPaperDocFilter::Shared {
+            s.serialize_field("filter_by", &self.filter_by)?;
+        }
         Ok(())
     }
 }

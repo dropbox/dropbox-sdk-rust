@@ -1076,9 +1076,15 @@ impl AddFileMemberArgs {
         if let Some(val) = &self.custom_message {
             s.serialize_field("custom_message", val)?;
         }
-        s.serialize_field("quiet", &self.quiet)?;
-        s.serialize_field("access_level", &self.access_level)?;
-        s.serialize_field("add_message_as_comment", &self.add_message_as_comment)?;
+        if self.quiet {
+            s.serialize_field("quiet", &self.quiet)?;
+        }
+        if self.access_level != AccessLevel::Viewer {
+            s.serialize_field("access_level", &self.access_level)?;
+        }
+        if self.add_message_as_comment {
+            s.serialize_field("add_message_as_comment", &self.add_message_as_comment)?;
+        }
         Ok(())
     }
 }
@@ -1338,7 +1344,9 @@ impl AddFolderMemberArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("members", &self.members)?;
-        s.serialize_field("quiet", &self.quiet)?;
+        if self.quiet {
+            s.serialize_field("quiet", &self.quiet)?;
+        }
         if let Some(val) = &self.custom_message {
             s.serialize_field("custom_message", val)?;
         }
@@ -1689,7 +1697,9 @@ impl AddMember {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
-        s.serialize_field("access_level", &self.access_level)?;
+        if self.access_level != AccessLevel::Viewer {
+            s.serialize_field("access_level", &self.access_level)?;
+        }
         Ok(())
     }
 }
@@ -2528,7 +2538,9 @@ impl CreateSharedLinkArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("short_url", &self.short_url)?;
+        if self.short_url {
+            s.serialize_field("short_url", &self.short_url)?;
+        }
         if let Some(val) = &self.pending_upload {
             s.serialize_field("pending_upload", val)?;
         }
@@ -6327,7 +6339,9 @@ impl GroupMembershipInfo {
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
-        s.serialize_field("is_inherited", &self.is_inherited)?;
+        if self.is_inherited {
+            s.serialize_field("is_inherited", &self.is_inherited)?;
+        }
         Ok(())
     }
 }
@@ -6801,7 +6815,9 @@ impl InviteeMembershipInfo {
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
-        s.serialize_field("is_inherited", &self.is_inherited)?;
+        if self.is_inherited {
+            s.serialize_field("is_inherited", &self.is_inherited)?;
+        }
         if let Some(val) = &self.user {
             s.serialize_field("user", val)?;
         }
@@ -8543,8 +8559,12 @@ impl ListFileMembersArg {
         if let Some(val) = &self.actions {
             s.serialize_field("actions", val)?;
         }
-        s.serialize_field("include_inherited", &self.include_inherited)?;
-        s.serialize_field("limit", &self.limit)?;
+        if !self.include_inherited {
+            s.serialize_field("include_inherited", &self.include_inherited)?;
+        }
+        if self.limit != 100 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -8654,7 +8674,9 @@ impl ListFileMembersBatchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("files", &self.files)?;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 10 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -9343,7 +9365,9 @@ impl ListFilesArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 100 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         if let Some(val) = &self.actions {
             s.serialize_field("actions", val)?;
         }
@@ -9773,7 +9797,9 @@ impl ListFolderMembersArgs {
         if let Some(val) = &self.actions {
             s.serialize_field("actions", val)?;
         }
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -10064,7 +10090,9 @@ impl ListFolderMembersCursorArg {
         if let Some(val) = &self.actions {
             s.serialize_field("actions", val)?;
         }
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -10170,7 +10198,9 @@ impl ListFoldersArgs {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         if let Some(val) = &self.actions {
             s.serialize_field("actions", val)?;
         }
@@ -11434,7 +11464,9 @@ impl MembershipInfo {
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
-        s.serialize_field("is_inherited", &self.is_inherited)?;
+        if self.is_inherited {
+            s.serialize_field("is_inherited", &self.is_inherited)?;
+        }
         Ok(())
     }
 }
@@ -11556,7 +11588,9 @@ impl ModifySharedLinkSettingsArgs {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("settings", &self.settings)?;
-        s.serialize_field("remove_expiration", &self.remove_expiration)?;
+        if self.remove_expiration {
+            s.serialize_field("remove_expiration", &self.remove_expiration)?;
+        }
         Ok(())
     }
 }
@@ -12740,7 +12774,9 @@ impl RelinquishFolderMembershipArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("leave_a_copy", &self.leave_a_copy)?;
+        if self.leave_a_copy {
+            s.serialize_field("leave_a_copy", &self.leave_a_copy)?;
+        }
         Ok(())
     }
 }
@@ -14041,7 +14077,9 @@ impl SetAccessInheritanceArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        if self.access_inheritance != AccessInheritance::Inherit {
+            s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        }
         Ok(())
     }
 }
@@ -14368,7 +14406,9 @@ impl ShareFolderArg {
         if let Some(val) = &self.acl_update_policy {
             s.serialize_field("acl_update_policy", val)?;
         }
-        s.serialize_field("force_async", &self.force_async)?;
+        if self.force_async {
+            s.serialize_field("force_async", &self.force_async)?;
+        }
         if let Some(val) = &self.member_policy {
             s.serialize_field("member_policy", val)?;
         }
@@ -14378,7 +14418,9 @@ impl ShareFolderArg {
         if let Some(val) = &self.viewer_info_policy {
             s.serialize_field("viewer_info_policy", val)?;
         }
-        s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        if self.access_inheritance != AccessInheritance::Inherit {
+            s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        }
         if let Some(val) = &self.actions {
             s.serialize_field("actions", val)?;
         }
@@ -14584,7 +14626,9 @@ impl ShareFolderArgBase {
         if let Some(val) = &self.acl_update_policy {
             s.serialize_field("acl_update_policy", val)?;
         }
-        s.serialize_field("force_async", &self.force_async)?;
+        if self.force_async {
+            s.serialize_field("force_async", &self.force_async)?;
+        }
         if let Some(val) = &self.member_policy {
             s.serialize_field("member_policy", val)?;
         }
@@ -14594,7 +14638,9 @@ impl ShareFolderArgBase {
         if let Some(val) = &self.viewer_info_policy {
             s.serialize_field("viewer_info_policy", val)?;
         }
-        s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        if self.access_inheritance != AccessInheritance::Inherit {
+            s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        }
         Ok(())
     }
 }
@@ -16849,7 +16895,9 @@ impl SharedFolderMetadata {
         if let Some(val) = &self.permissions {
             s.serialize_field("permissions", val)?;
         }
-        s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        if self.access_inheritance != AccessInheritance::Inherit {
+            s.serialize_field("access_inheritance", &self.access_inheritance)?;
+        }
         Ok(())
     }
 }
@@ -18804,7 +18852,9 @@ impl UnshareFolderArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("leave_a_copy", &self.leave_a_copy)?;
+        if self.leave_a_copy {
+            s.serialize_field("leave_a_copy", &self.leave_a_copy)?;
+        }
         Ok(())
     }
 }
@@ -19846,7 +19896,9 @@ impl UserFileMembershipInfo {
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
-        s.serialize_field("is_inherited", &self.is_inherited)?;
+        if self.is_inherited {
+            s.serialize_field("is_inherited", &self.is_inherited)?;
+        }
         if let Some(val) = &self.time_last_seen {
             s.serialize_field("time_last_seen", val)?;
         }
@@ -20175,7 +20227,9 @@ impl UserMembershipInfo {
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
-        s.serialize_field("is_inherited", &self.is_inherited)?;
+        if self.is_inherited {
+            s.serialize_field("is_inherited", &self.is_inherited)?;
+        }
         Ok(())
     }
 }

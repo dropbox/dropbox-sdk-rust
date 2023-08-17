@@ -1,3 +1,4 @@
+import contextlib
 from contextlib import contextmanager
 
 from rust import RustHelperBackend, EXTRA_DISPLAY_TYPES, REQUIRED_NAMESPACES
@@ -440,10 +441,26 @@ class RustBackend(RustHelperBackend):
                     self.emit('use serde::ser::SerializeStruct;')
                     for field in struct.all_fields:
                         if ir.is_nullable_type(field.data_type):
+                            # note: Stone requires a field can't be nullable and also have a
+                            # non-null default
                             with self.block(f'if let Some(val) = &self.{self.field_name(field)}'):
                                 self.emit(f's.serialize_field("{field.name}", val)?;')
                         else:
-                            self.emit(f's.serialize_field("{field.name}", &self.{self.field_name(field)})?;')
+                            fieldval = f'self.{self.field_name(field)}'
+                            if field.has_default:
+                                if isinstance(field.data_type, ir.String) and not field.default:
+                                    ctx = self.block(f'if !{fieldval}.is_empty()')
+                                elif isinstance(field.data_type, ir.Boolean):
+                                    if field.default:
+                                        ctx = self.block(f'if !{fieldval}')
+                                    else:
+                                        ctx = self.block(f'if {fieldval}')
+                                else:
+                                    ctx = self.block(f'if {fieldval} != ' + str(self._default_value(field)))
+                            else:
+                                ctx = contextlib.nullcontext()
+                            with ctx:
+                                self.emit(f's.serialize_field("{field.name}", &{fieldval})?;')
                     self.emit('Ok(())')
         self.emit()
         with self._impl_deserialize(self.struct_name(struct)):

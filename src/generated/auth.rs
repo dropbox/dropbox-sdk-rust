@@ -505,7 +505,9 @@ impl RateLimitError {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("reason", &self.reason)?;
-        s.serialize_field("retry_after", &self.retry_after)?;
+        if self.retry_after != 1 {
+            s.serialize_field("retry_after", &self.retry_after)?;
+        }
         Ok(())
     }
 }
