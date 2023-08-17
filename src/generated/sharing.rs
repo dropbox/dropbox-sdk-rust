@@ -7658,18 +7658,13 @@ impl ::serde::ser::Serialize for LinkMetadata {
             LinkMetadata::Path(ref x) => {
                 let mut s = serializer.serialize_struct("LinkMetadata", 5)?;
                 s.serialize_field(".tag", "path")?;
-                s.serialize_field("url", &x.url)?;
-                s.serialize_field("visibility", &x.visibility)?;
-                s.serialize_field("path", &x.path)?;
-                s.serialize_field("expires", &x.expires)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             LinkMetadata::Collection(ref x) => {
                 let mut s = serializer.serialize_struct("LinkMetadata", 4)?;
                 s.serialize_field(".tag", "collection")?;
-                s.serialize_field("url", &x.url)?;
-                s.serialize_field("visibility", &x.visibility)?;
-                s.serialize_field("expires", &x.expires)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             LinkMetadata::Other => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
@@ -17430,31 +17425,13 @@ impl ::serde::ser::Serialize for SharedLinkMetadata {
             SharedLinkMetadata::File(ref x) => {
                 let mut s = serializer.serialize_struct("SharedLinkMetadata", 13)?;
                 s.serialize_field(".tag", "file")?;
-                s.serialize_field("url", &x.url)?;
-                s.serialize_field("name", &x.name)?;
-                s.serialize_field("link_permissions", &x.link_permissions)?;
-                s.serialize_field("client_modified", &x.client_modified)?;
-                s.serialize_field("server_modified", &x.server_modified)?;
-                s.serialize_field("rev", &x.rev)?;
-                s.serialize_field("size", &x.size)?;
-                s.serialize_field("id", &x.id)?;
-                s.serialize_field("expires", &x.expires)?;
-                s.serialize_field("path_lower", &x.path_lower)?;
-                s.serialize_field("team_member_info", &x.team_member_info)?;
-                s.serialize_field("content_owner_team_info", &x.content_owner_team_info)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             SharedLinkMetadata::Folder(ref x) => {
                 let mut s = serializer.serialize_struct("SharedLinkMetadata", 9)?;
                 s.serialize_field(".tag", "folder")?;
-                s.serialize_field("url", &x.url)?;
-                s.serialize_field("name", &x.name)?;
-                s.serialize_field("link_permissions", &x.link_permissions)?;
-                s.serialize_field("id", &x.id)?;
-                s.serialize_field("expires", &x.expires)?;
-                s.serialize_field("path_lower", &x.path_lower)?;
-                s.serialize_field("team_member_info", &x.team_member_info)?;
-                s.serialize_field("content_owner_team_info", &x.content_owner_team_info)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             SharedLinkMetadata::Other => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))

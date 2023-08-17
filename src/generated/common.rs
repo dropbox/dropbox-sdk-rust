@@ -249,16 +249,13 @@ impl ::serde::ser::Serialize for RootInfo {
             RootInfo::Team(ref x) => {
                 let mut s = serializer.serialize_struct("RootInfo", 4)?;
                 s.serialize_field(".tag", "team")?;
-                s.serialize_field("root_namespace_id", &x.root_namespace_id)?;
-                s.serialize_field("home_namespace_id", &x.home_namespace_id)?;
-                s.serialize_field("home_path", &x.home_path)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             RootInfo::User(ref x) => {
                 let mut s = serializer.serialize_struct("RootInfo", 3)?;
                 s.serialize_field(".tag", "user")?;
-                s.serialize_field("root_namespace_id", &x.root_namespace_id)?;
-                s.serialize_field("home_namespace_id", &x.home_namespace_id)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             RootInfo::Other => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))

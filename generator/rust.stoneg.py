@@ -536,8 +536,7 @@ class RustBackend(RustHelperBackend):
                         self.emit('let mut s = serializer.serialize_struct('
                                   f'"{type_name}", {len(subtype.data_type.all_fields) + 1})?;')
                         self.emit(f's.serialize_field(".tag", "{subtype.name}")?;')
-                        for field in subtype.data_type.all_fields:
-                            self.emit(f's.serialize_field("{field.name}", &x.{self.field_name(field)})?;')
+                        self.emit('x.internal_serialize::<S>(&mut s)?;')
                         self.emit('s.end()')
                 if struct.is_catch_all():
                     self.emit(f'{type_name}::Other => Err(::serde::ser::Error::custom('
