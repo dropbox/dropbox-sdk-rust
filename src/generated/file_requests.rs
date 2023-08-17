@@ -430,7 +430,9 @@ impl CreateFileRequestArgs {
         if let Some(val) = &self.deadline {
             s.serialize_field("deadline", val)?;
         }
-        s.serialize_field("open", &self.open)?;
+        if !self.open {
+            s.serialize_field("open", &self.open)?;
+        }
         if let Some(val) = &self.description {
             s.serialize_field("description", val)?;
         }
@@ -2106,7 +2108,9 @@ impl ListFileRequestsArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -2743,7 +2747,9 @@ impl UpdateFileRequestArgs {
         if let Some(val) = &self.destination {
             s.serialize_field("destination", val)?;
         }
-        s.serialize_field("deadline", &self.deadline)?;
+        if self.deadline != UpdateFileRequestDeadline::NoUpdate {
+            s.serialize_field("deadline", &self.deadline)?;
+        }
         if let Some(val) = &self.open {
             s.serialize_field("open", val)?;
         }

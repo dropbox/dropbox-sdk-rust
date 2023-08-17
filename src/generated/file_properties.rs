@@ -1901,7 +1901,9 @@ impl PropertiesSearchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("queries", &self.queries)?;
-        s.serialize_field("template_filter", &self.template_filter)?;
+        if self.template_filter != TemplateFilter::FilterNone {
+            s.serialize_field("template_filter", &self.template_filter)?;
+        }
         Ok(())
     }
 }
@@ -2456,7 +2458,9 @@ impl PropertiesSearchQuery {
         use serde::ser::SerializeStruct;
         s.serialize_field("query", &self.query)?;
         s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("logical_operator", &self.logical_operator)?;
+        if self.logical_operator != LogicalOperator::OrOperator {
+            s.serialize_field("logical_operator", &self.logical_operator)?;
+        }
         Ok(())
     }
 }

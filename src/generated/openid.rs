@@ -357,8 +357,12 @@ impl UserInfoResult {
         if let Some(val) = &self.email_verified {
             s.serialize_field("email_verified", val)?;
         }
-        s.serialize_field("iss", &self.iss)?;
-        s.serialize_field("sub", &self.sub)?;
+        if !self.iss.is_empty() {
+            s.serialize_field("iss", &self.iss)?;
+        }
+        if !self.sub.is_empty() {
+            s.serialize_field("sub", &self.sub)?;
+        }
         Ok(())
     }
 }

@@ -4110,7 +4110,9 @@ impl ExcludedUsersListArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -6191,7 +6193,9 @@ impl GroupCreateArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group_name", &self.group_name)?;
-        s.serialize_field("add_creator_as_owner", &self.add_creator_as_owner)?;
+        if self.add_creator_as_owner {
+            s.serialize_field("add_creator_as_owner", &self.add_creator_as_owner)?;
+        }
         if let Some(val) = &self.group_external_id {
             s.serialize_field("group_external_id", val)?;
         }
@@ -7105,7 +7109,9 @@ impl GroupMembersAddArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("members", &self.members)?;
-        s.serialize_field("return_members", &self.return_members)?;
+        if !self.return_members {
+            s.serialize_field("return_members", &self.return_members)?;
+        }
         Ok(())
     }
 }
@@ -7505,7 +7511,9 @@ impl GroupMembersRemoveArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("users", &self.users)?;
-        s.serialize_field("return_members", &self.return_members)?;
+        if !self.return_members {
+            s.serialize_field("return_members", &self.return_members)?;
+        }
         Ok(())
     }
 }
@@ -7975,7 +7983,9 @@ impl GroupMembersSetAccessTypeArg {
         s.serialize_field("group", &self.group)?;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("access_type", &self.access_type)?;
-        s.serialize_field("return_members", &self.return_members)?;
+        if !self.return_members {
+            s.serialize_field("return_members", &self.return_members)?;
+        }
         Ok(())
     }
 }
@@ -8366,7 +8376,9 @@ impl GroupUpdateArgs {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
-        s.serialize_field("return_members", &self.return_members)?;
+        if !self.return_members {
+            s.serialize_field("return_members", &self.return_members)?;
+        }
         if let Some(val) = &self.new_group_name {
             s.serialize_field("new_group_name", val)?;
         }
@@ -8709,7 +8721,9 @@ impl GroupsListArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -9098,7 +9112,9 @@ impl GroupsMembersListArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -9816,7 +9832,9 @@ impl IncludeMembersArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("return_members", &self.return_members)?;
+        if !self.return_members {
+            s.serialize_field("return_members", &self.return_members)?;
+        }
         Ok(())
     }
 }
@@ -11218,7 +11236,9 @@ impl LegalHoldsListPoliciesArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("include_released", &self.include_released)?;
+        if self.include_released {
+            s.serialize_field("include_released", &self.include_released)?;
+        }
         Ok(())
     }
 }
@@ -12640,9 +12660,15 @@ impl ListMemberDevicesArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_member_id", &self.team_member_id)?;
-        s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
-        s.serialize_field("include_desktop_clients", &self.include_desktop_clients)?;
-        s.serialize_field("include_mobile_clients", &self.include_mobile_clients)?;
+        if !self.include_web_sessions {
+            s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
+        }
+        if !self.include_desktop_clients {
+            s.serialize_field("include_desktop_clients", &self.include_desktop_clients)?;
+        }
+        if !self.include_mobile_clients {
+            s.serialize_field("include_mobile_clients", &self.include_mobile_clients)?;
+        }
         Ok(())
     }
 }
@@ -13256,9 +13282,15 @@ impl ListMembersDevicesArg {
         if let Some(val) = &self.cursor {
             s.serialize_field("cursor", val)?;
         }
-        s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
-        s.serialize_field("include_desktop_clients", &self.include_desktop_clients)?;
-        s.serialize_field("include_mobile_clients", &self.include_mobile_clients)?;
+        if !self.include_web_sessions {
+            s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
+        }
+        if !self.include_desktop_clients {
+            s.serialize_field("include_desktop_clients", &self.include_desktop_clients)?;
+        }
+        if !self.include_mobile_clients {
+            s.serialize_field("include_mobile_clients", &self.include_mobile_clients)?;
+        }
         Ok(())
     }
 }
@@ -13877,9 +13909,15 @@ impl ListTeamDevicesArg {
         if let Some(val) = &self.cursor {
             s.serialize_field("cursor", val)?;
         }
-        s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
-        s.serialize_field("include_desktop_clients", &self.include_desktop_clients)?;
-        s.serialize_field("include_mobile_clients", &self.include_mobile_clients)?;
+        if !self.include_web_sessions {
+            s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
+        }
+        if !self.include_desktop_clients {
+            s.serialize_field("include_desktop_clients", &self.include_desktop_clients)?;
+        }
+        if !self.include_mobile_clients {
+            s.serialize_field("include_mobile_clients", &self.include_mobile_clients)?;
+        }
         Ok(())
     }
 }
@@ -14400,11 +14438,15 @@ impl MemberAddArg {
         if let Some(val) = &self.member_persistent_id {
             s.serialize_field("member_persistent_id", val)?;
         }
-        s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
+        if !self.send_welcome_email {
+            s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
+        }
         if let Some(val) = &self.is_directory_restricted {
             s.serialize_field("is_directory_restricted", val)?;
         }
-        s.serialize_field("role", &self.role)?;
+        if self.role != AdminTier::MemberOnly {
+            s.serialize_field("role", &self.role)?;
+        }
         Ok(())
     }
 }
@@ -14612,7 +14654,9 @@ impl MemberAddArgBase {
         if let Some(val) = &self.member_persistent_id {
             s.serialize_field("member_persistent_id", val)?;
         }
-        s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
+        if !self.send_welcome_email {
+            s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
+        }
         if let Some(val) = &self.is_directory_restricted {
             s.serialize_field("is_directory_restricted", val)?;
         }
@@ -15281,7 +15325,9 @@ impl MemberAddV2Arg {
         if let Some(val) = &self.member_persistent_id {
             s.serialize_field("member_persistent_id", val)?;
         }
-        s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
+        if !self.send_welcome_email {
+            s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
+        }
         if let Some(val) = &self.is_directory_restricted {
             s.serialize_field("is_directory_restricted", val)?;
         }
@@ -16311,7 +16357,9 @@ impl MembersAddArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_members", &self.new_members)?;
-        s.serialize_field("force_async", &self.force_async)?;
+        if self.force_async {
+            s.serialize_field("force_async", &self.force_async)?;
+        }
         Ok(())
     }
 }
@@ -16390,7 +16438,9 @@ impl MembersAddArgBase {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("force_async", &self.force_async)?;
+        if self.force_async {
+            s.serialize_field("force_async", &self.force_async)?;
+        }
         Ok(())
     }
 }
@@ -16827,7 +16877,9 @@ impl MembersAddV2Arg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_members", &self.new_members)?;
-        s.serialize_field("force_async", &self.force_async)?;
+        if self.force_async {
+            s.serialize_field("force_async", &self.force_async)?;
+        }
         Ok(())
     }
 }
@@ -17057,7 +17109,9 @@ impl MembersDeactivateArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
-        s.serialize_field("wipe_data", &self.wipe_data)?;
+        if !self.wipe_data {
+            s.serialize_field("wipe_data", &self.wipe_data)?;
+        }
         Ok(())
     }
 }
@@ -18248,8 +18302,12 @@ impl MembersListArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
-        s.serialize_field("include_removed", &self.include_removed)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
+        if self.include_removed {
+            s.serialize_field("include_removed", &self.include_removed)?;
+        }
         Ok(())
     }
 }
@@ -19075,15 +19133,21 @@ impl MembersRemoveArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
-        s.serialize_field("wipe_data", &self.wipe_data)?;
+        if !self.wipe_data {
+            s.serialize_field("wipe_data", &self.wipe_data)?;
+        }
         if let Some(val) = &self.transfer_dest_id {
             s.serialize_field("transfer_dest_id", val)?;
         }
         if let Some(val) = &self.transfer_admin_id {
             s.serialize_field("transfer_admin_id", val)?;
         }
-        s.serialize_field("keep_account", &self.keep_account)?;
-        s.serialize_field("retain_team_shares", &self.retain_team_shares)?;
+        if self.keep_account {
+            s.serialize_field("keep_account", &self.keep_account)?;
+        }
+        if self.retain_team_shares {
+            s.serialize_field("retain_team_shares", &self.retain_team_shares)?;
+        }
         Ok(())
     }
 }
@@ -22614,7 +22678,9 @@ impl RevokeDesktopClientArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
         s.serialize_field("team_member_id", &self.team_member_id)?;
-        s.serialize_field("delete_on_unlink", &self.delete_on_unlink)?;
+        if self.delete_on_unlink {
+            s.serialize_field("delete_on_unlink", &self.delete_on_unlink)?;
+        }
         Ok(())
     }
 }
@@ -23230,7 +23296,9 @@ impl RevokeLinkedApiAppArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_id", &self.app_id)?;
         s.serialize_field("team_member_id", &self.team_member_id)?;
-        s.serialize_field("keep_app_folder", &self.keep_app_folder)?;
+        if !self.keep_app_folder {
+            s.serialize_field("keep_app_folder", &self.keep_app_folder)?;
+        }
         Ok(())
     }
 }
@@ -24204,7 +24272,9 @@ impl SharingAllowlistListArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -24559,8 +24629,12 @@ impl SharingAllowlistListResponse {
         use serde::ser::SerializeStruct;
         s.serialize_field("domains", &self.domains)?;
         s.serialize_field("emails", &self.emails)?;
-        s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)?;
+        if !self.cursor.is_empty() {
+            s.serialize_field("cursor", &self.cursor)?;
+        }
+        if self.has_more {
+            s.serialize_field("has_more", &self.has_more)?;
+        }
         Ok(())
     }
 }
@@ -25239,7 +25313,9 @@ impl TeamFolderArchiveArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_folder_id", &self.team_folder_id)?;
-        s.serialize_field("force_async_off", &self.force_async_off)?;
+        if self.force_async_off {
+            s.serialize_field("force_async_off", &self.force_async_off)?;
+        }
         Ok(())
     }
 }
@@ -26151,7 +26227,9 @@ impl TeamFolderListArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -27638,7 +27716,9 @@ impl TeamGetInfoResult {
         s.serialize_field("num_licensed_users", &self.num_licensed_users)?;
         s.serialize_field("num_provisioned_users", &self.num_provisioned_users)?;
         s.serialize_field("policies", &self.policies)?;
-        s.serialize_field("num_used_licenses", &self.num_used_licenses)?;
+        if self.num_used_licenses != 0 {
+            s.serialize_field("num_used_licenses", &self.num_used_licenses)?;
+        }
         Ok(())
     }
 }
@@ -28678,7 +28758,9 @@ impl TeamNamespacesListArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("limit", &self.limit)?;
+        if self.limit != 1000 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }

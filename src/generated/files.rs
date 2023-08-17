@@ -1730,9 +1730,15 @@ impl AlphaGetMetadataArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("include_media_info", &self.include_media_info)?;
-        s.serialize_field("include_deleted", &self.include_deleted)?;
-        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        if self.include_media_info {
+            s.serialize_field("include_media_info", &self.include_media_info)?;
+        }
+        if self.include_deleted {
+            s.serialize_field("include_deleted", &self.include_deleted)?;
+        }
+        if self.include_has_explicit_shared_members {
+            s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        }
         if let Some(val) = &self.include_property_groups {
             s.serialize_field("include_property_groups", val)?;
         }
@@ -2113,16 +2119,24 @@ impl CommitInfo {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("autorename", &self.autorename)?;
+        if self.mode != WriteMode::Add {
+            s.serialize_field("mode", &self.mode)?;
+        }
+        if self.autorename {
+            s.serialize_field("autorename", &self.autorename)?;
+        }
         if let Some(val) = &self.client_modified {
             s.serialize_field("client_modified", val)?;
         }
-        s.serialize_field("mute", &self.mute)?;
+        if self.mute {
+            s.serialize_field("mute", &self.mute)?;
+        }
         if let Some(val) = &self.property_groups {
             s.serialize_field("property_groups", val)?;
         }
-        s.serialize_field("strict_conflict", &self.strict_conflict)?;
+        if self.strict_conflict {
+            s.serialize_field("strict_conflict", &self.strict_conflict)?;
+        }
         Ok(())
     }
 }
@@ -2440,7 +2454,9 @@ impl CreateFolderArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("autorename", &self.autorename)?;
+        if self.autorename {
+            s.serialize_field("autorename", &self.autorename)?;
+        }
         Ok(())
     }
 }
@@ -2568,8 +2584,12 @@ impl CreateFolderBatchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("paths", &self.paths)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("force_async", &self.force_async)?;
+        if self.autorename {
+            s.serialize_field("autorename", &self.autorename)?;
+        }
+        if self.force_async {
+            s.serialize_field("force_async", &self.force_async)?;
+        }
         Ok(())
     }
 }
@@ -6381,7 +6401,9 @@ impl FileMetadata {
         if let Some(val) = &self.sharing_info {
             s.serialize_field("sharing_info", val)?;
         }
-        s.serialize_field("is_downloadable", &self.is_downloadable)?;
+        if !self.is_downloadable {
+            s.serialize_field("is_downloadable", &self.is_downloadable)?;
+        }
         if let Some(val) = &self.export_info {
             s.serialize_field("export_info", val)?;
         }
@@ -7055,8 +7077,12 @@ impl FolderSharingInfo {
         if let Some(val) = &self.shared_folder_id {
             s.serialize_field("shared_folder_id", val)?;
         }
-        s.serialize_field("traverse_only", &self.traverse_only)?;
-        s.serialize_field("no_access", &self.no_access)?;
+        if self.traverse_only {
+            s.serialize_field("traverse_only", &self.traverse_only)?;
+        }
+        if self.no_access {
+            s.serialize_field("no_access", &self.no_access)?;
+        }
         Ok(())
     }
 }
@@ -7514,9 +7540,15 @@ impl GetMetadataArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("include_media_info", &self.include_media_info)?;
-        s.serialize_field("include_deleted", &self.include_deleted)?;
-        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        if self.include_media_info {
+            s.serialize_field("include_media_info", &self.include_media_info)?;
+        }
+        if self.include_deleted {
+            s.serialize_field("include_deleted", &self.include_deleted)?;
+        }
+        if self.include_has_explicit_shared_members {
+            s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        }
         if let Some(val) = &self.include_property_groups {
             s.serialize_field("include_property_groups", val)?;
         }
@@ -8191,7 +8223,9 @@ impl GetTemporaryUploadLinkArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("commit_info", &self.commit_info)?;
-        s.serialize_field("duration", &self.duration)?;
+        if self.duration != 14400.0 {
+            s.serialize_field("duration", &self.duration)?;
+        }
         Ok(())
     }
 }
@@ -9249,11 +9283,21 @@ impl ListFolderArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("recursive", &self.recursive)?;
-        s.serialize_field("include_media_info", &self.include_media_info)?;
-        s.serialize_field("include_deleted", &self.include_deleted)?;
-        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
-        s.serialize_field("include_mounted_folders", &self.include_mounted_folders)?;
+        if self.recursive {
+            s.serialize_field("recursive", &self.recursive)?;
+        }
+        if self.include_media_info {
+            s.serialize_field("include_media_info", &self.include_media_info)?;
+        }
+        if self.include_deleted {
+            s.serialize_field("include_deleted", &self.include_deleted)?;
+        }
+        if self.include_has_explicit_shared_members {
+            s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        }
+        if !self.include_mounted_folders {
+            s.serialize_field("include_mounted_folders", &self.include_mounted_folders)?;
+        }
         if let Some(val) = &self.limit {
             s.serialize_field("limit", val)?;
         }
@@ -9263,7 +9307,9 @@ impl ListFolderArg {
         if let Some(val) = &self.include_property_groups {
             s.serialize_field("include_property_groups", val)?;
         }
-        s.serialize_field("include_non_downloadable_files", &self.include_non_downloadable_files)?;
+        if !self.include_non_downloadable_files {
+            s.serialize_field("include_non_downloadable_files", &self.include_non_downloadable_files)?;
+        }
         Ok(())
     }
 }
@@ -9747,7 +9793,9 @@ impl ListFolderLongpollArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("timeout", &self.timeout)?;
+        if self.timeout != 30 {
+            s.serialize_field("timeout", &self.timeout)?;
+        }
         Ok(())
     }
 }
@@ -10170,8 +10218,12 @@ impl ListRevisionsArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("limit", &self.limit)?;
+        if self.mode != ListRevisionsMode::Path {
+            s.serialize_field("mode", &self.mode)?;
+        }
+        if self.limit != 10 {
+            s.serialize_field("limit", &self.limit)?;
+        }
         Ok(())
     }
 }
@@ -11804,8 +11856,12 @@ impl MoveBatchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        if self.autorename {
+            s.serialize_field("autorename", &self.autorename)?;
+        }
+        if self.allow_ownership_transfer {
+            s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        }
         Ok(())
     }
 }
@@ -13669,9 +13725,15 @@ impl RelocationArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("from_path", &self.from_path)?;
         s.serialize_field("to_path", &self.to_path)?;
-        s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        if self.allow_shared_folder {
+            s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
+        }
+        if self.autorename {
+            s.serialize_field("autorename", &self.autorename)?;
+        }
+        if self.allow_ownership_transfer {
+            s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        }
         Ok(())
     }
 }
@@ -13816,9 +13878,15 @@ impl RelocationBatchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
-        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        if self.autorename {
+            s.serialize_field("autorename", &self.autorename)?;
+        }
+        if self.allow_shared_folder {
+            s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
+        }
+        if self.allow_ownership_transfer {
+            s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)?;
+        }
         Ok(())
     }
 }
@@ -13928,7 +13996,9 @@ impl RelocationBatchArgBase {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("autorename", &self.autorename)?;
+        if self.autorename {
+            s.serialize_field("autorename", &self.autorename)?;
+        }
         Ok(())
     }
 }
@@ -16617,9 +16687,15 @@ impl SearchArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("query", &self.query)?;
-        s.serialize_field("start", &self.start)?;
-        s.serialize_field("max_results", &self.max_results)?;
-        s.serialize_field("mode", &self.mode)?;
+        if self.start != 0 {
+            s.serialize_field("start", &self.start)?;
+        }
+        if self.max_results != 100 {
+            s.serialize_field("max_results", &self.max_results)?;
+        }
+        if self.mode != SearchMode::Filename {
+            s.serialize_field("mode", &self.mode)?;
+        }
         Ok(())
     }
 }
@@ -16913,7 +16989,9 @@ impl SearchMatchFieldOptions {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("include_highlights", &self.include_highlights)?;
+        if self.include_highlights {
+            s.serialize_field("include_highlights", &self.include_highlights)?;
+        }
         Ok(())
     }
 }
@@ -17481,12 +17559,18 @@ impl SearchOptions {
         if let Some(val) = &self.path {
             s.serialize_field("path", val)?;
         }
-        s.serialize_field("max_results", &self.max_results)?;
+        if self.max_results != 100 {
+            s.serialize_field("max_results", &self.max_results)?;
+        }
         if let Some(val) = &self.order_by {
             s.serialize_field("order_by", val)?;
         }
-        s.serialize_field("file_status", &self.file_status)?;
-        s.serialize_field("filename_only", &self.filename_only)?;
+        if self.file_status != FileStatus::Active {
+            s.serialize_field("file_status", &self.file_status)?;
+        }
+        if self.filename_only {
+            s.serialize_field("filename_only", &self.filename_only)?;
+        }
         if let Some(val) = &self.file_extensions {
             s.serialize_field("file_extensions", val)?;
         }
@@ -19049,9 +19133,15 @@ impl ThumbnailArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("format", &self.format)?;
-        s.serialize_field("size", &self.size)?;
-        s.serialize_field("mode", &self.mode)?;
+        if self.format != ThumbnailFormat::Jpeg {
+            s.serialize_field("format", &self.format)?;
+        }
+        if self.size != ThumbnailSize::W64h64 {
+            s.serialize_field("size", &self.size)?;
+        }
+        if self.mode != ThumbnailMode::Strict {
+            s.serialize_field("mode", &self.mode)?;
+        }
         Ok(())
     }
 }
@@ -19557,9 +19647,15 @@ impl ThumbnailV2Arg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("resource", &self.resource)?;
-        s.serialize_field("format", &self.format)?;
-        s.serialize_field("size", &self.size)?;
-        s.serialize_field("mode", &self.mode)?;
+        if self.format != ThumbnailFormat::Jpeg {
+            s.serialize_field("format", &self.format)?;
+        }
+        if self.size != ThumbnailSize::W64h64 {
+            s.serialize_field("size", &self.size)?;
+        }
+        if self.mode != ThumbnailMode::Strict {
+            s.serialize_field("mode", &self.mode)?;
+        }
         Ok(())
     }
 }
@@ -20103,16 +20199,24 @@ impl UploadArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("autorename", &self.autorename)?;
+        if self.mode != WriteMode::Add {
+            s.serialize_field("mode", &self.mode)?;
+        }
+        if self.autorename {
+            s.serialize_field("autorename", &self.autorename)?;
+        }
         if let Some(val) = &self.client_modified {
             s.serialize_field("client_modified", val)?;
         }
-        s.serialize_field("mute", &self.mute)?;
+        if self.mute {
+            s.serialize_field("mute", &self.mute)?;
+        }
         if let Some(val) = &self.property_groups {
             s.serialize_field("property_groups", val)?;
         }
-        s.serialize_field("strict_conflict", &self.strict_conflict)?;
+        if self.strict_conflict {
+            s.serialize_field("strict_conflict", &self.strict_conflict)?;
+        }
         if let Some(val) = &self.content_hash {
             s.serialize_field("content_hash", val)?;
         }
@@ -20359,7 +20463,9 @@ impl UploadSessionAppendArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("close", &self.close)?;
+        if self.close {
+            s.serialize_field("close", &self.close)?;
+        }
         if let Some(val) = &self.content_hash {
             s.serialize_field("content_hash", val)?;
         }
@@ -21694,7 +21800,9 @@ impl UploadSessionStartArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("close", &self.close)?;
+        if self.close {
+            s.serialize_field("close", &self.close)?;
+        }
         if let Some(val) = &self.session_type {
             s.serialize_field("session_type", val)?;
         }

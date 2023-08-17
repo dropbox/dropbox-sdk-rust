@@ -126,8 +126,6 @@ fn test_null_fields_elided() {
         "server_modified": "server_modified",
         "rev": "rev",
         "size": 1337,
-        // FIXME(wfraser): this field is a default, it should not be included either
-        "is_downloadable": true,
     });
     let s = serde_json::to_string_pretty(&value).unwrap();
     let deser = serde_json::from_str::<serde_json::Value>(&s).unwrap();
