@@ -11423,18 +11423,13 @@ impl ::serde::ser::Serialize for MediaMetadata {
             MediaMetadata::Photo(ref x) => {
                 let mut s = serializer.serialize_struct("MediaMetadata", 4)?;
                 s.serialize_field(".tag", "photo")?;
-                s.serialize_field("dimensions", &x.dimensions)?;
-                s.serialize_field("location", &x.location)?;
-                s.serialize_field("time_taken", &x.time_taken)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             MediaMetadata::Video(ref x) => {
                 let mut s = serializer.serialize_struct("MediaMetadata", 5)?;
                 s.serialize_field(".tag", "video")?;
-                s.serialize_field("dimensions", &x.dimensions)?;
-                s.serialize_field("location", &x.location)?;
-                s.serialize_field("time_taken", &x.time_taken)?;
-                s.serialize_field("duration", &x.duration)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
         }
@@ -11487,49 +11482,19 @@ impl ::serde::ser::Serialize for Metadata {
             Metadata::File(ref x) => {
                 let mut s = serializer.serialize_struct("Metadata", 20)?;
                 s.serialize_field(".tag", "file")?;
-                s.serialize_field("name", &x.name)?;
-                s.serialize_field("id", &x.id)?;
-                s.serialize_field("client_modified", &x.client_modified)?;
-                s.serialize_field("server_modified", &x.server_modified)?;
-                s.serialize_field("rev", &x.rev)?;
-                s.serialize_field("size", &x.size)?;
-                s.serialize_field("path_lower", &x.path_lower)?;
-                s.serialize_field("path_display", &x.path_display)?;
-                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
-                s.serialize_field("preview_url", &x.preview_url)?;
-                s.serialize_field("media_info", &x.media_info)?;
-                s.serialize_field("symlink_info", &x.symlink_info)?;
-                s.serialize_field("sharing_info", &x.sharing_info)?;
-                s.serialize_field("is_downloadable", &x.is_downloadable)?;
-                s.serialize_field("export_info", &x.export_info)?;
-                s.serialize_field("property_groups", &x.property_groups)?;
-                s.serialize_field("has_explicit_shared_members", &x.has_explicit_shared_members)?;
-                s.serialize_field("content_hash", &x.content_hash)?;
-                s.serialize_field("file_lock_info", &x.file_lock_info)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             Metadata::Folder(ref x) => {
                 let mut s = serializer.serialize_struct("Metadata", 10)?;
                 s.serialize_field(".tag", "folder")?;
-                s.serialize_field("name", &x.name)?;
-                s.serialize_field("id", &x.id)?;
-                s.serialize_field("path_lower", &x.path_lower)?;
-                s.serialize_field("path_display", &x.path_display)?;
-                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
-                s.serialize_field("preview_url", &x.preview_url)?;
-                s.serialize_field("shared_folder_id", &x.shared_folder_id)?;
-                s.serialize_field("sharing_info", &x.sharing_info)?;
-                s.serialize_field("property_groups", &x.property_groups)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             Metadata::Deleted(ref x) => {
                 let mut s = serializer.serialize_struct("Metadata", 6)?;
                 s.serialize_field(".tag", "deleted")?;
-                s.serialize_field("name", &x.name)?;
-                s.serialize_field("path_lower", &x.path_lower)?;
-                s.serialize_field("path_display", &x.path_display)?;
-                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
-                s.serialize_field("preview_url", &x.preview_url)?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
         }
