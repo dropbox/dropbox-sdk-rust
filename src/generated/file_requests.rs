@@ -413,9 +413,9 @@ impl CreateFileRequestArgs {
         let result = CreateFileRequestArgs {
             title: field_title.ok_or_else(|| ::serde::de::Error::missing_field("title"))?,
             destination: field_destination.ok_or_else(|| ::serde::de::Error::missing_field("destination"))?,
-            deadline: field_deadline,
+            deadline: field_deadline.and_then(Option::flatten),
             open: field_open.unwrap_or(true),
-            description: field_description,
+            description: field_description.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -1358,9 +1358,9 @@ impl FileRequest {
             created: field_created.ok_or_else(|| ::serde::de::Error::missing_field("created"))?,
             is_open: field_is_open.ok_or_else(|| ::serde::de::Error::missing_field("is_open"))?,
             file_count: field_file_count.ok_or_else(|| ::serde::de::Error::missing_field("file_count"))?,
-            destination: field_destination,
-            deadline: field_deadline,
-            description: field_description,
+            destination: field_destination.and_then(Option::flatten),
+            deadline: field_deadline.and_then(Option::flatten),
+            description: field_description.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -1483,7 +1483,7 @@ impl FileRequestDeadline {
         }
         let result = FileRequestDeadline {
             deadline: field_deadline.ok_or_else(|| ::serde::de::Error::missing_field("deadline"))?,
-            allow_late_uploads: field_allow_late_uploads,
+            allow_late_uploads: field_allow_late_uploads.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -2726,11 +2726,11 @@ impl UpdateFileRequestArgs {
         }
         let result = UpdateFileRequestArgs {
             id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
-            title: field_title,
-            destination: field_destination,
+            title: field_title.and_then(Option::flatten),
+            destination: field_destination.and_then(Option::flatten),
             deadline: field_deadline.unwrap_or(UpdateFileRequestDeadline::NoUpdate),
-            open: field_open,
-            description: field_description,
+            open: field_open.and_then(Option::flatten),
+            description: field_description.and_then(Option::flatten),
         };
         Ok(Some(result))
     }

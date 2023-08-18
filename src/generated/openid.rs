@@ -330,10 +330,10 @@ impl UserInfoResult {
             }
         }
         let result = UserInfoResult {
-            family_name: field_family_name,
-            given_name: field_given_name,
-            email: field_email,
-            email_verified: field_email_verified,
+            family_name: field_family_name.and_then(Option::flatten),
+            given_name: field_given_name.and_then(Option::flatten),
+            email: field_email.and_then(Option::flatten),
+            email_verified: field_email_verified.and_then(Option::flatten),
             iss: field_iss.unwrap_or_default(),
             sub: field_sub.unwrap_or_default(),
         };

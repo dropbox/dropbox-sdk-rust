@@ -2559,7 +2559,7 @@ impl PropertiesSearchResult {
         }
         let result = PropertiesSearchResult {
             matches: field_matches.ok_or_else(|| ::serde::de::Error::missing_field("matches"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -3142,8 +3142,8 @@ impl PropertyGroupUpdate {
         }
         let result = PropertyGroupUpdate {
             template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
-            add_or_update_fields: field_add_or_update_fields,
-            remove_fields: field_remove_fields,
+            add_or_update_fields: field_add_or_update_fields.and_then(Option::flatten),
+            remove_fields: field_remove_fields.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4243,9 +4243,9 @@ impl UpdateTemplateArg {
         }
         let result = UpdateTemplateArg {
             template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
-            name: field_name,
-            description: field_description,
-            add_fields: field_add_fields,
+            name: field_name.and_then(Option::flatten),
+            description: field_description.and_then(Option::flatten),
+            add_fields: field_add_fields.and_then(Option::flatten),
         };
         Ok(Some(result))
     }

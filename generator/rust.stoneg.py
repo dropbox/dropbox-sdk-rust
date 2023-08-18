@@ -409,7 +409,11 @@ class RustBackend(RustHelperBackend):
                         for field in struct.all_fields:
                             field_name = self.field_name(field)
                             if isinstance(field.data_type, ir.Nullable):
-                                self.emit(f'{field_name}: field_{field_name},')
+                                # None -> field is not present
+                                # Some(None) -> field is present with null value
+                                # Some(Some(x)) -> field is present and non-null
+                                # First two are equivalent here, hence Option::flatten().
+                                self.emit(f'{field_name}: field_{field_name}.and_then(Option::flatten),')
                             elif field.has_default:
                                 default_value = self._default_value(field)
                                 if isinstance(field.data_type, ir.String) \

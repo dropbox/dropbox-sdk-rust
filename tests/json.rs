@@ -32,3 +32,38 @@ fn test_null_fields_elided() {
     let roundtrip = serde_json::from_str::<dropbox_sdk::files::Metadata>(&s).unwrap();
     assert_eq!(roundtrip, value);
 }
+
+#[test]
+fn test_missing_null_and_default() {
+    use dropbox_sdk::files::Metadata;
+
+    let a = r#"{
+        ".tag": "file",
+        "name": "name",
+        "id": "id",
+        "client_modified": "client_modified",
+        "server_modified": "server_modified",
+        "rev": "rev",
+        "size": 1337
+    }"#;
+
+    // Same as above, but add two more fields
+    // path_lower, set to null
+    // is_downloadable, set to the default value specified for this field
+    let b = r#"{
+        ".tag": "file",
+        "name": "name",
+        "id": "id",
+        "client_modified": "client_modified",
+        "server_modified": "server_modified",
+        "rev": "rev",
+        "size": 1337,
+        "path_lower": null,
+        "is_downloadable": true
+    }"#;
+
+    // These should both deserialize to the same value.
+    let a_de = serde_json::from_str::<Metadata>(a).unwrap();
+    let b_de = serde_json::from_str::<Metadata>(b).unwrap();
+    assert_eq!(a_de, b_de);
+}

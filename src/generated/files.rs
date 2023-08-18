@@ -1718,8 +1718,8 @@ impl AlphaGetMetadataArg {
             include_media_info: field_include_media_info.unwrap_or(false),
             include_deleted: field_include_deleted.unwrap_or(false),
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
-            include_property_groups: field_include_property_groups,
-            include_property_templates: field_include_property_templates,
+            include_property_groups: field_include_property_groups.and_then(Option::flatten),
+            include_property_templates: field_include_property_templates.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -2105,9 +2105,9 @@ impl CommitInfo {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             mode: field_mode.unwrap_or(WriteMode::Add),
             autorename: field_autorename.unwrap_or(false),
-            client_modified: field_client_modified,
+            client_modified: field_client_modified.and_then(Option::flatten),
             mute: field_mute.unwrap_or(false),
-            property_groups: field_property_groups,
+            property_groups: field_property_groups.and_then(Option::flatten),
             strict_conflict: field_strict_conflict.unwrap_or(false),
         };
         Ok(Some(result))
@@ -3402,7 +3402,7 @@ impl DeleteArg {
         }
         let result = DeleteArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            parent_rev: field_parent_rev,
+            parent_rev: field_parent_rev.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4341,10 +4341,10 @@ impl DeletedMetadata {
         }
         let result = DeletedMetadata {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
-            path_lower: field_path_lower,
-            path_display: field_path_display,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-            preview_url: field_preview_url,
+            path_lower: field_path_lower.and_then(Option::flatten),
+            path_display: field_path_display.and_then(Option::flatten),
+            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            preview_url: field_preview_url.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4569,7 +4569,7 @@ impl DownloadArg {
         }
         let result = DownloadArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            rev: field_rev,
+            rev: field_rev.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5053,7 +5053,7 @@ impl ExportArg {
         }
         let result = ExportArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            export_format: field_export_format,
+            export_format: field_export_format.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5263,8 +5263,8 @@ impl ExportInfo {
             }
         }
         let result = ExportInfo {
-            export_as: field_export_as,
-            export_options: field_export_options,
+            export_as: field_export_as.and_then(Option::flatten),
+            export_options: field_export_options.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -5408,8 +5408,8 @@ impl ExportMetadata {
         let result = ExportMetadata {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             size: field_size.ok_or_else(|| ::serde::de::Error::missing_field("size"))?,
-            export_hash: field_export_hash,
-            paper_revision: field_paper_revision,
+            export_hash: field_export_hash.and_then(Option::flatten),
+            paper_revision: field_paper_revision.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5946,10 +5946,10 @@ impl FileLockMetadata {
             }
         }
         let result = FileLockMetadata {
-            is_lockholder: field_is_lockholder,
-            lockholder_name: field_lockholder_name,
-            lockholder_account_id: field_lockholder_account_id,
-            created: field_created,
+            is_lockholder: field_is_lockholder.and_then(Option::flatten),
+            lockholder_name: field_lockholder_name.and_then(Option::flatten),
+            lockholder_account_id: field_lockholder_account_id.and_then(Option::flatten),
+            created: field_created.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -6352,19 +6352,19 @@ impl FileMetadata {
             server_modified: field_server_modified.ok_or_else(|| ::serde::de::Error::missing_field("server_modified"))?,
             rev: field_rev.ok_or_else(|| ::serde::de::Error::missing_field("rev"))?,
             size: field_size.ok_or_else(|| ::serde::de::Error::missing_field("size"))?,
-            path_lower: field_path_lower,
-            path_display: field_path_display,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-            preview_url: field_preview_url,
-            media_info: field_media_info,
-            symlink_info: field_symlink_info,
-            sharing_info: field_sharing_info,
+            path_lower: field_path_lower.and_then(Option::flatten),
+            path_display: field_path_display.and_then(Option::flatten),
+            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            preview_url: field_preview_url.and_then(Option::flatten),
+            media_info: field_media_info.and_then(Option::flatten),
+            symlink_info: field_symlink_info.and_then(Option::flatten),
+            sharing_info: field_sharing_info.and_then(Option::flatten),
             is_downloadable: field_is_downloadable.unwrap_or(true),
-            export_info: field_export_info,
-            property_groups: field_property_groups,
-            has_explicit_shared_members: field_has_explicit_shared_members,
-            content_hash: field_content_hash,
-            file_lock_info: field_file_lock_info,
+            export_info: field_export_info.and_then(Option::flatten),
+            property_groups: field_property_groups.and_then(Option::flatten),
+            has_explicit_shared_members: field_has_explicit_shared_members.and_then(Option::flatten),
+            content_hash: field_content_hash.and_then(Option::flatten),
+            file_lock_info: field_file_lock_info.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -6573,7 +6573,7 @@ impl FileSharingInfo {
         let result = FileSharingInfo {
             read_only: field_read_only.ok_or_else(|| ::serde::de::Error::missing_field("read_only"))?,
             parent_shared_folder_id: field_parent_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("parent_shared_folder_id"))?,
-            modified_by: field_modified_by,
+            modified_by: field_modified_by.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -6868,13 +6868,13 @@ impl FolderMetadata {
         let result = FolderMetadata {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
-            path_lower: field_path_lower,
-            path_display: field_path_display,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-            preview_url: field_preview_url,
-            shared_folder_id: field_shared_folder_id,
-            sharing_info: field_sharing_info,
-            property_groups: field_property_groups,
+            path_lower: field_path_lower.and_then(Option::flatten),
+            path_display: field_path_display.and_then(Option::flatten),
+            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            preview_url: field_preview_url.and_then(Option::flatten),
+            shared_folder_id: field_shared_folder_id.and_then(Option::flatten),
+            sharing_info: field_sharing_info.and_then(Option::flatten),
+            property_groups: field_property_groups.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -7057,8 +7057,8 @@ impl FolderSharingInfo {
         }
         let result = FolderSharingInfo {
             read_only: field_read_only.ok_or_else(|| ::serde::de::Error::missing_field("read_only"))?,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-            shared_folder_id: field_shared_folder_id,
+            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            shared_folder_id: field_shared_folder_id.and_then(Option::flatten),
             traverse_only: field_traverse_only.unwrap_or(false),
             no_access: field_no_access.unwrap_or(false),
         };
@@ -7529,7 +7529,7 @@ impl GetMetadataArg {
             include_media_info: field_include_media_info.unwrap_or(false),
             include_deleted: field_include_deleted.unwrap_or(false),
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
-            include_property_groups: field_include_property_groups,
+            include_property_groups: field_include_property_groups.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -9269,9 +9269,9 @@ impl ListFolderArg {
             include_deleted: field_include_deleted.unwrap_or(false),
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
             include_mounted_folders: field_include_mounted_folders.unwrap_or(true),
-            limit: field_limit,
-            shared_link: field_shared_link,
-            include_property_groups: field_include_property_groups,
+            limit: field_limit.and_then(Option::flatten),
+            shared_link: field_shared_link.and_then(Option::flatten),
+            include_property_groups: field_include_property_groups.and_then(Option::flatten),
             include_non_downloadable_files: field_include_non_downloadable_files.unwrap_or(true),
         };
         Ok(Some(result))
@@ -9960,7 +9960,7 @@ impl ListFolderLongpollResult {
         }
         let result = ListFolderLongpollResult {
             changes: field_changes.ok_or_else(|| ::serde::de::Error::missing_field("changes"))?,
-            backoff: field_backoff,
+            backoff: field_backoff.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -10479,7 +10479,7 @@ impl ListRevisionsResult {
         let result = ListRevisionsResult {
             is_deleted: field_is_deleted.ok_or_else(|| ::serde::de::Error::missing_field("is_deleted"))?,
             entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
-            server_deleted: field_server_deleted,
+            server_deleted: field_server_deleted.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -11710,8 +11710,8 @@ impl MinimalFileLinkMetadata {
         let result = MinimalFileLinkMetadata {
             url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
             rev: field_rev.ok_or_else(|| ::serde::de::Error::missing_field("rev"))?,
-            id: field_id,
-            path: field_path,
+            id: field_id.and_then(Option::flatten),
+            path: field_path.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -12690,7 +12690,7 @@ impl PaperUpdateArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             import_format: field_import_format.ok_or_else(|| ::serde::de::Error::missing_field("import_format"))?,
             doc_update_policy: field_doc_update_policy.ok_or_else(|| ::serde::de::Error::missing_field("doc_update_policy"))?,
-            paper_revision: field_paper_revision,
+            paper_revision: field_paper_revision.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -13228,9 +13228,9 @@ impl PhotoMetadata {
             }
         }
         let result = PhotoMetadata {
-            dimensions: field_dimensions,
-            location: field_location,
-            time_taken: field_time_taken,
+            dimensions: field_dimensions.and_then(Option::flatten),
+            location: field_location.and_then(Option::flatten),
+            time_taken: field_time_taken.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -13346,7 +13346,7 @@ impl PreviewArg {
         }
         let result = PreviewArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            rev: field_rev,
+            rev: field_rev.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -13551,8 +13551,8 @@ impl PreviewResult {
             }
         }
         let result = PreviewResult {
-            file_metadata: field_file_metadata,
-            link_metadata: field_link_metadata,
+            file_metadata: field_file_metadata.and_then(Option::flatten),
+            link_metadata: field_link_metadata.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -17261,8 +17261,8 @@ impl SearchMatchV2 {
         }
         let result = SearchMatchV2 {
             metadata: field_metadata.ok_or_else(|| ::serde::de::Error::missing_field("metadata"))?,
-            match_type: field_match_type,
-            highlight_spans: field_highlight_spans,
+            match_type: field_match_type.and_then(Option::flatten),
+            highlight_spans: field_highlight_spans.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -17539,14 +17539,14 @@ impl SearchOptions {
             }
         }
         let result = SearchOptions {
-            path: field_path,
+            path: field_path.and_then(Option::flatten),
             max_results: field_max_results.unwrap_or(100),
-            order_by: field_order_by,
+            order_by: field_order_by.and_then(Option::flatten),
             file_status: field_file_status.unwrap_or(FileStatus::Active),
             filename_only: field_filename_only.unwrap_or(false),
-            file_extensions: field_file_extensions,
-            file_categories: field_file_categories,
-            account_id: field_account_id,
+            file_extensions: field_file_extensions.and_then(Option::flatten),
+            file_categories: field_file_categories.and_then(Option::flatten),
+            account_id: field_account_id.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -17891,9 +17891,9 @@ impl SearchV2Arg {
         }
         let result = SearchV2Arg {
             query: field_query.ok_or_else(|| ::serde::de::Error::missing_field("query"))?,
-            options: field_options,
-            match_field_options: field_match_field_options,
-            include_highlights: field_include_highlights,
+            options: field_options.and_then(Option::flatten),
+            match_field_options: field_match_field_options.and_then(Option::flatten),
+            include_highlights: field_include_highlights.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -18116,7 +18116,7 @@ impl SearchV2Result {
         let result = SearchV2Result {
             matches: field_matches.ok_or_else(|| ::serde::de::Error::missing_field("matches"))?,
             has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -18228,7 +18228,7 @@ impl SharedLink {
         }
         let result = SharedLink {
             url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
-            password: field_password,
+            password: field_password.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -18359,8 +18359,8 @@ impl SharedLinkFileInfo {
         }
         let result = SharedLinkFileInfo {
             url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
-            path: field_path,
-            password: field_password,
+            path: field_path.and_then(Option::flatten),
+            password: field_password.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -18581,7 +18581,7 @@ impl SingleUserLock {
         let result = SingleUserLock {
             created: field_created.ok_or_else(|| ::serde::de::Error::missing_field("created"))?,
             lock_holder_account_id: field_lock_holder_account_id.ok_or_else(|| ::serde::de::Error::missing_field("lock_holder_account_id"))?,
-            lock_holder_team_id: field_lock_holder_team_id,
+            lock_holder_team_id: field_lock_holder_team_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -20184,11 +20184,11 @@ impl UploadArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             mode: field_mode.unwrap_or(WriteMode::Add),
             autorename: field_autorename.unwrap_or(false),
-            client_modified: field_client_modified,
+            client_modified: field_client_modified.and_then(Option::flatten),
             mute: field_mute.unwrap_or(false),
-            property_groups: field_property_groups,
+            property_groups: field_property_groups.and_then(Option::flatten),
             strict_conflict: field_strict_conflict.unwrap_or(false),
-            content_hash: field_content_hash,
+            content_hash: field_content_hash.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -20452,7 +20452,7 @@ impl UploadSessionAppendArg {
         let result = UploadSessionAppendArg {
             cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
             close: field_close.unwrap_or(false),
-            content_hash: field_content_hash,
+            content_hash: field_content_hash.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -20847,7 +20847,7 @@ impl UploadSessionFinishArg {
         let result = UploadSessionFinishArg {
             cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
             commit: field_commit.ok_or_else(|| ::serde::de::Error::missing_field("commit"))?,
-            content_hash: field_content_hash,
+            content_hash: field_content_hash.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -21789,8 +21789,8 @@ impl UploadSessionStartArg {
         }
         let result = UploadSessionStartArg {
             close: field_close.unwrap_or(false),
-            session_type: field_session_type,
-            content_hash: field_content_hash,
+            session_type: field_session_type.and_then(Option::flatten),
+            content_hash: field_content_hash.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -21907,7 +21907,7 @@ impl UploadSessionStartBatchArg {
         }
         let result = UploadSessionStartBatchArg {
             num_sessions: field_num_sessions.ok_or_else(|| ::serde::de::Error::missing_field("num_sessions"))?,
-            session_type: field_session_type,
+            session_type: field_session_type.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -22583,10 +22583,10 @@ impl VideoMetadata {
             }
         }
         let result = VideoMetadata {
-            dimensions: field_dimensions,
-            location: field_location,
-            time_taken: field_time_taken,
-            duration: field_duration,
+            dimensions: field_dimensions.and_then(Option::flatten),
+            location: field_location.and_then(Option::flatten),
+            time_taken: field_time_taken.and_then(Option::flatten),
+            duration: field_duration.and_then(Option::flatten),
         };
         Ok(result)
     }

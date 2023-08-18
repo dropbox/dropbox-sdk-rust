@@ -1,7 +1,8 @@
 # v0.16.1
 xxxx-yy-zz
 * MSRV raised to 1.63.0
-* Omit fields with null or default value in more places when serializing
+* Omit fields with null or default value in more places when serializing, and accept nulls when
+  deserializing.
 
 # v0.16.0
 2023-08-13
