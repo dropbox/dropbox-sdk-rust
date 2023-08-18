@@ -643,6 +643,14 @@ impl ::serde::ser::Serialize for AddPaperDocUser {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<AddPaperDocUser> for RefPaperDoc {
+    fn from(subtype: AddPaperDocUser) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 /// Per-member result for [`docs_users_add()`](docs_users_add).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -1063,6 +1071,15 @@ impl ::std::fmt::Display for DocLookupError {
     }
 }
 
+// union extends PaperApiBaseError
+impl From<PaperApiBaseError> for DocLookupError {
+    fn from(parent: PaperApiBaseError) -> Self {
+        match parent {
+            PaperApiBaseError::InsufficientPermissions => DocLookupError::InsufficientPermissions,
+            PaperApiBaseError::Other => DocLookupError::Other,
+        }
+    }
+}
 /// The subscription level of a Paper doc.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DocSubscriptionLevel {
@@ -2494,6 +2511,15 @@ impl ::std::fmt::Display for ListUsersCursorError {
     }
 }
 
+// union extends PaperApiBaseError
+impl From<PaperApiBaseError> for ListUsersCursorError {
+    fn from(parent: PaperApiBaseError) -> Self {
+        match parent {
+            PaperApiBaseError::InsufficientPermissions => ListUsersCursorError::InsufficientPermissions,
+            PaperApiBaseError::Other => ListUsersCursorError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderArgs {
@@ -2606,6 +2632,14 @@ impl ::serde::ser::Serialize for ListUsersOnFolderArgs {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<ListUsersOnFolderArgs> for RefPaperDoc {
+    fn from(subtype: ListUsersOnFolderArgs) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderContinueArgs {
@@ -2712,6 +2746,14 @@ impl ::serde::ser::Serialize for ListUsersOnFolderContinueArgs {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<ListUsersOnFolderContinueArgs> for RefPaperDoc {
+    fn from(subtype: ListUsersOnFolderContinueArgs) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderResponse {
@@ -2984,6 +3026,14 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocArgs {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<ListUsersOnPaperDocArgs> for RefPaperDoc {
+    fn from(subtype: ListUsersOnPaperDocArgs) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocContinueArgs {
@@ -3089,6 +3139,14 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocContinueArgs {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<ListUsersOnPaperDocContinueArgs> for RefPaperDoc {
+    fn from(subtype: ListUsersOnPaperDocContinueArgs) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocResponse {
@@ -3638,6 +3696,15 @@ impl ::std::fmt::Display for PaperDocCreateError {
     }
 }
 
+// union extends PaperApiBaseError
+impl From<PaperApiBaseError> for PaperDocCreateError {
+    fn from(parent: PaperApiBaseError) -> Self {
+        match parent {
+            PaperApiBaseError::InsufficientPermissions => PaperDocCreateError::InsufficientPermissions,
+            PaperApiBaseError::Other => PaperDocCreateError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocCreateUpdateResult {
@@ -3858,6 +3925,14 @@ impl ::serde::ser::Serialize for PaperDocExport {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<PaperDocExport> for RefPaperDoc {
+    fn from(subtype: PaperDocExport) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocExportResult {
@@ -4158,6 +4233,14 @@ impl ::serde::ser::Serialize for PaperDocSharingPolicy {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<PaperDocSharingPolicy> for RefPaperDoc {
+    fn from(subtype: PaperDocSharingPolicy) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocUpdateArgs {
@@ -4294,6 +4377,14 @@ impl ::serde::ser::Serialize for PaperDocUpdateArgs {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<PaperDocUpdateArgs> for RefPaperDoc {
+    fn from(subtype: PaperDocUpdateArgs) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdateError {
@@ -4441,6 +4532,16 @@ impl ::std::fmt::Display for PaperDocUpdateError {
     }
 }
 
+// union extends DocLookupError
+impl From<DocLookupError> for PaperDocUpdateError {
+    fn from(parent: DocLookupError) -> Self {
+        match parent {
+            DocLookupError::InsufficientPermissions => PaperDocUpdateError::InsufficientPermissions,
+            DocLookupError::Other => PaperDocUpdateError::Other,
+            DocLookupError::DocNotFound => PaperDocUpdateError::DocNotFound,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdatePolicy {
@@ -4743,6 +4844,15 @@ impl ::std::fmt::Display for PaperFolderCreateError {
     }
 }
 
+// union extends PaperApiBaseError
+impl From<PaperApiBaseError> for PaperFolderCreateError {
+    fn from(parent: PaperApiBaseError) -> Self {
+        match parent {
+            PaperApiBaseError::InsufficientPermissions => PaperFolderCreateError::InsufficientPermissions,
+            PaperApiBaseError::Other => PaperFolderCreateError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperFolderCreateResult {
@@ -5030,6 +5140,14 @@ impl ::serde::ser::Serialize for RemovePaperDocUser {
     }
 }
 
+// struct extends RefPaperDoc
+impl From<RemovePaperDocUser> for RefPaperDoc {
+    fn from(subtype: RemovePaperDocUser) -> Self {
+        Self {
+            doc_id: subtype.doc_id,
+        }
+    }
+}
 /// Sharing policy of Paper doc.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -5210,6 +5328,16 @@ impl ::serde::ser::Serialize for SharingPublicPolicyType {
     }
 }
 
+// union extends SharingTeamPolicyType
+impl From<SharingTeamPolicyType> for SharingPublicPolicyType {
+    fn from(parent: SharingTeamPolicyType) -> Self {
+        match parent {
+            SharingTeamPolicyType::PeopleWithLinkCanEdit => SharingPublicPolicyType::PeopleWithLinkCanEdit,
+            SharingTeamPolicyType::PeopleWithLinkCanViewAndComment => SharingPublicPolicyType::PeopleWithLinkCanViewAndComment,
+            SharingTeamPolicyType::InviteOnly => SharingPublicPolicyType::InviteOnly,
+        }
+    }
+}
 /// The sharing policy type of the Paper doc.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SharingTeamPolicyType {

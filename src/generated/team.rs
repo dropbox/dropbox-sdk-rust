@@ -1691,6 +1691,18 @@ impl ::serde::ser::Serialize for ActiveWebSession {
     }
 }
 
+// struct extends DeviceSession
+impl From<ActiveWebSession> for DeviceSession {
+    fn from(subtype: ActiveWebSession) -> Self {
+        Self {
+            session_id: subtype.session_id,
+            ip_address: subtype.ip_address,
+            country: subtype.country,
+            created: subtype.created,
+            updated: subtype.updated,
+        }
+    }
+}
 /// Result of trying to add a secondary email to a user. 'success' is the only value indicating that
 /// a secondary email was successfully added to a user. The other values explain the type of error
 /// that occurred, and include the email for which the error occurred.
@@ -3525,6 +3537,18 @@ impl ::serde::ser::Serialize for DesktopClientSession {
     }
 }
 
+// struct extends DeviceSession
+impl From<DesktopClientSession> for DeviceSession {
+    fn from(subtype: DesktopClientSession) -> Self {
+        Self {
+            session_id: subtype.session_id,
+            ip_address: subtype.ip_address,
+            country: subtype.country,
+            created: subtype.created,
+            updated: subtype.updated,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DesktopPlatform {
@@ -5549,6 +5573,14 @@ impl ::serde::ser::Serialize for GetActivityReport {
     }
 }
 
+// struct extends BaseDfbReport
+impl From<GetActivityReport> for BaseDfbReport {
+    fn from(subtype: GetActivityReport) -> Self {
+        Self {
+            start_date: subtype.start_date,
+        }
+    }
+}
 /// Devices Report Result. Contains subsections for different time ranges of activity. Each of the
 /// items in each subsection of the storage report is an array of values, one value per day. If
 /// there is no data for a day, then the value will be None.
@@ -5687,6 +5719,14 @@ impl ::serde::ser::Serialize for GetDevicesReport {
     }
 }
 
+// struct extends BaseDfbReport
+impl From<GetDevicesReport> for BaseDfbReport {
+    fn from(subtype: GetDevicesReport) -> Self {
+        Self {
+            start_date: subtype.start_date,
+        }
+    }
+}
 /// Membership Report Result. Each of the items in the storage report is an array of values, one
 /// value per day. If there is no data for a day, then the value will be None.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -5852,6 +5892,14 @@ impl ::serde::ser::Serialize for GetMembershipReport {
     }
 }
 
+// struct extends BaseDfbReport
+impl From<GetMembershipReport> for BaseDfbReport {
+    fn from(subtype: GetMembershipReport) -> Self {
+        Self {
+            start_date: subtype.start_date,
+        }
+    }
+}
 /// Storage Report Result. Each of the items in the storage report is an array of values, one value
 /// per day. If there is no data for a day, then the value will be None.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -6020,6 +6068,14 @@ impl ::serde::ser::Serialize for GetStorageReport {
     }
 }
 
+// struct extends BaseDfbReport
+impl From<GetStorageReport> for BaseDfbReport {
+    fn from(subtype: GetStorageReport) -> Self {
+        Self {
+            start_date: subtype.start_date,
+        }
+    }
+}
 /// Role of a user in group.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupAccessType {
@@ -6423,6 +6479,16 @@ impl ::std::fmt::Display for GroupDeleteError {
     }
 }
 
+// union extends GroupSelectorWithTeamGroupError
+impl From<GroupSelectorWithTeamGroupError> for GroupDeleteError {
+    fn from(parent: GroupSelectorWithTeamGroupError) -> Self {
+        match parent {
+            GroupSelectorWithTeamGroupError::GroupNotFound => GroupDeleteError::GroupNotFound,
+            GroupSelectorWithTeamGroupError::Other => GroupDeleteError::Other,
+            GroupSelectorWithTeamGroupError::SystemManagedGroupDisallowed => GroupDeleteError::SystemManagedGroupDisallowed,
+        }
+    }
+}
 /// Full description of a group.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -6617,6 +6683,18 @@ impl ::serde::ser::Serialize for GroupFullInfo {
     }
 }
 
+// struct extends crate::team_common::GroupSummary
+impl From<GroupFullInfo> for crate::team_common::GroupSummary {
+    fn from(subtype: GroupFullInfo) -> Self {
+        Self {
+            group_name: subtype.group_name,
+            group_id: subtype.group_id,
+            group_management_type: subtype.group_management_type,
+            group_external_id: subtype.group_external_id,
+            member_count: subtype.member_count,
+        }
+    }
+}
 /// Profile of group member, and role in group.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -6918,6 +6996,16 @@ impl ::std::fmt::Display for GroupMemberSelectorError {
     }
 }
 
+// union extends GroupSelectorWithTeamGroupError
+impl From<GroupSelectorWithTeamGroupError> for GroupMemberSelectorError {
+    fn from(parent: GroupSelectorWithTeamGroupError) -> Self {
+        match parent {
+            GroupSelectorWithTeamGroupError::GroupNotFound => GroupMemberSelectorError::GroupNotFound,
+            GroupSelectorWithTeamGroupError::Other => GroupMemberSelectorError::Other,
+            GroupSelectorWithTeamGroupError::SystemManagedGroupDisallowed => GroupMemberSelectorError::SystemManagedGroupDisallowed,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupMemberSetAccessTypeError {
@@ -7018,6 +7106,17 @@ impl ::std::fmt::Display for GroupMemberSetAccessTypeError {
     }
 }
 
+// union extends GroupMemberSelectorError
+impl From<GroupMemberSelectorError> for GroupMemberSetAccessTypeError {
+    fn from(parent: GroupMemberSelectorError) -> Self {
+        match parent {
+            GroupMemberSelectorError::GroupNotFound => GroupMemberSetAccessTypeError::GroupNotFound,
+            GroupMemberSelectorError::Other => GroupMemberSetAccessTypeError::Other,
+            GroupMemberSelectorError::SystemManagedGroupDisallowed => GroupMemberSetAccessTypeError::SystemManagedGroupDisallowed,
+            GroupMemberSelectorError::MemberNotInGroup => GroupMemberSetAccessTypeError::MemberNotInGroup,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersAddArg {
@@ -7144,6 +7243,14 @@ impl ::serde::ser::Serialize for GroupMembersAddArg {
     }
 }
 
+// struct extends IncludeMembersArg
+impl From<GroupMembersAddArg> for IncludeMembersArg {
+    fn from(subtype: GroupMembersAddArg) -> Self {
+        Self {
+            return_members: subtype.return_members,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupMembersAddError {
@@ -7312,6 +7419,16 @@ impl ::std::fmt::Display for GroupMembersAddError {
     }
 }
 
+// union extends GroupSelectorWithTeamGroupError
+impl From<GroupSelectorWithTeamGroupError> for GroupMembersAddError {
+    fn from(parent: GroupSelectorWithTeamGroupError) -> Self {
+        match parent {
+            GroupSelectorWithTeamGroupError::GroupNotFound => GroupMembersAddError::GroupNotFound,
+            GroupSelectorWithTeamGroupError::Other => GroupMembersAddError::Other,
+            GroupSelectorWithTeamGroupError::SystemManagedGroupDisallowed => GroupMembersAddError::SystemManagedGroupDisallowed,
+        }
+    }
+}
 /// Result returned by [`groups_members_add()`](groups_members_add) and
 /// [`groups_members_remove()`](groups_members_remove).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -7546,6 +7663,14 @@ impl ::serde::ser::Serialize for GroupMembersRemoveArg {
     }
 }
 
+// struct extends IncludeMembersArg
+impl From<GroupMembersRemoveArg> for IncludeMembersArg {
+    fn from(subtype: GroupMembersRemoveArg) -> Self {
+        Self {
+            return_members: subtype.return_members,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupMembersRemoveError {
@@ -7683,6 +7808,17 @@ impl ::std::fmt::Display for GroupMembersRemoveError {
     }
 }
 
+// union extends GroupMembersSelectorError
+impl From<GroupMembersSelectorError> for GroupMembersRemoveError {
+    fn from(parent: GroupMembersSelectorError) -> Self {
+        match parent {
+            GroupMembersSelectorError::GroupNotFound => GroupMembersRemoveError::GroupNotFound,
+            GroupMembersSelectorError::Other => GroupMembersRemoveError::Other,
+            GroupMembersSelectorError::SystemManagedGroupDisallowed => GroupMembersRemoveError::SystemManagedGroupDisallowed,
+            GroupMembersSelectorError::MemberNotInGroup => GroupMembersRemoveError::MemberNotInGroup,
+        }
+    }
+}
 /// Argument for selecting a group and a list of users.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -7879,6 +8015,16 @@ impl ::std::fmt::Display for GroupMembersSelectorError {
     }
 }
 
+// union extends GroupSelectorWithTeamGroupError
+impl From<GroupSelectorWithTeamGroupError> for GroupMembersSelectorError {
+    fn from(parent: GroupSelectorWithTeamGroupError) -> Self {
+        match parent {
+            GroupSelectorWithTeamGroupError::GroupNotFound => GroupMembersSelectorError::GroupNotFound,
+            GroupSelectorWithTeamGroupError::Other => GroupMembersSelectorError::Other,
+            GroupSelectorWithTeamGroupError::SystemManagedGroupDisallowed => GroupMembersSelectorError::SystemManagedGroupDisallowed,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersSetAccessTypeArg {
@@ -8018,6 +8164,15 @@ impl ::serde::ser::Serialize for GroupMembersSetAccessTypeArg {
     }
 }
 
+// struct extends GroupMemberSelector
+impl From<GroupMembersSetAccessTypeArg> for GroupMemberSelector {
+    fn from(subtype: GroupMembersSetAccessTypeArg) -> Self {
+        Self {
+            group: subtype.group,
+            user: subtype.user,
+        }
+    }
+}
 /// Argument for selecting a single group, either by group_id or by external group ID.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupSelector {
@@ -8240,6 +8395,15 @@ impl ::std::fmt::Display for GroupSelectorWithTeamGroupError {
     }
 }
 
+// union extends GroupSelectorError
+impl From<GroupSelectorError> for GroupSelectorWithTeamGroupError {
+    fn from(parent: GroupSelectorError) -> Self {
+        match parent {
+            GroupSelectorError::GroupNotFound => GroupSelectorWithTeamGroupError::GroupNotFound,
+            GroupSelectorError::Other => GroupSelectorWithTeamGroupError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupUpdateArgs {
@@ -8420,6 +8584,14 @@ impl ::serde::ser::Serialize for GroupUpdateArgs {
     }
 }
 
+// struct extends IncludeMembersArg
+impl From<GroupUpdateArgs> for IncludeMembersArg {
+    fn from(subtype: GroupUpdateArgs) -> Self {
+        Self {
+            return_members: subtype.return_members,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupUpdateError {
@@ -8531,6 +8703,16 @@ impl ::std::fmt::Display for GroupUpdateError {
     }
 }
 
+// union extends GroupSelectorWithTeamGroupError
+impl From<GroupSelectorWithTeamGroupError> for GroupUpdateError {
+    fn from(parent: GroupSelectorWithTeamGroupError) -> Self {
+        match parent {
+            GroupSelectorWithTeamGroupError::GroupNotFound => GroupUpdateError::GroupNotFound,
+            GroupSelectorWithTeamGroupError::Other => GroupUpdateError::Other,
+            GroupSelectorWithTeamGroupError::SystemManagedGroupDisallowed => GroupUpdateError::SystemManagedGroupDisallowed,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupsGetInfoError {
@@ -9513,6 +9695,16 @@ impl ::std::fmt::Display for GroupsPollError {
     }
 }
 
+// union extends crate::dbx_async::PollError
+impl From<crate::dbx_async::PollError> for GroupsPollError {
+    fn from(parent: crate::dbx_async::PollError) -> Self {
+        match parent {
+            crate::dbx_async::PollError::InvalidAsyncJobId => GroupsPollError::InvalidAsyncJobId,
+            crate::dbx_async::PollError::InternalError => GroupsPollError::InternalError,
+            crate::dbx_async::PollError::Other => GroupsPollError::Other,
+        }
+    }
+}
 /// Argument for selecting a list of groups, either by group_ids, or external group IDs.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupsSelector {
@@ -10659,6 +10851,16 @@ impl ::std::fmt::Display for LegalHoldsGetPolicyError {
     }
 }
 
+// union extends LegalHoldsError
+impl From<LegalHoldsError> for LegalHoldsGetPolicyError {
+    fn from(parent: LegalHoldsError) -> Self {
+        match parent {
+            LegalHoldsError::UnknownLegalHoldError => LegalHoldsGetPolicyError::UnknownLegalHoldError,
+            LegalHoldsError::InsufficientPermissions => LegalHoldsGetPolicyError::InsufficientPermissions,
+            LegalHoldsError::Other => LegalHoldsGetPolicyError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListHeldRevisionResult {
@@ -11190,6 +11392,16 @@ impl ::std::fmt::Display for LegalHoldsListHeldRevisionsError {
     }
 }
 
+// union extends LegalHoldsError
+impl From<LegalHoldsError> for LegalHoldsListHeldRevisionsError {
+    fn from(parent: LegalHoldsError) -> Self {
+        match parent {
+            LegalHoldsError::UnknownLegalHoldError => LegalHoldsListHeldRevisionsError::UnknownLegalHoldError,
+            LegalHoldsError::InsufficientPermissions => LegalHoldsListHeldRevisionsError::InsufficientPermissions,
+            LegalHoldsError::Other => LegalHoldsListHeldRevisionsError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListPoliciesArg {
@@ -11360,6 +11572,16 @@ impl ::std::fmt::Display for LegalHoldsListPoliciesError {
     }
 }
 
+// union extends LegalHoldsError
+impl From<LegalHoldsError> for LegalHoldsListPoliciesError {
+    fn from(parent: LegalHoldsError) -> Self {
+        match parent {
+            LegalHoldsError::UnknownLegalHoldError => LegalHoldsListPoliciesError::UnknownLegalHoldError,
+            LegalHoldsError::InsufficientPermissions => LegalHoldsListPoliciesError::InsufficientPermissions,
+            LegalHoldsError::Other => LegalHoldsListPoliciesError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListPoliciesResult {
@@ -11780,6 +12002,16 @@ impl ::std::fmt::Display for LegalHoldsPolicyCreateError {
     }
 }
 
+// union extends LegalHoldsError
+impl From<LegalHoldsError> for LegalHoldsPolicyCreateError {
+    fn from(parent: LegalHoldsError) -> Self {
+        match parent {
+            LegalHoldsError::UnknownLegalHoldError => LegalHoldsPolicyCreateError::UnknownLegalHoldError,
+            LegalHoldsError::InsufficientPermissions => LegalHoldsPolicyCreateError::InsufficientPermissions,
+            LegalHoldsError::Other => LegalHoldsPolicyCreateError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsPolicyReleaseArg {
@@ -11982,6 +12214,16 @@ impl ::std::fmt::Display for LegalHoldsPolicyReleaseError {
     }
 }
 
+// union extends LegalHoldsError
+impl From<LegalHoldsError> for LegalHoldsPolicyReleaseError {
+    fn from(parent: LegalHoldsError) -> Self {
+        match parent {
+            LegalHoldsError::UnknownLegalHoldError => LegalHoldsPolicyReleaseError::UnknownLegalHoldError,
+            LegalHoldsError::InsufficientPermissions => LegalHoldsPolicyReleaseError::InsufficientPermissions,
+            LegalHoldsError::Other => LegalHoldsPolicyReleaseError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsPolicyUpdateArg {
@@ -12299,6 +12541,16 @@ impl ::std::fmt::Display for LegalHoldsPolicyUpdateError {
     }
 }
 
+// union extends LegalHoldsError
+impl From<LegalHoldsError> for LegalHoldsPolicyUpdateError {
+    fn from(parent: LegalHoldsError) -> Self {
+        match parent {
+            LegalHoldsError::UnknownLegalHoldError => LegalHoldsPolicyUpdateError::UnknownLegalHoldError,
+            LegalHoldsError::InsufficientPermissions => LegalHoldsPolicyUpdateError::InsufficientPermissions,
+            LegalHoldsError::Other => LegalHoldsPolicyUpdateError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMemberAppsArg {
@@ -14479,6 +14731,20 @@ impl ::serde::ser::Serialize for MemberAddArg {
     }
 }
 
+// struct extends MemberAddArgBase
+impl From<MemberAddArg> for MemberAddArgBase {
+    fn from(subtype: MemberAddArg) -> Self {
+        Self {
+            member_email: subtype.member_email,
+            member_given_name: subtype.member_given_name,
+            member_surname: subtype.member_surname,
+            member_external_id: subtype.member_external_id,
+            member_persistent_id: subtype.member_persistent_id,
+            send_welcome_email: subtype.send_welcome_email,
+            is_directory_restricted: subtype.is_directory_restricted,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAddArgBase {
@@ -14920,6 +15186,23 @@ impl ::serde::ser::Serialize for MemberAddResult {
     }
 }
 
+// union extends MemberAddResultBase
+impl From<MemberAddResultBase> for MemberAddResult {
+    fn from(parent: MemberAddResultBase) -> Self {
+        match parent {
+            MemberAddResultBase::TeamLicenseLimit(x) => MemberAddResult::TeamLicenseLimit(x),
+            MemberAddResultBase::FreeTeamMemberLimitReached(x) => MemberAddResult::FreeTeamMemberLimitReached(x),
+            MemberAddResultBase::UserAlreadyOnTeam(x) => MemberAddResult::UserAlreadyOnTeam(x),
+            MemberAddResultBase::UserOnAnotherTeam(x) => MemberAddResult::UserOnAnotherTeam(x),
+            MemberAddResultBase::UserAlreadyPaired(x) => MemberAddResult::UserAlreadyPaired(x),
+            MemberAddResultBase::UserMigrationFailed(x) => MemberAddResult::UserMigrationFailed(x),
+            MemberAddResultBase::DuplicateExternalMemberId(x) => MemberAddResult::DuplicateExternalMemberId(x),
+            MemberAddResultBase::DuplicateMemberPersistentId(x) => MemberAddResult::DuplicateMemberPersistentId(x),
+            MemberAddResultBase::PersistentIdDisabled(x) => MemberAddResult::PersistentIdDisabled(x),
+            MemberAddResultBase::UserCreationFailed(x) => MemberAddResult::UserCreationFailed(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MemberAddResultBase {
     /// Team is already full. The organization has no available licenses.
@@ -15366,6 +15649,20 @@ impl ::serde::ser::Serialize for MemberAddV2Arg {
     }
 }
 
+// struct extends MemberAddArgBase
+impl From<MemberAddV2Arg> for MemberAddArgBase {
+    fn from(subtype: MemberAddV2Arg) -> Self {
+        Self {
+            member_email: subtype.member_email,
+            member_given_name: subtype.member_given_name,
+            member_surname: subtype.member_surname,
+            member_external_id: subtype.member_external_id,
+            member_persistent_id: subtype.member_persistent_id,
+            send_welcome_email: subtype.send_welcome_email,
+            is_directory_restricted: subtype.is_directory_restricted,
+        }
+    }
+}
 /// Describes the result of attempting to add a single user to the team. 'success' is the only value
 /// indicating that a user was indeed added to the team - the other values explain the type of
 /// failure that occurred, and include the email of the user for which the operation has failed.
@@ -15600,6 +15897,23 @@ impl ::serde::ser::Serialize for MemberAddV2Result {
     }
 }
 
+// union extends MemberAddResultBase
+impl From<MemberAddResultBase> for MemberAddV2Result {
+    fn from(parent: MemberAddResultBase) -> Self {
+        match parent {
+            MemberAddResultBase::TeamLicenseLimit(x) => MemberAddV2Result::TeamLicenseLimit(x),
+            MemberAddResultBase::FreeTeamMemberLimitReached(x) => MemberAddV2Result::FreeTeamMemberLimitReached(x),
+            MemberAddResultBase::UserAlreadyOnTeam(x) => MemberAddV2Result::UserAlreadyOnTeam(x),
+            MemberAddResultBase::UserOnAnotherTeam(x) => MemberAddV2Result::UserOnAnotherTeam(x),
+            MemberAddResultBase::UserAlreadyPaired(x) => MemberAddV2Result::UserAlreadyPaired(x),
+            MemberAddResultBase::UserMigrationFailed(x) => MemberAddV2Result::UserMigrationFailed(x),
+            MemberAddResultBase::DuplicateExternalMemberId(x) => MemberAddV2Result::DuplicateExternalMemberId(x),
+            MemberAddResultBase::DuplicateMemberPersistentId(x) => MemberAddV2Result::DuplicateMemberPersistentId(x),
+            MemberAddResultBase::PersistentIdDisabled(x) => MemberAddV2Result::PersistentIdDisabled(x),
+            MemberAddResultBase::UserCreationFailed(x) => MemberAddV2Result::UserCreationFailed(x),
+        }
+    }
+}
 /// Information on devices of a team's member.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -16281,6 +16595,14 @@ impl ::std::fmt::Display for MemberSelectorError {
     }
 }
 
+// union extends UserSelectorError
+impl From<UserSelectorError> for MemberSelectorError {
+    fn from(parent: UserSelectorError) -> Self {
+        match parent {
+            UserSelectorError::UserNotFound => MemberSelectorError::UserNotFound,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersAddArg {
@@ -16392,6 +16714,14 @@ impl ::serde::ser::Serialize for MembersAddArg {
     }
 }
 
+// struct extends MembersAddArgBase
+impl From<MembersAddArg> for MembersAddArgBase {
+    fn from(subtype: MembersAddArg) -> Self {
+        Self {
+            force_async: subtype.force_async,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersAddArgBase {
@@ -16558,6 +16888,14 @@ impl ::serde::ser::Serialize for MembersAddJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for MembersAddJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => MembersAddJobStatus::InProgress,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersAddJobStatusV2Result {
@@ -16649,6 +16987,14 @@ impl ::serde::ser::Serialize for MembersAddJobStatusV2Result {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for MembersAddJobStatusV2Result {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => MembersAddJobStatusV2Result::InProgress,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MembersAddLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -16722,6 +17068,14 @@ impl ::serde::ser::Serialize for MembersAddLaunch {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for MembersAddLaunch {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => MembersAddLaunch::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersAddLaunchV2Result {
@@ -16801,6 +17155,14 @@ impl ::serde::ser::Serialize for MembersAddLaunchV2Result {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for MembersAddLaunchV2Result {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => MembersAddLaunchV2Result::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersAddV2Arg {
@@ -16912,6 +17274,14 @@ impl ::serde::ser::Serialize for MembersAddV2Arg {
     }
 }
 
+// struct extends MembersAddArgBase
+impl From<MembersAddV2Arg> for MembersAddArgBase {
+    fn from(subtype: MembersAddV2Arg) -> Self {
+        Self {
+            force_async: subtype.force_async,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDataTransferArg {
@@ -17033,6 +17403,14 @@ impl ::serde::ser::Serialize for MembersDataTransferArg {
     }
 }
 
+// struct extends MembersDeactivateBaseArg
+impl From<MembersDataTransferArg> for MembersDeactivateBaseArg {
+    fn from(subtype: MembersDataTransferArg) -> Self {
+        Self {
+            user: subtype.user,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDeactivateArg {
@@ -17144,6 +17522,14 @@ impl ::serde::ser::Serialize for MembersDeactivateArg {
     }
 }
 
+// struct extends MembersDeactivateBaseArg
+impl From<MembersDeactivateArg> for MembersDeactivateBaseArg {
+    fn from(subtype: MembersDeactivateArg) -> Self {
+        Self {
+            user: subtype.user,
+        }
+    }
+}
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -17316,6 +17702,14 @@ impl ::std::fmt::Display for MembersDeactivateError {
     }
 }
 
+// union extends UserSelectorError
+impl From<UserSelectorError> for MembersDeactivateError {
+    fn from(parent: UserSelectorError) -> Self {
+        match parent {
+            UserSelectorError::UserNotFound => MembersDeactivateError::UserNotFound,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDeleteProfilePhotoArg {
@@ -17497,6 +17891,15 @@ impl ::std::fmt::Display for MembersDeleteProfilePhotoError {
     }
 }
 
+// union extends MemberSelectorError
+impl From<MemberSelectorError> for MembersDeleteProfilePhotoError {
+    fn from(parent: MemberSelectorError) -> Self {
+        match parent {
+            MemberSelectorError::UserNotFound => MembersDeleteProfilePhotoError::UserNotFound,
+            MemberSelectorError::UserNotInTeam => MembersDeleteProfilePhotoError::UserNotInTeam,
+        }
+    }
+}
 /// Available TeamMemberRole for the connected team. To be used with
 /// [`members_set_admin_permissions_v2()`](members_set_admin_permissions_v2).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -17805,6 +18208,14 @@ impl ::serde::ser::Serialize for MembersGetInfoItem {
     }
 }
 
+// union extends MembersGetInfoItemBase
+impl From<MembersGetInfoItemBase> for MembersGetInfoItem {
+    fn from(parent: MembersGetInfoItemBase) -> Self {
+        match parent {
+            MembersGetInfoItemBase::IdNotFound(x) => MembersGetInfoItem::IdNotFound(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MembersGetInfoItemBase {
     /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info) or
@@ -17942,6 +18353,14 @@ impl ::serde::ser::Serialize for MembersGetInfoItemV2 {
     }
 }
 
+// union extends MembersGetInfoItemBase
+impl From<MembersGetInfoItemBase> for MembersGetInfoItemV2 {
+    fn from(parent: MembersGetInfoItemBase) -> Self {
+        match parent {
+            MembersGetInfoItemBase::IdNotFound(x) => MembersGetInfoItemV2::IdNotFound(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersGetInfoV2Arg {
@@ -18982,6 +19401,14 @@ impl ::std::fmt::Display for MembersRecoverError {
     }
 }
 
+// union extends UserSelectorError
+impl From<UserSelectorError> for MembersRecoverError {
+    fn from(parent: UserSelectorError) -> Self {
+        match parent {
+            UserSelectorError::UserNotFound => MembersRecoverError::UserNotFound,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersRemoveArg {
@@ -19180,6 +19607,15 @@ impl ::serde::ser::Serialize for MembersRemoveArg {
     }
 }
 
+// struct extends MembersDeactivateArg
+impl From<MembersRemoveArg> for MembersDeactivateArg {
+    fn from(subtype: MembersRemoveArg) -> Self {
+        Self {
+            user: subtype.user,
+            wipe_data: subtype.wipe_data,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersRemoveError {
@@ -19482,6 +19918,25 @@ impl ::std::fmt::Display for MembersRemoveError {
     }
 }
 
+// union extends MembersTransferFilesError
+impl From<MembersTransferFilesError> for MembersRemoveError {
+    fn from(parent: MembersTransferFilesError) -> Self {
+        match parent {
+            MembersTransferFilesError::UserNotFound => MembersRemoveError::UserNotFound,
+            MembersTransferFilesError::UserNotInTeam => MembersRemoveError::UserNotInTeam,
+            MembersTransferFilesError::Other => MembersRemoveError::Other,
+            MembersTransferFilesError::RemovedAndTransferDestShouldDiffer => MembersRemoveError::RemovedAndTransferDestShouldDiffer,
+            MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer => MembersRemoveError::RemovedAndTransferAdminShouldDiffer,
+            MembersTransferFilesError::TransferDestUserNotFound => MembersRemoveError::TransferDestUserNotFound,
+            MembersTransferFilesError::TransferDestUserNotInTeam => MembersRemoveError::TransferDestUserNotInTeam,
+            MembersTransferFilesError::TransferAdminUserNotInTeam => MembersRemoveError::TransferAdminUserNotInTeam,
+            MembersTransferFilesError::TransferAdminUserNotFound => MembersRemoveError::TransferAdminUserNotFound,
+            MembersTransferFilesError::UnspecifiedTransferAdminId => MembersRemoveError::UnspecifiedTransferAdminId,
+            MembersTransferFilesError::TransferAdminIsNotAdmin => MembersRemoveError::TransferAdminIsNotAdmin,
+            MembersTransferFilesError::RecipientNotVerified => MembersRemoveError::RecipientNotVerified,
+        }
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -19562,6 +20017,15 @@ impl ::std::fmt::Display for MembersSendWelcomeError {
     }
 }
 
+// union extends MemberSelectorError
+impl From<MemberSelectorError> for MembersSendWelcomeError {
+    fn from(parent: MemberSelectorError) -> Self {
+        match parent {
+            MemberSelectorError::UserNotFound => MembersSendWelcomeError::UserNotFound,
+            MemberSelectorError::UserNotInTeam => MembersSendWelcomeError::UserNotInTeam,
+        }
+    }
+}
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -19788,6 +20252,14 @@ impl ::std::fmt::Display for MembersSetPermissions2Error {
     }
 }
 
+// union extends UserSelectorError
+impl From<UserSelectorError> for MembersSetPermissions2Error {
+    fn from(parent: UserSelectorError) -> Self {
+        match parent {
+            UserSelectorError::UserNotFound => MembersSetPermissions2Error::UserNotFound,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetPermissions2Result {
@@ -20117,6 +20589,14 @@ impl ::std::fmt::Display for MembersSetPermissionsError {
     }
 }
 
+// union extends UserSelectorError
+impl From<UserSelectorError> for MembersSetPermissionsError {
+    fn from(parent: UserSelectorError) -> Self {
+        match parent {
+            UserSelectorError::UserNotFound => MembersSetPermissionsError::UserNotFound,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetPermissionsResult {
@@ -20615,6 +21095,15 @@ impl ::std::fmt::Display for MembersSetProfileError {
     }
 }
 
+// union extends MemberSelectorError
+impl From<MemberSelectorError> for MembersSetProfileError {
+    fn from(parent: MemberSelectorError) -> Self {
+        match parent {
+            MemberSelectorError::UserNotFound => MembersSetProfileError::UserNotFound,
+            MemberSelectorError::UserNotInTeam => MembersSetProfileError::UserNotInTeam,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetProfilePhotoArg {
@@ -20832,6 +21321,15 @@ impl ::std::fmt::Display for MembersSetProfilePhotoError {
     }
 }
 
+// union extends MemberSelectorError
+impl From<MemberSelectorError> for MembersSetProfilePhotoError {
+    fn from(parent: MemberSelectorError) -> Self {
+        match parent {
+            MemberSelectorError::UserNotFound => MembersSetProfilePhotoError::UserNotFound,
+            MemberSelectorError::UserNotInTeam => MembersSetProfilePhotoError::UserNotInTeam,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersSuspendError {
@@ -20944,6 +21442,16 @@ impl ::std::fmt::Display for MembersSuspendError {
     }
 }
 
+// union extends MembersDeactivateError
+impl From<MembersDeactivateError> for MembersSuspendError {
+    fn from(parent: MembersDeactivateError) -> Self {
+        match parent {
+            MembersDeactivateError::UserNotFound => MembersSuspendError::UserNotFound,
+            MembersDeactivateError::UserNotInTeam => MembersSuspendError::UserNotInTeam,
+            MembersDeactivateError::Other => MembersSuspendError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersTransferFilesError {
@@ -21122,6 +21630,16 @@ impl ::std::fmt::Display for MembersTransferFilesError {
     }
 }
 
+// union extends MembersDeactivateError
+impl From<MembersDeactivateError> for MembersTransferFilesError {
+    fn from(parent: MembersDeactivateError) -> Self {
+        match parent {
+            MembersDeactivateError::UserNotFound => MembersTransferFilesError::UserNotFound,
+            MembersDeactivateError::UserNotInTeam => MembersTransferFilesError::UserNotInTeam,
+            MembersDeactivateError::Other => MembersTransferFilesError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersTransferFormerMembersFilesError {
@@ -21344,6 +21862,25 @@ impl ::std::fmt::Display for MembersTransferFormerMembersFilesError {
     }
 }
 
+// union extends MembersTransferFilesError
+impl From<MembersTransferFilesError> for MembersTransferFormerMembersFilesError {
+    fn from(parent: MembersTransferFilesError) -> Self {
+        match parent {
+            MembersTransferFilesError::UserNotFound => MembersTransferFormerMembersFilesError::UserNotFound,
+            MembersTransferFilesError::UserNotInTeam => MembersTransferFormerMembersFilesError::UserNotInTeam,
+            MembersTransferFilesError::Other => MembersTransferFormerMembersFilesError::Other,
+            MembersTransferFilesError::RemovedAndTransferDestShouldDiffer => MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer,
+            MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer => MembersTransferFormerMembersFilesError::RemovedAndTransferAdminShouldDiffer,
+            MembersTransferFilesError::TransferDestUserNotFound => MembersTransferFormerMembersFilesError::TransferDestUserNotFound,
+            MembersTransferFilesError::TransferDestUserNotInTeam => MembersTransferFormerMembersFilesError::TransferDestUserNotInTeam,
+            MembersTransferFilesError::TransferAdminUserNotInTeam => MembersTransferFormerMembersFilesError::TransferAdminUserNotInTeam,
+            MembersTransferFilesError::TransferAdminUserNotFound => MembersTransferFormerMembersFilesError::TransferAdminUserNotFound,
+            MembersTransferFilesError::UnspecifiedTransferAdminId => MembersTransferFormerMembersFilesError::UnspecifiedTransferAdminId,
+            MembersTransferFilesError::TransferAdminIsNotAdmin => MembersTransferFormerMembersFilesError::TransferAdminIsNotAdmin,
+            MembersTransferFilesError::RecipientNotVerified => MembersTransferFormerMembersFilesError::RecipientNotVerified,
+        }
+    }
+}
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -21538,6 +22075,16 @@ impl ::std::fmt::Display for MembersUnsuspendError {
     }
 }
 
+// union extends MembersDeactivateError
+impl From<MembersDeactivateError> for MembersUnsuspendError {
+    fn from(parent: MembersDeactivateError) -> Self {
+        match parent {
+            MembersDeactivateError::UserNotFound => MembersUnsuspendError::UserNotFound,
+            MembersDeactivateError::UserNotInTeam => MembersUnsuspendError::UserNotInTeam,
+            MembersDeactivateError::Other => MembersUnsuspendError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MobileClientPlatform {
@@ -21895,6 +22442,18 @@ impl ::serde::ser::Serialize for MobileClientSession {
     }
 }
 
+// struct extends DeviceSession
+impl From<MobileClientSession> for DeviceSession {
+    fn from(subtype: MobileClientSession) -> Self {
+        Self {
+            session_id: subtype.session_id,
+            ip_address: subtype.ip_address,
+            country: subtype.country,
+            created: subtype.created,
+            updated: subtype.updated,
+        }
+    }
+}
 /// Properties of a namespace.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -22713,6 +23272,15 @@ impl ::serde::ser::Serialize for RevokeDesktopClientArg {
     }
 }
 
+// struct extends DeviceSessionArg
+impl From<RevokeDesktopClientArg> for DeviceSessionArg {
+    fn from(subtype: RevokeDesktopClientArg) -> Self {
+        Self {
+            session_id: subtype.session_id,
+            team_member_id: subtype.team_member_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RevokeDeviceSessionArg {
     /// End an active session.
@@ -23935,6 +24503,15 @@ impl ::std::fmt::Display for SetCustomQuotaError {
     }
 }
 
+// union extends CustomQuotaError
+impl From<CustomQuotaError> for SetCustomQuotaError {
+    fn from(parent: CustomQuotaError) -> Self {
+        match parent {
+            CustomQuotaError::TooManyUsers => SetCustomQuotaError::TooManyUsers,
+            CustomQuotaError::Other => SetCustomQuotaError::Other,
+        }
+    }
+}
 /// Structure representing Approve List entries. Domain and emails are supported. At least one entry
 /// of any supported type is required.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -25237,6 +25814,17 @@ impl ::std::fmt::Display for TeamFolderActivateError {
     }
 }
 
+// union extends BaseTeamFolderError
+impl From<BaseTeamFolderError> for TeamFolderActivateError {
+    fn from(parent: BaseTeamFolderError) -> Self {
+        match parent {
+            BaseTeamFolderError::AccessError(x) => TeamFolderActivateError::AccessError(x),
+            BaseTeamFolderError::StatusError(x) => TeamFolderActivateError::StatusError(x),
+            BaseTeamFolderError::TeamSharedDropboxError(x) => TeamFolderActivateError::TeamSharedDropboxError(x),
+            BaseTeamFolderError::Other => TeamFolderActivateError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderArchiveArg {
@@ -25348,6 +25936,14 @@ impl ::serde::ser::Serialize for TeamFolderArchiveArg {
     }
 }
 
+// struct extends TeamFolderIdArg
+impl From<TeamFolderArchiveArg> for TeamFolderIdArg {
+    fn from(subtype: TeamFolderArchiveArg) -> Self {
+        Self {
+            team_folder_id: subtype.team_folder_id,
+        }
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -25464,6 +26060,17 @@ impl ::std::fmt::Display for TeamFolderArchiveError {
     }
 }
 
+// union extends BaseTeamFolderError
+impl From<BaseTeamFolderError> for TeamFolderArchiveError {
+    fn from(parent: BaseTeamFolderError) -> Self {
+        match parent {
+            BaseTeamFolderError::AccessError(x) => TeamFolderArchiveError::AccessError(x),
+            BaseTeamFolderError::StatusError(x) => TeamFolderArchiveError::StatusError(x),
+            BaseTeamFolderError::TeamSharedDropboxError(x) => TeamFolderArchiveError::TeamSharedDropboxError(x),
+            BaseTeamFolderError::Other => TeamFolderArchiveError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TeamFolderArchiveJobStatus {
     /// The asynchronous job is still in progress.
@@ -25542,6 +26149,14 @@ impl ::serde::ser::Serialize for TeamFolderArchiveJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for TeamFolderArchiveJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => TeamFolderArchiveJobStatus::InProgress,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TeamFolderArchiveLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -25609,6 +26224,14 @@ impl ::serde::ser::Serialize for TeamFolderArchiveLaunch {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for TeamFolderArchiveLaunch {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => TeamFolderArchiveLaunch::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderCreateArg {
@@ -26920,6 +27543,17 @@ impl ::std::fmt::Display for TeamFolderPermanentlyDeleteError {
     }
 }
 
+// union extends BaseTeamFolderError
+impl From<BaseTeamFolderError> for TeamFolderPermanentlyDeleteError {
+    fn from(parent: BaseTeamFolderError) -> Self {
+        match parent {
+            BaseTeamFolderError::AccessError(x) => TeamFolderPermanentlyDeleteError::AccessError(x),
+            BaseTeamFolderError::StatusError(x) => TeamFolderPermanentlyDeleteError::StatusError(x),
+            BaseTeamFolderError::TeamSharedDropboxError(x) => TeamFolderPermanentlyDeleteError::TeamSharedDropboxError(x),
+            BaseTeamFolderError::Other => TeamFolderPermanentlyDeleteError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderRenameArg {
@@ -27024,6 +27658,14 @@ impl ::serde::ser::Serialize for TeamFolderRenameArg {
     }
 }
 
+// struct extends TeamFolderIdArg
+impl From<TeamFolderRenameArg> for TeamFolderIdArg {
+    fn from(subtype: TeamFolderRenameArg) -> Self {
+        Self {
+            team_folder_id: subtype.team_folder_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderRenameError {
@@ -27172,6 +27814,17 @@ impl ::std::fmt::Display for TeamFolderRenameError {
     }
 }
 
+// union extends BaseTeamFolderError
+impl From<BaseTeamFolderError> for TeamFolderRenameError {
+    fn from(parent: BaseTeamFolderError) -> Self {
+        match parent {
+            BaseTeamFolderError::AccessError(x) => TeamFolderRenameError::AccessError(x),
+            BaseTeamFolderError::StatusError(x) => TeamFolderRenameError::StatusError(x),
+            BaseTeamFolderError::TeamSharedDropboxError(x) => TeamFolderRenameError::TeamSharedDropboxError(x),
+            BaseTeamFolderError::Other => TeamFolderRenameError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderStatus {
@@ -27449,6 +28102,14 @@ impl ::serde::ser::Serialize for TeamFolderUpdateSyncSettingsArg {
     }
 }
 
+// struct extends TeamFolderIdArg
+impl From<TeamFolderUpdateSyncSettingsArg> for TeamFolderIdArg {
+    fn from(subtype: TeamFolderUpdateSyncSettingsArg) -> Self {
+        Self {
+            team_folder_id: subtype.team_folder_id,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderUpdateSyncSettingsError {
@@ -27583,6 +28244,17 @@ impl ::std::fmt::Display for TeamFolderUpdateSyncSettingsError {
     }
 }
 
+// union extends BaseTeamFolderError
+impl From<BaseTeamFolderError> for TeamFolderUpdateSyncSettingsError {
+    fn from(parent: BaseTeamFolderError) -> Self {
+        match parent {
+            BaseTeamFolderError::AccessError(x) => TeamFolderUpdateSyncSettingsError::AccessError(x),
+            BaseTeamFolderError::StatusError(x) => TeamFolderUpdateSyncSettingsError::StatusError(x),
+            BaseTeamFolderError::TeamSharedDropboxError(x) => TeamFolderUpdateSyncSettingsError::TeamSharedDropboxError(x),
+            BaseTeamFolderError::Other => TeamFolderUpdateSyncSettingsError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamGetInfoResult {
@@ -28441,6 +29113,28 @@ impl ::serde::ser::Serialize for TeamMemberProfile {
     }
 }
 
+// struct extends MemberProfile
+impl From<TeamMemberProfile> for MemberProfile {
+    fn from(subtype: TeamMemberProfile) -> Self {
+        Self {
+            team_member_id: subtype.team_member_id,
+            email: subtype.email,
+            email_verified: subtype.email_verified,
+            status: subtype.status,
+            name: subtype.name,
+            membership_type: subtype.membership_type,
+            external_id: subtype.external_id,
+            account_id: subtype.account_id,
+            secondary_emails: subtype.secondary_emails,
+            invited_on: subtype.invited_on,
+            joined_on: subtype.joined_on,
+            suspended_on: subtype.suspended_on,
+            persistent_id: subtype.persistent_id,
+            is_directory_restricted: subtype.is_directory_restricted,
+            profile_photo_url: subtype.profile_photo_url,
+        }
+    }
+}
 /// A role which can be attached to a team member. This replaces AdminTier; each AdminTier
 /// corresponds to a new TeamMemberRole with a matching name.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -28962,6 +29656,15 @@ impl ::std::fmt::Display for TeamNamespacesListContinueError {
     }
 }
 
+// union extends TeamNamespacesListError
+impl From<TeamNamespacesListError> for TeamNamespacesListContinueError {
+    fn from(parent: TeamNamespacesListError) -> Self {
+        match parent {
+            TeamNamespacesListError::InvalidArg => TeamNamespacesListContinueError::InvalidArg,
+            TeamNamespacesListError::Other => TeamNamespacesListContinueError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamNamespacesListError {

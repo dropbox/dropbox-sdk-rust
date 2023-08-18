@@ -1996,6 +1996,21 @@ impl ::serde::ser::Serialize for AlphaResolvedVisibility {
     }
 }
 
+// union extends ResolvedVisibility
+impl From<ResolvedVisibility> for AlphaResolvedVisibility {
+    fn from(parent: ResolvedVisibility) -> Self {
+        match parent {
+            ResolvedVisibility::Public => AlphaResolvedVisibility::Public,
+            ResolvedVisibility::TeamOnly => AlphaResolvedVisibility::TeamOnly,
+            ResolvedVisibility::Password => AlphaResolvedVisibility::Password,
+            ResolvedVisibility::TeamAndPassword => AlphaResolvedVisibility::TeamAndPassword,
+            ResolvedVisibility::SharedFolderOnly => AlphaResolvedVisibility::SharedFolderOnly,
+            ResolvedVisibility::NoOne => AlphaResolvedVisibility::NoOne,
+            ResolvedVisibility::OnlyYou => AlphaResolvedVisibility::OnlyYou,
+            ResolvedVisibility::Other => AlphaResolvedVisibility::Other,
+        }
+    }
+}
 /// Information about the content that has a link audience different than that of this folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -2443,6 +2458,12 @@ impl ::serde::ser::Serialize for CollectionLinkMetadata {
     }
 }
 
+// struct extends polymorphic struct LinkMetadata
+impl From<CollectionLinkMetadata> for LinkMetadata {
+    fn from(subtype: CollectionLinkMetadata) -> Self {
+        LinkMetadata::Collection(subtype)
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateSharedLinkArg {
@@ -3106,6 +3127,20 @@ impl ::serde::ser::Serialize for ExpectedSharedContentLinkMetadata {
     }
 }
 
+// struct extends SharedContentLinkMetadataBase
+impl From<ExpectedSharedContentLinkMetadata> for SharedContentLinkMetadataBase {
+    fn from(subtype: ExpectedSharedContentLinkMetadata) -> Self {
+        Self {
+            audience_options: subtype.audience_options,
+            current_audience: subtype.current_audience,
+            link_permissions: subtype.link_permissions,
+            password_protected: subtype.password_protected,
+            access_level: subtype.access_level,
+            audience_restricting_shared_folder: subtype.audience_restricting_shared_folder,
+            expiry: subtype.expiry,
+        }
+    }
+}
 /// Sharing actions that may be taken on files.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -3654,6 +3689,12 @@ impl ::serde::ser::Serialize for FileLinkMetadata {
     }
 }
 
+// struct extends polymorphic struct SharedLinkMetadata
+impl From<FileLinkMetadata> for SharedLinkMetadata {
+    fn from(subtype: FileLinkMetadata) -> Self {
+        SharedLinkMetadata::File(subtype)
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileMemberActionError {
@@ -4598,6 +4639,12 @@ impl ::serde::ser::Serialize for FolderLinkMetadata {
     }
 }
 
+// struct extends polymorphic struct SharedLinkMetadata
+impl From<FolderLinkMetadata> for SharedLinkMetadata {
+    fn from(subtype: FolderLinkMetadata) -> Self {
+        SharedLinkMetadata::Folder(subtype)
+    }
+}
 /// Whether the user is allowed to take the action on the shared folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -5610,6 +5657,17 @@ impl ::std::fmt::Display for GetSharedLinkFileError {
     }
 }
 
+// union extends SharedLinkError
+impl From<SharedLinkError> for GetSharedLinkFileError {
+    fn from(parent: SharedLinkError) -> Self {
+        match parent {
+            SharedLinkError::SharedLinkNotFound => GetSharedLinkFileError::SharedLinkNotFound,
+            SharedLinkError::SharedLinkAccessDenied => GetSharedLinkFileError::SharedLinkAccessDenied,
+            SharedLinkError::UnsupportedLinkType => GetSharedLinkFileError::UnsupportedLinkType,
+            SharedLinkError::Other => GetSharedLinkFileError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinkMetadataArg {
@@ -6207,6 +6265,18 @@ impl ::serde::ser::Serialize for GroupInfo {
     }
 }
 
+// struct extends crate::team_common::GroupSummary
+impl From<GroupInfo> for crate::team_common::GroupSummary {
+    fn from(subtype: GroupInfo) -> Self {
+        Self {
+            group_name: subtype.group_name,
+            group_id: subtype.group_id,
+            group_management_type: subtype.group_management_type,
+            group_external_id: subtype.group_external_id,
+            member_count: subtype.member_count,
+        }
+    }
+}
 /// The information about a group member of the shared content.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -6374,6 +6444,17 @@ impl ::serde::ser::Serialize for GroupMembershipInfo {
     }
 }
 
+// struct extends MembershipInfo
+impl From<GroupMembershipInfo> for MembershipInfo {
+    fn from(subtype: GroupMembershipInfo) -> Self {
+        Self {
+            access_type: subtype.access_type,
+            permissions: subtype.permissions,
+            initials: subtype.initials,
+            is_inherited: subtype.is_inherited,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct InsufficientPlan {
@@ -6853,6 +6934,17 @@ impl ::serde::ser::Serialize for InviteeMembershipInfo {
     }
 }
 
+// struct extends MembershipInfo
+impl From<InviteeMembershipInfo> for MembershipInfo {
+    fn from(subtype: InviteeMembershipInfo) -> Self {
+        Self {
+            access_type: subtype.access_type,
+            permissions: subtype.permissions,
+            initials: subtype.initials,
+            is_inherited: subtype.is_inherited,
+        }
+    }
+}
 /// Error occurred while performing an asynchronous job from [`unshare_folder()`](unshare_folder) or
 /// [`remove_folder_member()`](remove_folder_member).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -7050,6 +7142,14 @@ impl ::serde::ser::Serialize for JobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for JobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => JobStatus::InProgress,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkAccessLevel {
@@ -7426,6 +7526,20 @@ impl ::serde::ser::Serialize for LinkAudienceDisallowedReason {
     }
 }
 
+// union extends VisibilityPolicyDisallowedReason
+impl From<VisibilityPolicyDisallowedReason> for LinkAudienceDisallowedReason {
+    fn from(parent: VisibilityPolicyDisallowedReason) -> Self {
+        match parent {
+            VisibilityPolicyDisallowedReason::DeleteAndRecreate => LinkAudienceDisallowedReason::DeleteAndRecreate,
+            VisibilityPolicyDisallowedReason::RestrictedBySharedFolder => LinkAudienceDisallowedReason::RestrictedBySharedFolder,
+            VisibilityPolicyDisallowedReason::RestrictedByTeam => LinkAudienceDisallowedReason::RestrictedByTeam,
+            VisibilityPolicyDisallowedReason::UserNotOnTeam => LinkAudienceDisallowedReason::UserNotOnTeam,
+            VisibilityPolicyDisallowedReason::UserAccountType => LinkAudienceDisallowedReason::UserAccountType,
+            VisibilityPolicyDisallowedReason::PermissionDenied => LinkAudienceDisallowedReason::PermissionDenied,
+            VisibilityPolicyDisallowedReason::Other => LinkAudienceDisallowedReason::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkAudienceOption {
@@ -9832,6 +9946,15 @@ impl ::serde::ser::Serialize for ListFolderMembersArgs {
     }
 }
 
+// struct extends ListFolderMembersCursorArg
+impl From<ListFolderMembersArgs> for ListFolderMembersCursorArg {
+    fn from(subtype: ListFolderMembersArgs) -> Self {
+        Self {
+            actions: subtype.actions,
+            limit: subtype.limit,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersContinueArg {
@@ -11747,6 +11870,17 @@ impl ::std::fmt::Display for ModifySharedLinkSettingsError {
     }
 }
 
+// union extends SharedLinkError
+impl From<SharedLinkError> for ModifySharedLinkSettingsError {
+    fn from(parent: SharedLinkError) -> Self {
+        match parent {
+            SharedLinkError::SharedLinkNotFound => ModifySharedLinkSettingsError::SharedLinkNotFound,
+            SharedLinkError::SharedLinkAccessDenied => ModifySharedLinkSettingsError::SharedLinkAccessDenied,
+            SharedLinkError::UnsupportedLinkType => ModifySharedLinkSettingsError::UnsupportedLinkType,
+            SharedLinkError::Other => ModifySharedLinkSettingsError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MountFolderArg {
@@ -12248,6 +12382,12 @@ impl ::serde::ser::Serialize for PathLinkMetadata {
     }
 }
 
+// struct extends polymorphic struct LinkMetadata
+impl From<PathLinkMetadata> for LinkMetadata {
+    fn from(subtype: PathLinkMetadata) -> Self {
+        LinkMetadata::Path(subtype)
+    }
+}
 /// Flag to indicate pending upload default (for linking to not-yet-existing paths).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PendingUploadMode {
@@ -13530,6 +13670,14 @@ impl ::serde::ser::Serialize for RemoveMemberJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for RemoveMemberJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => RemoveMemberJobStatus::InProgress,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RequestedLinkAccessLevel {
@@ -13811,6 +13959,16 @@ impl ::serde::ser::Serialize for ResolvedVisibility {
     }
 }
 
+// union extends RequestedVisibility
+impl From<RequestedVisibility> for ResolvedVisibility {
+    fn from(parent: RequestedVisibility) -> Self {
+        match parent {
+            RequestedVisibility::Public => ResolvedVisibility::Public,
+            RequestedVisibility::TeamOnly => ResolvedVisibility::TeamOnly,
+            RequestedVisibility::Password => ResolvedVisibility::Password,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeSharedLinkArg {
@@ -14001,6 +14159,17 @@ impl ::std::fmt::Display for RevokeSharedLinkError {
     }
 }
 
+// union extends SharedLinkError
+impl From<SharedLinkError> for RevokeSharedLinkError {
+    fn from(parent: SharedLinkError) -> Self {
+        match parent {
+            SharedLinkError::SharedLinkNotFound => RevokeSharedLinkError::SharedLinkNotFound,
+            SharedLinkError::SharedLinkAccessDenied => RevokeSharedLinkError::SharedLinkAccessDenied,
+            SharedLinkError::UnsupportedLinkType => RevokeSharedLinkError::UnsupportedLinkType,
+            SharedLinkError::Other => RevokeSharedLinkError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetAccessInheritanceArg {
@@ -14459,6 +14628,20 @@ impl ::serde::ser::Serialize for ShareFolderArg {
     }
 }
 
+// struct extends ShareFolderArgBase
+impl From<ShareFolderArg> for ShareFolderArgBase {
+    fn from(subtype: ShareFolderArg) -> Self {
+        Self {
+            path: subtype.path,
+            acl_update_policy: subtype.acl_update_policy,
+            force_async: subtype.force_async,
+            member_policy: subtype.member_policy,
+            shared_link_policy: subtype.shared_link_policy,
+            viewer_info_policy: subtype.viewer_info_policy,
+            access_inheritance: subtype.access_inheritance,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ShareFolderArgBase {
@@ -14797,6 +14980,18 @@ impl ::std::fmt::Display for ShareFolderError {
     }
 }
 
+// union extends ShareFolderErrorBase
+impl From<ShareFolderErrorBase> for ShareFolderError {
+    fn from(parent: ShareFolderErrorBase) -> Self {
+        match parent {
+            ShareFolderErrorBase::EmailUnverified => ShareFolderError::EmailUnverified,
+            ShareFolderErrorBase::BadPath(x) => ShareFolderError::BadPath(x),
+            ShareFolderErrorBase::TeamPolicyDisallowsMemberPolicy => ShareFolderError::TeamPolicyDisallowsMemberPolicy,
+            ShareFolderErrorBase::DisallowedSharedLinkPolicy => ShareFolderError::DisallowedSharedLinkPolicy,
+            ShareFolderErrorBase::Other => ShareFolderError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ShareFolderErrorBase {
@@ -14968,6 +15163,14 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for ShareFolderJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => ShareFolderJobStatus::InProgress,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ShareFolderLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -15035,6 +15238,14 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for ShareFolderLaunch {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => ShareFolderLaunch::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharePathError {
@@ -15507,6 +15718,20 @@ impl ::serde::ser::Serialize for SharedContentLinkMetadata {
     }
 }
 
+// struct extends SharedContentLinkMetadataBase
+impl From<SharedContentLinkMetadata> for SharedContentLinkMetadataBase {
+    fn from(subtype: SharedContentLinkMetadata) -> Self {
+        Self {
+            audience_options: subtype.audience_options,
+            current_audience: subtype.current_audience,
+            link_permissions: subtype.link_permissions,
+            password_protected: subtype.password_protected,
+            access_level: subtype.access_level,
+            audience_restricting_shared_folder: subtype.audience_restricting_shared_folder,
+            expiry: subtype.expiry,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedContentLinkMetadataBase {
@@ -16930,6 +17155,22 @@ impl ::serde::ser::Serialize for SharedFolderMetadata {
     }
 }
 
+// struct extends SharedFolderMetadataBase
+impl From<SharedFolderMetadata> for SharedFolderMetadataBase {
+    fn from(subtype: SharedFolderMetadata) -> Self {
+        Self {
+            access_type: subtype.access_type,
+            is_inside_team_folder: subtype.is_inside_team_folder,
+            is_team_folder: subtype.is_team_folder,
+            owner_display_names: subtype.owner_display_names,
+            owner_team: subtype.owner_team,
+            parent_shared_folder_id: subtype.parent_shared_folder_id,
+            path_display: subtype.path_display,
+            path_lower: subtype.path_lower,
+            parent_folder_name: subtype.parent_folder_name,
+        }
+    }
+}
 /// Properties of the shared folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -19937,6 +20178,18 @@ impl ::serde::ser::Serialize for UserFileMembershipInfo {
     }
 }
 
+// struct extends UserMembershipInfo
+impl From<UserFileMembershipInfo> for UserMembershipInfo {
+    fn from(subtype: UserFileMembershipInfo) -> Self {
+        Self {
+            access_type: subtype.access_type,
+            user: subtype.user,
+            permissions: subtype.permissions,
+            initials: subtype.initials,
+            is_inherited: subtype.is_inherited,
+        }
+    }
+}
 /// Basic information about a user. Use [`users::get_account()`](super::users::get_account) and
 /// [`users::get_account_batch()`](super::users::get_account_batch) to obtain more detailed
 /// information.
@@ -20262,6 +20515,17 @@ impl ::serde::ser::Serialize for UserMembershipInfo {
     }
 }
 
+// struct extends MembershipInfo
+impl From<UserMembershipInfo> for MembershipInfo {
+    fn from(subtype: UserMembershipInfo) -> Self {
+        Self {
+            access_type: subtype.access_type,
+            permissions: subtype.permissions,
+            initials: subtype.initials,
+            is_inherited: subtype.is_inherited,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ViewerInfoPolicy {

@@ -1576,6 +1576,15 @@ impl ::std::fmt::Display for AddTagError {
     }
 }
 
+// union extends BaseTagError
+impl From<BaseTagError> for AddTagError {
+    fn from(parent: BaseTagError) -> Self {
+        match parent {
+            BaseTagError::Path(x) => AddTagError::Path(x),
+            BaseTagError::Other => AddTagError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AlphaGetMetadataArg {
@@ -1777,6 +1786,18 @@ impl ::serde::ser::Serialize for AlphaGetMetadataArg {
     }
 }
 
+// struct extends GetMetadataArg
+impl From<AlphaGetMetadataArg> for GetMetadataArg {
+    fn from(subtype: AlphaGetMetadataArg) -> Self {
+        Self {
+            path: subtype.path,
+            include_media_info: subtype.include_media_info,
+            include_deleted: subtype.include_deleted,
+            include_has_explicit_shared_members: subtype.include_has_explicit_shared_members,
+            include_property_groups: subtype.include_property_groups,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum AlphaGetMetadataError {
     Path(LookupError),
@@ -1866,6 +1887,14 @@ impl ::std::fmt::Display for AlphaGetMetadataError {
     }
 }
 
+// union extends GetMetadataError
+impl From<GetMetadataError> for AlphaGetMetadataError {
+    fn from(parent: GetMetadataError) -> Self {
+        match parent {
+            GetMetadataError::Path(x) => AlphaGetMetadataError::Path(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum BaseTagError {
@@ -2772,6 +2801,14 @@ impl ::serde::ser::Serialize for CreateFolderBatchJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for CreateFolderBatchJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => CreateFolderBatchJobStatus::InProgress,
+        }
+    }
+}
 /// Result returned by [`create_folder_batch()`](create_folder_batch) that may either launch an
 /// asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2847,6 +2884,14 @@ impl ::serde::ser::Serialize for CreateFolderBatchLaunch {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for CreateFolderBatchLaunch {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => CreateFolderBatchLaunch::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderBatchResult {
@@ -2939,6 +2984,12 @@ impl ::serde::ser::Serialize for CreateFolderBatchResult {
     }
 }
 
+// struct extends FileOpsResult
+impl From<CreateFolderBatchResult> for FileOpsResult {
+    fn from(_: CreateFolderBatchResult) -> Self {
+        Self {}
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CreateFolderBatchResultEntry {
     Success(CreateFolderEntryResult),
@@ -3336,6 +3387,12 @@ impl ::serde::ser::Serialize for CreateFolderResult {
     }
 }
 
+// struct extends FileOpsResult
+impl From<CreateFolderResult> for FileOpsResult {
+    fn from(_: CreateFolderResult) -> Self {
+        Self {}
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteArg {
@@ -3687,6 +3744,14 @@ impl ::serde::ser::Serialize for DeleteBatchJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for DeleteBatchJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => DeleteBatchJobStatus::InProgress,
+        }
+    }
+}
 /// Result returned by [`delete_batch()`](delete_batch) that may either launch an asynchronous job
 /// or complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
@@ -3762,6 +3827,14 @@ impl ::serde::ser::Serialize for DeleteBatchLaunch {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for DeleteBatchLaunch {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => DeleteBatchLaunch::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteBatchResult {
@@ -3854,6 +3927,12 @@ impl ::serde::ser::Serialize for DeleteBatchResult {
     }
 }
 
+// struct extends FileOpsResult
+impl From<DeleteBatchResult> for FileOpsResult {
+    fn from(_: DeleteBatchResult) -> Self {
+        Self {}
+    }
+}
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteBatchResultData {
@@ -4220,6 +4299,12 @@ impl ::serde::ser::Serialize for DeleteResult {
     }
 }
 
+// struct extends FileOpsResult
+impl From<DeleteResult> for FileOpsResult {
+    fn from(_: DeleteResult) -> Self {
+        Self {}
+    }
+}
 /// Indicates that there used to be a file or folder at this path, but it no longer exists.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -4399,6 +4484,12 @@ impl ::serde::ser::Serialize for DeletedMetadata {
     }
 }
 
+// struct extends polymorphic struct Metadata
+impl From<DeletedMetadata> for Metadata {
+    fn from(subtype: DeletedMetadata) -> Self {
+        Metadata::Deleted(subtype)
+    }
+}
 /// Dimensions for a photo or video.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -6451,6 +6542,12 @@ impl ::serde::ser::Serialize for FileMetadata {
     }
 }
 
+// struct extends polymorphic struct Metadata
+impl From<FileMetadata> for Metadata {
+    fn from(subtype: FileMetadata) -> Self {
+        Metadata::File(subtype)
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileOpsResult {
@@ -6620,6 +6717,14 @@ impl ::serde::ser::Serialize for FileSharingInfo {
     }
 }
 
+// struct extends SharingInfo
+impl From<FileSharingInfo> for SharingInfo {
+    fn from(subtype: FileSharingInfo) -> Self {
+        Self {
+            read_only: subtype.read_only,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileStatus {
@@ -6939,6 +7044,12 @@ impl ::serde::ser::Serialize for FolderMetadata {
     }
 }
 
+// struct extends polymorphic struct Metadata
+impl From<FolderMetadata> for Metadata {
+    fn from(subtype: FolderMetadata) -> Self {
+        Metadata::Folder(subtype)
+    }
+}
 /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount
 /// point.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -7115,6 +7226,14 @@ impl ::serde::ser::Serialize for FolderSharingInfo {
     }
 }
 
+// struct extends SharingInfo
+impl From<FolderSharingInfo> for SharingInfo {
+    fn from(subtype: FolderSharingInfo) -> Self {
+        Self {
+            read_only: subtype.read_only,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetCopyReferenceArg {
@@ -10892,6 +11011,12 @@ impl ::serde::ser::Serialize for LockFileBatchResult {
     }
 }
 
+// struct extends FileOpsResult
+impl From<LockFileBatchResult> for FileOpsResult {
+    fn from(_: LockFileBatchResult) -> Self {
+        Self {}
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LockFileError {
@@ -11894,6 +12019,15 @@ impl ::serde::ser::Serialize for MoveBatchArg {
     }
 }
 
+// struct extends RelocationBatchArgBase
+impl From<MoveBatchArg> for RelocationBatchArgBase {
+    fn from(subtype: MoveBatchArg) -> Self {
+        Self {
+            entries: subtype.entries,
+            autorename: subtype.autorename,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MoveIntoFamilyError {
@@ -12379,6 +12513,18 @@ impl ::std::fmt::Display for PaperCreateError {
     }
 }
 
+// union extends PaperContentError
+impl From<PaperContentError> for PaperCreateError {
+    fn from(parent: PaperContentError) -> Self {
+        match parent {
+            PaperContentError::InsufficientPermissions => PaperCreateError::InsufficientPermissions,
+            PaperContentError::ContentMalformed => PaperCreateError::ContentMalformed,
+            PaperContentError::DocLengthExceeded => PaperCreateError::DocLengthExceeded,
+            PaperContentError::ImageSizeExceeded => PaperCreateError::ImageSizeExceeded,
+            PaperContentError::Other => PaperCreateError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperCreateResult {
@@ -12895,6 +13041,18 @@ impl ::std::fmt::Display for PaperUpdateError {
     }
 }
 
+// union extends PaperContentError
+impl From<PaperContentError> for PaperUpdateError {
+    fn from(parent: PaperContentError) -> Self {
+        match parent {
+            PaperContentError::InsufficientPermissions => PaperUpdateError::InsufficientPermissions,
+            PaperContentError::ContentMalformed => PaperUpdateError::ContentMalformed,
+            PaperContentError::DocLengthExceeded => PaperUpdateError::DocLengthExceeded,
+            PaperContentError::ImageSizeExceeded => PaperUpdateError::ImageSizeExceeded,
+            PaperContentError::Other => PaperUpdateError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperUpdateResult {
@@ -13281,6 +13439,12 @@ impl ::serde::ser::Serialize for PhotoMetadata {
     }
 }
 
+// struct extends polymorphic struct MediaMetadata
+impl From<PhotoMetadata> for MediaMetadata {
+    fn from(subtype: PhotoMetadata) -> Self {
+        MediaMetadata::Photo(subtype)
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PreviewArg {
@@ -13766,6 +13930,15 @@ impl ::serde::ser::Serialize for RelocationArg {
     }
 }
 
+// struct extends RelocationPath
+impl From<RelocationArg> for RelocationPath {
+    fn from(subtype: RelocationArg) -> Self {
+        Self {
+            from_path: subtype.from_path,
+            to_path: subtype.to_path,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArg {
@@ -13919,6 +14092,15 @@ impl ::serde::ser::Serialize for RelocationBatchArg {
     }
 }
 
+// struct extends RelocationBatchArgBase
+impl From<RelocationBatchArg> for RelocationBatchArgBase {
+    fn from(subtype: RelocationBatchArg) -> Self {
+        Self {
+            entries: subtype.entries,
+            autorename: subtype.autorename,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArgBase {
@@ -14296,6 +14478,28 @@ impl ::std::fmt::Display for RelocationBatchError {
     }
 }
 
+// union extends RelocationError
+impl From<RelocationError> for RelocationBatchError {
+    fn from(parent: RelocationError) -> Self {
+        match parent {
+            RelocationError::FromLookup(x) => RelocationBatchError::FromLookup(x),
+            RelocationError::FromWrite(x) => RelocationBatchError::FromWrite(x),
+            RelocationError::To(x) => RelocationBatchError::To(x),
+            RelocationError::CantCopySharedFolder => RelocationBatchError::CantCopySharedFolder,
+            RelocationError::CantNestSharedFolder => RelocationBatchError::CantNestSharedFolder,
+            RelocationError::CantMoveFolderIntoItself => RelocationBatchError::CantMoveFolderIntoItself,
+            RelocationError::TooManyFiles => RelocationBatchError::TooManyFiles,
+            RelocationError::DuplicatedOrNestedPaths => RelocationBatchError::DuplicatedOrNestedPaths,
+            RelocationError::CantTransferOwnership => RelocationBatchError::CantTransferOwnership,
+            RelocationError::InsufficientQuota => RelocationBatchError::InsufficientQuota,
+            RelocationError::InternalError => RelocationBatchError::InternalError,
+            RelocationError::CantMoveSharedFolder => RelocationBatchError::CantMoveSharedFolder,
+            RelocationError::CantMoveIntoVault(x) => RelocationBatchError::CantMoveIntoVault(x),
+            RelocationError::CantMoveIntoFamily(x) => RelocationBatchError::CantMoveIntoFamily(x),
+            RelocationError::Other => RelocationBatchError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchErrorEntry {
@@ -14456,6 +14660,14 @@ impl ::serde::ser::Serialize for RelocationBatchJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for RelocationBatchJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => RelocationBatchJobStatus::InProgress,
+        }
+    }
+}
 /// Result returned by [`copy_batch()`](copy_batch) or [`move_batch()`](move_batch) that may either
 /// launch an asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
@@ -14531,6 +14743,14 @@ impl ::serde::ser::Serialize for RelocationBatchLaunch {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for RelocationBatchLaunch {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => RelocationBatchLaunch::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchResult {
@@ -14621,6 +14841,12 @@ impl ::serde::ser::Serialize for RelocationBatchResult {
     }
 }
 
+// struct extends FileOpsResult
+impl From<RelocationBatchResult> for FileOpsResult {
+    fn from(_: RelocationBatchResult) -> Self {
+        Self {}
+    }
+}
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchResultData {
@@ -14852,6 +15078,14 @@ impl ::serde::ser::Serialize for RelocationBatchV2JobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for RelocationBatchV2JobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => RelocationBatchV2JobStatus::InProgress,
+        }
+    }
+}
 /// Result returned by [`copy_batch_v2()`](copy_batch_v2) or [`move_batch_v2()`](move_batch_v2) that
 /// may either launch an asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
@@ -14921,6 +15155,14 @@ impl ::serde::ser::Serialize for RelocationBatchV2Launch {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for RelocationBatchV2Launch {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => RelocationBatchV2Launch::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchV2Result {
@@ -15013,6 +15255,12 @@ impl ::serde::ser::Serialize for RelocationBatchV2Result {
     }
 }
 
+// struct extends FileOpsResult
+impl From<RelocationBatchV2Result> for FileOpsResult {
+    fn from(_: RelocationBatchV2Result) -> Self {
+        Self {}
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelocationError {
@@ -15462,6 +15710,12 @@ impl ::serde::ser::Serialize for RelocationResult {
     }
 }
 
+// struct extends FileOpsResult
+impl From<RelocationResult> for FileOpsResult {
+    fn from(_: RelocationResult) -> Self {
+        Self {}
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveTagArg {
@@ -15656,6 +15910,15 @@ impl ::std::fmt::Display for RemoveTagError {
     }
 }
 
+// union extends BaseTagError
+impl From<BaseTagError> for RemoveTagError {
+    fn from(parent: BaseTagError) -> Self {
+        match parent {
+            BaseTagError::Path(x) => RemoveTagError::Path(x),
+            BaseTagError::Other => RemoveTagError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RestoreArg {
@@ -16493,6 +16756,14 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for SaveUrlJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => SaveUrlJobStatus::InProgress,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq)]
 pub enum SaveUrlResult {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -16561,6 +16832,14 @@ impl ::serde::ser::Serialize for SaveUrlResult {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for SaveUrlResult {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => SaveUrlResult::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchArg {
@@ -20252,6 +20531,20 @@ impl ::serde::ser::Serialize for UploadArg {
     }
 }
 
+// struct extends CommitInfo
+impl From<UploadArg> for CommitInfo {
+    fn from(subtype: UploadArg) -> Self {
+        Self {
+            path: subtype.path,
+            mode: subtype.mode,
+            autorename: subtype.autorename,
+            client_modified: subtype.client_modified,
+            mute: subtype.mute,
+            property_groups: subtype.property_groups,
+            strict_conflict: subtype.strict_conflict,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadError {
@@ -20663,6 +20956,22 @@ impl ::std::fmt::Display for UploadSessionAppendError {
     }
 }
 
+// union extends UploadSessionLookupError
+impl From<UploadSessionLookupError> for UploadSessionAppendError {
+    fn from(parent: UploadSessionLookupError) -> Self {
+        match parent {
+            UploadSessionLookupError::NotFound => UploadSessionAppendError::NotFound,
+            UploadSessionLookupError::IncorrectOffset(x) => UploadSessionAppendError::IncorrectOffset(x),
+            UploadSessionLookupError::Closed => UploadSessionAppendError::Closed,
+            UploadSessionLookupError::NotClosed => UploadSessionAppendError::NotClosed,
+            UploadSessionLookupError::TooLarge => UploadSessionAppendError::TooLarge,
+            UploadSessionLookupError::ConcurrentSessionInvalidOffset => UploadSessionAppendError::ConcurrentSessionInvalidOffset,
+            UploadSessionLookupError::ConcurrentSessionInvalidDataSize => UploadSessionAppendError::ConcurrentSessionInvalidDataSize,
+            UploadSessionLookupError::PayloadTooLarge => UploadSessionAppendError::PayloadTooLarge,
+            UploadSessionLookupError::Other => UploadSessionAppendError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionCursor {
@@ -21045,6 +21354,14 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchJobStatus {
     }
 }
 
+// union extends crate::dbx_async::PollResultBase
+impl From<crate::dbx_async::PollResultBase> for UploadSessionFinishBatchJobStatus {
+    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::dbx_async::PollResultBase::InProgress => UploadSessionFinishBatchJobStatus::InProgress,
+        }
+    }
+}
 /// Result returned by [`upload_session_finish_batch()`](upload_session_finish_batch) that may
 /// either launch an asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
@@ -21120,6 +21437,14 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchLaunch {
     }
 }
 
+// union extends crate::dbx_async::LaunchResultBase
+impl From<crate::dbx_async::LaunchResultBase> for UploadSessionFinishBatchLaunch {
+    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+        match parent {
+            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => UploadSessionFinishBatchLaunch::AsyncJobId(x),
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionFinishBatchResult {
@@ -22640,6 +22965,12 @@ impl ::serde::ser::Serialize for VideoMetadata {
     }
 }
 
+// struct extends polymorphic struct MediaMetadata
+impl From<VideoMetadata> for MediaMetadata {
+    fn from(subtype: VideoMetadata) -> Self {
+        MediaMetadata::Video(subtype)
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum WriteConflictError {

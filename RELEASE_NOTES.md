@@ -3,6 +3,8 @@ xxxx-yy-zz
 * MSRV raised to 1.63.0
 * Omit fields with null or default value in more places when serializing, and accept nulls when
   deserializing.
+* Types which have an `extends` relationship in the spec now implement `From` to do conversion to
+  or from the other type, as appropriate depending on the kind of types.
 
 # v0.16.0
 2023-08-13
