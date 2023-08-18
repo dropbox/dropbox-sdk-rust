@@ -38,23 +38,36 @@ class TestBackend(RustHelperBackend):
         self.reference = PythonTypesBackend(self.ref_path, args + ["--package", "reference"])
         self.reference_impls = {}
 
-    def make_test_value(self, typ):
+    # Make test values for this type.
+    # If it's a union or polymorphic type, make values for all variants.
+    # If the type or any of its variants have optional fields, also make two versions: one with all
+    # fields filled in, and one with all optional fields omitted. This helps catch backwards-compat
+    # issues as well as checking (de)serialization of None.
+    def make_test_values(self, typ):
+        vals = []
         if ir.is_struct_type(typ):
             if typ.has_enumerated_subtypes():
-                return [TestPolymorphicStruct(self, typ, self.reference_impls, variant)
-                    for variant in typ.get_enumerated_subtypes()]
+                for variant in typ.get_enumerated_subtypes():
+                    vals.append(TestPolymorphicStruct(
+                        self, typ, self.reference_impls, variant, no_optional_fields=False))
+                    if ir.is_struct_type(variant.data_type) \
+                            and variant.data_type.all_optional_fields:
+                        vals.append(TestPolymorphicStruct(
+                            self, typ, self.reference_impls, variant, no_optional_fields=True))
             else:
-                vals = [TestStruct(self, typ, self.reference_impls)]
+                vals.append(TestStruct(self, typ, self.reference_impls, no_optional_fields=False))
                 if typ.all_optional_fields:
-                    # If any fields are optional, also emit a test struct that lacks all optional fields.
-                    # This helps catch backwards-compat issues as well as checking serialization of None.
-                    vals += [TestStruct(self, typ, self.reference_impls, no_optional_fields=True)]
-                return vals
+                    vals.append(TestStruct(self, typ, self.reference_impls, no_optional_fields=True))
         elif ir.is_union_type(typ):
-            return [TestUnion(self, typ, self.reference_impls, variant)
-                for variant in typ.all_fields]
+            for variant in typ.all_fields:
+                vals.append(TestUnion(
+                    self, typ, self.reference_impls, variant, no_optional_fields=False))
+                if ir.is_struct_type(variant.data_type) and variant.data_type.all_optional_fields:
+                    vals.append(TestUnion(
+                        self, typ, self.reference_impls, variant, no_optional_fields=True))
         else:
             raise RuntimeError(f'ERROR: type {typ} is neither struct nor union')
+        return vals
 
     def generate(self, api):
         print('Generating Python reference code')
@@ -126,7 +139,7 @@ class TestBackend(RustHelperBackend):
         # JSON and desereialize it again, then check the fields of the
         # newly-deserialized struct. This verifies Rust's serializer.
 
-        for test_value in self.make_test_value(typ):
+        for test_value in self.make_test_values(typ):
             pyname = fmt_py_class(typ.name)
             rsname = self.struct_name(typ)
 
@@ -199,7 +212,7 @@ class TestBackend(RustHelperBackend):
         if arg_typ == '()':
             json = "{}"
         else:
-            arg_value = self.make_test_value(route.arg_data_type)[0]
+            arg_value = self.make_test_values(route.arg_data_type)[0]
             pyname = fmt_py_class(route.arg_data_type.name)
             json = json_encode(
                 self.reference_impls[route.arg_data_type.namespace.name].__dict__[pyname + '_validator'],
@@ -320,7 +333,7 @@ class TestValue(object):
 
 
 class TestStruct(TestValue):
-    def __init__(self, rust_generator: TestBackend, stone_type: ir.Struct, reference_impls, no_optional_fields=False):
+    def __init__(self, rust_generator: TestBackend, stone_type: ir.Struct, reference_impls, no_optional_fields):
         super(TestStruct, self).__init__(rust_generator)
 
         if stone_type.has_enumerated_subtypes():
@@ -338,7 +351,7 @@ class TestStruct(TestValue):
 
         for field in (stone_type.all_required_fields if no_optional_fields else stone_type.all_fields):
             field_value = make_test_field(
-                    field.name, field.data_type, rust_generator, reference_impls)
+                    field.name, field.data_type, rust_generator, reference_impls, no_optional_fields)
             if field_value is None:
                 raise RuntimeError(f'Error: incomplete type generated: {stone_type.name}')
             self.fields.append(field_value)
@@ -358,7 +371,7 @@ class TestStruct(TestValue):
             return ""
 
 class TestUnion(TestValue):
-    def __init__(self, rust_generator, stone_type, reference_impls, variant):
+    def __init__(self, rust_generator, stone_type, reference_impls, variant, no_optional_fields):
         super(TestUnion, self).__init__(rust_generator)
         self._stone_type = stone_type
         self._reference_impls = reference_impls
@@ -366,12 +379,13 @@ class TestUnion(TestValue):
         self._rust_variant_name = rust_generator.enum_variant_name_raw(variant.name)
         self._rust_namespace_name = rust_generator.namespace_name(stone_type.namespace)
         self._variant = variant
+        self._no_optional_fields = no_optional_fields
 
         # We can't serialize the catch-all variant.
         self._is_serializable = not variant.catch_all
 
         self._inner_value = make_test_field(
-            None, self._variant.data_type, rust_generator, reference_impls)
+            None, self._variant.data_type, rust_generator, reference_impls, no_optional_fields)
 
         if self._inner_value is None:
             raise RuntimeError(f'Error generating union variant value for {stone_type.name}.{variant.name}')
@@ -400,8 +414,12 @@ class TestUnion(TestValue):
             elif codegen.is_nullary_struct(self._variant.data_type):
                 codegen.emit(f'{path}(..) => (), // nullary struct')
             else:
-                with codegen.block(f'{path}(ref v) =>'):
-                    self._inner_value.emit_assert(codegen, '(*v)')
+                if self._no_optional_fields and ir.is_struct_type(self._variant.data_type) \
+                        and not deep_any_required_fields(self._variant.data_type):
+                    codegen.emit(f'{path}(_) => (), // all fields optional')
+                else:
+                    with codegen.block(f'{path}(ref v) =>'):
+                        self._inner_value.emit_assert(codegen, '(*v)')
 
             if self.has_other_variants():
                 codegen.emit('_ => panic!("wrong variant")')
@@ -410,7 +428,22 @@ class TestUnion(TestValue):
         return not self._variant.catch_all
 
     def test_suffix(self):
-        return "_" + self._rust_variant_name
+        suf = "_" + self._rust_variant_name
+        if self._no_optional_fields:
+            suf += "_OnlyRequiredFields"
+        return suf
+
+
+# Does this struct type have any required fields, and if any of those are structs, do they have
+# any required fields, and so on. Basically, is this type able to be represented by '{}' in json?
+def deep_any_required_fields(typ):
+    for f in typ.all_required_fields:
+        if ir.is_struct_type(f.data_type):
+            if deep_any_required_fields(f.data_type):
+                return True
+        else:
+            return True
+    return False
 
 
 class TestPolymorphicStruct(TestUnion):
@@ -428,7 +461,8 @@ class TestList(TestValue):
         self._stone_type = stone_type
         self._reference_impls = reference_impls
 
-        self._inner_value = make_test_field(None, stone_type, rust_generator, reference_impls)
+        self._inner_value = make_test_field(
+            None, stone_type, rust_generator, reference_impls, no_optional_fields=False)
         if self._inner_value is None:
             raise RuntimeError(f'Error generating value for list of {stone_type.name}')
 
@@ -454,7 +488,7 @@ class TestMap(TestValue):
         self._val_value.emit_assert(codegen, expression_path + key_str)
 
 
-def make_test_field(field_name, stone_type, rust_generator, reference_impls):
+def make_test_field(field_name, stone_type, rust_generator, reference_impls, no_optional_fields):
     rust_name = rust_generator.field_name_raw(field_name) if field_name is not None else None
     typ, option = ir.unwrap_nullable(stone_type)
 
@@ -463,9 +497,9 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
     if ir.is_struct_type(typ):
         if typ.has_enumerated_subtypes():
             variant = typ.get_enumerated_subtypes()[0]
-            inner = TestPolymorphicStruct(rust_generator, typ, reference_impls, variant)
+            inner = TestPolymorphicStruct(rust_generator, typ, reference_impls, variant, no_optional_fields)
         else:
-            inner = TestStruct(rust_generator, typ, reference_impls)
+            inner = TestStruct(rust_generator, typ, reference_impls, no_optional_fields)
         value = inner.value
     elif ir.is_union_type(typ):
         # Pick the first tag.
@@ -476,7 +510,7 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
             variant = typ.all_fields[0]
         else:
             variant = typ.fields[0]
-        inner = TestUnion(rust_generator, typ, reference_impls, variant)
+        inner = TestUnion(rust_generator, typ, reference_impls, variant, no_optional_fields)
         value = inner.value
     elif ir.is_list_type(typ):
         inner = TestList(rust_generator, typ.data_type, reference_impls)
