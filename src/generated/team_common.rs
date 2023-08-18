@@ -198,8 +198,8 @@ impl GroupSummary {
             group_name: field_group_name.ok_or_else(|| ::serde::de::Error::missing_field("group_name"))?,
             group_id: field_group_id.ok_or_else(|| ::serde::de::Error::missing_field("group_id"))?,
             group_management_type: field_group_management_type.ok_or_else(|| ::serde::de::Error::missing_field("group_management_type"))?,
-            group_external_id: field_group_external_id,
-            member_count: field_member_count,
+            group_external_id: field_group_external_id.and_then(Option::flatten),
+            member_count: field_member_count.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -447,8 +447,8 @@ impl TimeRange {
             }
         }
         let result = TimeRange {
-            start_time: field_start_time,
-            end_time: field_end_time,
+            start_time: field_start_time.and_then(Option::flatten),
+            end_time: field_end_time.and_then(Option::flatten),
         };
         Ok(result)
     }

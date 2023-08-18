@@ -201,7 +201,7 @@ impl Account {
             email: field_email.ok_or_else(|| ::serde::de::Error::missing_field("email"))?,
             email_verified: field_email_verified.ok_or_else(|| ::serde::de::Error::missing_field("email_verified"))?,
             disabled: field_disabled.ok_or_else(|| ::serde::de::Error::missing_field("disabled"))?,
-            profile_photo_url: field_profile_photo_url,
+            profile_photo_url: field_profile_photo_url.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -403,8 +403,8 @@ impl BasicAccount {
             email_verified: field_email_verified.ok_or_else(|| ::serde::de::Error::missing_field("email_verified"))?,
             disabled: field_disabled.ok_or_else(|| ::serde::de::Error::missing_field("disabled"))?,
             is_teammate: field_is_teammate.ok_or_else(|| ::serde::de::Error::missing_field("is_teammate"))?,
-            profile_photo_url: field_profile_photo_url,
-            team_member_id: field_team_member_id,
+            profile_photo_url: field_profile_photo_url.and_then(Option::flatten),
+            team_member_id: field_team_member_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -760,10 +760,10 @@ impl FullAccount {
             is_paired: field_is_paired.ok_or_else(|| ::serde::de::Error::missing_field("is_paired"))?,
             account_type: field_account_type.ok_or_else(|| ::serde::de::Error::missing_field("account_type"))?,
             root_info: field_root_info.ok_or_else(|| ::serde::de::Error::missing_field("root_info"))?,
-            profile_photo_url: field_profile_photo_url,
-            country: field_country,
-            team: field_team,
-            team_member_id: field_team_member_id,
+            profile_photo_url: field_profile_photo_url.and_then(Option::flatten),
+            country: field_country.and_then(Option::flatten),
+            team: field_team.and_then(Option::flatten),
+            team_member_id: field_team_member_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }

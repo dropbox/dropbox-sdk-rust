@@ -1058,7 +1058,7 @@ impl AddFileMemberArgs {
         let result = AddFileMemberArgs {
             file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
-            custom_message: field_custom_message,
+            custom_message: field_custom_message.and_then(Option::flatten),
             quiet: field_quiet.unwrap_or(false),
             access_level: field_access_level.unwrap_or(AccessLevel::Viewer),
             add_message_as_comment: field_add_message_as_comment.unwrap_or(false),
@@ -1332,7 +1332,7 @@ impl AddFolderMemberArg {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             quiet: field_quiet.unwrap_or(false),
-            custom_message: field_custom_message,
+            custom_message: field_custom_message.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -2396,7 +2396,7 @@ impl CollectionLinkMetadata {
         let result = CollectionLinkMetadata {
             url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
             visibility: field_visibility.ok_or_else(|| ::serde::de::Error::missing_field("visibility"))?,
-            expires: field_expires,
+            expires: field_expires.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -2527,7 +2527,7 @@ impl CreateSharedLinkArg {
         let result = CreateSharedLinkArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             short_url: field_short_url.unwrap_or(false),
-            pending_upload: field_pending_upload,
+            pending_upload: field_pending_upload.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -2720,7 +2720,7 @@ impl CreateSharedLinkWithSettingsArg {
         }
         let result = CreateSharedLinkWithSettingsArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            settings: field_settings,
+            settings: field_settings.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -3049,9 +3049,9 @@ impl ExpectedSharedContentLinkMetadata {
             current_audience: field_current_audience.ok_or_else(|| ::serde::de::Error::missing_field("current_audience"))?,
             link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
             password_protected: field_password_protected.ok_or_else(|| ::serde::de::Error::missing_field("password_protected"))?,
-            access_level: field_access_level,
-            audience_restricting_shared_folder: field_audience_restricting_shared_folder,
-            expiry: field_expiry,
+            access_level: field_access_level.and_then(Option::flatten),
+            audience_restricting_shared_folder: field_audience_restricting_shared_folder.and_then(Option::flatten),
+            expiry: field_expiry.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -3586,11 +3586,11 @@ impl FileLinkMetadata {
             server_modified: field_server_modified.ok_or_else(|| ::serde::de::Error::missing_field("server_modified"))?,
             rev: field_rev.ok_or_else(|| ::serde::de::Error::missing_field("rev"))?,
             size: field_size.ok_or_else(|| ::serde::de::Error::missing_field("size"))?,
-            id: field_id,
-            expires: field_expires,
-            path_lower: field_path_lower,
-            team_member_info: field_team_member_info,
-            content_owner_team_info: field_content_owner_team_info,
+            id: field_id.and_then(Option::flatten),
+            expires: field_expires.and_then(Option::flatten),
+            path_lower: field_path_lower.and_then(Option::flatten),
+            team_member_info: field_team_member_info.and_then(Option::flatten),
+            content_owner_team_info: field_content_owner_team_info.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -3941,8 +3941,8 @@ impl FileMemberActionResult {
         let result = FileMemberActionResult {
             member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
             result: field_result.ok_or_else(|| ::serde::de::Error::missing_field("result"))?,
-            sckey_sha1: field_sckey_sha1,
-            invitation_signature: field_invitation_signature,
+            sckey_sha1: field_sckey_sha1.and_then(Option::flatten),
+            invitation_signature: field_invitation_signature.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4143,7 +4143,7 @@ impl FilePermission {
         let result = FilePermission {
             action: field_action.ok_or_else(|| ::serde::de::Error::missing_field("action"))?,
             allow: field_allow.ok_or_else(|| ::serde::de::Error::missing_field("allow"))?,
-            reason: field_reason,
+            reason: field_reason.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4534,11 +4534,11 @@ impl FolderLinkMetadata {
             url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
-            id: field_id,
-            expires: field_expires,
-            path_lower: field_path_lower,
-            team_member_info: field_team_member_info,
-            content_owner_team_info: field_content_owner_team_info,
+            id: field_id.and_then(Option::flatten),
+            expires: field_expires.and_then(Option::flatten),
+            path_lower: field_path_lower.and_then(Option::flatten),
+            team_member_info: field_team_member_info.and_then(Option::flatten),
+            content_owner_team_info: field_content_owner_team_info.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4677,7 +4677,7 @@ impl FolderPermission {
         let result = FolderPermission {
             action: field_action.ok_or_else(|| ::serde::de::Error::missing_field("action"))?,
             allow: field_allow.ok_or_else(|| ::serde::de::Error::missing_field("allow"))?,
-            reason: field_reason,
+            reason: field_reason.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4838,9 +4838,9 @@ impl FolderPolicy {
         let result = FolderPolicy {
             acl_update_policy: field_acl_update_policy.ok_or_else(|| ::serde::de::Error::missing_field("acl_update_policy"))?,
             shared_link_policy: field_shared_link_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_link_policy"))?,
-            member_policy: field_member_policy,
-            resolved_member_policy: field_resolved_member_policy,
-            viewer_info_policy: field_viewer_info_policy,
+            member_policy: field_member_policy.and_then(Option::flatten),
+            resolved_member_policy: field_resolved_member_policy.and_then(Option::flatten),
+            viewer_info_policy: field_viewer_info_policy.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4961,7 +4961,7 @@ impl GetFileMetadataArg {
         }
         let result = GetFileMetadataArg {
             file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
-            actions: field_actions,
+            actions: field_actions.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5075,7 +5075,7 @@ impl GetFileMetadataBatchArg {
         }
         let result = GetFileMetadataBatchArg {
             files: field_files.ok_or_else(|| ::serde::de::Error::missing_field("files"))?,
-            actions: field_actions,
+            actions: field_actions.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5465,7 +5465,7 @@ impl GetMetadataArgs {
         }
         let result = GetMetadataArgs {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
-            actions: field_actions,
+            actions: field_actions.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5692,8 +5692,8 @@ impl GetSharedLinkMetadataArg {
         }
         let result = GetSharedLinkMetadataArg {
             url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
-            path: field_path,
-            link_password: field_link_password,
+            path: field_path.and_then(Option::flatten),
+            link_password: field_link_password.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5778,7 +5778,7 @@ impl GetSharedLinksArg {
             }
         }
         let result = GetSharedLinksArg {
-            path: field_path,
+            path: field_path.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -6151,8 +6151,8 @@ impl GroupInfo {
             is_member: field_is_member.ok_or_else(|| ::serde::de::Error::missing_field("is_member"))?,
             is_owner: field_is_owner.ok_or_else(|| ::serde::de::Error::missing_field("is_owner"))?,
             same_team: field_same_team.ok_or_else(|| ::serde::de::Error::missing_field("same_team"))?,
-            group_external_id: field_group_external_id,
-            member_count: field_member_count,
+            group_external_id: field_group_external_id.and_then(Option::flatten),
+            member_count: field_member_count.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -6319,8 +6319,8 @@ impl GroupMembershipInfo {
         let result = GroupMembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             group: field_group.ok_or_else(|| ::serde::de::Error::missing_field("group"))?,
-            permissions: field_permissions,
-            initials: field_initials,
+            permissions: field_permissions.and_then(Option::flatten),
+            initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
         };
         Ok(Some(result))
@@ -6440,7 +6440,7 @@ impl InsufficientPlan {
         }
         let result = InsufficientPlan {
             message: field_message.ok_or_else(|| ::serde::de::Error::missing_field("message"))?,
-            upsell_url: field_upsell_url,
+            upsell_url: field_upsell_url.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -6794,10 +6794,10 @@ impl InviteeMembershipInfo {
         let result = InviteeMembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             invitee: field_invitee.ok_or_else(|| ::serde::de::Error::missing_field("invitee"))?,
-            permissions: field_permissions,
-            initials: field_initials,
+            permissions: field_permissions.and_then(Option::flatten),
+            initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
-            user: field_user,
+            user: field_user.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -7504,7 +7504,7 @@ impl LinkAudienceOption {
         let result = LinkAudienceOption {
             audience: field_audience.ok_or_else(|| ::serde::de::Error::missing_field("audience"))?,
             allowed: field_allowed.ok_or_else(|| ::serde::de::Error::missing_field("allowed"))?,
-            disallowed_reason: field_disallowed_reason,
+            disallowed_reason: field_disallowed_reason.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -7835,7 +7835,7 @@ impl LinkPermission {
         let result = LinkPermission {
             action: field_action.ok_or_else(|| ::serde::de::Error::missing_field("action"))?,
             allow: field_allow.ok_or_else(|| ::serde::de::Error::missing_field("allow"))?,
-            reason: field_reason,
+            reason: field_reason.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -8215,16 +8215,16 @@ impl LinkPermissions {
             can_disallow_download: field_can_disallow_download.ok_or_else(|| ::serde::de::Error::missing_field("can_disallow_download"))?,
             allow_comments: field_allow_comments.ok_or_else(|| ::serde::de::Error::missing_field("allow_comments"))?,
             team_restricts_comments: field_team_restricts_comments.ok_or_else(|| ::serde::de::Error::missing_field("team_restricts_comments"))?,
-            resolved_visibility: field_resolved_visibility,
-            requested_visibility: field_requested_visibility,
-            revoke_failure_reason: field_revoke_failure_reason,
-            effective_audience: field_effective_audience,
-            link_access_level: field_link_access_level,
-            audience_options: field_audience_options,
-            can_set_password: field_can_set_password,
-            can_remove_password: field_can_remove_password,
-            require_password: field_require_password,
-            can_use_extended_sharing_controls: field_can_use_extended_sharing_controls,
+            resolved_visibility: field_resolved_visibility.and_then(Option::flatten),
+            requested_visibility: field_requested_visibility.and_then(Option::flatten),
+            revoke_failure_reason: field_revoke_failure_reason.and_then(Option::flatten),
+            effective_audience: field_effective_audience.and_then(Option::flatten),
+            link_access_level: field_link_access_level.and_then(Option::flatten),
+            audience_options: field_audience_options.and_then(Option::flatten),
+            can_set_password: field_can_set_password.and_then(Option::flatten),
+            can_remove_password: field_can_remove_password.and_then(Option::flatten),
+            require_password: field_require_password.and_then(Option::flatten),
+            can_use_extended_sharing_controls: field_can_use_extended_sharing_controls.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -8388,10 +8388,10 @@ impl LinkSettings {
             }
         }
         let result = LinkSettings {
-            access_level: field_access_level,
-            audience: field_audience,
-            expiry: field_expiry,
-            password: field_password,
+            access_level: field_access_level.and_then(Option::flatten),
+            audience: field_audience.and_then(Option::flatten),
+            expiry: field_expiry.and_then(Option::flatten),
+            password: field_password.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -8543,7 +8543,7 @@ impl ListFileMembersArg {
         }
         let result = ListFileMembersArg {
             file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
-            actions: field_actions,
+            actions: field_actions.and_then(Option::flatten),
             include_inherited: field_include_inherited.unwrap_or(true),
             limit: field_limit.unwrap_or(100),
         };
@@ -9355,7 +9355,7 @@ impl ListFilesArg {
         }
         let result = ListFilesArg {
             limit: field_limit.unwrap_or(100),
-            actions: field_actions,
+            actions: field_actions.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -9652,7 +9652,7 @@ impl ListFilesResult {
         }
         let result = ListFilesResult {
             entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -9782,7 +9782,7 @@ impl ListFolderMembersArgs {
         }
         let result = ListFolderMembersArgs {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
-            actions: field_actions,
+            actions: field_actions.and_then(Option::flatten),
             limit: field_limit.unwrap_or(1000),
         };
         Ok(Some(result))
@@ -10076,7 +10076,7 @@ impl ListFolderMembersCursorArg {
             }
         }
         let result = ListFolderMembersCursorArg {
-            actions: field_actions,
+            actions: field_actions.and_then(Option::flatten),
             limit: field_limit.unwrap_or(1000),
         };
         Ok(result)
@@ -10188,7 +10188,7 @@ impl ListFoldersArgs {
         }
         let result = ListFoldersArgs {
             limit: field_limit.unwrap_or(1000),
-            actions: field_actions,
+            actions: field_actions.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -10464,7 +10464,7 @@ impl ListFoldersResult {
         }
         let result = ListFoldersResult {
             entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -10576,9 +10576,9 @@ impl ListSharedLinksArg {
             }
         }
         let result = ListSharedLinksArg {
-            path: field_path,
-            cursor: field_cursor,
-            direct_only: field_direct_only,
+            path: field_path.and_then(Option::flatten),
+            cursor: field_cursor.and_then(Option::flatten),
+            direct_only: field_direct_only.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -10798,7 +10798,7 @@ impl ListSharedLinksResult {
         let result = ListSharedLinksResult {
             links: field_links.ok_or_else(|| ::serde::de::Error::missing_field("links"))?,
             has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -10914,9 +10914,9 @@ impl MemberAccessLevelResult {
             }
         }
         let result = MemberAccessLevelResult {
-            access_level: field_access_level,
-            warning: field_warning,
-            access_details: field_access_details,
+            access_level: field_access_level.and_then(Option::flatten),
+            warning: field_warning.and_then(Option::flatten),
+            access_details: field_access_details.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -11151,7 +11151,7 @@ impl MemberPermission {
         let result = MemberPermission {
             action: field_action.ok_or_else(|| ::serde::de::Error::missing_field("action"))?,
             allow: field_allow.ok_or_else(|| ::serde::de::Error::missing_field("allow"))?,
-            reason: field_reason,
+            reason: field_reason.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -11445,8 +11445,8 @@ impl MembershipInfo {
         }
         let result = MembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
-            permissions: field_permissions,
-            initials: field_initials,
+            permissions: field_permissions.and_then(Option::flatten),
+            initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
         };
         Ok(Some(result))
@@ -12200,7 +12200,7 @@ impl PathLinkMetadata {
             url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
             visibility: field_visibility.ok_or_else(|| ::serde::de::Error::missing_field("visibility"))?,
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            expires: field_expires,
+            expires: field_expires.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -14385,14 +14385,14 @@ impl ShareFolderArg {
         }
         let result = ShareFolderArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            acl_update_policy: field_acl_update_policy,
+            acl_update_policy: field_acl_update_policy.and_then(Option::flatten),
             force_async: field_force_async.unwrap_or(false),
-            member_policy: field_member_policy,
-            shared_link_policy: field_shared_link_policy,
-            viewer_info_policy: field_viewer_info_policy,
+            member_policy: field_member_policy.and_then(Option::flatten),
+            shared_link_policy: field_shared_link_policy.and_then(Option::flatten),
+            viewer_info_policy: field_viewer_info_policy.and_then(Option::flatten),
             access_inheritance: field_access_inheritance.unwrap_or(AccessInheritance::Inherit),
-            actions: field_actions,
-            link_settings: field_link_settings,
+            actions: field_actions.and_then(Option::flatten),
+            link_settings: field_link_settings.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -14607,11 +14607,11 @@ impl ShareFolderArgBase {
         }
         let result = ShareFolderArgBase {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            acl_update_policy: field_acl_update_policy,
+            acl_update_policy: field_acl_update_policy.and_then(Option::flatten),
             force_async: field_force_async.unwrap_or(false),
-            member_policy: field_member_policy,
-            shared_link_policy: field_shared_link_policy,
-            viewer_info_policy: field_viewer_info_policy,
+            member_policy: field_member_policy.and_then(Option::flatten),
+            shared_link_policy: field_shared_link_policy.and_then(Option::flatten),
+            viewer_info_policy: field_viewer_info_policy.and_then(Option::flatten),
             access_inheritance: field_access_inheritance.unwrap_or(AccessInheritance::Inherit),
         };
         Ok(Some(result))
@@ -15445,10 +15445,10 @@ impl SharedContentLinkMetadata {
             link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
             password_protected: field_password_protected.ok_or_else(|| ::serde::de::Error::missing_field("password_protected"))?,
             url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
-            access_level: field_access_level,
-            audience_restricting_shared_folder: field_audience_restricting_shared_folder,
-            expiry: field_expiry,
-            audience_exceptions: field_audience_exceptions,
+            access_level: field_access_level.and_then(Option::flatten),
+            audience_restricting_shared_folder: field_audience_restricting_shared_folder.and_then(Option::flatten),
+            expiry: field_expiry.and_then(Option::flatten),
+            audience_exceptions: field_audience_exceptions.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -15652,9 +15652,9 @@ impl SharedContentLinkMetadataBase {
             current_audience: field_current_audience.ok_or_else(|| ::serde::de::Error::missing_field("current_audience"))?,
             link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
             password_protected: field_password_protected.ok_or_else(|| ::serde::de::Error::missing_field("password_protected"))?,
-            access_level: field_access_level,
-            audience_restricting_shared_folder: field_audience_restricting_shared_folder,
-            expiry: field_expiry,
+            access_level: field_access_level.and_then(Option::flatten),
+            audience_restricting_shared_folder: field_audience_restricting_shared_folder.and_then(Option::flatten),
+            expiry: field_expiry.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -15808,7 +15808,7 @@ impl SharedFileMembers {
             users: field_users.ok_or_else(|| ::serde::de::Error::missing_field("users"))?,
             groups: field_groups.ok_or_else(|| ::serde::de::Error::missing_field("groups"))?,
             invitees: field_invitees.ok_or_else(|| ::serde::de::Error::missing_field("invitees"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -16121,16 +16121,16 @@ impl SharedFileMetadata {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             policy: field_policy.ok_or_else(|| ::serde::de::Error::missing_field("policy"))?,
             preview_url: field_preview_url.ok_or_else(|| ::serde::de::Error::missing_field("preview_url"))?,
-            access_type: field_access_type,
-            expected_link_metadata: field_expected_link_metadata,
-            link_metadata: field_link_metadata,
-            owner_display_names: field_owner_display_names,
-            owner_team: field_owner_team,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-            path_display: field_path_display,
-            path_lower: field_path_lower,
-            permissions: field_permissions,
-            time_invited: field_time_invited,
+            access_type: field_access_type.and_then(Option::flatten),
+            expected_link_metadata: field_expected_link_metadata.and_then(Option::flatten),
+            link_metadata: field_link_metadata.and_then(Option::flatten),
+            owner_display_names: field_owner_display_names.and_then(Option::flatten),
+            owner_team: field_owner_team.and_then(Option::flatten),
+            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            path_display: field_path_display.and_then(Option::flatten),
+            path_lower: field_path_lower.and_then(Option::flatten),
+            permissions: field_permissions.and_then(Option::flatten),
+            time_invited: field_time_invited.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -16504,7 +16504,7 @@ impl SharedFolderMembers {
             users: field_users.ok_or_else(|| ::serde::de::Error::missing_field("users"))?,
             groups: field_groups.ok_or_else(|| ::serde::de::Error::missing_field("groups"))?,
             invitees: field_invitees.ok_or_else(|| ::serde::de::Error::missing_field("invitees"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -16845,14 +16845,14 @@ impl SharedFolderMetadata {
             preview_url: field_preview_url.ok_or_else(|| ::serde::de::Error::missing_field("preview_url"))?,
             shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             time_invited: field_time_invited.ok_or_else(|| ::serde::de::Error::missing_field("time_invited"))?,
-            owner_display_names: field_owner_display_names,
-            owner_team: field_owner_team,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-            path_display: field_path_display,
-            path_lower: field_path_lower,
-            parent_folder_name: field_parent_folder_name,
-            link_metadata: field_link_metadata,
-            permissions: field_permissions,
+            owner_display_names: field_owner_display_names.and_then(Option::flatten),
+            owner_team: field_owner_team.and_then(Option::flatten),
+            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            path_display: field_path_display.and_then(Option::flatten),
+            path_lower: field_path_lower.and_then(Option::flatten),
+            parent_folder_name: field_parent_folder_name.and_then(Option::flatten),
+            link_metadata: field_link_metadata.and_then(Option::flatten),
+            permissions: field_permissions.and_then(Option::flatten),
             access_inheritance: field_access_inheritance.unwrap_or(AccessInheritance::Inherit),
         };
         Ok(Some(result))
@@ -17108,12 +17108,12 @@ impl SharedFolderMetadataBase {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             is_inside_team_folder: field_is_inside_team_folder.ok_or_else(|| ::serde::de::Error::missing_field("is_inside_team_folder"))?,
             is_team_folder: field_is_team_folder.ok_or_else(|| ::serde::de::Error::missing_field("is_team_folder"))?,
-            owner_display_names: field_owner_display_names,
-            owner_team: field_owner_team,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-            path_display: field_path_display,
-            path_lower: field_path_lower,
-            parent_folder_name: field_parent_folder_name,
+            owner_display_names: field_owner_display_names.and_then(Option::flatten),
+            owner_team: field_owner_team.and_then(Option::flatten),
+            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            path_display: field_path_display.and_then(Option::flatten),
+            path_lower: field_path_lower.and_then(Option::flatten),
+            parent_folder_name: field_parent_folder_name.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -17693,13 +17693,13 @@ impl SharedLinkSettings {
             }
         }
         let result = SharedLinkSettings {
-            require_password: field_require_password,
-            link_password: field_link_password,
-            expires: field_expires,
-            audience: field_audience,
-            access: field_access,
-            requested_visibility: field_requested_visibility,
-            allow_download: field_allow_download,
+            require_password: field_require_password.and_then(Option::flatten),
+            link_password: field_link_password.and_then(Option::flatten),
+            expires: field_expires.and_then(Option::flatten),
+            audience: field_audience.and_then(Option::flatten),
+            access: field_access.and_then(Option::flatten),
+            requested_visibility: field_requested_visibility.and_then(Option::flatten),
+            allow_download: field_allow_download.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -18095,7 +18095,7 @@ impl TeamMemberInfo {
         let result = TeamMemberInfo {
             team_info: field_team_info.ok_or_else(|| ::serde::de::Error::missing_field("team_info"))?,
             display_name: field_display_name.ok_or_else(|| ::serde::de::Error::missing_field("display_name"))?,
-            member_id: field_member_id,
+            member_id: field_member_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -19530,12 +19530,12 @@ impl UpdateFolderPolicyArg {
         }
         let result = UpdateFolderPolicyArg {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
-            member_policy: field_member_policy,
-            acl_update_policy: field_acl_update_policy,
-            viewer_info_policy: field_viewer_info_policy,
-            shared_link_policy: field_shared_link_policy,
-            link_settings: field_link_settings,
-            actions: field_actions,
+            member_policy: field_member_policy.and_then(Option::flatten),
+            acl_update_policy: field_acl_update_policy.and_then(Option::flatten),
+            viewer_info_policy: field_viewer_info_policy.and_then(Option::flatten),
+            shared_link_policy: field_shared_link_policy.and_then(Option::flatten),
+            link_settings: field_link_settings.and_then(Option::flatten),
+            actions: field_actions.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -19874,11 +19874,11 @@ impl UserFileMembershipInfo {
         let result = UserFileMembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
-            permissions: field_permissions,
-            initials: field_initials,
+            permissions: field_permissions.and_then(Option::flatten),
+            initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
-            time_last_seen: field_time_last_seen,
-            platform_type: field_platform_type,
+            time_last_seen: field_time_last_seen.and_then(Option::flatten),
+            platform_type: field_platform_type.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -20046,7 +20046,7 @@ impl UserInfo {
             email: field_email.ok_or_else(|| ::serde::de::Error::missing_field("email"))?,
             display_name: field_display_name.ok_or_else(|| ::serde::de::Error::missing_field("display_name"))?,
             same_team: field_same_team.ok_or_else(|| ::serde::de::Error::missing_field("same_team"))?,
-            team_member_id: field_team_member_id,
+            team_member_id: field_team_member_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -20207,8 +20207,8 @@ impl UserMembershipInfo {
         let result = UserMembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
-            permissions: field_permissions,
-            initials: field_initials,
+            permissions: field_permissions.and_then(Option::flatten),
+            initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
         };
         Ok(Some(result))
@@ -20521,7 +20521,7 @@ impl VisibilityPolicy {
             policy: field_policy.ok_or_else(|| ::serde::de::Error::missing_field("policy"))?,
             resolved_policy: field_resolved_policy.ok_or_else(|| ::serde::de::Error::missing_field("resolved_policy"))?,
             allowed: field_allowed.ok_or_else(|| ::serde::de::Error::missing_field("allowed"))?,
-            disallowed_reason: field_disallowed_reason,
+            disallowed_reason: field_disallowed_reason.and_then(Option::flatten),
         };
         Ok(Some(result))
     }

@@ -1626,11 +1626,11 @@ impl ActiveWebSession {
             user_agent: field_user_agent.ok_or_else(|| ::serde::de::Error::missing_field("user_agent"))?,
             os: field_os.ok_or_else(|| ::serde::de::Error::missing_field("os"))?,
             browser: field_browser.ok_or_else(|| ::serde::de::Error::missing_field("browser"))?,
-            ip_address: field_ip_address,
-            country: field_country,
-            created: field_created,
-            updated: field_updated,
-            expires: field_expires,
+            ip_address: field_ip_address.and_then(Option::flatten),
+            country: field_country.and_then(Option::flatten),
+            created: field_created.and_then(Option::flatten),
+            updated: field_updated.and_then(Option::flatten),
+            expires: field_expires.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -2350,9 +2350,9 @@ impl ApiApp {
             app_id: field_app_id.ok_or_else(|| ::serde::de::Error::missing_field("app_id"))?,
             app_name: field_app_name.ok_or_else(|| ::serde::de::Error::missing_field("app_name"))?,
             is_app_folder: field_is_app_folder.ok_or_else(|| ::serde::de::Error::missing_field("is_app_folder"))?,
-            publisher: field_publisher,
-            publisher_url: field_publisher_url,
-            linked: field_linked,
+            publisher: field_publisher.and_then(Option::flatten),
+            publisher_url: field_publisher_url.and_then(Option::flatten),
+            linked: field_linked.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -2900,8 +2900,8 @@ impl DateRange {
             }
         }
         let result = DateRange {
-            start_date: field_start_date,
-            end_date: field_end_date,
+            start_date: field_start_date.and_then(Option::flatten),
+            end_date: field_end_date.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -3462,10 +3462,10 @@ impl DesktopClientSession {
             client_version: field_client_version.ok_or_else(|| ::serde::de::Error::missing_field("client_version"))?,
             platform: field_platform.ok_or_else(|| ::serde::de::Error::missing_field("platform"))?,
             is_delete_on_unlink_supported: field_is_delete_on_unlink_supported.ok_or_else(|| ::serde::de::Error::missing_field("is_delete_on_unlink_supported"))?,
-            ip_address: field_ip_address,
-            country: field_country,
-            created: field_created,
-            updated: field_updated,
+            ip_address: field_ip_address.and_then(Option::flatten),
+            country: field_country.and_then(Option::flatten),
+            created: field_created.and_then(Option::flatten),
+            updated: field_updated.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -3713,10 +3713,10 @@ impl DeviceSession {
         }
         let result = DeviceSession {
             session_id: field_session_id.ok_or_else(|| ::serde::de::Error::missing_field("session_id"))?,
-            ip_address: field_ip_address,
-            country: field_country,
-            created: field_created,
-            updated: field_updated,
+            ip_address: field_ip_address.and_then(Option::flatten),
+            country: field_country.and_then(Option::flatten),
+            created: field_created.and_then(Option::flatten),
+            updated: field_updated.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4455,7 +4455,7 @@ impl ExcludedUsersListResult {
         let result = ExcludedUsersListResult {
             users: field_users.ok_or_else(|| ::serde::de::Error::missing_field("users"))?,
             has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4540,7 +4540,7 @@ impl ExcludedUsersUpdateArg {
             }
         }
         let result = ExcludedUsersUpdateArg {
-            users: field_users,
+            users: field_users.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -6181,8 +6181,8 @@ impl GroupCreateArg {
         let result = GroupCreateArg {
             group_name: field_group_name.ok_or_else(|| ::serde::de::Error::missing_field("group_name"))?,
             add_creator_as_owner: field_add_creator_as_owner.unwrap_or(false),
-            group_external_id: field_group_external_id,
-            group_management_type: field_group_management_type,
+            group_external_id: field_group_external_id.and_then(Option::flatten),
+            group_management_type: field_group_management_type.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -6560,9 +6560,9 @@ impl GroupFullInfo {
             group_id: field_group_id.ok_or_else(|| ::serde::de::Error::missing_field("group_id"))?,
             group_management_type: field_group_management_type.ok_or_else(|| ::serde::de::Error::missing_field("group_management_type"))?,
             created: field_created.ok_or_else(|| ::serde::de::Error::missing_field("created"))?,
-            group_external_id: field_group_external_id,
-            member_count: field_member_count,
-            members: field_members,
+            group_external_id: field_group_external_id.and_then(Option::flatten),
+            member_count: field_member_count.and_then(Option::flatten),
+            members: field_members.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -8363,9 +8363,9 @@ impl GroupUpdateArgs {
         let result = GroupUpdateArgs {
             group: field_group.ok_or_else(|| ::serde::de::Error::missing_field("group"))?,
             return_members: field_return_members.unwrap_or(true),
-            new_group_name: field_new_group_name,
-            new_group_external_id: field_new_group_external_id,
-            new_group_management_type: field_new_group_management_type,
+            new_group_name: field_new_group_name.and_then(Option::flatten),
+            new_group_external_id: field_new_group_external_id.and_then(Option::flatten),
+            new_group_management_type: field_new_group_management_type.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -10239,9 +10239,9 @@ impl LegalHoldPolicy {
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             status: field_status.ok_or_else(|| ::serde::de::Error::missing_field("status"))?,
             start_date: field_start_date.ok_or_else(|| ::serde::de::Error::missing_field("start_date"))?,
-            description: field_description,
-            activation_time: field_activation_time,
-            end_date: field_end_date,
+            description: field_description.and_then(Option::flatten),
+            activation_time: field_activation_time.and_then(Option::flatten),
+            end_date: field_end_date.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -10739,7 +10739,7 @@ impl LegalHoldsListHeldRevisionResult {
         let result = LegalHoldsListHeldRevisionResult {
             entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
             has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -10943,7 +10943,7 @@ impl LegalHoldsListHeldRevisionsContinueArg {
         }
         let result = LegalHoldsListHeldRevisionsContinueArg {
             id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -11559,9 +11559,9 @@ impl LegalHoldsPolicyCreateArg {
         let result = LegalHoldsPolicyCreateArg {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
-            description: field_description,
-            start_date: field_start_date,
-            end_date: field_end_date,
+            description: field_description.and_then(Option::flatten),
+            start_date: field_start_date.and_then(Option::flatten),
+            end_date: field_end_date.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -12079,9 +12079,9 @@ impl LegalHoldsPolicyUpdateArg {
         }
         let result = LegalHoldsPolicyUpdateArg {
             id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
-            name: field_name,
-            description: field_description,
-            members: field_members,
+            name: field_name.and_then(Option::flatten),
+            description: field_description.and_then(Option::flatten),
+            members: field_members.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -12834,9 +12834,9 @@ impl ListMemberDevicesResult {
             }
         }
         let result = ListMemberDevicesResult {
-            active_web_sessions: field_active_web_sessions,
-            desktop_client_sessions: field_desktop_client_sessions,
-            mobile_client_sessions: field_mobile_client_sessions,
+            active_web_sessions: field_active_web_sessions.and_then(Option::flatten),
+            desktop_client_sessions: field_desktop_client_sessions.and_then(Option::flatten),
+            mobile_client_sessions: field_mobile_client_sessions.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -12928,7 +12928,7 @@ impl ListMembersAppsArg {
             }
         }
         let result = ListMembersAppsArg {
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -13124,7 +13124,7 @@ impl ListMembersAppsResult {
         let result = ListMembersAppsResult {
             apps: field_apps.ok_or_else(|| ::serde::de::Error::missing_field("apps"))?,
             has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -13266,7 +13266,7 @@ impl ListMembersDevicesArg {
             }
         }
         let result = ListMembersDevicesArg {
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
             include_web_sessions: field_include_web_sessions.unwrap_or(true),
             include_desktop_clients: field_include_desktop_clients.unwrap_or(true),
             include_mobile_clients: field_include_mobile_clients.unwrap_or(true),
@@ -13468,7 +13468,7 @@ impl ListMembersDevicesResult {
         let result = ListMembersDevicesResult {
             devices: field_devices.ok_or_else(|| ::serde::de::Error::missing_field("devices"))?,
             has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -13556,7 +13556,7 @@ impl ListTeamAppsArg {
             }
         }
         let result = ListTeamAppsArg {
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -13751,7 +13751,7 @@ impl ListTeamAppsResult {
         let result = ListTeamAppsResult {
             apps: field_apps.ok_or_else(|| ::serde::de::Error::missing_field("apps"))?,
             has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -13893,7 +13893,7 @@ impl ListTeamDevicesArg {
             }
         }
         let result = ListTeamDevicesArg {
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
             include_web_sessions: field_include_web_sessions.unwrap_or(true),
             include_desktop_clients: field_include_desktop_clients.unwrap_or(true),
             include_mobile_clients: field_include_mobile_clients.unwrap_or(true),
@@ -14095,7 +14095,7 @@ impl ListTeamDevicesResult {
         let result = ListTeamDevicesResult {
             devices: field_devices.ok_or_else(|| ::serde::de::Error::missing_field("devices"))?,
             has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
-            cursor: field_cursor,
+            cursor: field_cursor.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -14409,12 +14409,12 @@ impl MemberAddArg {
         }
         let result = MemberAddArg {
             member_email: field_member_email.ok_or_else(|| ::serde::de::Error::missing_field("member_email"))?,
-            member_given_name: field_member_given_name,
-            member_surname: field_member_surname,
-            member_external_id: field_member_external_id,
-            member_persistent_id: field_member_persistent_id,
+            member_given_name: field_member_given_name.and_then(Option::flatten),
+            member_surname: field_member_surname.and_then(Option::flatten),
+            member_external_id: field_member_external_id.and_then(Option::flatten),
+            member_persistent_id: field_member_persistent_id.and_then(Option::flatten),
             send_welcome_email: field_send_welcome_email.unwrap_or(true),
-            is_directory_restricted: field_is_directory_restricted,
+            is_directory_restricted: field_is_directory_restricted.and_then(Option::flatten),
             role: field_role.unwrap_or(AdminTier::MemberOnly),
         };
         Ok(Some(result))
@@ -14626,12 +14626,12 @@ impl MemberAddArgBase {
         }
         let result = MemberAddArgBase {
             member_email: field_member_email.ok_or_else(|| ::serde::de::Error::missing_field("member_email"))?,
-            member_given_name: field_member_given_name,
-            member_surname: field_member_surname,
-            member_external_id: field_member_external_id,
-            member_persistent_id: field_member_persistent_id,
+            member_given_name: field_member_given_name.and_then(Option::flatten),
+            member_surname: field_member_surname.and_then(Option::flatten),
+            member_external_id: field_member_external_id.and_then(Option::flatten),
+            member_persistent_id: field_member_persistent_id.and_then(Option::flatten),
             send_welcome_email: field_send_welcome_email.unwrap_or(true),
-            is_directory_restricted: field_is_directory_restricted,
+            is_directory_restricted: field_is_directory_restricted.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -15296,13 +15296,13 @@ impl MemberAddV2Arg {
         }
         let result = MemberAddV2Arg {
             member_email: field_member_email.ok_or_else(|| ::serde::de::Error::missing_field("member_email"))?,
-            member_given_name: field_member_given_name,
-            member_surname: field_member_surname,
-            member_external_id: field_member_external_id,
-            member_persistent_id: field_member_persistent_id,
+            member_given_name: field_member_given_name.and_then(Option::flatten),
+            member_surname: field_member_surname.and_then(Option::flatten),
+            member_external_id: field_member_external_id.and_then(Option::flatten),
+            member_persistent_id: field_member_persistent_id.and_then(Option::flatten),
             send_welcome_email: field_send_welcome_email.unwrap_or(true),
-            is_directory_restricted: field_is_directory_restricted,
-            role_ids: field_role_ids,
+            is_directory_restricted: field_is_directory_restricted.and_then(Option::flatten),
+            role_ids: field_role_ids.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -15698,9 +15698,9 @@ impl MemberDevices {
         }
         let result = MemberDevices {
             team_member_id: field_team_member_id.ok_or_else(|| ::serde::de::Error::missing_field("team_member_id"))?,
-            web_sessions: field_web_sessions,
-            desktop_clients: field_desktop_clients,
-            mobile_clients: field_mobile_clients,
+            web_sessions: field_web_sessions.and_then(Option::flatten),
+            desktop_clients: field_desktop_clients.and_then(Option::flatten),
+            mobile_clients: field_mobile_clients.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -16126,15 +16126,15 @@ impl MemberProfile {
             status: field_status.ok_or_else(|| ::serde::de::Error::missing_field("status"))?,
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             membership_type: field_membership_type.ok_or_else(|| ::serde::de::Error::missing_field("membership_type"))?,
-            external_id: field_external_id,
-            account_id: field_account_id,
-            secondary_emails: field_secondary_emails,
-            invited_on: field_invited_on,
-            joined_on: field_joined_on,
-            suspended_on: field_suspended_on,
-            persistent_id: field_persistent_id,
-            is_directory_restricted: field_is_directory_restricted,
-            profile_photo_url: field_profile_photo_url,
+            external_id: field_external_id.and_then(Option::flatten),
+            account_id: field_account_id.and_then(Option::flatten),
+            secondary_emails: field_secondary_emails.and_then(Option::flatten),
+            invited_on: field_invited_on.and_then(Option::flatten),
+            joined_on: field_joined_on.and_then(Option::flatten),
+            suspended_on: field_suspended_on.and_then(Option::flatten),
+            persistent_id: field_persistent_id.and_then(Option::flatten),
+            is_directory_restricted: field_is_directory_restricted.and_then(Option::flatten),
+            profile_photo_url: field_profile_photo_url.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -19119,8 +19119,8 @@ impl MembersRemoveArg {
         let result = MembersRemoveArg {
             user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
             wipe_data: field_wipe_data.unwrap_or(true),
-            transfer_dest_id: field_transfer_dest_id,
-            transfer_admin_id: field_transfer_admin_id,
+            transfer_dest_id: field_transfer_dest_id.and_then(Option::flatten),
+            transfer_admin_id: field_transfer_admin_id.and_then(Option::flatten),
             keep_account: field_keep_account.unwrap_or(false),
             retain_team_shares: field_retain_team_shares.unwrap_or(false),
         };
@@ -19630,7 +19630,7 @@ impl MembersSetPermissions2Arg {
         }
         let result = MembersSetPermissions2Arg {
             user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
-            new_roles: field_new_roles,
+            new_roles: field_new_roles.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -19853,7 +19853,7 @@ impl MembersSetPermissions2Result {
         }
         let result = MembersSetPermissions2Result {
             team_member_id: field_team_member_id.ok_or_else(|| ::serde::de::Error::missing_field("team_member_id"))?,
-            roles: field_roles,
+            roles: field_roles.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -20370,12 +20370,12 @@ impl MembersSetProfileArg {
         }
         let result = MembersSetProfileArg {
             user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
-            new_email: field_new_email,
-            new_external_id: field_new_external_id,
-            new_given_name: field_new_given_name,
-            new_surname: field_new_surname,
-            new_persistent_id: field_new_persistent_id,
-            new_is_directory_restricted: field_new_is_directory_restricted,
+            new_email: field_new_email.and_then(Option::flatten),
+            new_external_id: field_new_external_id.and_then(Option::flatten),
+            new_given_name: field_new_given_name.and_then(Option::flatten),
+            new_surname: field_new_surname.and_then(Option::flatten),
+            new_persistent_id: field_new_persistent_id.and_then(Option::flatten),
+            new_is_directory_restricted: field_new_is_directory_restricted.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -21823,13 +21823,13 @@ impl MobileClientSession {
             session_id: field_session_id.ok_or_else(|| ::serde::de::Error::missing_field("session_id"))?,
             device_name: field_device_name.ok_or_else(|| ::serde::de::Error::missing_field("device_name"))?,
             client_type: field_client_type.ok_or_else(|| ::serde::de::Error::missing_field("client_type"))?,
-            ip_address: field_ip_address,
-            country: field_country,
-            created: field_created,
-            updated: field_updated,
-            client_version: field_client_version,
-            os_version: field_os_version,
-            last_carrier: field_last_carrier,
+            ip_address: field_ip_address.and_then(Option::flatten),
+            country: field_country.and_then(Option::flatten),
+            created: field_created.and_then(Option::flatten),
+            updated: field_updated.and_then(Option::flatten),
+            client_version: field_client_version.and_then(Option::flatten),
+            os_version: field_os_version.and_then(Option::flatten),
+            last_carrier: field_last_carrier.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -21990,7 +21990,7 @@ impl NamespaceMetadata {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             namespace_id: field_namespace_id.ok_or_else(|| ::serde::de::Error::missing_field("namespace_id"))?,
             namespace_type: field_namespace_type.ok_or_else(|| ::serde::de::Error::missing_field("namespace_type"))?,
-            team_member_id: field_team_member_id,
+            team_member_id: field_team_member_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -23160,7 +23160,7 @@ impl RevokeDeviceSessionStatus {
         }
         let result = RevokeDeviceSessionStatus {
             success: field_success.ok_or_else(|| ::serde::de::Error::missing_field("success"))?,
-            error_type: field_error_type,
+            error_type: field_error_type.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -23719,7 +23719,7 @@ impl RevokeLinkedAppStatus {
         }
         let result = RevokeLinkedAppStatus {
             success: field_success.ok_or_else(|| ::serde::de::Error::missing_field("success"))?,
-            error_type: field_error_type,
+            error_type: field_error_type.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -23988,8 +23988,8 @@ impl SharingAllowlistAddArgs {
             }
         }
         let result = SharingAllowlistAddArgs {
-            domains: field_domains,
-            emails: field_emails,
+            domains: field_domains.and_then(Option::flatten),
+            emails: field_emails.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -24718,8 +24718,8 @@ impl SharingAllowlistRemoveArgs {
             }
         }
         let result = SharingAllowlistRemoveArgs {
-            domains: field_domains,
-            emails: field_emails,
+            domains: field_domains.and_then(Option::flatten),
+            emails: field_emails.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -25675,7 +25675,7 @@ impl TeamFolderCreateArg {
         }
         let result = TeamFolderCreateArg {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
-            sync_setting: field_sync_setting,
+            sync_setting: field_sync_setting.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -27399,8 +27399,8 @@ impl TeamFolderUpdateSyncSettingsArg {
         }
         let result = TeamFolderUpdateSyncSettingsArg {
             team_folder_id: field_team_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("team_folder_id"))?,
-            sync_setting: field_sync_setting,
-            content_sync_settings: field_content_sync_settings,
+            sync_setting: field_sync_setting.and_then(Option::flatten),
+            content_sync_settings: field_content_sync_settings.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -27922,7 +27922,7 @@ impl TeamMemberInfoV2 {
         }
         let result = TeamMemberInfoV2 {
             profile: field_profile.ok_or_else(|| ::serde::de::Error::missing_field("profile"))?,
-            roles: field_roles,
+            roles: field_roles.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -28356,15 +28356,15 @@ impl TeamMemberProfile {
             membership_type: field_membership_type.ok_or_else(|| ::serde::de::Error::missing_field("membership_type"))?,
             groups: field_groups.ok_or_else(|| ::serde::de::Error::missing_field("groups"))?,
             member_folder_id: field_member_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("member_folder_id"))?,
-            external_id: field_external_id,
-            account_id: field_account_id,
-            secondary_emails: field_secondary_emails,
-            invited_on: field_invited_on,
-            joined_on: field_joined_on,
-            suspended_on: field_suspended_on,
-            persistent_id: field_persistent_id,
-            is_directory_restricted: field_is_directory_restricted,
-            profile_photo_url: field_profile_photo_url,
+            external_id: field_external_id.and_then(Option::flatten),
+            account_id: field_account_id.and_then(Option::flatten),
+            secondary_emails: field_secondary_emails.and_then(Option::flatten),
+            invited_on: field_invited_on.and_then(Option::flatten),
+            joined_on: field_joined_on.and_then(Option::flatten),
+            suspended_on: field_suspended_on.and_then(Option::flatten),
+            persistent_id: field_persistent_id.and_then(Option::flatten),
+            is_directory_restricted: field_is_directory_restricted.and_then(Option::flatten),
+            profile_photo_url: field_profile_photo_url.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -29751,7 +29751,7 @@ impl UserCustomQuotaResult {
         }
         let result = UserCustomQuotaResult {
             user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
-            quota_gb: field_quota_gb,
+            quota_gb: field_quota_gb.and_then(Option::flatten),
         };
         Ok(Some(result))
     }

@@ -592,7 +592,7 @@ impl AddPaperDocUser {
         let result = AddPaperDocUser {
             doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
-            custom_message: field_custom_message,
+            custom_message: field_custom_message.and_then(Option::flatten),
             quiet: field_quiet.unwrap_or(false),
         };
         Ok(Some(result))
@@ -937,7 +937,7 @@ impl Cursor {
         }
         let result = Cursor {
             value: field_value.ok_or_else(|| ::serde::de::Error::missing_field("value"))?,
-            expiration: field_expiration,
+            expiration: field_expiration.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -1507,8 +1507,8 @@ impl FoldersContainingPaperDoc {
             }
         }
         let result = FoldersContainingPaperDoc {
-            folder_sharing_policy_type: field_folder_sharing_policy_type,
-            folders: field_folders,
+            folder_sharing_policy_type: field_folder_sharing_policy_type.and_then(Option::flatten),
+            folders: field_folders.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -3478,7 +3478,7 @@ impl PaperDocCreateArgs {
         }
         let result = PaperDocCreateArgs {
             import_format: field_import_format.ok_or_else(|| ::serde::de::Error::missing_field("import_format"))?,
-            parent_folder_id: field_parent_folder_id,
+            parent_folder_id: field_parent_folder_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -4602,8 +4602,8 @@ impl PaperFolderCreateArg {
         }
         let result = PaperFolderCreateArg {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
-            parent_folder_id: field_parent_folder_id,
-            is_team_folder: field_is_team_folder,
+            parent_folder_id: field_parent_folder_id.and_then(Option::flatten),
+            is_team_folder: field_is_team_folder.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5082,8 +5082,8 @@ impl SharingPolicy {
             }
         }
         let result = SharingPolicy {
-            public_sharing_policy: field_public_sharing_policy,
-            team_sharing_policy: field_team_sharing_policy,
+            public_sharing_policy: field_public_sharing_policy.and_then(Option::flatten),
+            team_sharing_policy: field_team_sharing_policy.and_then(Option::flatten),
         };
         Ok(result)
     }
