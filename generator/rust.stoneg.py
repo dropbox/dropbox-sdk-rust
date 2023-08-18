@@ -141,8 +141,12 @@ class RustBackend(RustHelperBackend):
             self._impl_error(struct)
         elif self._rust_type(struct) in EXTRA_DISPLAY_TYPES:
             self._impl_display(struct)
-        elif struct.name == "RateLimitReason":
-            print(self._rust_type(struct))
+
+        if struct.parent_type:
+            if struct.parent_type.has_enumerated_subtypes():
+                self._impl_from_for_polymorphic_struct(struct, struct.parent_type)
+            else:
+                self._impl_from_for_struct(struct, struct.parent_type)
 
     def _emit_polymorphic_struct(self, struct):
         enum_name = self.enum_name(struct)
@@ -196,6 +200,9 @@ class RustBackend(RustHelperBackend):
             self._impl_display(union)
         elif union.name == "RateLimitReason":
             print(self._rust_type(union))
+
+        if union.parent_type:
+            self._impl_from_for_union(union, union.parent_type)
 
     def _emit_route(self, ns, fn, auth_trait = None):
         route_name = self.route_name(fn)
@@ -712,6 +719,50 @@ class RustBackend(RustHelperBackend):
                         self.emit(f'{type_name}::Other => Err(::serde::ser::Error::custom('
                                   '"cannot serialize \'Other\' variant"))')
         self.emit()
+
+    # "extends" for structs means the subtype adds additional fields to the supertype, so we can
+    # convert from the subtype to the supertype
+    def _impl_from_for_struct(self, struct, parent):
+        subtype = self._rust_type(struct)
+        supertype = self._rust_type(parent)
+        self.emit(f'// struct extends {supertype}')
+        with self.block(f'impl From<{subtype}> for {supertype}'):
+            if not parent.all_fields:
+                with self.block(f'fn from(_: {subtype}) -> Self'):
+                    return self.emit('Self {}')
+            with self.block(f'fn from(subtype: {subtype}) -> Self'):
+                with self.block('Self'):
+                    for field in parent.all_fields:
+                        field_name = self.field_name(field)
+                        self.emit(f'{field_name}: subtype.{field_name},')
+
+    # "extends" for polymorphic structs means it's one of the supertype's variants, so we can
+    # convert from the subtype to the supertype.
+    def _impl_from_for_polymorphic_struct(self, struct, parent):
+        subtype = self._rust_type(struct)
+        supertype = self._rust_type(parent)
+        self.emit(f'// struct extends polymorphic struct {supertype}')
+        with self.block(f'impl From<{subtype}> for {supertype}'):
+            with self.block(f'fn from(subtype: {subtype}) -> Self'):
+                for subtype in parent.get_enumerated_subtypes():
+                    if subtype.data_type != struct:
+                        continue
+                    variant_name = self.enum_variant_name(subtype)
+                    self.emit(f'{supertype}::{variant_name}(subtype)')
+
+    # "extends" for unions means the subtype adds additional variants, so we can convert from the
+    # supertype to the subtype.
+    def _impl_from_for_union(self, union, parent):
+        subtype = self._rust_type(union)
+        supertype = self._rust_type(parent)
+        self.emit(f'// union extends {supertype}')
+        with self.block(f'impl From<{supertype}> for {subtype}'):
+            with self.block(f'fn from(parent: {supertype}) -> Self'):
+                with self.block(f'match parent'):
+                    for field in parent.all_fields:
+                        variant_name = self.enum_variant_name(field)
+                        x = "" if isinstance(field.data_type, ir.Void) else "(x)"
+                        self.emit(f'{supertype}::{variant_name}{x} => {subtype}::{variant_name}{x},')
 
     # Helpers
 

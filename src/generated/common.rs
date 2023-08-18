@@ -387,6 +387,12 @@ impl ::serde::ser::Serialize for TeamRootInfo {
     }
 }
 
+// struct extends polymorphic struct RootInfo
+impl From<TeamRootInfo> for RootInfo {
+    fn from(subtype: TeamRootInfo) -> Self {
+        RootInfo::Team(subtype)
+    }
+}
 /// Root info when user is not member of a team or the user is a member of a team and the team does
 /// not have a separate root namespace.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -495,3 +501,9 @@ impl ::serde::ser::Serialize for UserRootInfo {
     }
 }
 
+// struct extends polymorphic struct RootInfo
+impl From<UserRootInfo> for RootInfo {
+    fn from(subtype: UserRootInfo) -> Self {
+        RootInfo::User(subtype)
+    }
+}

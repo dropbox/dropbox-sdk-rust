@@ -563,6 +563,21 @@ impl ::std::fmt::Display for AddPropertiesError {
     }
 }
 
+// union extends InvalidPropertyGroupError
+impl From<InvalidPropertyGroupError> for AddPropertiesError {
+    fn from(parent: InvalidPropertyGroupError) -> Self {
+        match parent {
+            InvalidPropertyGroupError::TemplateNotFound(x) => AddPropertiesError::TemplateNotFound(x),
+            InvalidPropertyGroupError::RestrictedContent => AddPropertiesError::RestrictedContent,
+            InvalidPropertyGroupError::Other => AddPropertiesError::Other,
+            InvalidPropertyGroupError::Path(x) => AddPropertiesError::Path(x),
+            InvalidPropertyGroupError::UnsupportedFolder => AddPropertiesError::UnsupportedFolder,
+            InvalidPropertyGroupError::PropertyFieldTooLarge => AddPropertiesError::PropertyFieldTooLarge,
+            InvalidPropertyGroupError::DoesNotFitTemplate => AddPropertiesError::DoesNotFitTemplate,
+            InvalidPropertyGroupError::DuplicatePropertyGroups => AddPropertiesError::DuplicatePropertyGroups,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddTemplateArg {
@@ -681,6 +696,16 @@ impl ::serde::ser::Serialize for AddTemplateArg {
     }
 }
 
+// struct extends PropertyGroupTemplate
+impl From<AddTemplateArg> for PropertyGroupTemplate {
+    fn from(subtype: AddTemplateArg) -> Self {
+        Self {
+            name: subtype.name,
+            description: subtype.description,
+            fields: subtype.fields,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddTemplateResult {
@@ -985,6 +1010,16 @@ impl ::serde::ser::Serialize for GetTemplateResult {
     }
 }
 
+// struct extends PropertyGroupTemplate
+impl From<GetTemplateResult> for PropertyGroupTemplate {
+    fn from(subtype: GetTemplateResult) -> Self {
+        Self {
+            name: subtype.name,
+            description: subtype.description,
+            fields: subtype.fields,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum InvalidPropertyGroupError {
@@ -1137,6 +1172,18 @@ impl ::std::fmt::Display for InvalidPropertyGroupError {
     }
 }
 
+// union extends PropertiesError
+impl From<PropertiesError> for InvalidPropertyGroupError {
+    fn from(parent: PropertiesError) -> Self {
+        match parent {
+            PropertiesError::TemplateNotFound(x) => InvalidPropertyGroupError::TemplateNotFound(x),
+            PropertiesError::RestrictedContent => InvalidPropertyGroupError::RestrictedContent,
+            PropertiesError::Other => InvalidPropertyGroupError::Other,
+            PropertiesError::Path(x) => InvalidPropertyGroupError::Path(x),
+            PropertiesError::UnsupportedFolder => InvalidPropertyGroupError::UnsupportedFolder,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTemplateResult {
@@ -1601,6 +1648,16 @@ impl ::std::fmt::Display for ModifyTemplateError {
     }
 }
 
+// union extends TemplateError
+impl From<TemplateError> for ModifyTemplateError {
+    fn from(parent: TemplateError) -> Self {
+        match parent {
+            TemplateError::TemplateNotFound(x) => ModifyTemplateError::TemplateNotFound(x),
+            TemplateError::RestrictedContent => ModifyTemplateError::RestrictedContent,
+            TemplateError::Other => ModifyTemplateError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct OverwritePropertyGroupArg {
@@ -1825,6 +1882,16 @@ impl ::std::fmt::Display for PropertiesError {
     }
 }
 
+// union extends TemplateError
+impl From<TemplateError> for PropertiesError {
+    fn from(parent: TemplateError) -> Self {
+        match parent {
+            TemplateError::TemplateNotFound(x) => PropertiesError::TemplateNotFound(x),
+            TemplateError::RestrictedContent => PropertiesError::RestrictedContent,
+            TemplateError::Other => PropertiesError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertiesSearchArg {
@@ -3491,6 +3558,18 @@ impl ::std::fmt::Display for RemovePropertiesError {
     }
 }
 
+// union extends PropertiesError
+impl From<PropertiesError> for RemovePropertiesError {
+    fn from(parent: PropertiesError) -> Self {
+        match parent {
+            PropertiesError::TemplateNotFound(x) => RemovePropertiesError::TemplateNotFound(x),
+            PropertiesError::RestrictedContent => RemovePropertiesError::RestrictedContent,
+            PropertiesError::Other => RemovePropertiesError::Other,
+            PropertiesError::Path(x) => RemovePropertiesError::Path(x),
+            PropertiesError::UnsupportedFolder => RemovePropertiesError::UnsupportedFolder,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveTemplateArg {
@@ -3741,6 +3820,15 @@ impl ::serde::ser::Serialize for TemplateFilter {
     }
 }
 
+// union extends TemplateFilterBase
+impl From<TemplateFilterBase> for TemplateFilter {
+    fn from(parent: TemplateFilterBase) -> Self {
+        match parent {
+            TemplateFilterBase::FilterSome(x) => TemplateFilter::FilterSome(x),
+            TemplateFilterBase::Other => TemplateFilter::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TemplateFilterBase {
@@ -4143,6 +4231,21 @@ impl ::std::fmt::Display for UpdatePropertiesError {
     }
 }
 
+// union extends InvalidPropertyGroupError
+impl From<InvalidPropertyGroupError> for UpdatePropertiesError {
+    fn from(parent: InvalidPropertyGroupError) -> Self {
+        match parent {
+            InvalidPropertyGroupError::TemplateNotFound(x) => UpdatePropertiesError::TemplateNotFound(x),
+            InvalidPropertyGroupError::RestrictedContent => UpdatePropertiesError::RestrictedContent,
+            InvalidPropertyGroupError::Other => UpdatePropertiesError::Other,
+            InvalidPropertyGroupError::Path(x) => UpdatePropertiesError::Path(x),
+            InvalidPropertyGroupError::UnsupportedFolder => UpdatePropertiesError::UnsupportedFolder,
+            InvalidPropertyGroupError::PropertyFieldTooLarge => UpdatePropertiesError::PropertyFieldTooLarge,
+            InvalidPropertyGroupError::DoesNotFitTemplate => UpdatePropertiesError::DoesNotFitTemplate,
+            InvalidPropertyGroupError::DuplicatePropertyGroups => UpdatePropertiesError::DuplicatePropertyGroups,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateTemplateArg {

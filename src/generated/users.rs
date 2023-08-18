@@ -458,6 +458,19 @@ impl ::serde::ser::Serialize for BasicAccount {
     }
 }
 
+// struct extends Account
+impl From<BasicAccount> for Account {
+    fn from(subtype: BasicAccount) -> Self {
+        Self {
+            account_id: subtype.account_id,
+            name: subtype.name,
+            email: subtype.email,
+            email_verified: subtype.email_verified,
+            disabled: subtype.disabled,
+            profile_photo_url: subtype.profile_photo_url,
+        }
+    }
+}
 /// The value for [`UserFeature::FileLocking`](UserFeature::FileLocking).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -827,6 +840,19 @@ impl ::serde::ser::Serialize for FullAccount {
     }
 }
 
+// struct extends Account
+impl From<FullAccount> for Account {
+    fn from(subtype: FullAccount) -> Self {
+        Self {
+            account_id: subtype.account_id,
+            name: subtype.name,
+            email: subtype.email,
+            email_verified: subtype.email_verified,
+            disabled: subtype.disabled,
+            profile_photo_url: subtype.profile_photo_url,
+        }
+    }
+}
 /// Detailed information about a team.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -963,6 +989,15 @@ impl ::serde::ser::Serialize for FullTeam {
     }
 }
 
+// struct extends Team
+impl From<FullTeam> for Team {
+    fn from(subtype: FullTeam) -> Self {
+        Self {
+            id: subtype.id,
+            name: subtype.name,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetAccountArg {

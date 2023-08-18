@@ -208,6 +208,15 @@ impl ::std::fmt::Display for CountFileRequestsError {
     }
 }
 
+// union extends GeneralFileRequestsError
+impl From<GeneralFileRequestsError> for CountFileRequestsError {
+    fn from(parent: GeneralFileRequestsError) -> Self {
+        match parent {
+            GeneralFileRequestsError::DisabledForTeam => CountFileRequestsError::DisabledForTeam,
+            GeneralFileRequestsError::Other => CountFileRequestsError::Other,
+        }
+    }
+}
 /// Result for [`count()`](count).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -628,6 +637,21 @@ impl ::std::fmt::Display for CreateFileRequestError {
     }
 }
 
+// union extends FileRequestError
+impl From<FileRequestError> for CreateFileRequestError {
+    fn from(parent: FileRequestError) -> Self {
+        match parent {
+            FileRequestError::DisabledForTeam => CreateFileRequestError::DisabledForTeam,
+            FileRequestError::Other => CreateFileRequestError::Other,
+            FileRequestError::NotFound => CreateFileRequestError::NotFound,
+            FileRequestError::NotAFolder => CreateFileRequestError::NotAFolder,
+            FileRequestError::AppLacksAccess => CreateFileRequestError::AppLacksAccess,
+            FileRequestError::NoPermission => CreateFileRequestError::NoPermission,
+            FileRequestError::EmailUnverified => CreateFileRequestError::EmailUnverified,
+            FileRequestError::ValidationError => CreateFileRequestError::ValidationError,
+        }
+    }
+}
 /// There was an error deleting all closed file requests.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -765,6 +789,21 @@ impl ::std::fmt::Display for DeleteAllClosedFileRequestsError {
     }
 }
 
+// union extends FileRequestError
+impl From<FileRequestError> for DeleteAllClosedFileRequestsError {
+    fn from(parent: FileRequestError) -> Self {
+        match parent {
+            FileRequestError::DisabledForTeam => DeleteAllClosedFileRequestsError::DisabledForTeam,
+            FileRequestError::Other => DeleteAllClosedFileRequestsError::Other,
+            FileRequestError::NotFound => DeleteAllClosedFileRequestsError::NotFound,
+            FileRequestError::NotAFolder => DeleteAllClosedFileRequestsError::NotAFolder,
+            FileRequestError::AppLacksAccess => DeleteAllClosedFileRequestsError::AppLacksAccess,
+            FileRequestError::NoPermission => DeleteAllClosedFileRequestsError::NoPermission,
+            FileRequestError::EmailUnverified => DeleteAllClosedFileRequestsError::EmailUnverified,
+            FileRequestError::ValidationError => DeleteAllClosedFileRequestsError::ValidationError,
+        }
+    }
+}
 /// Result for [`delete_all_closed()`](delete_all_closed).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -1097,6 +1136,21 @@ impl ::std::fmt::Display for DeleteFileRequestError {
     }
 }
 
+// union extends FileRequestError
+impl From<FileRequestError> for DeleteFileRequestError {
+    fn from(parent: FileRequestError) -> Self {
+        match parent {
+            FileRequestError::DisabledForTeam => DeleteFileRequestError::DisabledForTeam,
+            FileRequestError::Other => DeleteFileRequestError::Other,
+            FileRequestError::NotFound => DeleteFileRequestError::NotFound,
+            FileRequestError::NotAFolder => DeleteFileRequestError::NotAFolder,
+            FileRequestError::AppLacksAccess => DeleteFileRequestError::AppLacksAccess,
+            FileRequestError::NoPermission => DeleteFileRequestError::NoPermission,
+            FileRequestError::EmailUnverified => DeleteFileRequestError::EmailUnverified,
+            FileRequestError::ValidationError => DeleteFileRequestError::ValidationError,
+        }
+    }
+}
 /// Result for [`delete()`](delete).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -1666,6 +1720,15 @@ impl ::std::fmt::Display for FileRequestError {
     }
 }
 
+// union extends GeneralFileRequestsError
+impl From<GeneralFileRequestsError> for FileRequestError {
+    fn from(parent: GeneralFileRequestsError) -> Self {
+        match parent {
+            GeneralFileRequestsError::DisabledForTeam => FileRequestError::DisabledForTeam,
+            GeneralFileRequestsError::Other => FileRequestError::Other,
+        }
+    }
+}
 /// There is an error accessing the file requests functionality.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -1963,6 +2026,21 @@ impl ::std::fmt::Display for GetFileRequestError {
     }
 }
 
+// union extends FileRequestError
+impl From<FileRequestError> for GetFileRequestError {
+    fn from(parent: FileRequestError) -> Self {
+        match parent {
+            FileRequestError::DisabledForTeam => GetFileRequestError::DisabledForTeam,
+            FileRequestError::Other => GetFileRequestError::Other,
+            FileRequestError::NotFound => GetFileRequestError::NotFound,
+            FileRequestError::NotAFolder => GetFileRequestError::NotAFolder,
+            FileRequestError::AppLacksAccess => GetFileRequestError::AppLacksAccess,
+            FileRequestError::NoPermission => GetFileRequestError::NoPermission,
+            FileRequestError::EmailUnverified => GetFileRequestError::EmailUnverified,
+            FileRequestError::ValidationError => GetFileRequestError::ValidationError,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GracePeriod {
@@ -2313,6 +2391,15 @@ impl ::std::fmt::Display for ListFileRequestsContinueError {
     }
 }
 
+// union extends GeneralFileRequestsError
+impl From<GeneralFileRequestsError> for ListFileRequestsContinueError {
+    fn from(parent: GeneralFileRequestsError) -> Self {
+        match parent {
+            GeneralFileRequestsError::DisabledForTeam => ListFileRequestsContinueError::DisabledForTeam,
+            GeneralFileRequestsError::Other => ListFileRequestsContinueError::Other,
+        }
+    }
+}
 /// There was an error retrieving the file requests.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -2381,6 +2468,15 @@ impl ::std::fmt::Display for ListFileRequestsError {
     }
 }
 
+// union extends GeneralFileRequestsError
+impl From<GeneralFileRequestsError> for ListFileRequestsError {
+    fn from(parent: GeneralFileRequestsError) -> Self {
+        match parent {
+            GeneralFileRequestsError::DisabledForTeam => ListFileRequestsError::DisabledForTeam,
+            GeneralFileRequestsError::Other => ListFileRequestsError::Other,
+        }
+    }
+}
 /// Result for [`list()`](list).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -2994,3 +3090,18 @@ impl ::std::fmt::Display for UpdateFileRequestError {
     }
 }
 
+// union extends FileRequestError
+impl From<FileRequestError> for UpdateFileRequestError {
+    fn from(parent: FileRequestError) -> Self {
+        match parent {
+            FileRequestError::DisabledForTeam => UpdateFileRequestError::DisabledForTeam,
+            FileRequestError::Other => UpdateFileRequestError::Other,
+            FileRequestError::NotFound => UpdateFileRequestError::NotFound,
+            FileRequestError::NotAFolder => UpdateFileRequestError::NotAFolder,
+            FileRequestError::AppLacksAccess => UpdateFileRequestError::AppLacksAccess,
+            FileRequestError::NoPermission => UpdateFileRequestError::NoPermission,
+            FileRequestError::EmailUnverified => UpdateFileRequestError::EmailUnverified,
+            FileRequestError::ValidationError => UpdateFileRequestError::ValidationError,
+        }
+    }
+}
