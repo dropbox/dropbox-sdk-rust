@@ -294,7 +294,10 @@ class TestField(object):
     def emit_assert(self, codegen, expression_path):
         extra = ('.' + self.name) if self.name else ''
         if self.option:
-            expression = '(*' + expression_path + extra + '.as_ref().unwrap())'
+            if self.value is None:
+                codegen.emit(f'assert!({expression_path}{extra}.is_none());')
+                return
+            expression = f'(*{expression_path}{extra}.as_ref().unwrap())'
         else:
             expression = expression_path + extra
 
@@ -349,16 +352,26 @@ class TestStruct(TestValue):
         except Exception as e:
             raise RuntimeError(f'Error instantiating value for {stone_type.name}: {e}')
 
-        for field in (stone_type.all_required_fields if no_optional_fields else stone_type.all_fields):
-            field_value = make_test_field(
-                    field.name, field.data_type, rust_generator, reference_impls, no_optional_fields)
-            if field_value is None:
-                raise RuntimeError(f'Error: incomplete type generated: {stone_type.name}')
+        for field in stone_type.all_fields:
+            if no_optional_fields and (field.has_default or ir.is_nullable_type(field.data_type)):
+                # Construct a TestField to hold the default value and emit assertions for it, but
+                # don't set the field value on this struct (so it is omitted from the JSON).
+                field_value = test_field_with_value(
+                    field.name,
+                    field.default if field.has_default else None,
+                    field.data_type,
+                    rust_generator,
+                    reference_impls)
+            else:
+                field_value = make_test_field(
+                        field.name, field.data_type, rust_generator, reference_impls, no_optional_fields)
+                if field_value is None:
+                    raise RuntimeError(f'Error: incomplete type generated: {stone_type.name}')
+                try:
+                    setattr(self.value, field.name, field_value.value)
+                except Exception as e:
+                    raise RuntimeError(f'Error generating value for {stone_type.name}.{field.name}: {e}')
             self.fields.append(field_value)
-            try:
-                setattr(self.value, field.name, field_value.value)
-            except Exception as e:
-                raise RuntimeError(f'Error generating value for {stone_type.name}.{field.name}: {e}')
 
     def emit_asserts(self, codegen, expression_path):
         for field in self.fields:
@@ -488,6 +501,29 @@ class TestMap(TestValue):
         self._val_value.emit_assert(codegen, expression_path + key_str)
 
 
+# Make a TestField with a specific value.
+def test_field_with_value(field_name, value, stone_type, rust_generator, reference_impls):
+    typ, option = ir.unwrap_nullable(stone_type)
+    inner = None
+    if ir.is_tag_ref(value):
+        # TagRef means we need to instantiate the named variant of this union, so find the right
+        # field (variant) of the union and change the value to a TestUnion of it
+        for f in stone_type.all_fields:
+            if f.name == value.tag_name:
+                variant = f
+                break
+        inner = TestUnion(rust_generator, typ, reference_impls, variant, no_optional_fields=True)
+        value = inner.value
+    return TestField(
+        rust_generator.field_name_raw(field_name),
+        value,
+        inner,
+        typ,
+        option)
+
+
+# Make a TestField with an arbitrary value that satisfies constraints. If no_optional_fields is True
+# then optional or nullable fields will be left unset.
 def make_test_field(field_name, stone_type, rust_generator, reference_impls, no_optional_fields):
     rust_name = rust_generator.field_name_raw(field_name) if field_name is not None else None
     typ, option = ir.unwrap_nullable(stone_type)
