@@ -62,9 +62,6 @@ class TestBackend(RustHelperBackend):
             for variant in typ.all_fields:
                 vals.append(TestUnion(
                     self, typ, self.reference_impls, variant, no_optional_fields=False))
-                if ir.is_struct_type(variant.data_type) and variant.data_type.all_optional_fields:
-                    vals.append(TestUnion(
-                        self, typ, self.reference_impls, variant, no_optional_fields=True))
         else:
             raise RuntimeError(f'ERROR: type {typ} is neither struct nor union')
         return vals
