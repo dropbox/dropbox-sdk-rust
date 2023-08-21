@@ -424,12 +424,8 @@ class TestUnion(TestValue):
             elif codegen.is_nullary_struct(self._variant.data_type):
                 codegen.emit(f'{path}(..) => (), // nullary struct')
             else:
-                if self._no_optional_fields and ir.is_struct_type(self._variant.data_type) \
-                        and not deep_any_required_fields(self._variant.data_type):
-                    codegen.emit(f'{path}(_) => (), // all fields optional')
-                else:
-                    with codegen.block(f'{path}(ref v) =>'):
-                        self._inner_value.emit_assert(codegen, '(*v)')
+                with codegen.block(f'{path}(ref v) =>'):
+                    self._inner_value.emit_assert(codegen, '(*v)')
 
             if self.has_other_variants():
                 codegen.emit('_ => panic!("wrong variant")')
@@ -442,18 +438,6 @@ class TestUnion(TestValue):
         if self._no_optional_fields:
             suf += "_OnlyRequiredFields"
         return suf
-
-
-# Does this struct type have any required fields, and if any of those are structs, do they have
-# any required fields, and so on. Basically, is this type able to be represented by '{}' in json?
-def deep_any_required_fields(typ):
-    for f in typ.all_required_fields:
-        if ir.is_struct_type(f.data_type):
-            if deep_any_required_fields(f.data_type):
-                return True
-        else:
-            return True
-    return False
 
 
 class TestPolymorphicStruct(TestUnion):
