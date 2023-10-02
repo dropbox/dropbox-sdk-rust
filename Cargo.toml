@@ -18,7 +18,7 @@ msrv = "1.65.0" # Nov 3, 2022
 atty = "0.2.14"
 base64 = "0.21"
 log = "0.4"
-ring = "0.16"
+ring = "0.17"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "1.0"
