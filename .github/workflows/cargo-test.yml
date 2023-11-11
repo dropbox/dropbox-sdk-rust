@@ -29,10 +29,10 @@ jobs:
         run: if [[ ! -z `git status --porcelain=v1` ]]; then echo "::error::Workspace is dirty after running generator. Did you remember to check in the generated files?"; exit 1; fi
 
       - name: Install MSRV toolchain
-        run: rustup install 1.63.0 --profile minimal
+        run: rustup install 1.65.0 --profile minimal
 
       - name: Run cargo test
-        run: rustup run 1.63.0 cargo test
+        run: rustup run 1.65.0 cargo test
 
       - name: Install nightly toolchain
         run: |

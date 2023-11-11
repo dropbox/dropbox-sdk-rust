@@ -12,7 +12,7 @@ readme = "README.md"
 
 [package.metadata]
 # Keep this at least 1 year old.
-msrv = "1.63.0" # Aug 11, 2022
+msrv = "1.65.0" # Nov 3, 2022
 
 [dependencies]
 atty = "0.2.14"

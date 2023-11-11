@@ -1,3 +1,7 @@
+# v0.17.1
+xxxx-yy-zz
+* MSRV raised to 1.65.0
+
 # v0.17.0
 2023-11-10
 * MSRV raised to 1.63.0
