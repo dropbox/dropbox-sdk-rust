@@ -1,6 +1,13 @@
-# v0.17.1
+# v0.18.0
 xxxx-yy-zz
 * MSRV raised to 1.65.0
+* oauth2 changes and bugfixes:
+    * Fix the check for expired token in the default client.
+    * Added a helper for the above: client_trait::is_token_expired_error()
+    * Authorize::obtain_access_token() when currently holding a refresh token will return an updated bearer token and retain the refresh token. There was previously a bug where it would switch to only being a short-lived token with no way to refresh.
+    * (breaking) Oauth2Type::AuthorizationCode is now a struct variant with a named field instead of a tuple variant.
+    * (breaking) Oauth2Type::ImplicitGrant now is a nullary variant
+    * (breaking) Renamed Authorization::from_access_token() to Authorization::from_long_lived_access_token() and marked it as deprecated
 
 # v0.17.0
 2023-11-10

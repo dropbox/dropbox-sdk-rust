@@ -4,6 +4,9 @@
 
 use std::io::Read;
 
+use crate::auth::AuthError;
+use crate::client_helpers::TopLevelError;
+
 /// The base HTTP client trait.
 pub trait HttpClient {
     /// Make a HTTP request.
@@ -151,4 +154,18 @@ impl TeamSelect {
             TeamSelect::Admin(_) => "Dropbox-API-Select-Admin",
         }
     }
+}
+
+/// Check whether a given [error](crate::Error) is due to using an expired access token. Clients
+/// receiving such a response should update their access token and retry.
+pub fn is_token_expired_error(e: &crate::Error) -> bool {
+    let crate::Error::UnexpectedHttpError { code: 401, status: _, json } = &e else {
+        return false;
+    };
+
+    let Ok(auth_err) = serde_json::from_str::<TopLevelError<AuthError>>(json) else {
+        return false;
+    };
+
+    auth_err.error == AuthError::ExpiredAccessToken
 }

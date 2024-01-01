@@ -11,7 +11,7 @@ use serde::ser::Serialize;
 /// When Dropbox returns an error with HTTP 409 or 429, it uses an implicit JSON object with the
 /// following structure, which contains the actual error as a field.
 #[derive(Debug, Deserialize)]
-struct TopLevelError<T> {
+pub(crate) struct TopLevelError<T> {
     pub error: T,
 
     // It also has these fields, which we don't expose anywhere:
