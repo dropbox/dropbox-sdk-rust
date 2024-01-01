@@ -31,7 +31,10 @@ pub enum Oauth2Type {
     /// your app with the code (if it is a server-side app), or can be used without a redirect URI,
     /// in which case the authorization page displays the authorization code to the user and they
     /// must then input the code manually into the program.
-    AuthorizationCode(String /* client secret */),
+    AuthorizationCode {
+        /// Client secret
+        client_secret: String,
+    },
 
     /// The PKCE flow is an extension of the Authorization Code flow which uses dynamically
     /// generated codes instead of an app secret to perform the OAuth exchange. This both avoids
@@ -44,7 +47,7 @@ pub enum Oauth2Type {
     /// token is needed. This can ONLY be used with a redirect URI.
     ///
     /// This flow is considered "legacy" and is not as secure as the other flows.
-    ImplicitGrant(String /* client secret */),
+    ImplicitGrant,
 }
 
 impl Oauth2Type {
@@ -52,7 +55,7 @@ impl Oauth2Type {
     pub(crate) fn response_type_str(&self) -> &'static str {
         match self {
             Oauth2Type::AuthorizationCode { .. } | Oauth2Type::PKCE { .. } => "code",
-            Oauth2Type::ImplicitGrant { .. } => "token",
+            Oauth2Type::ImplicitGrant => "token",
         }
     }
 }
@@ -284,21 +287,23 @@ impl<'a> AuthorizeUrlBuilder<'a> {
 #[derive(Debug, Clone)]
 enum AuthorizationState {
     InitialAuth {
-        client_id: String,
         flow_type: Oauth2Type,
         auth_code: String,
         redirect_uri: Option<String>,
     },
     Refresh {
-        client_id: String,
         refresh_token: String,
     },
-    AccessToken(String),
+    AccessToken {
+        client_secret: Option<String>,
+        token: String,
+    },
 }
 
 /// Provides for continuing authorization of the app.
 #[derive(Debug, Clone)]
 pub struct Authorization {
+    client_id: String,
     state: AuthorizationState,
 }
 
@@ -316,8 +321,8 @@ impl Authorization {
         redirect_uri: Option<String>,
     ) -> Self {
         Self {
-            state: AuthorizationState::InitialAuth {
-                client_id, flow_type, auth_code, redirect_uri },
+            client_id,
+            state: AuthorizationState::InitialAuth { flow_type, auth_code, redirect_uri },
         }
     }
 
@@ -327,11 +332,14 @@ impl Authorization {
     /// token yet).
     pub fn save(&self) -> Option<String> {
         match &self.state {
-            AuthorizationState::InitialAuth { .. } => None,
-            AuthorizationState::AccessToken(access_token) =>
-                Some(format!("1&{}", access_token)),
-            AuthorizationState::Refresh { client_id: _, refresh_token } =>
-                Some(format!("2&{}", refresh_token)),
+            AuthorizationState::AccessToken { token, client_secret } if client_secret.is_none() => {
+                // Legacy long-lived access token.
+                Some(format!("1&{}", token))
+            },
+            AuthorizationState::Refresh { refresh_token, .. } => {
+                Some(format!("2&{}", refresh_token))
+            },
+            _ => None,
         }
     }
 
@@ -344,41 +352,49 @@ impl Authorization {
     /// [`Authentication`](crate::Error::Authentication) errors. In such a case you should also
     /// start the authorization procedure from scratch.
     pub fn load(client_id: String, saved: &str) -> Option<Self> {
-        let state = match saved.get(0..2) {
-            Some("1&") => AuthorizationState::AccessToken(saved[2..].to_owned()),
-            Some("2&") => AuthorizationState::Refresh {
-                client_id,
-                refresh_token: saved[2..].to_owned(),
+        Some(match saved.get(0..2) {
+            Some("1&") => {
+                #[allow(deprecated)]
+                Self::from_long_lived_access_token(saved[2..].to_owned())
             },
+            Some("2&") => Self::from_refresh_token(client_id, saved[2..].to_owned()),
             _ => {
                 error!("unrecognized saved Authorization representation: {:?}", saved);
                 return None;
             }
-        };
-        Some(Self { state })
+        })
     }
 
-    /// Recreate the authorization from an authorization code and refresh token.
+    /// Recreate the authorization from a refresh token.
     pub fn from_refresh_token(
         client_id: String,
         refresh_token: String,
     ) -> Self {
-        Self { state: AuthorizationState::Refresh { client_id, refresh_token } }
+        Self {
+            client_id,
+            state: AuthorizationState::Refresh { refresh_token },
+        }
     }
 
     /// Recreate the authorization from a long-lived access token. This token cannot be refreshed;
     /// any call to [`obtain_access_token`](Authorization::obtain_access_token) will simply return
-    /// the given token.
-    pub fn from_access_token(
+    /// the given token. Therefore this requires neither client ID or client secret.
+    ///
+    /// Long-lived tokens are deprecated and the ability to generate them will be removed in the
+    /// future.
+    #[deprecated]
+    pub fn from_long_lived_access_token(
         access_token: String,
     ) -> Self {
-        Self { state: AuthorizationState::AccessToken(access_token) }
+        Self {
+            client_id: String::new(),
+            state: AuthorizationState::AccessToken { token: access_token, client_secret: None },
+        }
     }
 
     /// Obtain an access token. Use this to complete the authorization process, or to obtain an
     /// updated token when a short-lived access token has expired.
     pub fn obtain_access_token(&mut self, client: impl NoauthClient) -> crate::Result<String> {
-        let client_id: String;
         let mut redirect_uri = None;
         let mut client_secret = None;
         let mut pkce_code = None;
@@ -386,30 +402,36 @@ impl Authorization {
         let mut auth_code = None;
 
         match self.state.clone() {
-            AuthorizationState::AccessToken(token) => {
-                return Ok(token);
+            AuthorizationState::AccessToken { token, client_secret: secret } => {
+                match secret {
+                    None => {
+                        // Long-lived token which cannot be refreshed
+                        return Ok(token)
+                    },
+                    Some(secret) => {
+                        client_secret = Some(secret);
+                    }
+                }
             }
             AuthorizationState::InitialAuth {
-                client_id: id, flow_type, auth_code: code, redirect_uri: uri } =>
+                flow_type, auth_code: code, redirect_uri: uri } =>
             {
                 match flow_type {
-                    Oauth2Type::ImplicitGrant(_secret) => {
-                        self.state = AuthorizationState::AccessToken(code.clone());
+                    Oauth2Type::ImplicitGrant => {
+                        self.state = AuthorizationState::AccessToken { client_secret: None, token: code.clone() };
                         return Ok(code);
                     }
-                    Oauth2Type::AuthorizationCode(secret) => {
+                    Oauth2Type::AuthorizationCode { client_secret: secret } => {
                         client_secret = Some(secret);
                     }
                     Oauth2Type::PKCE(pkce) => {
-                        pkce_code = Some(pkce.code);
+                        pkce_code = Some(pkce.code.clone());
                     }
                 }
-                client_id = id;
                 auth_code = Some(code);
                 redirect_uri = uri;
             }
-            AuthorizationState::Refresh { client_id: id, refresh_token: refresh } => {
-                client_id = id;
+            AuthorizationState::Refresh { refresh_token: refresh } => {
                 refresh_token = Some(refresh);
             }
         }
@@ -424,7 +446,7 @@ impl Authorization {
             params.append_pair("code", &auth_code.unwrap());
         }
 
-        params.append_pair("client_id", &client_id);
+        params.append_pair("client_id", &self.client_id);
 
         if refresh_token.is_none() {
             if let Some(pkce) = pkce_code {
@@ -432,7 +454,7 @@ impl Authorization {
             } else {
                 params.append_pair(
                     "client_secret",
-                    &client_secret.expect("need either PKCE code or client secret"));
+                    client_secret.as_ref().expect("need either PKCE code or client secret"));
             }
         }
 
@@ -477,11 +499,15 @@ impl Authorization {
 
         match refresh_token {
             Some(refresh) => {
-                self.state = AuthorizationState::Refresh { client_id, refresh_token: refresh };
+                self.state = AuthorizationState::Refresh { refresh_token: refresh };
             }
-            None => {
-                self.state = AuthorizationState::AccessToken(access_token.clone());
+            None if !matches!(self.state, AuthorizationState::Refresh {..}) => {
+                self.state = AuthorizationState::AccessToken {
+                    token: access_token.clone(),
+                    client_secret,
+                };
             }
+            _ => (),
         }
 
         Ok(access_token)
@@ -550,7 +576,8 @@ impl TokenCache {
 pub fn get_auth_from_env_or_prompt() -> Authorization {
     if let Ok(long_lived) = env::var("DBX_OAUTH_TOKEN") {
         // Used to provide a legacy long-lived token.
-        return Authorization::from_access_token(long_lived);
+        #[allow(deprecated)]
+        return Authorization::from_long_lived_access_token(long_lived);
     }
 
     if let (Ok(client_id), Ok(saved))

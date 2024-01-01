@@ -12,7 +12,6 @@
 //! This code (and its dependencies) are only built if you use the `default_client` Cargo feature.
 
 use crate::Error;
-use crate::auth::AuthError;
 use crate::client_trait::*;
 use crate::oauth2::{Authorization, TokenCache};
 use std::borrow::Cow;
@@ -60,11 +59,18 @@ macro_rules! forward_authed_request {
                 let result = $inner.request(endpoint, style, function, &params, params_type, body,
                     range_start, range_end, Some(&token), $path_root, $team_select);
 
+                // if-let chains will make this much less verbose...
+                // if !retried && let Err(e) = &result && is_token_expired_error(e) { ... }
+
                 if retried {
                     break result;
                 }
 
-                if let Err(crate::Error::Authentication(AuthError::ExpiredAccessToken)) = &result {
+                let Err(e) = &result else {
+                    break result;
+                };
+
+                if is_token_expired_error(e) {
                     info!("refreshing auth token");
                     let old_token = token;
                     token = $tokens.update_token(
