@@ -1,5 +1,5 @@
 # v0.18.0
-xxxx-yy-zz
+2024-01-12
 * MSRV raised to 1.65.0
 * oauth2 changes and bugfixes:
     * Fix the check for expired token in the default client.
