@@ -16,7 +16,7 @@ msrv = "1.65.0" # Nov 3, 2022
 
 [dependencies]
 atty = "0.2.14"
-base64 = "0.21"
+base64 = "0.22"
 log = "0.4"
 ring = "0.17"
 serde = { version = "1.0", features = ["derive"] }
