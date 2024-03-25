@@ -9,45 +9,11 @@
 
 #![allow(missing_docs)]
 
-if_feature! { "dbx_account", pub mod account; }
+if_feature! { "async", pub mod async_routes; }
+pub mod routes;
 
-if_feature! { "dbx_async", pub mod dbx_async; }
-
-pub mod auth;
-
-if_feature! { "dbx_check", pub mod check; }
-
-if_feature! { "dbx_common", pub mod common; }
-
-if_feature! { "dbx_contacts", pub mod contacts; }
-
-if_feature! { "dbx_file_properties", pub mod file_properties; }
-
-if_feature! { "dbx_file_requests", pub mod file_requests; }
-
-if_feature! { "dbx_files", pub mod files; }
-
-if_feature! { "dbx_openid", pub mod openid; }
-
-if_feature! { "dbx_paper", pub mod paper; }
-
-if_feature! { "dbx_secondary_emails", pub mod secondary_emails; }
-
-if_feature! { "dbx_seen_state", pub mod seen_state; }
-
-if_feature! { "dbx_sharing", pub mod sharing; }
-
-if_feature! { "dbx_team", pub mod team; }
-
-if_feature! { "dbx_team_common", pub mod team_common; }
-
-if_feature! { "dbx_team_log", pub mod team_log; }
-
-if_feature! { "dbx_team_policies", pub mod team_policies; }
-
-if_feature! { "dbx_users", pub mod users; }
-
-if_feature! { "dbx_users_common", pub mod users_common; }
+mod types;
+pub use types::*;
 
 pub(crate) fn eat_json_fields<'de, V>(map: &mut V) -> Result<(), V::Error> where V: ::serde::de::MapAccess<'de> {
     while map.next_entry::<&str, ::serde_json::Value>()?.is_some() {

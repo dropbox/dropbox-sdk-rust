@@ -98,7 +98,9 @@ pub use client_trait::{AppAuthClient, NoauthClient, UserAuthClient, TeamAuthClie
 pub(crate) mod client_helpers;
 pub mod oauth2;
 
-mod generated; // You need to run the Stone generator to create this module.
+mod generated;
+
+// You need to run the Stone generator to create this module.
 pub use generated::*;
 
 /// A special error type for a method that doesn't have any defined error return. You can't

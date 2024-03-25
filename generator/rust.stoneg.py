@@ -47,10 +47,29 @@ class RustBackend(RustHelperBackend):
 
         for namespace in api.namespaces.values():
             self._emit_namespace(namespace)
-        self._generate_mod_file()
 
-    def _generate_mod_file(self) -> None:
+        for d in ['async_routes', 'routes', 'types']:
+            self._generate_mod_file(f'{d}/mod.rs')
+
         with self.output_to_relative_path('mod.rs'):
+            self._emit_header()
+            self.emit('#![allow(missing_docs)]')
+            self.emit()
+            self.emit('if_feature! { "async", pub mod async_routes; }')
+            self.emit('pub mod routes;')
+            self.emit()
+            self.emit('mod types;')
+            self.emit('pub use types::*;')
+            self.emit()
+            with self.block('pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
+                            ' -> Result<(), V::Error>'
+                            ' where V: ::serde::de::MapAccess<\'de>'):
+                with self.block('while map.next_entry::<&str, ::serde_json::Value>()?.is_some()'):
+                    self.emit('/* ignore */')
+                self.emit('Ok(())')
+
+    def _generate_mod_file(self, path: str) -> None:
+        with self.output_to_relative_path(path):
             self._emit_header()
             self.emit('#![allow(missing_docs)]')
             self.emit()
@@ -61,32 +80,31 @@ class RustBackend(RustHelperBackend):
                 else:
                     self.emit(f'if_feature! {{ "dbx_{module}", pub mod {ns}; }}')
                 self.emit()
-            with self.block('pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
-                            ' -> Result<(), V::Error>'
-                            ' where V: ::serde::de::MapAccess<\'de>'):
-                with self.block('while map.next_entry::<&str, ::serde_json::Value>()?.is_some()'):
-                    self.emit('/* ignore */')
-                self.emit('Ok(())')
 
     # Type Emitters
 
     def _emit_namespace(self, namespace: ir.ApiNamespace) -> None:
         ns = self.namespace_name(namespace)
-        with self.output_to_relative_path(ns + '.rs'):
-            self._current_namespace = namespace.name
+        self._current_namespace = namespace.name
+
+        with self.output_to_relative_path(f'types/{ns}.rs'):
             self._emit_header()
 
             if namespace.doc is not None:
                 self._emit_doc(namespace.doc, prefix='//!')
                 self.emit()
 
+            self.emit('// for compatibility with old module structure')
+            with self.block(f'if_feature!'):
+                self.emit('"sync",')
+                self.emit('#[allow(unused_imports)]')
+                self.emit(f'pub use crate::generated::routes::{ns}::*;')
+            self.emit()
+
             for alias in namespace.aliases:
                 self._emit_alias(alias)
             if namespace.aliases:
                 self.emit()
-
-            for fn in namespace.routes:
-                self._emit_route(ns, fn)
 
             for typ in namespace.data_types:
                 self._current_type = typ
@@ -99,6 +117,23 @@ class RustBackend(RustHelperBackend):
                     self._emit_union(typ)
                 else:
                     raise RuntimeError(f'WARNING: unhandled type "{type(typ).__name__}" of field "{typ.name}"')
+
+        with self.output_to_relative_path(f'routes/{ns}.rs'):
+            self._emit_header()
+            self.emit('#[allow(unused_imports)]')
+            self.emit(f'pub use crate::generated::types::{ns}::*;')
+            self.emit()
+            for fn in namespace.routes:
+                self._emit_route(ns, fn)
+
+        with self.output_to_relative_path(f'async_routes/{ns}.rs'):
+            self._emit_header()
+            self.emit('#[allow(unused_imports)]')
+            self.emit(f'pub use crate::generated::types::{ns}::*;')
+            self.emit()
+            self.emit('compile_error!("async routes not implemented yet");')
+            for fn in namespace.routes:
+                self._emit_route(ns, fn, as_async=True)
 
         self._modules.append(namespace.name)
 
@@ -209,12 +244,15 @@ class RustBackend(RustHelperBackend):
         if union.parent_type:
             self._impl_from_for_union(union, union.parent_type)
 
-    def _emit_route(self, ns: str, fn: ir.ApiRoute, auth_trait: Optional[str] = None) -> None:
+    def _emit_route(self, ns: str, fn: ir.ApiRoute, auth_trait: Optional[str] = None, as_async: bool = False) -> None:
         # work around lazy init messing with mypy
         assert fn.attrs is not None
         assert fn.arg_data_type is not None
         assert fn.result_data_type is not None
         assert fn.error_data_type is not None
+
+        if as_async:
+            return
 
         route_name = self.route_name(fn)
         host = fn.attrs.get('host', 'api')
