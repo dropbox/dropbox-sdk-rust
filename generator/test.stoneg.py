@@ -5,7 +5,7 @@ import string
 import sys
 
 try:
-    import re._parser as sre_parse
+    import re._parser as sre_parse  # type: ignore
 except ImportError:    # Python < 3.11
     import sre_parse
 
