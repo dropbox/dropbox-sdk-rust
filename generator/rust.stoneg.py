@@ -5,7 +5,6 @@ from typing import Optional, Sequence
 from rust import RustHelperBackend, EXTRA_DISPLAY_TYPES, REQUIRED_NAMESPACES
 from stone import ir
 from stone.backends.helpers import split_words
-from stone.ir import Alias, Api, ApiNamespace, ApiRoute, DataType, Struct, StructField, Union, UserDefined
 
 
 DERIVE_TRAITS = ['Debug', 'Clone', 'PartialEq']
@@ -20,14 +19,14 @@ class RustBackend(RustHelperBackend):
         super().__init__(target_folder_path, args)
         self.preserve_aliases = True
 
-        self._all_types: dict[str, dict[str, UserDefined]] = dict()
+        self._all_types: dict[str, dict[str, ir.UserDefined]] = dict()
         self._current_namespace: str = ''
-        self._error_types: set[Optional[DataType]] = set()
+        self._error_types: set[Optional[ir.DataType]] = set()
         self._modules: list[str] = []
 
     # File Generators
 
-    def generate(self, api: Api) -> None:
+    def generate(self, api: ir.Api) -> None:
         self._all_types = {ns.name: {typ.name: typ for typ in ns.data_types}
                            for ns in api.namespaces.values()}
 
@@ -71,7 +70,7 @@ class RustBackend(RustHelperBackend):
 
     # Type Emitters
 
-    def _emit_namespace(self, namespace: ApiNamespace) -> None:
+    def _emit_namespace(self, namespace: ir.ApiNamespace) -> None:
         ns = self.namespace_name(namespace)
         with self.output_to_relative_path(ns + '.rs'):
             self._current_namespace = namespace.name
@@ -114,7 +113,7 @@ class RustBackend(RustHelperBackend):
         self.emit(')]')
         self.emit()
 
-    def _emit_struct(self, struct: Struct):
+    def _emit_struct(self, struct: ir.Struct):
         struct_name = self.struct_name(struct)
         self._emit_doc(struct.doc)
         derive_traits = list(DERIVE_TRAITS)
@@ -154,7 +153,7 @@ class RustBackend(RustHelperBackend):
             else:
                 self._impl_from_for_struct(struct, struct.parent_type)
 
-    def _emit_polymorphic_struct(self, struct: Struct):
+    def _emit_polymorphic_struct(self, struct: ir.Struct):
         enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
         derive_traits = list(DERIVE_TRAITS)
@@ -174,7 +173,7 @@ class RustBackend(RustHelperBackend):
 
         self._impl_serde_for_polymorphic_struct(struct)
 
-    def _emit_union(self, union: Union):
+    def _emit_union(self, union: ir.Union):
         enum_name = self.enum_name(union)
         self._emit_doc(union.doc)
         derive_traits = list(DERIVE_TRAITS)
@@ -210,7 +209,7 @@ class RustBackend(RustHelperBackend):
         if union.parent_type:
             self._impl_from_for_union(union, union.parent_type)
 
-    def _emit_route(self, ns: str, fn: ApiRoute, auth_trait: Optional[str] = None) -> None:
+    def _emit_route(self, ns: str, fn: ir.ApiRoute, auth_trait: Optional[str] = None) -> None:
         # work around lazy init messing with mypy
         assert fn.attrs is not None
         assert fn.arg_data_type is not None
@@ -336,7 +335,7 @@ class RustBackend(RustHelperBackend):
             raise RuntimeError(f'ERROR: unknown route style: {style}')
         self.emit()
 
-    def _emit_alias(self, alias: Alias) -> None:
+    def _emit_alias(self, alias: ir.Alias) -> None:
         alias_name = self.alias_name(alias)
         self.emit(f'pub type {alias_name} = {self._rust_type(alias.data_type)};')
 
@@ -350,7 +349,7 @@ class RustBackend(RustHelperBackend):
 
     # Serialization
 
-    def _impl_serde_for_struct(self, struct: Struct) -> None:
+    def _impl_serde_for_struct(self, struct: ir.Struct) -> None:
         """
         Emit internal_deserialize() and possibly internal_deserialize_opt().
         internal_deserialize[_opt] takes a map and deserializes it into the struct. It reads the
@@ -516,7 +515,7 @@ class RustBackend(RustHelperBackend):
                 self.emit('s.end()')
         self.emit()
 
-    def _impl_serde_for_polymorphic_struct(self, struct: Struct) -> None:
+    def _impl_serde_for_polymorphic_struct(self, struct: ir.Struct) -> None:
         type_name = self.enum_name(struct)
         with self._impl_deserialize(type_name):
             self.emit('// polymorphic struct deserializer')
@@ -584,7 +583,7 @@ class RustBackend(RustHelperBackend):
                               '"cannot serialize unknown variant"))')
         self.emit()
 
-    def _impl_serde_for_union(self, union: Union) -> None:
+    def _impl_serde_for_union(self, union: ir.Union) -> None:
         type_name = self.enum_name(union)
         with self._impl_deserialize(type_name):
             self.emit('// union deserializer')
@@ -735,7 +734,7 @@ class RustBackend(RustHelperBackend):
 
     # "extends" for structs means the subtype adds additional fields to the supertype, so we can
     # convert from the subtype to the supertype
-    def _impl_from_for_struct(self, struct: Struct, parent: Struct) -> None:
+    def _impl_from_for_struct(self, struct: ir.Struct, parent: ir.Struct) -> None:
         subtype = self._rust_type(struct)
         supertype = self._rust_type(parent)
         self.emit(f'// struct extends {supertype}')
@@ -751,7 +750,7 @@ class RustBackend(RustHelperBackend):
 
     # "extends" for polymorphic structs means it's one of the supertype's variants, so we can
     # convert from the subtype to the supertype.
-    def _impl_from_for_polymorphic_struct(self, struct: Struct, parent: Struct) -> None:
+    def _impl_from_for_polymorphic_struct(self, struct: ir.Struct, parent: ir.Struct) -> None:
         subtype = self._rust_type(struct)
         supertype = self._rust_type(parent)
         self.emit(f'// struct extends polymorphic struct {supertype}')
@@ -765,7 +764,7 @@ class RustBackend(RustHelperBackend):
 
     # "extends" for unions means the subtype adds additional variants, so we can convert from the
     # supertype to the subtype.
-    def _impl_from_for_union(self, union: Union, parent: Union) -> None:
+    def _impl_from_for_union(self, union: ir.Union, parent: ir.Union) -> None:
         subtype = self._rust_type(union)
         supertype = self._rust_type(parent)
         self.emit(f'// union extends {supertype}')
@@ -881,7 +880,7 @@ class RustBackend(RustHelperBackend):
                     'Result<S::Ok, S::Error>'):
             yield
 
-    def _impl_default_for_struct(self, struct: Struct) -> None:
+    def _impl_default_for_struct(self, struct: ir.Struct) -> None:
         struct_name = self.struct_name(struct)
         with self.block(f'impl Default for {struct_name}'):
             with self.emit_rust_function_def('default', [], 'Self'):
@@ -891,10 +890,10 @@ class RustBackend(RustHelperBackend):
                         value = self._default_value(field)
                         self.emit(f'{name}: {value},')
 
-    def _impl_struct(self, struct: Struct):
+    def _impl_struct(self, struct: ir.Struct):
         return self.block(f'impl {self.struct_name(struct)}')
 
-    def _emit_new_for_struct(self, struct: Struct) -> None:
+    def _emit_new_for_struct(self, struct: ir.Struct) -> None:
         struct_name = self.struct_name(struct)
         first = True
 
@@ -940,7 +939,7 @@ class RustBackend(RustHelperBackend):
                 self.emit(f'self.{field_name} = {value};')
                 self.emit('self')
 
-    def _default_value(self, field: StructField) -> str:
+    def _default_value(self, field: ir.StructField) -> str:
         if isinstance(field.data_type, ir.Nullable):
             return 'None'
         elif ir.is_numeric_type(ir.unwrap_aliases(field.data_type)[0]):
@@ -973,7 +972,7 @@ class RustBackend(RustHelperBackend):
                 print('    unwrapped alias:', ir.unwrap_aliases(field.data_type)[0])
             return field.default
 
-    def _can_derive_eq(self, typ: DataType) -> bool:
+    def _can_derive_eq(self, typ: ir.DataType) -> bool:
         if isinstance(typ, ir.Float32) or isinstance(typ, ir.Float64):
             # These are the only primitive types that don't have strict equality.
             return False
@@ -981,8 +980,7 @@ class RustBackend(RustHelperBackend):
         # Check for various kinds of compound types and check all fields:
         if hasattr(typ, "data_type"):
             return self._can_derive_eq(typ.data_type)
-        if hasattr(typ, "has_enumerated_subtypes") and typ.has_enumerated_subtypes():
-            assert hasattr(typ, "get_enumerated_subtypes")
+        if isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes():
             for styp in typ.get_enumerated_subtypes():
                 if not self._can_derive_eq(styp):
                     return False
@@ -996,7 +994,7 @@ class RustBackend(RustHelperBackend):
         # All other primitive types are strict-comparable.
         return True
 
-    def _needs_explicit_default(self, field: StructField) -> bool:
+    def _needs_explicit_default(self, field: ir.StructField) -> bool:
         if isinstance(field.data_type, ir.Nullable):
             # default is always None
             return False
@@ -1014,10 +1012,10 @@ class RustBackend(RustHelperBackend):
             print('its default is', field.default)
             return True
 
-    def _is_error_type(self, typ: DataType) -> bool:
+    def _is_error_type(self, typ: ir.DataType) -> bool:
         return typ in self._error_types
 
-    def _impl_error(self, typ: DataType) -> None:
+    def _impl_error(self, typ: ir.DataType) -> None:
         type_name = self.enum_name(typ)
 
         # N.B.: error types SHOULD always be enums, but there's at least one type used as the error
@@ -1042,7 +1040,7 @@ class RustBackend(RustHelperBackend):
         self.emit()
         self._impl_display(typ)
 
-    def _impl_display(self, typ: DataType) -> None:
+    def _impl_display(self, typ: ir.DataType) -> None:
         type_name = self.enum_name(typ)
         variants = self.get_enum_variants(typ)
 
@@ -1126,5 +1124,5 @@ class RustBackend(RustHelperBackend):
 
     # Naming Rules
 
-    def _rust_type(self, typ: DataType, no_qualify=False):
+    def _rust_type(self, typ: ir.DataType, no_qualify=False):
         return self.rust_type(typ, self._current_namespace, no_qualify)
