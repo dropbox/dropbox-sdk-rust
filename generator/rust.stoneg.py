@@ -1,6 +1,6 @@
 import contextlib
 from contextlib import contextmanager
-from typing import Optional, Sequence
+from typing import Iterator, Optional, Sequence
 
 from rust import RustHelperBackend, EXTRA_DISPLAY_TYPES, REQUIRED_NAMESPACES
 from stone import ir
@@ -10,7 +10,7 @@ from stone.backends.helpers import split_words
 DERIVE_TRAITS = ['Debug', 'Clone', 'PartialEq']
 
 
-def fmt_shouting_snake(name):
+def fmt_shouting_snake(name: str) -> str:
     return '_'.join([word.upper() for word in split_words(name)])
 
 
@@ -113,7 +113,7 @@ class RustBackend(RustHelperBackend):
         self.emit(')]')
         self.emit()
 
-    def _emit_struct(self, struct: ir.Struct):
+    def _emit_struct(self, struct: ir.Struct) -> None:
         struct_name = self.struct_name(struct)
         self._emit_doc(struct.doc)
         derive_traits = list(DERIVE_TRAITS)
@@ -153,7 +153,7 @@ class RustBackend(RustHelperBackend):
             else:
                 self._impl_from_for_struct(struct, struct.parent_type)
 
-    def _emit_polymorphic_struct(self, struct: ir.Struct):
+    def _emit_polymorphic_struct(self, struct: ir.Struct) -> None:
         enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
         derive_traits = list(DERIVE_TRAITS)
@@ -173,7 +173,7 @@ class RustBackend(RustHelperBackend):
 
         self._impl_serde_for_polymorphic_struct(struct)
 
-    def _emit_union(self, union: ir.Union):
+    def _emit_union(self, union: ir.Union) -> None:
         enum_name = self.enum_name(union)
         self._emit_doc(union.doc)
         derive_traits = list(DERIVE_TRAITS)
@@ -337,6 +337,7 @@ class RustBackend(RustHelperBackend):
 
     def _emit_alias(self, alias: ir.Alias) -> None:
         alias_name = self.alias_name(alias)
+        assert isinstance(alias.data_type, ir.DataType)
         self.emit(f'pub type {alias_name} = {self._rust_type(alias.data_type)};')
 
     def _emit_other_variant(self) -> None:
@@ -751,12 +752,13 @@ class RustBackend(RustHelperBackend):
     # "extends" for polymorphic structs means it's one of the supertype's variants, so we can
     # convert from the subtype to the supertype.
     def _impl_from_for_polymorphic_struct(self, struct: ir.Struct, parent: ir.Struct) -> None:
-        subtype = self._rust_type(struct)
+        thistype = self._rust_type(struct)
         supertype = self._rust_type(parent)
         self.emit(f'// struct extends polymorphic struct {supertype}')
-        with self.block(f'impl From<{subtype}> for {supertype}'):
-            with self.block(f'fn from(subtype: {subtype}) -> Self'):
+        with self.block(f'impl From<{thistype}> for {supertype}'):
+            with self.block(f'fn from(subtype: {thistype}) -> Self'):
                 for subtype in parent.get_enumerated_subtypes():
+                    assert isinstance(subtype, ir.UnionField)
                     if subtype.data_type != struct:
                         continue
                     variant_name = self.enum_variant_name(subtype)
@@ -778,7 +780,7 @@ class RustBackend(RustHelperBackend):
 
     # Helpers
 
-    def _emit_doc(self, doc_string: Optional[str], prefix='///') -> None:
+    def _emit_doc(self, doc_string: Optional[str], prefix: str = '///') -> None:
         if doc_string is not None:
             for idx, chunk in enumerate(doc_string.split('\n\n')):
                 if idx != 0:
@@ -812,7 +814,7 @@ class RustBackend(RustHelperBackend):
                 type_name = self._rust_type(typ)
                 if self.is_enum_type(typ):
                     if isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes() \
-                            and field in (field.name for field in typ.fields):
+                            and typ.fields and field in (field.name for field in typ.fields):
                         # This is actually a link to a field in a polymorphic struct, not a enum
                         # variant. Because Rust doesn't have polymorphism, we make the fields be
                         # present on all enum variants, so this is a link to a field in the current
@@ -863,7 +865,7 @@ class RustBackend(RustHelperBackend):
             return f'`{val}`'
 
     @contextmanager
-    def _impl_deserialize(self, type_name: str):
+    def _impl_deserialize(self, type_name: str) -> Iterator[None]:
         with self.block(f'impl<\'de> ::serde::de::Deserialize<\'de> for {type_name}'), \
                 self.emit_rust_function_def(
                     'deserialize<D: ::serde::de::Deserializer<\'de>>',
@@ -872,7 +874,7 @@ class RustBackend(RustHelperBackend):
             yield
 
     @contextmanager
-    def _impl_serialize(self, type_name: str):
+    def _impl_serialize(self, type_name: str) -> Iterator[None]:
         with self.block(f'impl ::serde::ser::Serialize for {type_name}'), \
                 self.emit_rust_function_def(
                     'serialize<S: ::serde::ser::Serializer>',
@@ -890,8 +892,10 @@ class RustBackend(RustHelperBackend):
                         value = self._default_value(field)
                         self.emit(f'{name}: {value},')
 
-    def _impl_struct(self, struct: ir.Struct):
-        return self.block(f'impl {self.struct_name(struct)}')
+    @contextmanager
+    def _impl_struct(self, struct: ir.Struct) -> Iterator[None]:
+        with self.block(f'impl {self.struct_name(struct)}'):
+            yield
 
     def _emit_new_for_struct(self, struct: ir.Struct) -> None:
         struct_name = self.struct_name(struct)
@@ -943,7 +947,7 @@ class RustBackend(RustHelperBackend):
         if isinstance(field.data_type, ir.Nullable):
             return 'None'
         elif ir.is_numeric_type(ir.unwrap_aliases(field.data_type)[0]):
-            return field.default
+            return str(field.default)
         elif isinstance(field.default, ir.TagRef):
             default_variant = None
             for variant in field.default.union_data_type.all_fields:
@@ -970,7 +974,7 @@ class RustBackend(RustHelperBackend):
             print(f'    in field: {field}')
             if isinstance(field.data_type, ir.Alias):
                 print('    unwrapped alias:', ir.unwrap_aliases(field.data_type)[0])
-            return field.default
+            return str(field.default)
 
     def _can_derive_eq(self, typ: ir.DataType) -> bool:
         if isinstance(typ, ir.Float32) or isinstance(typ, ir.Float64):
@@ -1003,7 +1007,7 @@ class RustBackend(RustHelperBackend):
         elif ir.is_numeric_type(ir.unwrap_aliases(field.data_type)[0]):
             return field.default != 0
         elif isinstance(field.data_type, ir.Boolean):
-            return field.default
+            return bool(field.default)
         elif isinstance(field.data_type, ir.String):
             return len(field.default) != 0
         else:
@@ -1124,5 +1128,5 @@ class RustBackend(RustHelperBackend):
 
     # Naming Rules
 
-    def _rust_type(self, typ: ir.DataType, no_qualify=False):
+    def _rust_type(self, typ: ir.DataType, no_qualify: bool = False) -> str:
         return self.rust_type(typ, self._current_namespace, no_qualify)

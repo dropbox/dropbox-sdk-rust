@@ -1,6 +1,6 @@
 from abc import ABC
 from contextlib import contextmanager
-from typing import Optional
+from typing import Optional, Iterator
 
 from stone import ir
 from stone.backend import CodeBackend
@@ -8,7 +8,6 @@ from stone.backends.helpers import (
     fmt_pascal,
     fmt_underscores
 )
-from stone.ir import Alias, ApiNamespace, ApiRoute, DataType, Field, Struct, StructField
 
 RUST_RESERVED_WORDS = [
     "abstract", "alignof", "as", "async", "become", "box", "break", "const", "continue", "crate",
@@ -59,7 +58,7 @@ class RustHelperBackend(CodeBackend, ABC):
             args: Optional[list[str]] = None,
             return_type: Optional[str] = None,
             access: Optional[str] = None,
-    ):
+    ) -> Iterator[None]:
         """
         A Rust function definition context manager.
         """
@@ -102,19 +101,19 @@ class RustHelperBackend(CodeBackend, ABC):
                 for i, arg in enumerate(args):
                     self.emit(arg + (',' if i + 1 < len(args) else (')' + end)))
 
-    def is_enum_type(self, typ: DataType) -> bool:
+    def is_enum_type(self, typ: ir.DataType) -> bool:
         return isinstance(typ, ir.Union) or \
             (isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes())
 
-    def is_nullary_struct(self, typ: DataType) -> bool:
+    def is_nullary_struct(self, typ: ir.DataType) -> bool:
         return isinstance(typ, ir.Struct) and not typ.all_fields
 
-    def is_closed_union(self, typ: DataType) -> bool:
+    def is_closed_union(self, typ: ir.DataType) -> bool:
         return (isinstance(typ, ir.Union) and typ.closed) \
             or (isinstance(typ, ir.Struct)
                 and typ.has_enumerated_subtypes() and not typ.is_catch_all())
 
-    def get_enum_variants(self, typ: DataType) -> list[StructField]:
+    def get_enum_variants(self, typ: ir.DataType) -> list[ir.StructField]:
         if isinstance(typ, ir.Union):
             return typ.all_fields
         elif isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes():
@@ -122,7 +121,7 @@ class RustHelperBackend(CodeBackend, ABC):
         else:
             return []
 
-    def namespace_name(self, ns: ApiNamespace) -> str:
+    def namespace_name(self, ns: ir.ApiNamespace) -> str:
         return self.namespace_name_raw(ns.name)
 
     def namespace_name_raw(self, ns_name: str) -> str:
@@ -131,19 +130,19 @@ class RustHelperBackend(CodeBackend, ABC):
             name = 'dbx_' + name
         return name
 
-    def struct_name(self, struct: Struct) -> str:
+    def struct_name(self, struct: ir.Struct) -> str:
         name = fmt_pascal(struct.name)
         if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
             name += 'Struct'
         return name
 
-    def enum_name(self, union: DataType) -> str:
+    def enum_name(self, union: ir.DataType) -> str:
         name = fmt_pascal(union.name)
         if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
             name += 'Union'
         return name
 
-    def field_name(self, field: StructField) -> str:
+    def field_name(self, field: ir.StructField) -> str:
         return self.field_name_raw(field.name)
 
     def field_name_raw(self, name: str) -> str:
@@ -152,7 +151,7 @@ class RustHelperBackend(CodeBackend, ABC):
             name += '_field'
         return name
 
-    def enum_variant_name(self, field: StructField) -> str:
+    def enum_variant_name(self, field: ir.UnionField) -> str:
         return self.enum_variant_name_raw(field.name)
 
     def enum_variant_name_raw(self, name: str) -> str:
@@ -161,7 +160,7 @@ class RustHelperBackend(CodeBackend, ABC):
             name += 'Variant'
         return name
 
-    def route_name(self, route: ApiRoute) -> str:
+    def route_name(self, route: ir.ApiRoute) -> str:
         return self.route_name_raw(route.name, route.version)
 
     def route_name_raw(self, name: str, version: int) -> str:
@@ -172,13 +171,13 @@ class RustHelperBackend(CodeBackend, ABC):
             name = 'do_' + name
         return name
 
-    def alias_name(self, alias: Alias) -> str:
+    def alias_name(self, alias: ir.Alias) -> str:
         name = fmt_pascal(alias.name)
         if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
             name += 'Alias'
         return name
 
-    def rust_type(self, typ: DataType, current_namespace: str, no_qualify=False, crate='crate') -> str:
+    def rust_type(self, typ: ir.DataType, current_namespace: str, no_qualify: bool = False, crate: str ='crate') -> str:
         if isinstance(typ, ir.Nullable):
             t = self.rust_type(typ.data_type, current_namespace, no_qualify, crate)
             return f'Option<{t}>'

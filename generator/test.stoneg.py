@@ -6,7 +6,8 @@ import re
 import string
 import sys
 from _ast import Module
-from typing import Callable, Any, Optional, Dict
+from contextlib import contextmanager
+from typing import Any, Dict, Iterator, Optional, Protocol
 
 try:
     import re._parser as sre_parse  # type: ignore
@@ -30,7 +31,18 @@ class Permissions(object):
         return ['internal']
 
 
-JsonEncodeType = Callable[[Any, object, list[str], ...], str]
+#JsonEncodeType = Callable[[Any, object, list[str], **kwargs], str]
+class JsonEncodeType(Protocol):
+    def __call__(
+            self,
+            data_type: Any,
+            obj: object,
+            permissions: Permissions,
+            _1: Any = None,
+            _2: bool = False,
+            _3: bool = False,
+    ) -> str:
+        ...
 
 
 class TestBackend(RustHelperBackend):
@@ -43,7 +55,7 @@ class TestBackend(RustHelperBackend):
         self.target_path = target_folder_path
         self.ref_path = os.path.join(target_folder_path, 'reference')
         self.reference = PythonTypesBackend(self.ref_path, args + ["--package", "reference"])
-        self.reference_impls = {}
+        self.reference_impls: Dict[str, Module] = {}
 
     # Make test values for this type.
     # If it's a union or polymorphic type, make values for all variants.
@@ -51,8 +63,8 @@ class TestBackend(RustHelperBackend):
     # fields filled in, and one with all optional fields omitted. This helps catch backwards-compat
     # issues as well as checking (de)serialization of None.
     def make_test_values(self, typ: ir.Struct | ir.Union) -> list[TestStruct | TestUnion | TestPolymorphicStruct]:
-        vals = []
-        if ir.is_struct_type(typ):
+        vals: list[TestStruct | TestUnion | TestPolymorphicStruct] = []
+        if isinstance(typ, ir.Struct):
             if typ.has_enumerated_subtypes():
                 for variant in typ.get_enumerated_subtypes():
                     vals.append(TestPolymorphicStruct(
@@ -65,7 +77,7 @@ class TestBackend(RustHelperBackend):
                 vals.append(TestStruct(self, typ, self.reference_impls, no_optional_fields=False))
                 if typ.all_optional_fields:
                     vals.append(TestStruct(self, typ, self.reference_impls, no_optional_fields=True))
-        elif ir.is_union_type(typ):
+        elif isinstance(typ, ir.Union):
             for variant in typ.all_fields:
                 vals.append(TestUnion(
                     self, typ, self.reference_impls, variant, no_optional_fields=False))
@@ -83,13 +95,13 @@ class TestBackend(RustHelperBackend):
         sys.path.insert(0, self.target_path)
         sys.path.insert(1, "stone")
         from stone.backends.python_rsrc.stone_serializers import json_encode
-        for ns in api.namespaces:
-            print('\t' + ns)
-            python_ns = ns
-            if ns == 'async':
+        for ns_name in api.namespaces:
+            print('\t' + ns_name)
+            python_ns = ns_name
+            if ns_name == 'async':
                 # hack to work around 'async' being a Python3 keyword
                 python_ns = 'async_'
-            self.reference_impls[ns] = __import__('reference.'+python_ns).__dict__[python_ns]
+            self.reference_impls[ns_name] = __import__('reference.'+python_ns).__dict__[python_ns]
 
         print('Generating test code')
         for ns in api.namespaces.values():
@@ -111,10 +123,10 @@ class TestBackend(RustHelperBackend):
             self.emit('#[path = "../noop_client.rs"]')
             self.emit('pub mod noop_client;')
             self.emit()
-            for ns in api.namespaces:
-                if ns not in REQUIRED_NAMESPACES:
-                    self.emit(f'#[cfg(feature = "dbx_{ns}")]')
-                self.emit(f'mod {self.namespace_name_raw(ns)};')
+            for ns_name in api.namespaces:
+                if ns_name not in REQUIRED_NAMESPACES:
+                    self.emit(f'#[cfg(feature = "dbx_{ns_name}")]')
+                self.emit(f'mod {self.namespace_name_raw(ns_name)};')
                 self.emit()
 
     def _emit_header(self) -> None:
@@ -223,7 +235,12 @@ class TestBackend(RustHelperBackend):
             route: ir.ApiRoute,
             json_encode: JsonEncodeType,
             auth_type: Optional[str] = None,
-    ):
+    ) -> None:
+        assert route.arg_data_type
+        assert route.result_data_type
+        assert route.error_data_type
+        assert route.attrs
+
         arg_typ = self.rust_type(route.arg_data_type, '', crate='dropbox_sdk')
         if arg_typ == '()':
             json = "{}"
@@ -288,9 +305,11 @@ class TestBackend(RustHelperBackend):
             self.emit('assert!(matches!(ret, Err(dropbox_sdk::Error::HttpClient(..))));')
         self.emit()
 
-    def _test_fn(self, name: str):
+    @contextmanager
+    def _test_fn(self, name: str) -> Iterator[None]:
         self.emit('#[test]')
-        return self.emit_rust_function_def('test_' + name)
+        with self.emit_rust_function_def('test_' + name):
+            yield
 
 
 def _typ_or_void(typ: ir.DataType) -> ir.DataType:
@@ -346,7 +365,7 @@ class TestField(object):
 class TestValue(object):
     def __init__(self, rust_generator: RustHelperBackend) -> None:
         self.rust_generator = rust_generator
-        self.fields = []
+        self.fields: list[TestField] = []
         self.value = None
 
     def emit_asserts(self, codegen: RustHelperBackend, expression_path: str) -> None:
@@ -453,7 +472,8 @@ class TestUnion(TestValue):
             raise RuntimeError(f'Error generating value for {self._stone_type.name}.{variant_name}: {e}')
 
     def has_other_variants(self) -> bool:
-        return len(self._stone_type.all_fields) > 1 or not self._stone_type.closed
+        return len(self._stone_type.all_fields) > 1 \
+            or (isinstance(self._stone_type, ir.Union) and not self._stone_type.closed)
 
     def emit_asserts(self, codegen: RustHelperBackend, expression_path: str) -> None:
         if expression_path[0] == '(' and expression_path[-1] == ')':
