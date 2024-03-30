@@ -260,7 +260,7 @@ class TestBackend(RustHelperBackend):
         err_typ = self.rust_type(_typ_or_void(route.error_data_type), '', crate='dropbox_sdk')
         if err_typ == '()':
             err_typ = 'dropbox_sdk::NoError'
-        ns_path = 'dropbox_sdk::' + self.namespace_name(ns)
+        ns_path = 'dropbox_sdk::routes::' + self.namespace_name(ns)
         fn_name = self.route_name(route)
 
         if auth_type is None:
