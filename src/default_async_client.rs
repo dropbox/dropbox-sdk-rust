@@ -22,7 +22,7 @@ use crate::oauth2::{Authorization, TokenCache};
 
 macro_rules! impl_update_token {
     ($self:ident) => {
-        fn update_token(&$self, old_token: Arc<String>) -> impl Future<Output = bool> {
+        fn update_token(&$self, old_token: Arc<String>) -> impl Future<Output = bool> + Send {
             info!("refreshing auth token");
             $self.tokens
                 .update_token(

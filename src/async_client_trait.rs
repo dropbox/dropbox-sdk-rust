@@ -30,7 +30,7 @@ pub trait HttpClient {
     fn update_token(
         &self,
         _old_token: Arc<String>,
-    ) -> impl Future<Output = bool> {
+    ) -> impl Future<Output = bool> + Send {
         ready(false).boxed()
     }
 
@@ -101,7 +101,7 @@ impl<T: sync::HttpClient> HttpClient for T {
         self.new_request(url)
     }
 
-    fn update_token(&self, old_token: Arc<String>) -> impl Future<Output=bool> {
+    fn update_token(&self, old_token: Arc<String>) -> impl Future<Output=bool> + Send {
         ready(self.update_token(old_token))
     }
 
