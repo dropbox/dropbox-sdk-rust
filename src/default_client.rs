@@ -195,8 +195,18 @@ impl<'a> HttpClient for TokenUpdateClient<'a> {
 
 impl<'a> crate::async_client_trait::NoauthClient for TokenUpdateClient<'a> {}
 
-#[derive(Debug, Default)]
-struct UreqClient {}
+#[derive(Debug)]
+struct UreqClient {
+    agent: ureq::Agent,
+}
+
+impl Default for UreqClient {
+    fn default() -> Self {
+        Self {
+            agent: ureq::Agent::new(),
+        }
+    }
+}
 
 impl HttpClient for UreqClient {
     type Request = UreqRequest;
@@ -236,7 +246,7 @@ impl HttpClient for UreqClient {
 
     fn new_request(&self, url: &str) -> Self::Request {
         UreqRequest {
-            req: ureq::post(url),
+            req: self.agent.post(url),
             body: Bytes::new(),
         }
     }
