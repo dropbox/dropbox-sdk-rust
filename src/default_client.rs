@@ -16,93 +16,29 @@ use crate::client_trait::*;
 use crate::oauth2::{Authorization, TokenCache};
 use std::borrow::Cow;
 use std::fmt::Write;
+use std::str::FromStr;
 use std::sync::Arc;
+use bytes::Bytes;
+use futures::FutureExt;
+use crate::client_trait_common::{HttpRequest, TeamSelect};
+use crate::default_client_common::impl_set_path_root;
 
-const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
-
-macro_rules! forward_noauth_request {
-    ($self:ident, $inner:expr, $path_root:expr) => {
-        fn request(
-            &$self,
-            endpoint: Endpoint,
-            style: Style,
-            function: &str,
-            params: String,
-            params_type: ParamsType,
-            body: Option<&[u8]>,
-            range_start: Option<u64>,
-            range_end: Option<u64>,
-        ) -> crate::Result<HttpRequestResultRaw> {
-            $inner.request(endpoint, style, function, &params, params_type, body, range_start,
-                range_end, None, $path_root, None)
-        }
-    }
-}
-
-macro_rules! forward_authed_request {
-    ($self:ident, $tokens:expr, $inner:expr, $path_root:expr, $team_select:expr) => {
-        fn request(
-            &$self,
-            endpoint: Endpoint,
-            style: Style,
-            function: &str,
-            params: String,
-            params_type: ParamsType,
-            body: Option<&[u8]>,
-            range_start: Option<u64>,
-            range_end: Option<u64>,
-        ) -> crate::Result<HttpRequestResultRaw> {
-            let mut token = $tokens.get_token(TokenUpdateClient { inner: &$inner })?;
-
-            let mut retried = false;
-            loop {
-                let result = $inner.request(endpoint, style, function, &params, params_type, body,
-                    range_start, range_end, Some(&token), $path_root, $team_select);
-
-                // if-let chains will make this much less verbose...
-                // if !retried && let Err(e) = &result && is_token_expired_error(e) { ... }
-
-                if retried {
-                    break result;
+macro_rules! impl_update_token {
+    ($self:ident) => {
+        fn update_token(&$self, old_token: Arc<String>) -> bool {
+            info!("refreshing auth token");
+            match $self.tokens.update_token(
+                TokenUpdateClient { inner: &$self.inner },
+                old_token,
+            ).now_or_never().unwrap() {
+                Ok(_) => true,
+                Err(e) => {
+                    error!("failed to update auth token: {e}");
+                    false
                 }
-
-                let Err(e) = &result else {
-                    break result;
-                };
-
-                if is_token_expired_error(e) {
-                    info!("refreshing auth token");
-                    let old_token = token;
-                    token = $tokens.update_token(
-                        TokenUpdateClient { inner: &$inner },
-                        old_token,
-                    )?;
-                    retried = true;
-                    continue;
-                }
-
-                break result;
             }
         }
-    }
-}
-
-macro_rules! impl_set_path_root {
-    ($self:ident) => {
-        /// Set a root which all subsequent paths are evaluated relative to.
-        ///
-        /// The default, if this function is not called, is to behave as if it was called with
-        /// [`PathRoot::Home`](crate::common::PathRoot::Home).
-        ///
-        /// See <https://www.dropbox.com/developers/reference/path-root-header-modes> for more
-        /// information.
-        #[cfg(feature = "dbx_common")]
-        pub fn set_path_root(&mut $self, path_root: &crate::common::PathRoot) {
-            // Only way this can fail is if PathRoot::Other was specified, which is a programmer
-            // error, so panic if that happens.
-            $self.path_root = Some(serde_json::to_string(path_root).expect("invalid path root"));
-        }
-    }
+    };
 }
 
 /// Default HTTP client using User authorization.
@@ -132,7 +68,25 @@ impl UserAuthDefaultClient {
 }
 
 impl HttpClient for UserAuthDefaultClient {
-    forward_authed_request! { self, self.tokens, self.inner, self.path_root.as_deref(), None }
+    type Request = UreqRequest;
+
+    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
+        self.inner.execute(request)
+    }
+
+    fn new_request(&self, url: &str) -> Self::Request {
+        self.inner.new_request(url)
+    }
+
+    impl_update_token!(self);
+
+    fn token(&self) -> Option<Arc<String>> {
+        self.tokens.get_token()
+    }
+
+    fn path_root(&self) -> Option<&str> {
+        self.path_root.as_deref()
+    }
 }
 
 impl UserAuthClient for UserAuthDefaultClient {}
@@ -165,7 +119,29 @@ impl TeamAuthDefaultClient {
 }
 
 impl HttpClient for TeamAuthDefaultClient {
-    forward_authed_request! { self, self.tokens, self.inner, self.path_root.as_deref(), self.team_select.as_ref() }
+    type Request = UreqRequest;
+
+    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
+        self.inner.execute(request)
+    }
+
+    fn new_request(&self, url: &str) -> Self::Request {
+        self.inner.new_request(url)
+    }
+
+    fn token(&self) -> Option<Arc<String>> {
+        self.tokens.get_token()
+    }
+
+    impl_update_token!(self);
+
+    fn path_root(&self) -> Option<&str> {
+        self.path_root.as_deref()
+    }
+
+    fn team_select(&self) -> Option<&TeamSelect> {
+        self.team_select.as_ref()
+    }
 }
 
 impl TeamAuthClient for TeamAuthDefaultClient {}
@@ -182,7 +158,19 @@ impl NoauthDefaultClient {
 }
 
 impl HttpClient for NoauthDefaultClient {
-    forward_noauth_request! { self, self.inner, self.path_root.as_deref() }
+    type Request = UreqRequest;
+
+    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
+        self.inner.execute(request)
+    }
+
+    fn new_request(&self, url: &str) -> Self::Request {
+        self.inner.new_request(url)
+    }
+
+    fn path_root(&self) -> Option<&str> {
+        self.path_root.as_deref()
+    }
 }
 
 impl NoauthClient for NoauthDefaultClient {}
@@ -194,136 +182,87 @@ struct TokenUpdateClient<'a> {
 }
 
 impl<'a> HttpClient for TokenUpdateClient<'a> {
-    forward_noauth_request! { self, self.inner, None }
+    type Request = UreqRequest;
+
+    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
+        self.inner.execute(request)
+    }
+
+    fn new_request(&self, url: &str) -> Self::Request {
+        self.inner.new_request(url)
+    }
 }
 
-impl<'a> NoauthClient for TokenUpdateClient<'a> {}
+impl<'a> crate::async_client_trait::NoauthClient for TokenUpdateClient<'a> {}
 
 #[derive(Debug, Default)]
 struct UreqClient {}
 
-impl UreqClient {
-    #[allow(clippy::too_many_arguments)]
-    fn request(
-        &self,
-        endpoint: Endpoint,
-        style: Style,
-        function: &str,
-        params: &str,
-        params_type: ParamsType,
-        body: Option<&[u8]>,
-        range_start: Option<u64>,
-        range_end: Option<u64>,
-        token: Option<&str>,
-        path_root: Option<&str>,
-        team_select: Option<&TeamSelect>,
-    ) -> crate::Result<HttpRequestResultRaw> {
+impl HttpClient for UreqClient {
+    type Request = UreqRequest;
 
-        let url = endpoint.url().to_owned() + function;
-        debug!("request for {:?}", url);
-
-        let mut req = ureq::post(&url)
-            .set("User-Agent", USER_AGENT);
-
-        if let Some(token) = token {
-            req = req.set("Authorization", &format!("Bearer {}", token));
-        }
-
-        if let Some(path_root) = path_root {
-            req = req.set("Dropbox-API-Path-Root", path_root);
-        }
-
-        if let Some(team_select) = team_select {
-            req = match team_select {
-                TeamSelect::User(id) => req.set("Dropbox-API-Select-User", id),
-                TeamSelect::Admin(id) => req.set("Dropbox-API-Select-Admin", id),
-            };
-        }
-
-        req = match (range_start, range_end) {
-            (Some(start), Some(end)) => req.set("Range", &format!("bytes={}-{}", start, end)),
-            (Some(start), None) => req.set("Range", &format!("bytes={}-", start)),
-            (None, Some(end)) => req.set("Range", &format!("bytes=-{}", end)),
-            (None, None) => req,
-        };
-
-        // If the params are totally empty, don't send any arg header or body.
-        let result = if params.is_empty() {
-            req.call()
+    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
+        let resp = if request.body.is_empty() {
+            request.req.call()
         } else {
-            match style {
-                Style::Rpc => {
-                    // Send params in the body.
-                    req = req.set("Content-Type", params_type.content_type());
-                    req.send_string(params)
-                }
-                Style::Upload | Style::Download => {
-                    // Send params in a header. Note that non-ASCII and 0x7F in a header need to be
-                    // escaped per the HTTP spec.
-                    req = req.set(
-                        "Dropbox-API-Arg",
-                        json_escape_header(params).as_ref());
-                    if style == Style::Upload {
-                        req = req.set("Content-Type", "application/octet-stream");
-                        if let Some(body) = body {
-                            req.send_bytes(body)
-                        } else {
-                            req.send_bytes(&[])
-                        }
-                    } else {
-                        assert!(body.is_none(), "body can only be set for Style::Upload request");
-                        req.call()
-                    }
-                }
-            }
+            request.req.send_bytes(request.body.as_ref())
         };
 
-        let resp = match result {
-            Ok(resp) => resp,
-            Err(e @ ureq::Error::Transport(_)) => {
-                error!("request failed: {}", e);
-                return Err(RequestError { inner: e }.into());
+        let (code, status, resp) = match resp {
+            Ok(resp) => {
+                (resp.status(), resp.status_text().to_owned(), resp)
             }
             Err(ureq::Error::Status(code, resp)) => {
-                let status = resp.status_text().to_owned();
-                let json = resp.into_string()?;
-                return Err(Error::UnexpectedHttpError {
-                    code,
-                    status,
-                    json,
-                });
+                (code, resp.status_text().to_owned(), resp)
+            }
+            Err(e @ ureq::Error::Transport(_)) => {
+                return Err(RequestError { inner: e }.into());
             }
         };
 
-        match style {
-            Style::Rpc | Style::Upload => {
-                // Get the response from the body; return no body stream.
-                let result_json = resp.into_string()?;
-                Ok(HttpRequestResultRaw {
-                    result_json,
-                    content_length: None,
-                    body: None,
-                })
-            }
-            Style::Download => {
-                // Get the response from a header; return the body stream.
-                let result_json = resp.header("Dropbox-API-Result")
-                    .ok_or(Error::UnexpectedResponse("missing Dropbox-API-Result header"))?
-                    .to_owned();
+        let result_header = resp.header("Dropbox-API-Result").map(String::from);
 
-                let content_length = match resp.header("Content-Length") {
-                    Some(s) => Some(s.parse()
-                        .map_err(|_| Error::UnexpectedResponse("invalid Content-Length header"))?),
-                    None => None,
-                };
+        let content_length = resp.header("Content-Length")
+            .map(|s| u64::from_str(s).map_err(|e| Error::UnexpectedResponse(format!("invalid Content-Length {s:?}: {e}"))))
+            .transpose()?;
 
-                Ok(HttpRequestResultRaw {
-                    result_json,
-                    content_length,
-                    body: Some(Box::new(resp.into_reader())),
-                })
-            }
+        Ok(HttpRequestResultRaw {
+            status: (code, status),
+            result_header,
+            content_length,
+            body: resp.into_reader(),
+        })
+    }
+
+    fn new_request(&self, url: &str) -> Self::Request {
+        UreqRequest {
+            req: ureq::post(url),
+            body: Bytes::new(),
         }
+    }
+}
+
+/// This is an implementation detail of the HTTP client.
+pub struct UreqRequest {
+    req: ureq::Request,
+    body: Bytes,
+}
+
+impl HttpRequest for UreqRequest {
+    fn set_header(mut self, name: &str, value: &str) -> Self {
+        if name.eq_ignore_ascii_case("dropbox-api-arg") {
+            // Non-ASCII and 0x7F in a header need to be escaped per the HTTP spec, and ureq doesn't
+            // do this for us. This is only an issue for this particular header.
+            self.req = self.req.set(name, json_escape_header(value).as_ref());
+        } else {
+            self.req = self.req.set(name, value);
+        }
+        self
+    }
+
+    fn set_body(mut self, body: Bytes) -> Self {
+        self.body = body;
+        self
     }
 }
 

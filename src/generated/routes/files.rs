@@ -22,13 +22,15 @@ pub fn alpha_get_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AlphaGetMetadataArg,
 ) -> crate::Result<Result<Metadata, AlphaGetMetadataError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/alpha/get_metadata",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/alpha/get_metadata",
+            arg,
+            None)
+    )
 }
 
 /// Create a new file with the contents provided in the request. Note that the behavior of this
@@ -45,13 +47,15 @@ pub fn alpha_upload(
     arg: &UploadArg,
     body: &[u8],
 ) -> crate::Result<Result<FileMetadata, UploadError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Upload,
-        "files/alpha/upload",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Upload,
+            "files/alpha/upload",
+            arg,
+            Some(body))
+    )
 }
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
@@ -60,13 +64,15 @@ pub fn copy_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationArg,
 ) -> crate::Result<Result<RelocationResult, RelocationError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/copy_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/copy_v2",
+            arg,
+            None)
+    )
 }
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
@@ -76,13 +82,15 @@ pub fn copy(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationArg,
 ) -> crate::Result<Result<Metadata, RelocationError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/copy",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/copy",
+            arg,
+            None)
+    )
 }
 
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
@@ -94,13 +102,15 @@ pub fn copy_batch_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CopyBatchArg,
 ) -> crate::Result<Result<RelocationBatchV2Launch, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/copy_batch_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/copy_batch_v2",
+            arg,
+            None)
+    )
 }
 
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
@@ -111,13 +121,15 @@ pub fn copy_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationBatchArg,
 ) -> crate::Result<Result<RelocationBatchLaunch, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/copy_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/copy_batch",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for [`copy_batch_v2()`](copy_batch_v2). It returns
@@ -126,13 +138,15 @@ pub fn copy_batch_check_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<RelocationBatchV2JobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/copy_batch/check_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/copy_batch/check_v2",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for [`copy_batch()`](copy_batch). If success, it
@@ -142,13 +156,15 @@ pub fn copy_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<RelocationBatchJobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/copy_batch/check",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/copy_batch/check",
+            arg,
+            None)
+    )
 }
 
 /// Get a copy reference to a file or folder. This reference string can be used to save that file or
@@ -158,13 +174,15 @@ pub fn copy_reference_get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetCopyReferenceArg,
 ) -> crate::Result<Result<GetCopyReferenceResult, GetCopyReferenceError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/copy_reference/get",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/copy_reference/get",
+            arg,
+            None)
+    )
 }
 
 /// Save a copy reference returned by [`copy_reference_get()`](copy_reference_get) to the user's
@@ -173,13 +191,15 @@ pub fn copy_reference_save(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SaveCopyReferenceArg,
 ) -> crate::Result<Result<SaveCopyReferenceResult, SaveCopyReferenceError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/copy_reference/save",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/copy_reference/save",
+            arg,
+            None)
+    )
 }
 
 /// Create a folder at a given path.
@@ -187,13 +207,15 @@ pub fn create_folder_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFolderArg,
 ) -> crate::Result<Result<CreateFolderResult, CreateFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/create_folder_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/create_folder_v2",
+            arg,
+            None)
+    )
 }
 
 /// Create a folder at a given path.
@@ -202,13 +224,15 @@ pub fn create_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFolderArg,
 ) -> crate::Result<Result<FolderMetadata, CreateFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/create_folder",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/create_folder",
+            arg,
+            None)
+    )
 }
 
 /// Create multiple folders at once. This route is asynchronous for large batches, which returns a
@@ -220,13 +244,15 @@ pub fn create_folder_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFolderBatchArg,
 ) -> crate::Result<Result<CreateFolderBatchLaunch, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/create_folder_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/create_folder_batch",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for [`create_folder_batch()`](create_folder_batch). If
@@ -235,13 +261,15 @@ pub fn create_folder_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<CreateFolderBatchJobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/create_folder_batch/check",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/create_folder_batch/check",
+            arg,
+            None)
+    )
 }
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
@@ -253,13 +281,15 @@ pub fn delete_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteArg,
 ) -> crate::Result<Result<DeleteResult, DeleteError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/delete_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/delete_v2",
+            arg,
+            None)
+    )
 }
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
@@ -272,13 +302,15 @@ pub fn delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteArg,
 ) -> crate::Result<Result<Metadata, DeleteError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/delete",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/delete",
+            arg,
+            None)
+    )
 }
 
 /// Delete multiple files/folders at once. This route is asynchronous, which returns a job ID
@@ -288,13 +320,15 @@ pub fn delete_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteBatchArg,
 ) -> crate::Result<Result<DeleteBatchLaunch, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/delete_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/delete_batch",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for [`delete_batch()`](delete_batch). If success, it
@@ -303,13 +337,15 @@ pub fn delete_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<DeleteBatchJobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/delete_batch/check",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/delete_batch/check",
+            arg,
+            None)
+    )
 }
 
 /// Download a file from a user's Dropbox.
@@ -319,15 +355,18 @@ pub fn download(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<FileMetadata>, DownloadError>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "files/download",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Download,
-        "files/download",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Download a folder from the user's Dropbox, as a zip file. The folder must be less than 20 GB in
@@ -340,15 +379,18 @@ pub fn download_zip(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<DownloadZipResult>, DownloadZipError>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "files/download_zip",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Download,
-        "files/download_zip",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be
@@ -365,15 +407,18 @@ pub fn export(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<ExportResult>, ExportError>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "files/export",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Download,
-        "files/export",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Return the lock metadata for the given list of paths.
@@ -381,13 +426,15 @@ pub fn get_file_lock_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &LockFileBatchArg,
 ) -> crate::Result<Result<LockFileBatchResult, LockFileError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/get_file_lock_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/get_file_lock_batch",
+            arg,
+            None)
+    )
 }
 
 /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
@@ -395,13 +442,15 @@ pub fn get_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetMetadataArg,
 ) -> crate::Result<Result<Metadata, GetMetadataError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/get_metadata",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/get_metadata",
+            arg,
+            None)
+    )
 }
 
 /// Get a preview for a file. Currently, PDF previews are generated for files with the following
@@ -415,15 +464,18 @@ pub fn get_preview(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<FileMetadata>, PreviewError>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "files/get_preview",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Download,
-        "files/get_preview",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Get a temporary link to stream content of a file. This link will expire in four hours and
@@ -433,13 +485,15 @@ pub fn get_temporary_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetTemporaryLinkArg,
 ) -> crate::Result<Result<GetTemporaryLinkResult, GetTemporaryLinkError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/get_temporary_link",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/get_temporary_link",
+            arg,
+            None)
+    )
 }
 
 /// Get a one-time use temporary upload link to upload a file to a Dropbox location.
@@ -482,13 +536,15 @@ pub fn get_temporary_upload_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetTemporaryUploadLinkArg,
 ) -> crate::Result<Result<GetTemporaryUploadLinkResult, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/get_temporary_upload_link",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/get_temporary_upload_link",
+            arg,
+            None)
+    )
 }
 
 /// Get a thumbnail for an image. This method currently supports files with the following file
@@ -500,15 +556,18 @@ pub fn get_thumbnail(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<FileMetadata>, ThumbnailError>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "files/get_thumbnail",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Download,
-        "files/get_thumbnail",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Get a thumbnail for an image. This method currently supports files with the following file
@@ -520,15 +579,18 @@ pub fn get_thumbnail_v2(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<PreviewResult>, ThumbnailV2Error>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "files/get_thumbnail_v2",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Download,
-        "files/get_thumbnail_v2",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Get a thumbnail for an image. This method currently supports files with the following file
@@ -540,15 +602,18 @@ pub fn get_thumbnail_v2_app_auth(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<PreviewResult>, ThumbnailV2Error>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "files/get_thumbnail_v2",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Download,
-        "files/get_thumbnail_v2",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Get thumbnails for a list of images. We allow up to 25 thumbnails in a single batch. This method
@@ -558,13 +623,15 @@ pub fn get_thumbnail_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetThumbnailBatchArg,
 ) -> crate::Result<Result<GetThumbnailBatchResult, GetThumbnailBatchError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Rpc,
-        "files/get_thumbnail_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Rpc,
+            "files/get_thumbnail_batch",
+            arg,
+            None)
+    )
 }
 
 /// Starts returning the contents of a folder. If the result's
@@ -591,13 +658,15 @@ pub fn list_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFolderArg,
 ) -> crate::Result<Result<ListFolderResult, ListFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/list_folder",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/list_folder",
+            arg,
+            None)
+    )
 }
 
 /// Starts returning the contents of a folder. If the result's
@@ -624,13 +693,15 @@ pub fn list_folder_app_auth(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &ListFolderArg,
 ) -> crate::Result<Result<ListFolderResult, ListFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/list_folder",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/list_folder",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`list_folder()`](list_folder), use this to paginate
@@ -640,13 +711,15 @@ pub fn list_folder_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFolderContinueArg,
 ) -> crate::Result<Result<ListFolderResult, ListFolderContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/list_folder/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/list_folder/continue",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`list_folder()`](list_folder), use this to paginate
@@ -656,13 +729,15 @@ pub fn list_folder_continue_app_auth(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &ListFolderContinueArg,
 ) -> crate::Result<Result<ListFolderResult, ListFolderContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/list_folder/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/list_folder/continue",
+            arg,
+            None)
+    )
 }
 
 /// A way to quickly get a cursor for the folder's state. Unlike [`list_folder()`](list_folder),
@@ -673,13 +748,15 @@ pub fn list_folder_get_latest_cursor(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFolderArg,
 ) -> crate::Result<Result<ListFolderGetLatestCursorResult, ListFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/list_folder/get_latest_cursor",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/list_folder/get_latest_cursor",
+            arg,
+            None)
+    )
 }
 
 /// A longpoll endpoint to wait for changes on an account. In conjunction with
@@ -692,13 +769,15 @@ pub fn list_folder_longpoll(
     client: &impl crate::client_trait::NoauthClient,
     arg: &ListFolderLongpollArg,
 ) -> crate::Result<Result<ListFolderLongpollResult, ListFolderLongpollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Notify,
-        crate::client_trait::Style::Rpc,
-        "files/list_folder/longpoll",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Notify,
+            crate::client_trait_common::Style::Rpc,
+            "files/list_folder/longpoll",
+            arg,
+            None)
+    )
 }
 
 /// Returns revisions for files based on a file path or a file id. The file path or file id is
@@ -713,13 +792,15 @@ pub fn list_revisions(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListRevisionsArg,
 ) -> crate::Result<Result<ListRevisionsResult, ListRevisionsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/list_revisions",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/list_revisions",
+            arg,
+            None)
+    )
 }
 
 /// Lock the files at the given paths. A locked file will be writable only by the lock holder. A
@@ -729,13 +810,15 @@ pub fn lock_file_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &LockFileBatchArg,
 ) -> crate::Result<Result<LockFileBatchResult, LockFileError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/lock_file_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/lock_file_batch",
+            arg,
+            None)
+    )
 }
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
@@ -744,13 +827,15 @@ pub fn move_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationArg,
 ) -> crate::Result<Result<RelocationResult, RelocationError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/move_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/move_v2",
+            arg,
+            None)
+    )
 }
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
@@ -760,13 +845,15 @@ pub fn do_move(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationArg,
 ) -> crate::Result<Result<Metadata, RelocationError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/move",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/move",
+            arg,
+            None)
+    )
 }
 
 /// Move multiple files or folders to different locations at once in the user's Dropbox. Note that
@@ -779,13 +866,15 @@ pub fn move_batch_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &MoveBatchArg,
 ) -> crate::Result<Result<RelocationBatchV2Launch, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/move_batch_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/move_batch_v2",
+            arg,
+            None)
+    )
 }
 
 /// Move multiple files or folders to different locations at once in the user's Dropbox. This route
@@ -796,13 +885,15 @@ pub fn move_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationBatchArg,
 ) -> crate::Result<Result<RelocationBatchLaunch, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/move_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/move_batch",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for [`move_batch_v2()`](move_batch_v2). It returns
@@ -811,13 +902,15 @@ pub fn move_batch_check_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<RelocationBatchV2JobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/move_batch/check_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/move_batch/check_v2",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for [`move_batch()`](move_batch). If success, it
@@ -827,13 +920,15 @@ pub fn move_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<RelocationBatchJobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/move_batch/check",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/move_batch/check",
+            arg,
+            None)
+    )
 }
 
 /// Creates a new Paper doc with the provided content.
@@ -847,13 +942,15 @@ pub fn paper_create(
     arg: &PaperCreateArg,
     body: &[u8],
 ) -> crate::Result<Result<PaperCreateResult, PaperCreateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Upload,
-        "files/paper/create",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Upload,
+            "files/paper/create",
+            arg,
+            Some(body))
+    )
 }
 
 /// Updates an existing Paper doc with the provided content.
@@ -867,13 +964,15 @@ pub fn paper_update(
     arg: &PaperUpdateArg,
     body: &[u8],
 ) -> crate::Result<Result<PaperUpdateResult, PaperUpdateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Upload,
-        "files/paper/update",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Upload,
+            "files/paper/update",
+            arg,
+            Some(body))
+    )
 }
 
 /// Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40).
@@ -884,13 +983,15 @@ pub fn permanently_delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteArg,
 ) -> crate::Result<Result<(), DeleteError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/permanently_delete",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/permanently_delete",
+            arg,
+            None)
+    )
 }
 
 #[deprecated]
@@ -898,13 +999,15 @@ pub fn properties_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::file_properties::AddPropertiesArg,
 ) -> crate::Result<Result<(), crate::file_properties::AddPropertiesError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/properties/add",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/properties/add",
+            arg,
+            None)
+    )
 }
 
 #[deprecated]
@@ -912,13 +1015,15 @@ pub fn properties_overwrite(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::file_properties::OverwritePropertyGroupArg,
 ) -> crate::Result<Result<(), crate::file_properties::InvalidPropertyGroupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/properties/overwrite",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/properties/overwrite",
+            arg,
+            None)
+    )
 }
 
 #[deprecated]
@@ -926,13 +1031,15 @@ pub fn properties_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::file_properties::RemovePropertiesArg,
 ) -> crate::Result<Result<(), crate::file_properties::RemovePropertiesError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/properties/remove",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/properties/remove",
+            arg,
+            None)
+    )
 }
 
 #[deprecated]
@@ -940,26 +1047,30 @@ pub fn properties_template_get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::file_properties::GetTemplateArg,
 ) -> crate::Result<Result<crate::file_properties::GetTemplateResult, crate::file_properties::TemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/properties/template/get",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/properties/template/get",
+            arg,
+            None)
+    )
 }
 
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<crate::file_properties::ListTemplateResult, crate::file_properties::TemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/properties/template/list",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/properties/template/list",
+            &(),
+            None)
+    )
 }
 
 #[deprecated]
@@ -967,13 +1078,15 @@ pub fn properties_update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::file_properties::UpdatePropertiesArg,
 ) -> crate::Result<Result<(), crate::file_properties::UpdatePropertiesError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/properties/update",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/properties/update",
+            arg,
+            None)
+    )
 }
 
 /// Restore a specific revision of a file to the given path.
@@ -981,13 +1094,15 @@ pub fn restore(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RestoreArg,
 ) -> crate::Result<Result<FileMetadata, RestoreError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/restore",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/restore",
+            arg,
+            None)
+    )
 }
 
 /// Save the data from a specified URL into a file in user's Dropbox. Note that the transfer from
@@ -998,13 +1113,15 @@ pub fn save_url(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SaveUrlArg,
 ) -> crate::Result<Result<SaveUrlResult, SaveUrlError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/save_url",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/save_url",
+            arg,
+            None)
+    )
 }
 
 /// Check the status of a [`save_url()`](save_url) job.
@@ -1012,13 +1129,15 @@ pub fn save_url_check_job_status(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<SaveUrlJobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/save_url/check_job_status",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/save_url/check_job_status",
+            arg,
+            None)
+    )
 }
 
 /// Searches for files and folders. Note: Recent changes will be reflected in search results within
@@ -1029,13 +1148,15 @@ pub fn search(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SearchArg,
 ) -> crate::Result<Result<SearchResult, SearchError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/search",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/search",
+            arg,
+            None)
+    )
 }
 
 /// Searches for files and folders. Note: [`search_v2()`](search_v2) along with
@@ -1046,13 +1167,15 @@ pub fn search_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SearchV2Arg,
 ) -> crate::Result<Result<SearchV2Result, SearchError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/search_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/search_v2",
+            arg,
+            None)
+    )
 }
 
 /// Fetches the next page of search results returned from [`search_v2()`](search_v2). Note:
@@ -1064,13 +1187,15 @@ pub fn search_continue_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SearchV2ContinueArg,
 ) -> crate::Result<Result<SearchV2Result, SearchError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/search/continue_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/search/continue_v2",
+            arg,
+            None)
+    )
 }
 
 /// Add a tag to an item. A tag is a string. The strings are automatically converted to lowercase
@@ -1084,13 +1209,15 @@ pub fn tags_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddTagArg,
 ) -> crate::Result<Result<(), AddTagError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/tags/add",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/tags/add",
+            arg,
+            None)
+    )
 }
 
 /// Get list of tags assigned to items.
@@ -1103,13 +1230,15 @@ pub fn tags_get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetTagsArg,
 ) -> crate::Result<Result<GetTagsResult, BaseTagError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/tags/get",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/tags/get",
+            arg,
+            None)
+    )
 }
 
 /// Remove a tag from an item.
@@ -1122,13 +1251,15 @@ pub fn tags_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveTagArg,
 ) -> crate::Result<Result<(), RemoveTagError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/tags/remove",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/tags/remove",
+            arg,
+            None)
+    )
 }
 
 /// Unlock the files at the given paths. A locked file can only be unlocked by the lock holder or,
@@ -1138,13 +1269,15 @@ pub fn unlock_file_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnlockFileBatchArg,
 ) -> crate::Result<Result<LockFileBatchResult, LockFileError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/unlock_file_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/unlock_file_batch",
+            arg,
+            None)
+    )
 }
 
 /// Create a new file with the contents provided in the request. Do not use this to upload a file
@@ -1158,13 +1291,15 @@ pub fn upload(
     arg: &UploadArg,
     body: &[u8],
 ) -> crate::Result<Result<FileMetadata, UploadError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Upload,
-        "files/upload",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Upload,
+            "files/upload",
+            arg,
+            Some(body))
+    )
 }
 
 /// Append more data to an upload session. When the parameter close is set, this call will close the
@@ -1178,13 +1313,15 @@ pub fn upload_session_append_v2(
     arg: &UploadSessionAppendArg,
     body: &[u8],
 ) -> crate::Result<Result<(), UploadSessionAppendError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Upload,
-        "files/upload_session/append_v2",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Upload,
+            "files/upload_session/append_v2",
+            arg,
+            Some(body))
+    )
 }
 
 /// Append more data to an upload session. A single request should not upload more than 150 MB. The
@@ -1198,13 +1335,15 @@ pub fn upload_session_append(
     arg: &UploadSessionCursor,
     body: &[u8],
 ) -> crate::Result<Result<(), UploadSessionAppendError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Upload,
-        "files/upload_session/append",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Upload,
+            "files/upload_session/append",
+            arg,
+            Some(body))
+    )
 }
 
 /// Finish an upload session and save the uploaded data to the given file path. A single request
@@ -1218,13 +1357,15 @@ pub fn upload_session_finish(
     arg: &UploadSessionFinishArg,
     body: &[u8],
 ) -> crate::Result<Result<FileMetadata, UploadSessionFinishError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Upload,
-        "files/upload_session/finish",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Upload,
+            "files/upload_session/finish",
+            arg,
+            Some(body))
+    )
 }
 
 /// This route helps you commit many files at once into a user's Dropbox. Use
@@ -1250,13 +1391,15 @@ pub fn upload_session_finish_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionFinishBatchArg,
 ) -> crate::Result<Result<UploadSessionFinishBatchLaunch, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/upload_session/finish_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/upload_session/finish_batch",
+            arg,
+            None)
+    )
 }
 
 /// This route helps you commit many files at once into a user's Dropbox. Use
@@ -1278,13 +1421,15 @@ pub fn upload_session_finish_batch_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionFinishBatchArg,
 ) -> crate::Result<Result<UploadSessionFinishBatchResult, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/upload_session/finish_batch_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/upload_session/finish_batch_v2",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for
@@ -1294,13 +1439,15 @@ pub fn upload_session_finish_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<UploadSessionFinishBatchJobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/upload_session/finish_batch/check",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/upload_session/finish_batch/check",
+            arg,
+            None)
+    )
 }
 
 /// Upload sessions allow you to upload a single file in one or more requests, for example where the
@@ -1339,13 +1486,15 @@ pub fn upload_session_start(
     arg: &UploadSessionStartArg,
     body: &[u8],
 ) -> crate::Result<Result<UploadSessionStartResult, UploadSessionStartError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Upload,
-        "files/upload_session/start",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Upload,
+            "files/upload_session/start",
+            arg,
+            Some(body))
+    )
 }
 
 /// This route starts batch of upload_sessions. Please refer to `upload_session/start` usage. Calls
@@ -1356,12 +1505,14 @@ pub fn upload_session_start_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionStartBatchArg,
 ) -> crate::Result<Result<UploadSessionStartBatchResult, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "files/upload_session/start_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "files/upload_session/start_batch",
+            arg,
+            None)
+    )
 }
 

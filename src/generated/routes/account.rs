@@ -15,12 +15,14 @@ pub fn set_profile_photo(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SetProfilePhotoArg,
 ) -> crate::Result<Result<SetProfilePhotoResult, SetProfilePhotoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "account/set_profile_photo",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "account/set_profile_photo",
+            arg,
+            None)
+    )
 }
 

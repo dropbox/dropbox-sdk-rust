@@ -24,13 +24,15 @@ pub fn app(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &EchoArg,
 ) -> crate::Result<Result<EchoResult, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "check/app",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "check/app",
+            arg,
+            None)
+    )
 }
 
 /// This endpoint performs User Authentication, validating the supplied access token, and returns
@@ -46,12 +48,14 @@ pub fn user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &EchoArg,
 ) -> crate::Result<Result<EchoResult, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "check/user",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "check/user",
+            arg,
+            None)
+    )
 }
 

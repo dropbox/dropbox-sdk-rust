@@ -16,13 +16,15 @@ pub fn properties_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddPropertiesArg,
 ) -> crate::Result<Result<(), AddPropertiesError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/properties/add",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/properties/add",
+            arg,
+            None)
+    )
 }
 
 /// Overwrite property groups associated with a file. This endpoint should be used instead of
@@ -34,13 +36,15 @@ pub fn properties_overwrite(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &OverwritePropertyGroupArg,
 ) -> crate::Result<Result<(), InvalidPropertyGroupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/properties/overwrite",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/properties/overwrite",
+            arg,
+            None)
+    )
 }
 
 /// Permanently removes the specified property group from the file. To remove specific property
@@ -53,13 +57,15 @@ pub fn properties_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemovePropertiesArg,
 ) -> crate::Result<Result<(), RemovePropertiesError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/properties/remove",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/properties/remove",
+            arg,
+            None)
+    )
 }
 
 /// Search across property templates for particular property field values.
@@ -67,13 +73,15 @@ pub fn properties_search(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PropertiesSearchArg,
 ) -> crate::Result<Result<PropertiesSearchResult, PropertiesSearchError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/properties/search",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/properties/search",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`properties_search()`](properties_search), use this to
@@ -82,13 +90,15 @@ pub fn properties_search_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PropertiesSearchContinueArg,
 ) -> crate::Result<Result<PropertiesSearchResult, PropertiesSearchContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/properties/search/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/properties/search/continue",
+            arg,
+            None)
+    )
 }
 
 /// Add, update or remove properties associated with the supplied file and templates. This endpoint
@@ -101,13 +111,15 @@ pub fn properties_update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdatePropertiesArg,
 ) -> crate::Result<Result<(), UpdatePropertiesError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/properties/update",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/properties/update",
+            arg,
+            None)
+    )
 }
 
 /// Add a template associated with a team. See [`properties_add()`](properties_add) to add
@@ -116,13 +128,15 @@ pub fn templates_add_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &AddTemplateArg,
 ) -> crate::Result<Result<AddTemplateResult, ModifyTemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/add_for_team",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/add_for_team",
+            arg,
+            None)
+    )
 }
 
 /// Add a template associated with a user. See [`properties_add()`](properties_add) to add
@@ -131,13 +145,15 @@ pub fn templates_add_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddTemplateArg,
 ) -> crate::Result<Result<AddTemplateResult, ModifyTemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/add_for_user",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/add_for_user",
+            arg,
+            None)
+    )
 }
 
 /// Get the schema for a specified template.
@@ -145,13 +161,15 @@ pub fn templates_get_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GetTemplateArg,
 ) -> crate::Result<Result<GetTemplateResult, TemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/get_for_team",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/get_for_team",
+            arg,
+            None)
+    )
 }
 
 /// Get the schema for a specified template. This endpoint can't be called on a team member or
@@ -160,13 +178,15 @@ pub fn templates_get_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetTemplateArg,
 ) -> crate::Result<Result<GetTemplateResult, TemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/get_for_user",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/get_for_user",
+            arg,
+            None)
+    )
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
@@ -174,13 +194,15 @@ pub fn templates_get_for_user(
 pub fn templates_list_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
 ) -> crate::Result<Result<ListTemplateResult, TemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/list_for_team",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/list_for_team",
+            &(),
+            None)
+    )
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
@@ -189,13 +211,15 @@ pub fn templates_list_for_team(
 pub fn templates_list_for_user(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<ListTemplateResult, TemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/list_for_user",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/list_for_user",
+            &(),
+            None)
+    )
 }
 
 /// Permanently removes the specified template created from
@@ -205,13 +229,15 @@ pub fn templates_remove_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &RemoveTemplateArg,
 ) -> crate::Result<Result<(), TemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/remove_for_team",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/remove_for_team",
+            arg,
+            None)
+    )
 }
 
 /// Permanently removes the specified template created from
@@ -221,13 +247,15 @@ pub fn templates_remove_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveTemplateArg,
 ) -> crate::Result<Result<(), TemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/remove_for_user",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/remove_for_user",
+            arg,
+            None)
+    )
 }
 
 /// Update a template associated with a team. This route can update the template name, the template
@@ -236,13 +264,15 @@ pub fn templates_update_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &UpdateTemplateArg,
 ) -> crate::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/update_for_team",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/update_for_team",
+            arg,
+            None)
+    )
 }
 
 /// Update a template associated with a user. This route can update the template name, the template
@@ -252,12 +282,14 @@ pub fn templates_update_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateTemplateArg,
 ) -> crate::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_properties/templates/update_for_user",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_properties/templates/update_for_user",
+            arg,
+            None)
+    )
 }
 

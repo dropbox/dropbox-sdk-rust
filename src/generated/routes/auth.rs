@@ -16,13 +16,15 @@ pub fn token_from_oauth1(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &TokenFromOAuth1Arg,
 ) -> crate::Result<Result<TokenFromOAuth1Result, TokenFromOAuth1Error>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "auth/token/from_oauth1",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "auth/token/from_oauth1",
+            arg,
+            None)
+    )
 }
 
 /// Disables the access token used to authenticate the call. If there is a corresponding refresh
@@ -31,12 +33,14 @@ pub fn token_from_oauth1(
 pub fn token_revoke(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<(), crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "auth/token/revoke",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "auth/token/revoke",
+            &(),
+            None)
+    )
 }
 

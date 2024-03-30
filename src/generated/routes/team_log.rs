@@ -23,13 +23,15 @@ pub fn get_events(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GetTeamEventsArg,
 ) -> crate::Result<Result<GetTeamEventsResult, GetTeamEventsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "team_log/get_events",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "team_log/get_events",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`get_events()`](get_events), use this to paginate through
@@ -38,12 +40,14 @@ pub fn get_events_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GetTeamEventsContinueArg,
 ) -> crate::Result<Result<GetTeamEventsResult, GetTeamEventsContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "team_log/get_events/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "team_log/get_events/continue",
+            arg,
+            None)
+    )
 }
 

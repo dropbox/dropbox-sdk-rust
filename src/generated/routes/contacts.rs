@@ -15,13 +15,15 @@ pub use crate::generated::types::contacts::*;
 pub fn delete_manual_contacts(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<(), crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "contacts/delete_manual_contacts",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "contacts/delete_manual_contacts",
+            &(),
+            None)
+    )
 }
 
 /// Removes manually added contacts from the given list.
@@ -29,12 +31,14 @@ pub fn delete_manual_contacts_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteManualContactsArg,
 ) -> crate::Result<Result<(), DeleteManualContactsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "contacts/delete_manual_contacts_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "contacts/delete_manual_contacts_batch",
+            arg,
+            None)
+    )
 }
 

@@ -15,13 +15,15 @@ pub use crate::generated::types::file_requests::*;
 pub fn count(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<CountFileRequestsResult, CountFileRequestsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/count",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/count",
+            &(),
+            None)
+    )
 }
 
 /// Creates a file request for this user.
@@ -29,13 +31,15 @@ pub fn create(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFileRequestArgs,
 ) -> crate::Result<Result<FileRequest, CreateFileRequestError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/create",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/create",
+            arg,
+            None)
+    )
 }
 
 /// Delete a batch of closed file requests.
@@ -43,26 +47,30 @@ pub fn delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteFileRequestArgs,
 ) -> crate::Result<Result<DeleteFileRequestsResult, DeleteFileRequestError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/delete",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/delete",
+            arg,
+            None)
+    )
 }
 
 /// Delete all closed file requests owned by this user.
 pub fn delete_all_closed(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<DeleteAllClosedFileRequestsResult, DeleteAllClosedFileRequestsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/delete_all_closed",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/delete_all_closed",
+            &(),
+            None)
+    )
 }
 
 /// Returns the specified file request.
@@ -70,13 +78,15 @@ pub fn get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetFileRequestArgs,
 ) -> crate::Result<Result<FileRequest, GetFileRequestError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/get",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/get",
+            arg,
+            None)
+    )
 }
 
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
@@ -85,13 +95,15 @@ pub fn list_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsArg,
 ) -> crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/list_v2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/list_v2",
+            arg,
+            None)
+    )
 }
 
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
@@ -99,13 +111,15 @@ pub fn list_v2(
 pub fn list(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/list",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/list",
+            &(),
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`list_v2()`](list_v2), use this to paginate through all
@@ -115,13 +129,15 @@ pub fn list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsContinueArg,
 ) -> crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/list/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/list/continue",
+            arg,
+            None)
+    )
 }
 
 /// Update a file request.
@@ -129,12 +145,14 @@ pub fn update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFileRequestArgs,
 ) -> crate::Result<Result<FileRequest, UpdateFileRequestError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "file_requests/update",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "file_requests/update",
+            arg,
+            None)
+    )
 }
 

@@ -22,12 +22,14 @@ pub fn userinfo(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UserInfoArgs,
 ) -> crate::Result<Result<UserInfoResult, UserInfoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "openid/userinfo",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "openid/userinfo",
+            arg,
+            None)
+    )
 }
 

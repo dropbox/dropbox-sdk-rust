@@ -15,13 +15,15 @@ pub fn features_get_values(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UserFeaturesGetValuesBatchArg,
 ) -> crate::Result<Result<UserFeaturesGetValuesBatchResult, UserFeaturesGetValuesBatchError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "users/features/get_values",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "users/features/get_values",
+            arg,
+            None)
+    )
 }
 
 /// Get information about a user's account.
@@ -29,13 +31,15 @@ pub fn get_account(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetAccountArg,
 ) -> crate::Result<Result<BasicAccount, GetAccountError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "users/get_account",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "users/get_account",
+            arg,
+            None)
+    )
 }
 
 /// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
@@ -43,38 +47,44 @@ pub fn get_account_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetAccountBatchArg,
 ) -> crate::Result<Result<GetAccountBatchResult, GetAccountBatchError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "users/get_account_batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "users/get_account_batch",
+            arg,
+            None)
+    )
 }
 
 /// Get information about the current user's account.
 pub fn get_current_account(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<FullAccount, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "users/get_current_account",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "users/get_current_account",
+            &(),
+            None)
+    )
 }
 
 /// Get the space usage information for the current user's account.
 pub fn get_space_usage(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<SpaceUsage, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "users/get_space_usage",
-        &(),
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "users/get_space_usage",
+            &(),
+            None)
+    )
 }
 

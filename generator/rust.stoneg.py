@@ -257,11 +257,11 @@ class RustBackend(RustHelperBackend):
         route_name = self.route_name(fn)
         host = fn.attrs.get('host', 'api')
         if host == 'api':
-            endpoint = 'crate::client_trait::Endpoint::Api'
+            endpoint = 'crate::client_trait_common::Endpoint::Api'
         elif host == 'content':
-            endpoint = 'crate::client_trait::Endpoint::Content'
+            endpoint = 'crate::client_trait_common::Endpoint::Content'
         elif host == 'notify':
-            endpoint = 'crate::client_trait::Endpoint::Notify'
+            endpoint = 'crate::client_trait_common::Endpoint::Notify'
         else:
             raise RuntimeError(f'ERROR: unsupported endpoint: {host}')
 
@@ -326,11 +326,12 @@ class RustBackend(RustHelperBackend):
                         + ([] if arg_void else [f'arg: &{arg_type}']),
                     f'crate::Result<Result<{ret_type}, {error_type}>>',
                     access='pub'):
-                self.emit_rust_fn_call(
+                with self.block('crate::client_helpers::unwrap_async(', delim=(None, ')')):
+                    self.emit_rust_fn_call(
                     'crate::client_helpers::request',
                     ['client',
                         endpoint,
-                        'crate::client_trait::Style::Rpc',
+                        'crate::client_trait_common::Style::Rpc',
                         f'"{ns}/{name_with_version}"',
                         '&()' if arg_void else 'arg',
                         'None'])
@@ -343,16 +344,19 @@ class RustBackend(RustHelperBackend):
                             'range_end: Option<u64>'],
                     f'crate::Result<Result<crate::client_trait::HttpRequestResult<{ret_type}>, {error_type}>>',
                     access='pub'):
-                self.emit_rust_fn_call(
-                    'crate::client_helpers::request_with_body',
-                    ['client',
-                        endpoint,
-                        'crate::client_trait::Style::Download',
-                        f'"{ns}/{name_with_version}"',
-                        '&()' if arg_void else 'arg',
-                        'None',
-                        'range_start',
-                        'range_end'])
+                with self.block('crate::client_helpers::unwrap_async_body(', delim=(None, ')')):
+                    self.emit_rust_fn_call(
+                        'crate::client_helpers::request_with_body',
+                        ['client',
+                            endpoint,
+                            'crate::client_trait_common::Style::Download',
+                            f'"{ns}/{name_with_version}"',
+                            '&()' if arg_void else 'arg',
+                            'None',
+                            'range_start',
+                            'range_end'],
+                        end=',')
+                    self.emit('client,')
         elif style == 'upload':
             with self.emit_rust_function_def(
                     route_name,
@@ -361,14 +365,15 @@ class RustBackend(RustHelperBackend):
                         + ['body: &[u8]'],
                     f'crate::Result<Result<{ret_type}, {error_type}>>',
                     access='pub'):
-                self.emit_rust_fn_call(
-                    'crate::client_helpers::request',
-                    ['client',
-                        endpoint,
-                        'crate::client_trait::Style::Upload',
-                        f'"{ns}/{name_with_version}"',
-                        '&()' if arg_void else 'arg',
-                        'Some(body)'])
+                with self.block('crate::client_helpers::unwrap_async(', delim=(None, ')')):
+                    self.emit_rust_fn_call(
+                        'crate::client_helpers::request',
+                        ['client',
+                            endpoint,
+                            'crate::client_trait_common::Style::Upload',
+                            f'"{ns}/{name_with_version}"',
+                            '&()' if arg_void else 'arg',
+                            'Some(body)'])
         else:
             raise RuntimeError(f'ERROR: unknown route style: {style}')
         self.emit()

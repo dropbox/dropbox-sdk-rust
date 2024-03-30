@@ -15,13 +15,15 @@ pub fn add_file_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddFileMemberArgs,
 ) -> crate::Result<Result<Vec<FileMemberActionResult>, AddFileMemberError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/add_file_member",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/add_file_member",
+            arg,
+            None)
+    )
 }
 
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to add another
@@ -31,13 +33,15 @@ pub fn add_folder_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddFolderMemberArg,
 ) -> crate::Result<Result<(), AddFolderMemberError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/add_folder_member",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/add_folder_member",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job.
@@ -45,13 +49,15 @@ pub fn check_job_status(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<JobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/check_job_status",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/check_job_status",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for sharing a folder.
@@ -59,13 +65,15 @@ pub fn check_remove_member_job_status(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<RemoveMemberJobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/check_remove_member_job_status",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/check_remove_member_job_status",
+            arg,
+            None)
+    )
 }
 
 /// Returns the status of an asynchronous job for sharing a folder.
@@ -73,13 +81,15 @@ pub fn check_share_job_status(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::dbx_async::PollArg,
 ) -> crate::Result<Result<ShareFolderJobStatus, crate::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/check_share_job_status",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/check_share_job_status",
+            arg,
+            None)
+    )
 }
 
 /// Create a shared link. If a shared link already exists for the given path, that link is returned.
@@ -92,13 +102,15 @@ pub fn create_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateSharedLinkArg,
 ) -> crate::Result<Result<PathLinkMetadata, CreateSharedLinkError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/create_shared_link",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/create_shared_link",
+            arg,
+            None)
+    )
 }
 
 /// Create a shared link with custom settings. If no settings are given then the default visibility
@@ -108,13 +120,15 @@ pub fn create_shared_link_with_settings(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateSharedLinkWithSettingsArg,
 ) -> crate::Result<Result<SharedLinkMetadata, CreateSharedLinkWithSettingsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/create_shared_link_with_settings",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/create_shared_link_with_settings",
+            arg,
+            None)
+    )
 }
 
 /// Returns shared file metadata.
@@ -122,13 +136,15 @@ pub fn get_file_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetFileMetadataArg,
 ) -> crate::Result<Result<SharedFileMetadata, GetFileMetadataError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/get_file_metadata",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/get_file_metadata",
+            arg,
+            None)
+    )
 }
 
 /// Returns shared file metadata.
@@ -136,13 +152,15 @@ pub fn get_file_metadata_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetFileMetadataBatchArg,
 ) -> crate::Result<Result<Vec<GetFileMetadataBatchResult>, SharingUserError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/get_file_metadata/batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/get_file_metadata/batch",
+            arg,
+            None)
+    )
 }
 
 /// Returns shared folder metadata by its folder ID.
@@ -150,13 +168,15 @@ pub fn get_folder_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetMetadataArgs,
 ) -> crate::Result<Result<SharedFolderMetadata, SharedFolderAccessError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/get_folder_metadata",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/get_folder_metadata",
+            arg,
+            None)
+    )
 }
 
 /// Download the shared link's file from a user's Dropbox.
@@ -166,15 +186,18 @@ pub fn get_shared_link_file(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<SharedLinkMetadata>, GetSharedLinkFileError>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "sharing/get_shared_link_file",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Content,
-        crate::client_trait::Style::Download,
-        "sharing/get_shared_link_file",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Get the shared link's metadata.
@@ -182,13 +205,15 @@ pub fn get_shared_link_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetSharedLinkMetadataArg,
 ) -> crate::Result<Result<SharedLinkMetadata, SharedLinkError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/get_shared_link_metadata",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/get_shared_link_metadata",
+            arg,
+            None)
+    )
 }
 
 /// Get the shared link's metadata.
@@ -196,13 +221,15 @@ pub fn get_shared_link_metadata_app_auth(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &GetSharedLinkMetadataArg,
 ) -> crate::Result<Result<SharedLinkMetadata, SharedLinkError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/get_shared_link_metadata",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/get_shared_link_metadata",
+            arg,
+            None)
+    )
 }
 
 /// Returns a list of [`LinkMetadata`](LinkMetadata) objects for this user, including collection
@@ -215,13 +242,15 @@ pub fn get_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetSharedLinksArg,
 ) -> crate::Result<Result<GetSharedLinksResult, GetSharedLinksError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/get_shared_links",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/get_shared_links",
+            arg,
+            None)
+    )
 }
 
 /// Use to obtain the members who have been invited to a file, both inherited and uninherited
@@ -230,13 +259,15 @@ pub fn list_file_members(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileMembersArg,
 ) -> crate::Result<Result<SharedFileMembers, ListFileMembersError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_file_members",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_file_members",
+            arg,
+            None)
+    )
 }
 
 /// Get members of multiple files at once. The arguments to this route are more limited, and the
@@ -247,13 +278,15 @@ pub fn list_file_members_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileMembersBatchArg,
 ) -> crate::Result<Result<Vec<ListFileMembersBatchResult>, SharingUserError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_file_members/batch",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_file_members/batch",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`list_file_members()`](list_file_members) or
@@ -263,13 +296,15 @@ pub fn list_file_members_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileMembersContinueArg,
 ) -> crate::Result<Result<SharedFileMembers, ListFileMembersContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_file_members/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_file_members/continue",
+            arg,
+            None)
+    )
 }
 
 /// Returns shared folder membership by its folder ID.
@@ -277,13 +312,15 @@ pub fn list_folder_members(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFolderMembersArgs,
 ) -> crate::Result<Result<SharedFolderMembers, SharedFolderAccessError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_folder_members",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_folder_members",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`list_folder_members()`](list_folder_members), use this
@@ -292,13 +329,15 @@ pub fn list_folder_members_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFolderMembersContinueArg,
 ) -> crate::Result<Result<SharedFolderMembers, ListFolderMembersContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_folder_members/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_folder_members/continue",
+            arg,
+            None)
+    )
 }
 
 /// Return the list of all shared folders the current user has access to.
@@ -306,13 +345,15 @@ pub fn list_folders(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersArgs,
 ) -> crate::Result<Result<ListFoldersResult, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_folders",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_folders",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`list_folders()`](list_folders), use this to paginate
@@ -322,13 +363,15 @@ pub fn list_folders_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersContinueArg,
 ) -> crate::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_folders/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_folders/continue",
+            arg,
+            None)
+    )
 }
 
 /// Return the list of all shared folders the current user can mount or unmount.
@@ -336,13 +379,15 @@ pub fn list_mountable_folders(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersArgs,
 ) -> crate::Result<Result<ListFoldersResult, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_mountable_folders",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_mountable_folders",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`list_mountable_folders()`](list_mountable_folders), use
@@ -353,13 +398,15 @@ pub fn list_mountable_folders_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersContinueArg,
 ) -> crate::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_mountable_folders/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_mountable_folders/continue",
+            arg,
+            None)
+    )
 }
 
 /// Returns a list of all files shared with current user.  Does not include files the user has
@@ -368,13 +415,15 @@ pub fn list_received_files(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFilesArg,
 ) -> crate::Result<Result<ListFilesResult, SharingUserError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_received_files",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_received_files",
+            arg,
+            None)
+    )
 }
 
 /// Get more results with a cursor from [`list_received_files()`](list_received_files).
@@ -382,13 +431,15 @@ pub fn list_received_files_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFilesContinueArg,
 ) -> crate::Result<Result<ListFilesResult, ListFilesContinueError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_received_files/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_received_files/continue",
+            arg,
+            None)
+    )
 }
 
 /// List shared links of this user. If no path is given, returns a list of all shared links for the
@@ -403,13 +454,15 @@ pub fn list_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListSharedLinksArg,
 ) -> crate::Result<Result<ListSharedLinksResult, ListSharedLinksError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/list_shared_links",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/list_shared_links",
+            arg,
+            None)
+    )
 }
 
 /// Modify the shared link's settings. If the requested visibility conflict with the shared links
@@ -422,13 +475,15 @@ pub fn modify_shared_link_settings(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ModifySharedLinkSettingsArgs,
 ) -> crate::Result<Result<SharedLinkMetadata, ModifySharedLinkSettingsError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/modify_shared_link_settings",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/modify_shared_link_settings",
+            arg,
+            None)
+    )
 }
 
 /// The current user mounts the designated folder. Mount a shared folder for a user after they have
@@ -437,13 +492,15 @@ pub fn mount_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &MountFolderArg,
 ) -> crate::Result<Result<SharedFolderMetadata, MountFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/mount_folder",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/mount_folder",
+            arg,
+            None)
+    )
 }
 
 /// The current user relinquishes their membership in the designated file. Note that the current
@@ -452,13 +509,15 @@ pub fn relinquish_file_membership(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelinquishFileMembershipArg,
 ) -> crate::Result<Result<(), RelinquishFileMembershipError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/relinquish_file_membership",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/relinquish_file_membership",
+            arg,
+            None)
+    )
 }
 
 /// The current user relinquishes their membership in the designated shared folder and will no
@@ -469,13 +528,15 @@ pub fn relinquish_folder_membership(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelinquishFolderMembershipArg,
 ) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/relinquish_folder_membership",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/relinquish_folder_membership",
+            arg,
+            None)
+    )
 }
 
 /// Identical to remove_file_member_2 but with less information returned.
@@ -484,13 +545,15 @@ pub fn remove_file_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFileMemberArg,
 ) -> crate::Result<Result<FileMemberActionIndividualResult, RemoveFileMemberError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/remove_file_member",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/remove_file_member",
+            arg,
+            None)
+    )
 }
 
 /// Removes a specified member from the file.
@@ -498,13 +561,15 @@ pub fn remove_file_member_2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFileMemberArg,
 ) -> crate::Result<Result<FileMemberRemoveActionResult, RemoveFileMemberError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/remove_file_member_2",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/remove_file_member_2",
+            arg,
+            None)
+    )
 }
 
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to remove another
@@ -513,13 +578,15 @@ pub fn remove_folder_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFolderMemberArg,
 ) -> crate::Result<Result<crate::dbx_async::LaunchResultBase, RemoveFolderMemberError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/remove_folder_member",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/remove_folder_member",
+            arg,
+            None)
+    )
 }
 
 /// Revoke a shared link. Note that even after revoking a shared link to a file, the file may be
@@ -531,13 +598,15 @@ pub fn revoke_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RevokeSharedLinkArg,
 ) -> crate::Result<Result<(), RevokeSharedLinkError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/revoke_shared_link",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/revoke_shared_link",
+            arg,
+            None)
+    )
 }
 
 /// Change the inheritance policy of an existing Shared Folder. Only permitted for shared folders in
@@ -548,13 +617,15 @@ pub fn set_access_inheritance(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SetAccessInheritanceArg,
 ) -> crate::Result<Result<ShareFolderLaunch, SetAccessInheritanceError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/set_access_inheritance",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/set_access_inheritance",
+            arg,
+            None)
+    )
 }
 
 /// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders
@@ -567,13 +638,15 @@ pub fn share_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ShareFolderArg,
 ) -> crate::Result<Result<ShareFolderLaunch, ShareFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/share_folder",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/share_folder",
+            arg,
+            None)
+    )
 }
 
 /// Transfer ownership of a shared folder to a member of the shared folder. User must have
@@ -582,13 +655,15 @@ pub fn transfer_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &TransferFolderArg,
 ) -> crate::Result<Result<(), TransferFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/transfer_folder",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/transfer_folder",
+            arg,
+            None)
+    )
 }
 
 /// The current user unmounts the designated folder. They can re-mount the folder at a later time
@@ -597,13 +672,15 @@ pub fn unmount_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnmountFolderArg,
 ) -> crate::Result<Result<(), UnmountFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/unmount_folder",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/unmount_folder",
+            arg,
+            None)
+    )
 }
 
 /// Remove all members from this file. Does not remove inherited members.
@@ -611,13 +688,15 @@ pub fn unshare_file(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnshareFileArg,
 ) -> crate::Result<Result<(), UnshareFileError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/unshare_file",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/unshare_file",
+            arg,
+            None)
+    )
 }
 
 /// Allows a shared folder owner to unshare the folder. You'll need to call
@@ -626,13 +705,15 @@ pub fn unshare_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnshareFolderArg,
 ) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, UnshareFolderError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/unshare_folder",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/unshare_folder",
+            arg,
+            None)
+    )
 }
 
 /// Changes a member's access on a shared file.
@@ -640,13 +721,15 @@ pub fn update_file_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFileMemberArgs,
 ) -> crate::Result<Result<MemberAccessLevelResult, FileMemberActionError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/update_file_member",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/update_file_member",
+            arg,
+            None)
+    )
 }
 
 /// Allows an owner or editor of a shared folder to update another member's permissions.
@@ -654,13 +737,15 @@ pub fn update_folder_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFolderMemberArg,
 ) -> crate::Result<Result<MemberAccessLevelResult, UpdateFolderMemberError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/update_folder_member",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/update_folder_member",
+            arg,
+            None)
+    )
 }
 
 /// Update the sharing policies for a shared folder. User must have
@@ -669,12 +754,14 @@ pub fn update_folder_policy(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFolderPolicyArg,
 ) -> crate::Result<Result<SharedFolderMetadata, UpdateFolderPolicyError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "sharing/update_folder_policy",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/update_folder_policy",
+            arg,
+            None)
+    )
 }
 

@@ -22,13 +22,15 @@ pub fn docs_archive(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
 ) -> crate::Result<Result<(), DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/archive",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/archive",
+            arg,
+            None)
+    )
 }
 
 /// Creates a new Paper doc with the provided content. Note that this endpoint will continue to work
@@ -44,13 +46,15 @@ pub fn docs_create(
     arg: &PaperDocCreateArgs,
     body: &[u8],
 ) -> crate::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Upload,
-        "paper/docs/create",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Upload,
+            "paper/docs/create",
+            arg,
+            Some(body))
+    )
 }
 
 /// Exports and downloads Paper doc either as HTML or markdown. Note that this endpoint will
@@ -66,15 +70,18 @@ pub fn docs_download(
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<crate::client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>> {
-    crate::client_helpers::request_with_body(
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Download,
+            "paper/docs/download",
+            arg,
+            None,
+            range_start,
+            range_end),
         client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Download,
-        "paper/docs/download",
-        arg,
-        None,
-        range_start,
-        range_end)
+    )
 }
 
 /// Lists the users who are explicitly invited to the Paper folder in which the Paper doc is
@@ -90,13 +97,15 @@ pub fn docs_folder_users_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnFolderArgs,
 ) -> crate::Result<Result<ListUsersOnFolderResponse, DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/folder_users/list",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/folder_users/list",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`docs_folder_users_list()`](docs_folder_users_list), use
@@ -111,13 +120,15 @@ pub fn docs_folder_users_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnFolderContinueArgs,
 ) -> crate::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/folder_users/list/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/folder_users/list/continue",
+            arg,
+            None)
+    )
 }
 
 /// Retrieves folder information for the given Paper doc. This includes:   - folder sharing policy;
@@ -136,13 +147,15 @@ pub fn docs_get_folder_info(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
 ) -> crate::Result<Result<FoldersContainingPaperDoc, DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/get_folder_info",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/get_folder_info",
+            arg,
+            None)
+    )
 }
 
 /// Return the list of all Paper docs according to the argument specifications. To iterate over
@@ -158,13 +171,15 @@ pub fn docs_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsArgs,
 ) -> crate::Result<Result<ListPaperDocsResponse, crate::NoError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/list",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/list",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`docs_list()`](docs_list), use this to paginate through
@@ -179,13 +194,15 @@ pub fn docs_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsContinueArgs,
 ) -> crate::Result<Result<ListPaperDocsResponse, ListDocsCursorError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/list/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/list/continue",
+            arg,
+            None)
+    )
 }
 
 /// Permanently deletes the given Paper doc. This operation is final as the doc cannot be recovered.
@@ -200,13 +217,15 @@ pub fn docs_permanently_delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
 ) -> crate::Result<Result<(), DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/permanently_delete",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/permanently_delete",
+            arg,
+            None)
+    )
 }
 
 /// Gets the default sharing policy for the given Paper doc. Note that this endpoint will continue
@@ -220,13 +239,15 @@ pub fn docs_sharing_policy_get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
 ) -> crate::Result<Result<SharingPolicy, DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/sharing_policy/get",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/sharing_policy/get",
+            arg,
+            None)
+    )
 }
 
 /// Sets the default sharing policy for the given Paper doc. The default 'team_sharing_policy' can
@@ -243,13 +264,15 @@ pub fn docs_sharing_policy_set(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocSharingPolicy,
 ) -> crate::Result<Result<(), DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/sharing_policy/set",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/sharing_policy/set",
+            arg,
+            None)
+    )
 }
 
 /// Updates an existing Paper doc with the provided content. Note that this endpoint will continue
@@ -265,13 +288,15 @@ pub fn docs_update(
     arg: &PaperDocUpdateArgs,
     body: &[u8],
 ) -> crate::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Upload,
-        "paper/docs/update",
-        arg,
-        Some(body))
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Upload,
+            "paper/docs/update",
+            arg,
+            Some(body))
+    )
 }
 
 /// Allows an owner or editor to add users to a Paper doc or change their permissions using their
@@ -287,13 +312,15 @@ pub fn docs_users_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddPaperDocUser,
 ) -> crate::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/users/add",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/users/add",
+            arg,
+            None)
+    )
 }
 
 /// Lists all users who visited the Paper doc or users with explicit access. This call excludes
@@ -310,13 +337,15 @@ pub fn docs_users_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnPaperDocArgs,
 ) -> crate::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/users/list",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/users/list",
+            arg,
+            None)
+    )
 }
 
 /// Once a cursor has been retrieved from [`docs_users_list()`](docs_users_list), use this to
@@ -331,13 +360,15 @@ pub fn docs_users_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnPaperDocContinueArgs,
 ) -> crate::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/users/list/continue",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/users/list/continue",
+            arg,
+            None)
+    )
 }
 
 /// Allows an owner or editor to remove users from a Paper doc using their email address or Dropbox
@@ -352,13 +383,15 @@ pub fn docs_users_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemovePaperDocUser,
 ) -> crate::Result<Result<(), DocLookupError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/docs/users/remove",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/users/remove",
+            arg,
+            None)
+    )
 }
 
 /// Create a new Paper folder with the provided info. Note that this endpoint will continue to work
@@ -372,12 +405,14 @@ pub fn folders_create(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperFolderCreateArg,
 ) -> crate::Result<Result<PaperFolderCreateResult, PaperFolderCreateError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "paper/folders/create",
-        arg,
-        None)
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/folders/create",
+            arg,
+            None)
+    )
 }
 

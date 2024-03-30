@@ -12,16 +12,20 @@
 //! [Dropbox OAuth Guide]: https://developers.dropbox.com/oauth-guide
 //! [OAuth types summary]: https://developers.dropbox.com/oauth-guide#summary
 
-use base64::Engine;
-use base64::engine::general_purpose::{URL_SAFE, URL_SAFE_NO_PAD};
-use crate::Error;
-use crate::client_trait::*;
-use ring::rand::{SecureRandom, SystemRandom};
 use std::env;
 use std::io::{self, Write};
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
+use async_lock::RwLock;
+use base64::Engine;
+use base64::engine::general_purpose::{URL_SAFE, URL_SAFE_NO_PAD};
+use bytes::Bytes;
+use ring::rand::{SecureRandom, SystemRandom};
 use url::form_urlencoded::Serializer as UrlEncoder;
 use url::Url;
+use crate::Error;
+use crate::async_client_trait::NoauthClient;
+use crate::client_helpers::{body_to_string, prepare_request};
+use crate::client_trait_common::{Endpoint, ParamsType, Style};
 
 /// Which type of OAuth2 flow to use.
 #[derive(Debug, Clone)]
@@ -394,7 +398,7 @@ impl Authorization {
 
     /// Obtain an access token. Use this to complete the authorization process, or to obtain an
     /// updated token when a short-lived access token has expired.
-    pub fn obtain_access_token(&mut self, client: impl NoauthClient) -> crate::Result<String> {
+    pub async fn obtain_access_token(&mut self, client: impl NoauthClient) -> crate::Result<String> {
         let mut redirect_uri = None;
         let mut client_secret = None;
         let mut pkce_code = None;
@@ -462,39 +466,46 @@ impl Authorization {
             params.append_pair("redirect_uri", &value);
         }
 
-        debug!("Requesting OAuth2 token");
-        let resp = client.request(
+        let req = prepare_request(
+            &client,
             Endpoint::OAuth2,
             Style::Rpc,
             "oauth2/token",
             params.finish(),
             ParamsType::Form,
+            Bytes::new(),
             None,
             None,
             None,
-        )?;
+            None,
+            None,
+        );
 
-        let result_json = serde_json::from_str(&resp.result_json)?;
-        debug!("OAuth2 response: {:?}", result_json);
+        debug!("Requesting OAuth2 token");
+        let mut resp = client.execute(req).await?;
+        let result_json = body_to_string(&mut resp.body).await?;
+        let result_value = serde_json::from_str(&result_json)?;
+
+        debug!("OAuth2 response: {:?}", result_value);
 
         let access_token: String;
         let refresh_token: Option<String>;
 
-        match result_json {
+        match result_value {
             serde_json::Value::Object(mut map) => {
                 match map.remove("access_token") {
                     Some(serde_json::Value::String(token)) => access_token = token,
-                    _ => return Err(Error::UnexpectedResponse("no access token in response!")),
+                    _ => return Err(Error::UnexpectedResponse("no access token in response!".to_owned())),
                 }
                 match map.remove("refresh_token") {
                     Some(serde_json::Value::String(refresh)) => refresh_token = Some(refresh),
                     Some(_) => {
-                        return Err(Error::UnexpectedResponse("refresh token is not a string!"));
+                        return Err(Error::UnexpectedResponse("refresh token is not a string!".to_owned()));
                     },
                     None => refresh_token = None,
                 }
             },
-            _ => return Err(Error::UnexpectedResponse("response is not a JSON object")),
+            _ => return Err(Error::UnexpectedResponse("response is not a JSON object".to_owned())),
         }
 
         match refresh_token {
@@ -527,31 +538,27 @@ impl TokenCache {
         }
     }
 
-    /// Get the current token, or obtain one if no cached token is set yet.
-    ///
-    /// Unless the token has not been obtained yet, this does not do any HTTP request.
-    pub fn get_token(&self, client: impl NoauthClient) -> crate::Result<Arc<String>> {
-        let read = self.auth.read().unwrap();
+    /// Get the current token, unless no cached token is set yet.
+    pub fn get_token(&self) -> Option<Arc<String>> {
+        let read = self.auth.read_blocking();
         if read.1.is_empty() {
-            let empty = Arc::clone(&read.1);
-            drop(read);
-            self.update_token(client, empty)
+            None
         } else {
-            Ok(Arc::clone(&read.1))
+            Some(Arc::clone(&read.1))
         }
     }
 
     /// Forces an update to the token, for when it is detected that the token is expired.
     ///
     /// To avoid double-updating the token in a race, requires the token which is being replaced.
-    pub fn update_token(&self, client: impl NoauthClient, old_token: Arc<String>)
+    pub async fn update_token(&self, client: impl NoauthClient, old_token: Arc<String>)
         -> crate::Result<Arc<String>>
     {
-        let mut write = self.auth.write().unwrap();
+        let mut write = self.auth.write().await;
         // Check if the token changed while we were unlocked; only update it if it
         // didn't.
         if write.1 == old_token {
-            write.1 = Arc::new(write.0.obtain_access_token(client)?);
+            write.1 = Arc::new(write.0.obtain_access_token(client).await?);
         }
         Ok(Arc::clone(&write.1))
     }

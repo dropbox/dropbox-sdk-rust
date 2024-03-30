@@ -45,7 +45,7 @@ pub enum Error {
 
     /// The Dropbox API response was unexpected or malformed in some way.
     #[error("Dropbox API returned something unexpected: {0}")]
-    UnexpectedResponse(&'static str),
+    UnexpectedResponse(String),
 
     /// The Dropbox API indicated that your request was malformed in some way.
     #[error("Dropbox API indicated that the request was malformed: {0}")]
@@ -92,9 +92,17 @@ pub enum Error {
 pub type Result<T> = std::result::Result<T, Error>;
 
 if_feature! { "default_client", pub mod default_client; }
+if_feature! { "default_async_client", pub mod default_async_client; }
+
+#[cfg(any(feature = "default_client", feature = "default_async_client"))]
+pub(crate) mod default_client_common;
+
+pub mod client_trait_common;
 
 pub mod client_trait;
-pub use client_trait::{AppAuthClient, NoauthClient, UserAuthClient, TeamAuthClient};
+
+pub mod async_client_trait;
+
 pub(crate) mod client_helpers;
 pub mod oauth2;
 
