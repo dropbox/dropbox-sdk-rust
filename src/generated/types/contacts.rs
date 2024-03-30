@@ -7,12 +7,12 @@
     clippy::doc_markdown,
 )]
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::contacts::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::contacts::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::contacts::*;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.

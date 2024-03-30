@@ -7,12 +7,12 @@
     clippy::doc_markdown,
 )]
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::common::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::common::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::common::*;
 
 pub type Date = String /*Timestamp*/;
 pub type DisplayName = String;

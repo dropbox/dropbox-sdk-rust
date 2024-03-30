@@ -9,12 +9,12 @@
 
 //! This namespace contains common data types used within the users namespace.
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::users_common::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::users_common::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::users_common::*;
 
 pub type AccountId = String;
 

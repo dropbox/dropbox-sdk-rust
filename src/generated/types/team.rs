@@ -7,12 +7,12 @@
     clippy::doc_markdown,
 )]
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::team::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::team::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::team::*;
 
 pub type GroupsGetInfoResult = Vec<GroupsGetInfoItem>;
 pub type LegalHoldId = String;

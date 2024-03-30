@@ -7,12 +7,12 @@
     clippy::doc_markdown,
 )]
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::team_common::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::team_common::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::team_common::*;
 
 pub type GroupExternalId = String;
 pub type GroupId = String;

@@ -7,12 +7,12 @@
     clippy::doc_markdown,
 )]
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::check::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::check::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::check::*;
 
 /// Contains the arguments to be sent to the Dropbox servers.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]

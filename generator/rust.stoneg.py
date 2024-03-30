@@ -55,7 +55,7 @@ class RustBackend(RustHelperBackend):
             self._emit_header()
             self.emit('#![allow(missing_docs)]')
             self.emit()
-            self.emit('if_feature! { "async", pub mod async_routes; }')
+            self.emit('if_feature! { "async_routes", pub mod async_routes; }')
             self.emit('pub mod routes;')
             self.emit()
             self.emit('mod types;')
@@ -94,11 +94,12 @@ class RustBackend(RustHelperBackend):
                 self._emit_doc(namespace.doc, prefix='//!')
                 self.emit()
 
-            self.emit('// for compatibility with old module structure')
-            with self.block(f'if_feature!'):
-                self.emit('"sync",')
-                self.emit('#[allow(unused_imports)]')
-                self.emit(f'pub use crate::generated::routes::{ns}::*;')
+            self.emit('#[cfg(feature = "async_routes")]')
+            self.emit('#[allow(unused_imports)]')
+            self.emit(f'pub use crate::generated::async_routes::{ns}::*;')
+            self.emit('#[cfg(not(feature = "async_routes"))]')
+            self.emit('#[allow(unused_imports)]')
+            self.emit(f'pub use crate::generated::routes::{ns}::*;')
             self.emit()
 
             for alias in namespace.aliases:

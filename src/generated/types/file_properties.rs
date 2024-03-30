@@ -39,12 +39,12 @@
 //! `files/get_metadata`, and `files/list_folder`. Properties can also be added during upload, using
 //! `files/upload`.
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::file_properties::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::file_properties::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::file_properties::*;
 
 pub type Id = String;
 pub type PathOrId = String;

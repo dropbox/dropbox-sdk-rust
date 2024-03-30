@@ -9,12 +9,12 @@
 
 //! This namespace contains endpoints and data types for user management.
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::users::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::users::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::users::*;
 
 pub type GetAccountBatchResult = Vec<BasicAccount>;
 

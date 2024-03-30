@@ -10,12 +10,12 @@
 //! This namespace contains endpoints and data types for creating and managing shared links and
 //! shared folders.
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::sharing::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::sharing::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::sharing::*;
 
 pub type DropboxId = String;
 pub type GetSharedLinkFileArg = GetSharedLinkMetadataArg;

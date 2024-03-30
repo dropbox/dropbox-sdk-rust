@@ -9,7 +9,7 @@
 
 #![allow(missing_docs)]
 
-if_feature! { "async", pub mod async_routes; }
+if_feature! { "async_routes", pub mod async_routes; }
 pub mod routes;
 
 mod types;

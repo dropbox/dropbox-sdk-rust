@@ -13,12 +13,12 @@
 //! and /sharing endpoints to interact with their Paper content. Read more in the [Paper Migration
 //! Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
 
-// for compatibility with old module structure
-if_feature! {
-    "sync",
-    #[allow(unused_imports)]
-    pub use crate::generated::routes::paper::*;
-}
+#[cfg(feature = "async_routes")]
+#[allow(unused_imports)]
+pub use crate::generated::async_routes::paper::*;
+#[cfg(not(feature = "async_routes"))]
+#[allow(unused_imports)]
+pub use crate::generated::routes::paper::*;
 
 pub type PaperDocId = String;
 
