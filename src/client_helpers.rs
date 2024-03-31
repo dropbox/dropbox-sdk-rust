@@ -1,18 +1,16 @@
 // Copyright (c) 2019-2021 Dropbox, Inc.
 
 use std::error::Error as StdError;
-use std::future::Future;
 use std::io::ErrorKind;
 use std::sync::Arc;
 use bytes::Bytes;
-use futures::{AsyncRead, AsyncReadExt, FutureExt};
+use futures::{AsyncRead, AsyncReadExt};
 use serde::{Deserialize};
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use crate::Error;
-use crate::async_client_trait::{HttpClient, HttpRequestResult, HttpRequestResultRaw, SyncReadAdapter};
+use crate::async_client_trait::{HttpClient, HttpRequestResult, HttpRequestResultRaw};
 use crate::auth::{AccessError, AuthError, RateLimitReason};
-use crate::client_trait as sync;
 use crate::client_trait_common::{Endpoint, HttpRequest, ParamsType, Style, TeamSelect};
 
 /// When Dropbox returns an error with HTTP 409 or 429, it uses an implicit JSON object with the
@@ -298,51 +296,68 @@ pub async fn request<T: DeserializeOwned, E: DeserializeOwned + StdError, P: Ser
         .map(|result| result.map(|HttpRequestResult { result, .. }| result))
 }
 
-/// Given an async HttpRequestResult which was created from a *sync* HttpClient, convert it to the
-/// sync HttpRequestResult by cracking open the SyncReadAdapter in the body.
-///
-/// This is ONLY safe if the result was created by a sync HttpClient, so we require it as an
-/// argument just to be extra careful.
-#[inline]
-pub(crate) fn unwrap_async_result<T>(r: HttpRequestResult<T>, _client: &impl HttpClient) -> sync::HttpRequestResult<T> {
-    match r.body {
-        Some(async_read) => {
-            let p: *mut dyn AsyncRead = Box::into_raw(async_read);
-            // SAFETY: the only body value an async HttpRequestResult created for a sync client
-            // can be is a SyncReadAdapter.
-            let adapter = unsafe {
-                Box::<SyncReadAdapter>::from_raw(p as *mut SyncReadAdapter)
-            };
-            sync::HttpRequestResult {
+#[cfg(feature = "sync_routes")]
+mod sync_helpers {
+    use std::future::Future;
+    use futures::{AsyncRead, FutureExt};
+    use crate::async_client_trait::{HttpRequestResult, SyncReadAdapter};
+    use crate::client_trait as sync;
+
+    /// Given an async HttpRequestResult which was created from a *sync* HttpClient, convert it to the
+    /// sync HttpRequestResult by cracking open the SyncReadAdapter in the body.
+    ///
+    /// This is ONLY safe if the result was created by a sync HttpClient, so we require it as an
+    /// argument just to be extra careful.
+    #[cfg(feature = "sync_routes")]
+    #[inline]
+    pub(crate) fn unwrap_async_result<T>(
+        r: HttpRequestResult<T>,
+        _client: &impl sync::HttpClient,
+    ) -> sync::HttpRequestResult<T> {
+        match r.body {
+            Some(async_read) => {
+                let p: *mut dyn AsyncRead = Box::into_raw(async_read);
+                // SAFETY: the only body value an async HttpRequestResult created for a sync client
+                // can be is a SyncReadAdapter.
+                let adapter = unsafe {
+                    Box::<SyncReadAdapter>::from_raw(p as *mut SyncReadAdapter)
+                };
+                sync::HttpRequestResult {
+                    result: r.result,
+                    content_length: r.content_length,
+                    body: Some(adapter.inner),
+                }
+            }
+            None => sync::HttpRequestResult {
                 result: r.result,
                 content_length: r.content_length,
-                body: Some(adapter.inner),
+                body: None,
             }
         }
-        None => sync::HttpRequestResult {
-            result: r.result,
-            content_length: r.content_length,
-            body: None,
+    }
+
+    #[cfg(feature = "sync_routes")]
+    #[inline]
+    pub(crate) fn unwrap_async_body<T, E>(
+        f: impl Future<Output = crate::Result<Result<HttpRequestResult<T>, E>>>,
+        client: &impl sync::HttpClient,
+    ) -> crate::Result<Result<sync::HttpRequestResult<T>, E>> {
+        let r = f.now_or_never().expect("sync future should resolve immediately");
+        match r {
+            Ok(Ok(v)) => Ok(Ok(unwrap_async_result(v, client))),
+            Ok(Err(e)) => Ok(Err(e)),
+            Err(e) => Err(e),
         }
     }
-}
 
-#[inline]
-pub(crate) fn unwrap_async_body<T, E>(
-    f: impl Future<Output = crate::Result<Result<HttpRequestResult<T>, E>>>,
-    client: &impl HttpClient,
-) -> crate::Result<Result<sync::HttpRequestResult<T>, E>> {
-    let r = f.now_or_never().expect("sync future should resolve immediately");
-    match r {
-        Ok(Ok(v)) => Ok(Ok(unwrap_async_result(v, client))),
-        Ok(Err(e)) => Ok(Err(e)),
-        Err(e) => Err(e),
+    #[cfg(feature = "sync_routes")]
+    #[inline]
+    pub(crate) fn unwrap_async<T, E>(
+        f: impl Future<Output = crate::Result<Result<T, E>>>,
+    ) -> crate::Result<Result<T, E>> {
+        f.now_or_never().expect("sync future should resolve immediately")
     }
 }
 
-#[inline]
-pub(crate) fn unwrap_async<T, E>(
-    f: impl Future<Output = crate::Result<Result<T, E>>>,
-) -> crate::Result<Result<T, E>> {
-    f.now_or_never().expect("sync future should resolve immediately")
-}
+#[cfg(feature = "sync_routes")]
+pub(crate) use sync_helpers::*;

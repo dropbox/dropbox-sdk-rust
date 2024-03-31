@@ -120,7 +120,6 @@ impl TeamAuthDefaultClient {
 impl HttpClient for TeamAuthDefaultClient {
     type Request = ReqwestRequest;
 
-
     fn execute(&self, request: Self::Request) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
         self.inner.execute(request)
     }
@@ -173,7 +172,7 @@ impl HttpClient for NoauthDefaultClient {
     }
 }
 
-impl NoauthClient for crate::default_client::NoauthDefaultClient {}
+impl NoauthClient for NoauthDefaultClient {}
 
 /// Same as NoauthDefaultClient but with inner by reference and no path_root.
 /// Only used for updating authorization tokens.

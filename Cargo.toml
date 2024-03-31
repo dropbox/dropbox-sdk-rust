@@ -49,6 +49,15 @@ chrono = "0.4"
 parallel_reader = "0.1"
 threadpool = "1.8"
 
+[dev-dependencies.tokio]
+version = "1.37.0"
+features = ["rt-multi-thread", "macros"]
+
+[dev-dependencies.tokio-util]
+version = "0.7.10"
+default-features = false
+features = ["compat"]
+
 [[example]]
 name = "demo"
 required-features = ["dbx_files", "default_client"]
@@ -56,6 +65,10 @@ required-features = ["dbx_files", "default_client"]
 [[example]]
 name = "large-file-upload"
 required-features = ["dbx_files", "default_client"]
+
+[[example]]
+name = "demo-async"
+required-features = ["dbx_files", "default_async_client"]
 
 [features]
 # dbx_* features each correspond to one Stone spec file.
@@ -81,8 +94,8 @@ dbx_team_policies = []
 dbx_users = ["dbx_common", "dbx_team_common", "dbx_team_policies", "dbx_users_common"]
 dbx_users_common = ["dbx_common"]
 
-default_async_client = ["dep:reqwest"]
-default_client = ["dep:ureq"]
+default_async_client = ["async_routes", "dep:reqwest"]
+default_client = ["sync_routes", "dep:ureq"]
 
 # Enable unstable ("preview") API routes.
 unstable = []
@@ -92,7 +105,7 @@ async_routes = []
 
 # Export sync routes in the `dropbox_sdk::{namsepace}` module directly.
 # If disabled, export the async routes there instead.
-sync_routes_default = []
+sync_routes_default = ["sync_routes"]
 
 # Include everything by default.
 default = [

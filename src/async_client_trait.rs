@@ -1,12 +1,8 @@
 //! Everything needed to implement your async HTTP client.
 
 use std::future::{Future, ready};
-use std::io::{IoSliceMut, Read};
-use std::pin::Pin;
 use std::sync::Arc;
-use std::task::{Context, Poll};
-use futures::{AsyncRead, FutureExt};
-use crate::client_trait as sync;
+use futures::AsyncRead;
 use crate::client_trait_common::{HttpRequest, TeamSelect};
 
 /// The base HTTP asynchronous client trait.
@@ -31,7 +27,7 @@ pub trait HttpClient: Sync {
         &self,
         _old_token: Arc<String>,
     ) -> impl Future<Output = bool> + Send {
-        ready(false).boxed()
+        ready(false)
     }
 
     /// The client's current authentication token, if any.
@@ -83,7 +79,8 @@ pub struct HttpRequestResult<T> {
 /// Blanket implementation of the async interface for all sync clients.
 /// This is necessary because all the machinery is actually implemented in terms of the async
 /// client.
-impl<T: sync::HttpClient + Sync> HttpClient for T {
+#[cfg(feature = "sync_routes")]
+impl<T: crate::client_trait::HttpClient + Sync> HttpClient for T {
     type Request = T::Request;
 
     fn execute(&self, request: Self::Request) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
@@ -125,7 +122,6 @@ pub trait NoauthClient: HttpClient {}
 /// Team authentication works by adding a `Authorization: Bearer <TOKEN>` header.
 pub trait UserAuthClient: HttpClient {}
 
-
 /// Marker trait to indicate that a HTTP client supports Team authentication.
 /// Team authentication works by adding a `Authorization: Bearer <TOKEN>` header, and optionally a
 /// `Dropbox-API-Select-Admin` or `Dropbox-API-Select-User` header.
@@ -136,16 +132,26 @@ pub trait TeamAuthClient: HttpClient {}
 /// to the HTTP request.
 pub trait AppAuthClient: HttpClient {}
 
+#[cfg(feature = "sync_routes")]
 pub(crate) struct SyncReadAdapter {
-    pub inner: Box<dyn Read + Send>,
+    pub inner: Box<dyn std::io::Read + Send>,
 }
 
+#[cfg(feature = "sync_routes")]
 impl AsyncRead for SyncReadAdapter {
-    fn poll_read(mut self: Pin<&mut Self>, _cx: &mut Context<'_>, buf: &mut [u8]) -> Poll<std::io::Result<usize>> {
-        Poll::Ready(self.inner.read(buf))
+    fn poll_read(
+        mut self: std::pin::Pin<&mut Self>,
+        _cx: &mut std::task::Context<'_>,
+        buf: &mut [u8],
+    ) -> std::task::Poll<std::io::Result<usize>> {
+        std::task::Poll::Ready(std::io::Read::read(&mut self.inner, buf))
     }
 
-    fn poll_read_vectored(mut self: Pin<&mut Self>, _cx: &mut Context<'_>, bufs: &mut [IoSliceMut<'_>]) -> Poll<std::io::Result<usize>> {
-        Poll::Ready(self.inner.read_vectored(bufs))
+    fn poll_read_vectored(
+        mut self: std::pin::Pin<&mut Self>,
+        _cx: &mut std::task::Context<'_>,
+        bufs: &mut [std::io::IoSliceMut<'_>],
+    ) -> std::task::Poll<std::io::Result<usize>> {
+        std::task::Poll::Ready(std::io::Read::read_vectored(&mut self.inner, bufs))
     }
 }
