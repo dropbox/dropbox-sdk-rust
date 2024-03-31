@@ -7,13 +7,6 @@
     clippy::doc_markdown,
 )]
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::contacts::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::contacts::*;
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteManualContactsArg {

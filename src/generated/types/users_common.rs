@@ -9,13 +9,6 @@
 
 //! This namespace contains common data types used within the users namespace.
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::users_common::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::users_common::*;
-
 pub type AccountId = String;
 
 /// What type of account this user has.

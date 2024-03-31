@@ -7,13 +7,18 @@
     clippy::doc_markdown,
 )]
 
-#![allow(missing_docs)]
-
+pub mod types;
 if_feature! { "async_routes", pub mod async_routes; }
-if_feature! { "sync_routes", pub mod routes; }
+if_feature! { "sync_routes", pub mod sync_routes; }
 
-mod types;
-pub use types::*;
+if_feature! { "sync_routes_default",
+    #[allow(unused_imports)]
+    pub use crate::generated::sync_routes::*;
+}
+if_feature! { not "sync_routes_default",
+    #[allow(unused_imports)]
+    pub use crate::generated::async_routes::*;
+}
 
 pub(crate) fn eat_json_fields<'de, V>(map: &mut V) -> Result<(), V::Error> where V: ::serde::de::MapAccess<'de> {
     while map.next_entry::<&str, ::serde_json::Value>()?.is_some() {

@@ -7,13 +7,6 @@
     clippy::doc_markdown,
 )]
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::common::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::common::*;
-
 pub type Date = String /*Timestamp*/;
 pub type DisplayName = String;
 pub type DisplayNameLegacy = String;

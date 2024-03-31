@@ -7,13 +7,6 @@
     clippy::doc_markdown,
 )]
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::team_common::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::team_common::*;
-
 pub type GroupExternalId = String;
 pub type GroupId = String;
 pub type MemberExternalId = String;

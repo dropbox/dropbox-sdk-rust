@@ -25,7 +25,14 @@ macro_rules! if_feature {
             #[cfg_attr(docsrs, doc(cfg(feature = $feature_name)))]
             $item
         )*
-    }
+    };
+    (not $feature_name:expr, $($item:item)*) => {
+        $(
+            #[cfg(not(feature = $feature_name))]
+            #[cfg_attr(docsrs, doc(cfg(not(feature = $feature_name))))]
+            $item
+        )*
+    };
 }
 
 #[macro_use] extern crate log;

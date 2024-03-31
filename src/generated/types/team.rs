@@ -7,13 +7,6 @@
     clippy::doc_markdown,
 )]
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::team::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::team::*;
-
 pub type GroupsGetInfoResult = Vec<GroupsGetInfoItem>;
 pub type LegalHoldId = String;
 pub type LegalHoldPolicyDescription = String;

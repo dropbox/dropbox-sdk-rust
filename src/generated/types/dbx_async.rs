@@ -7,13 +7,6 @@
     clippy::doc_markdown,
 )]
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::dbx_async::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::dbx_async::*;
-
 pub type AsyncJobId = String;
 
 /// Result returned by methods that may either launch an asynchronous job or complete synchronously.

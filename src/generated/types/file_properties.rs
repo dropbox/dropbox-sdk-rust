@@ -39,13 +39,6 @@
 //! `files/get_metadata`, and `files/list_folder`. Properties can also be added during upload, using
 //! `files/upload`.
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::file_properties::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::file_properties::*;
-
 pub type Id = String;
 pub type PathOrId = String;
 pub type PropertiesSearchCursor = String;

@@ -100,14 +100,18 @@ default_client = ["sync_routes", "dep:ureq"]
 # Enable unstable ("preview") API routes.
 unstable = []
 
+# Enable sync routes under `dropbox_sdk::routes::{namespace}`
 sync_routes = []
+
+# Enable async routes under `dropbox_sdk::async_routes::{namespace}`
 async_routes = []
 
-# Export sync routes in the `dropbox_sdk::{namsepace}` module directly.
+# Re-export the sync routes as `dropbox_sdk::{namsepace}` directly (matches pre-v0.19 structure).
 # If disabled, export the async routes there instead.
 sync_routes_default = ["sync_routes"]
 
-# Include everything by default.
+# Include all namespaces by default.
+# Enable sync default client, sync routes, and make the sync routes default, to match pre-v0.19.
 default = [
     "dbx_account",
     "dbx_async",

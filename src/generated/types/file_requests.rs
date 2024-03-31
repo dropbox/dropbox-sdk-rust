@@ -9,13 +9,6 @@
 
 //! This namespace contains endpoints and data types for file request operations.
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::file_requests::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::file_requests::*;
-
 pub type FileRequestId = String;
 pub type FileRequestValidationError = Option<String>;
 

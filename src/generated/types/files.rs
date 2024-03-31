@@ -9,13 +9,6 @@
 
 //! This namespace contains endpoints and data types for basic file operations.
 
-#[cfg(not(feature = "sync_routes_default"))]
-#[allow(unused_imports)]
-pub use crate::generated::async_routes::files::*;
-#[cfg(feature = "sync_routes_default")]
-#[allow(unused_imports)]
-pub use crate::generated::routes::files::*;
-
 pub type CopyBatchArg = RelocationBatchArgBase;
 pub type FileId = String;
 pub type Id = String;

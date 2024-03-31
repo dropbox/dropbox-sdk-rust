@@ -48,18 +48,21 @@ class RustBackend(RustHelperBackend):
         for namespace in api.namespaces.values():
             self._emit_namespace(namespace)
 
-        for d in ['async_routes', 'routes', 'types']:
+        for d in ['async_routes', 'sync_routes', 'types']:
             self._generate_mod_file(f'{d}/mod.rs')
 
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
-            self.emit('#![allow(missing_docs)]')
-            self.emit()
+            self.emit('pub mod types;')
             self.emit('if_feature! { "async_routes", pub mod async_routes; }')
-            self.emit('if_feature! { "sync_routes", pub mod routes; }')
+            self.emit('if_feature! { "sync_routes", pub mod sync_routes; }')
             self.emit()
-            self.emit('mod types;')
-            self.emit('pub use types::*;')
+            with self.block('if_feature! { "sync_routes_default",', delim=(None, '}')):
+                self.emit('#[allow(unused_imports)]')
+                self.emit(f'pub use crate::generated::sync_routes::*;')
+            with self.block('if_feature! { not "sync_routes_default",', delim=(None, '}')):
+                self.emit('#[allow(unused_imports)]')
+                self.emit(f'pub use crate::generated::async_routes::*;')
             self.emit()
             with self.block('pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
                             ' -> Result<(), V::Error>'
@@ -94,14 +97,6 @@ class RustBackend(RustHelperBackend):
                 self._emit_doc(namespace.doc, prefix='//!')
                 self.emit()
 
-            self.emit('#[cfg(not(feature = "sync_routes_default"))]')
-            self.emit('#[allow(unused_imports)]')
-            self.emit(f'pub use crate::generated::async_routes::{ns}::*;')
-            self.emit('#[cfg(feature = "sync_routes_default")]')
-            self.emit('#[allow(unused_imports)]')
-            self.emit(f'pub use crate::generated::routes::{ns}::*;')
-            self.emit()
-
             for alias in namespace.aliases:
                 self._emit_alias(alias)
             if namespace.aliases:
@@ -119,7 +114,7 @@ class RustBackend(RustHelperBackend):
                 else:
                     raise RuntimeError(f'WARNING: unhandled type "{type(typ).__name__}" of field "{typ.name}"')
 
-        with self.output_to_relative_path(f'routes/{ns}.rs'):
+        with self.output_to_relative_path(f'sync_routes/{ns}.rs'):
             self._emit_header()
             self.emit('#[allow(unused_imports)]')
             self.emit(f'pub use crate::generated::types::{ns}::*;')

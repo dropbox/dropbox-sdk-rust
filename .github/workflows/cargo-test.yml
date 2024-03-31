@@ -41,3 +41,9 @@ jobs:
 
       - name: Run clippy
         run: rustup run nightly cargo clippy --all-targets --all-features -- --deny warnings
+
+      - name: Run clippy with minimal features (sync)
+        run: rustup run nightly cargo clippy --no-default-features --features sync_routes
+
+      - name: Run clippy with minimal features (async)
+        run: rustup run nightly cargo clippy --no-default-features --features default_async_client
