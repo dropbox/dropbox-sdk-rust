@@ -1,3 +1,12 @@
+# v0.19.0
+xxxx-yy-zz
+* **BIG UPDATE: async support added**
+  * HTTP client traits completely redesigned
+    * Should actually be much simpler to implement now, as the work of setting the right headers has been extracted out
+      into client_helpers code, and implementations now just need to provide a generic HttpRequest type which can set
+      any header.
+  * Users who use the default client shouldn't notice any changes.
+
 # v0.18.0
 2024-01-12
 * MSRV raised to 1.65.0
