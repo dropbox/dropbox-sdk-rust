@@ -62,7 +62,7 @@ pub struct HttpRequestResultRaw {
     pub content_length: Option<u64>,
 
     /// The response body stream.
-    pub body: Box<dyn AsyncRead + Unpin + Send>,
+    pub body: Box<dyn AsyncRead + Send + Unpin>,
 }
 
 /// The response from the server, parsed into a given type, including a body stream if it is from

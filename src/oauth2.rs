@@ -440,38 +440,42 @@ impl Authorization {
             }
         }
 
-        let mut params = UrlEncoder::new(String::new());
+        let params = {
+            let mut params = UrlEncoder::new(String::new());
 
-        if let Some(refresh) = &refresh_token {
-            params.append_pair("grant_type", "refresh_token");
-            params.append_pair("refresh_token", refresh);
-        } else {
-            params.append_pair("grant_type", "authorization_code");
-            params.append_pair("code", &auth_code.unwrap());
-        }
-
-        params.append_pair("client_id", &self.client_id);
-
-        if refresh_token.is_none() {
-            if let Some(pkce) = pkce_code {
-                params.append_pair("code_verifier", &pkce);
+            if let Some(refresh) = &refresh_token {
+                params.append_pair("grant_type", "refresh_token");
+                params.append_pair("refresh_token", refresh);
             } else {
-                params.append_pair(
-                    "client_secret",
-                    client_secret.as_ref().expect("need either PKCE code or client secret"));
+                params.append_pair("grant_type", "authorization_code");
+                params.append_pair("code", &auth_code.unwrap());
             }
-        }
 
-        if let Some(value) = redirect_uri {
-            params.append_pair("redirect_uri", &value);
-        }
+            params.append_pair("client_id", &self.client_id);
+
+            if refresh_token.is_none() {
+                if let Some(pkce) = pkce_code {
+                    params.append_pair("code_verifier", &pkce);
+                } else {
+                    params.append_pair(
+                        "client_secret",
+                        client_secret.as_ref().expect("need either PKCE code or client secret"));
+                }
+            }
+
+            if let Some(value) = redirect_uri {
+                params.append_pair("redirect_uri", &value);
+            }
+
+            params.finish()
+        };
 
         let req = prepare_request(
             &client,
             Endpoint::OAuth2,
             Style::Rpc,
             "oauth2/token",
-            params.finish(),
+            params,
             ParamsType::Form,
             Bytes::new(),
             None,

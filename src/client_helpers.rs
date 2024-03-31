@@ -103,7 +103,7 @@ pub(crate) fn prepare_request<T: HttpClient>(
     req
 }
 
-pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Unpin)) -> crate::Result<String> {
+pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) -> crate::Result<String> {
     let mut s = String::new();
     match body.read_to_string(&mut s).await {
         Ok(_) => Ok(s),
