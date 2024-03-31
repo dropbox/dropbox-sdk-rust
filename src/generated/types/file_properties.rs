@@ -39,10 +39,10 @@
 //! `files/get_metadata`, and `files/list_folder`. Properties can also be added during upload, using
 //! `files/upload`.
 
-#[cfg(feature = "async_routes")]
+#[cfg(not(feature = "sync_routes_default"))]
 #[allow(unused_imports)]
 pub use crate::generated::async_routes::file_properties::*;
-#[cfg(not(feature = "async_routes"))]
+#[cfg(feature = "sync_routes_default")]
 #[allow(unused_imports)]
 pub use crate::generated::routes::file_properties::*;
 

@@ -10,4 +10,17 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::account::*;
 
-compile_error!("async routes not implemented yet");
+/// Sets a user's profile photo.
+pub fn set_profile_photo<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a SetProfilePhotoArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SetProfilePhotoResult, SetProfilePhotoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "account/set_profile_photo",
+        arg,
+        None)
+}
+

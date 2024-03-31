@@ -7,10 +7,10 @@
     clippy::doc_markdown,
 )]
 
-#[cfg(feature = "async_routes")]
+#[cfg(not(feature = "sync_routes_default"))]
 #[allow(unused_imports)]
 pub use crate::generated::async_routes::dbx_async::*;
-#[cfg(not(feature = "async_routes"))]
+#[cfg(feature = "sync_routes_default")]
 #[allow(unused_imports)]
 pub use crate::generated::routes::dbx_async::*;
 

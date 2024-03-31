@@ -10,4 +10,24 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::openid::*;
 
-compile_error!("async routes not implemented yet");
+/// This route is used for refreshing the info that is found in the id_token during the OIDC flow.
+/// This route doesn't require any arguments and will use the scopes approved for the given access
+/// token.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn userinfo<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UserInfoArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<UserInfoResult, UserInfoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "openid/userinfo",
+        arg,
+        None)
+}
+

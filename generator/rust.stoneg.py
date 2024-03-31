@@ -56,7 +56,7 @@ class RustBackend(RustHelperBackend):
             self.emit('#![allow(missing_docs)]')
             self.emit()
             self.emit('if_feature! { "async_routes", pub mod async_routes; }')
-            self.emit('pub mod routes;')
+            self.emit('if_feature! { "sync_routes", pub mod routes; }')
             self.emit()
             self.emit('mod types;')
             self.emit('pub use types::*;')
@@ -94,10 +94,10 @@ class RustBackend(RustHelperBackend):
                 self._emit_doc(namespace.doc, prefix='//!')
                 self.emit()
 
-            self.emit('#[cfg(feature = "async_routes")]')
+            self.emit('#[cfg(not(feature = "sync_routes_default"))]')
             self.emit('#[allow(unused_imports)]')
             self.emit(f'pub use crate::generated::async_routes::{ns}::*;')
-            self.emit('#[cfg(not(feature = "async_routes"))]')
+            self.emit('#[cfg(feature = "sync_routes_default")]')
             self.emit('#[allow(unused_imports)]')
             self.emit(f'pub use crate::generated::routes::{ns}::*;')
             self.emit()
@@ -132,7 +132,6 @@ class RustBackend(RustHelperBackend):
             self.emit('#[allow(unused_imports)]')
             self.emit(f'pub use crate::generated::types::{ns}::*;')
             self.emit()
-            self.emit('compile_error!("async routes not implemented yet");')
             for fn in namespace.routes:
                 self._emit_route(ns, fn, as_async=True)
 
@@ -252,9 +251,6 @@ class RustBackend(RustHelperBackend):
         assert fn.result_data_type is not None
         assert fn.error_data_type is not None
 
-        if as_async:
-            return
-
         route_name = self.route_name(fn)
         host = fn.attrs.get('host', 'api')
         if host == 'api':
@@ -266,28 +262,29 @@ class RustBackend(RustHelperBackend):
         else:
             raise RuntimeError(f'ERROR: unsupported endpoint: {host}')
 
+        mod = 'async_client_trait' if as_async else 'client_trait'
         if auth_trait is None:
             auths_str = fn.attrs.get('auth', 'user')
             auths = list(map(lambda s: s.strip(), auths_str.split(',')))
             auths.sort()
             if auths == ['user']:
-                auth_trait = 'crate::client_trait::UserAuthClient'
+                auth_trait = f'crate::{mod}::UserAuthClient'
             elif auths == ['team']:
-                auth_trait = 'crate::client_trait::TeamAuthClient'
+                auth_trait = f'crate::{mod}::TeamAuthClient'
             elif auths == ['app']:
-                auth_trait = 'crate::client_trait::AppAuthClient'
+                auth_trait = f'crate::{mod}::AppAuthClient'
             elif auths == ['app', 'user']:
                 # This is kind of lame, but there's no way to have a marker trait for either User
                 # OR App auth, so to get around this, we'll emit two functions, one for each.
 
                 # Emit the User auth route with no suffix via a recursive call.
-                self._emit_route(ns, fn, 'crate::client_trait::UserAuthClient')
+                self._emit_route(ns, fn, f'crate::{mod}::UserAuthClient', as_async=as_async)
 
                 # Now modify the name to add a suffix, and emit the App auth version by continuing.
                 route_name += "_app_auth"
-                auth_trait = 'crate::client_trait::AppAuthClient'
+                auth_trait = f'crate::{mod}::AppAuthClient'
             elif auths == ['noauth']:
-                auth_trait = 'crate::client_trait::NoauthClient'
+                auth_trait = f'crate::{mod}::NoauthClient'
             else:
                 raise Exception(f'route {ns}/{route_name}: unsupported auth type(s): {auths_str}')
 
@@ -326,8 +323,9 @@ class RustBackend(RustHelperBackend):
                     [f'client: &impl {auth_trait}']
                         + ([] if arg_void else [f'arg: &{arg_type}']),
                     f'crate::Result<Result<{ret_type}, {error_type}>>',
-                    access='pub'):
-                with self.block('crate::client_helpers::unwrap_async(', delim=(None, ')')):
+                    access='pub',
+                    is_async=as_async):
+                with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async'):
                     self.emit_rust_fn_call(
                     'crate::client_helpers::request',
                     ['client',
@@ -343,9 +341,10 @@ class RustBackend(RustHelperBackend):
                         + ([] if arg_void else [f'arg: &{arg_type}'])
                         + ['range_start: Option<u64>',
                             'range_end: Option<u64>'],
-                    f'crate::Result<Result<crate::client_trait::HttpRequestResult<{ret_type}>, {error_type}>>',
-                    access='pub'):
-                with self.block('crate::client_helpers::unwrap_async_body(', delim=(None, ')')):
+                    f'crate::Result<Result<crate::{mod}::HttpRequestResult<{ret_type}>, {error_type}>>',
+                    access='pub',
+                    is_async=as_async):
+                with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async_body'):
                     self.emit_rust_fn_call(
                         'crate::client_helpers::request_with_body',
                         ['client',
@@ -356,8 +355,9 @@ class RustBackend(RustHelperBackend):
                             'None',
                             'range_start',
                             'range_end'],
-                        end=',')
-                    self.emit('client,')
+                        end=None if as_async else ',')
+                    if not as_async:
+                        self.emit('client,')
         elif style == 'upload':
             with self.emit_rust_function_def(
                     route_name,
@@ -365,8 +365,9 @@ class RustBackend(RustHelperBackend):
                         + ([] if arg_void else [f'arg: &{arg_type}'])
                         + ['body: &[u8]'],
                     f'crate::Result<Result<{ret_type}, {error_type}>>',
-                    access='pub'):
-                with self.block('crate::client_helpers::unwrap_async(', delim=(None, ')')):
+                    access='pub',
+                    is_async=as_async):
+                with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async'):
                     self.emit_rust_fn_call(
                         'crate::client_helpers::request',
                         ['client',

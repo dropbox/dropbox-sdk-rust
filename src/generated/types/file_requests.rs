@@ -9,10 +9,10 @@
 
 //! This namespace contains endpoints and data types for file request operations.
 
-#[cfg(feature = "async_routes")]
+#[cfg(not(feature = "sync_routes_default"))]
 #[allow(unused_imports)]
 pub use crate::generated::async_routes::file_requests::*;
-#[cfg(not(feature = "async_routes"))]
+#[cfg(feature = "sync_routes_default")]
 #[allow(unused_imports)]
 pub use crate::generated::routes::file_requests::*;
 

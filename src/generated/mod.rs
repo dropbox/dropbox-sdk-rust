@@ -10,7 +10,7 @@
 #![allow(missing_docs)]
 
 if_feature! { "async_routes", pub mod async_routes; }
-pub mod routes;
+if_feature! { "sync_routes", pub mod routes; }
 
 mod types;
 pub use types::*;

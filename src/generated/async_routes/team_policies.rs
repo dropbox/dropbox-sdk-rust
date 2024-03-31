@@ -10,4 +10,3 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::team_policies::*;
 
-compile_error!("async routes not implemented yet");

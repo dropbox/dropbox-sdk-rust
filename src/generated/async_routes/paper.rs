@@ -10,4 +10,374 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::paper::*;
 
-compile_error!("async routes not implemented yet");
+/// Marks the given Paper doc as archived. This action can be performed or undone by anyone with
+/// edit permissions to the doc. Note that this endpoint will continue to work for content created
+/// by users on the older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. This endpoint will be retired in September 2020. Refer to the [Paper
+/// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
+/// information.
+#[deprecated]
+pub fn docs_archive<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RefPaperDoc,
+) -> impl std::future::Future<Output=crate::Result<Result<(), DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/archive",
+        arg,
+        None)
+}
+
+/// Creates a new Paper doc with the provided content. Note that this endpoint will continue to work
+/// for content created by users on the older version of Paper. To check which version of Paper a
+/// user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. This endpoint will be retired in September 2020. Refer
+/// to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
+/// information.
+#[deprecated]
+pub fn docs_create<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a PaperDocCreateArgs,
+    body: &'a [u8],
+) -> impl std::future::Future<Output=crate::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Upload,
+        "paper/docs/create",
+        arg,
+        Some(body))
+}
+
+/// Exports and downloads Paper doc either as HTML or markdown. Note that this endpoint will
+/// continue to work for content created by users on the older version of Paper. To check which
+/// version of Paper a user is on, use /users/features/get_values. If the paper_as_files feature is
+/// enabled, then the user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_download<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a PaperDocExport,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request_with_body(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Download,
+        "paper/docs/download",
+        arg,
+        None,
+        range_start,
+        range_end)
+}
+
+/// Lists the users who are explicitly invited to the Paper folder in which the Paper doc is
+/// contained. For private folders all users (including owner) shared on the folder are listed and
+/// for team folders all non-team users shared on the folder are returned. Note that this endpoint
+/// will continue to work for content created by users on the older version of Paper. To check which
+/// version of Paper a user is on, use /users/features/get_values. If the paper_as_files feature is
+/// enabled, then the user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_folder_users_list<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListUsersOnFolderArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<ListUsersOnFolderResponse, DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/folder_users/list",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`docs_folder_users_list()`](docs_folder_users_list), use
+/// this to paginate through all users on the Paper folder. Note that this endpoint will continue to
+/// work for content created by users on the older version of Paper. To check which version of Paper
+/// a user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_folder_users_list_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListUsersOnFolderContinueArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/folder_users/list/continue",
+        arg,
+        None)
+}
+
+/// Retrieves folder information for the given Paper doc. This includes:   - folder sharing policy;
+/// permissions for subfolders are set by the top-level folder.   - full 'filepath', i.e. the list
+/// of folders (both folderId and folderName) from     the root folder to the folder directly
+/// containing the Paper doc.
+///
+/// If the Paper doc is not in any folder (aka unfiled) the response will be empty. Note that this
+/// endpoint will continue to work for content created by users on the older version of Paper. To
+/// check which version of Paper a user is on, use /users/features/get_values. If the paper_as_files
+/// feature is enabled, then the user is running the new version of Paper. Refer to the [Paper
+/// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for
+/// migration information.
+#[deprecated]
+pub fn docs_get_folder_info<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RefPaperDoc,
+) -> impl std::future::Future<Output=crate::Result<Result<FoldersContainingPaperDoc, DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/get_folder_info",
+        arg,
+        None)
+}
+
+/// Return the list of all Paper docs according to the argument specifications. To iterate over
+/// through the full pagination, pass the cursor to [`docs_list_continue()`](docs_list_continue).
+/// Note that this endpoint will continue to work for content created by users on the older version
+/// of Paper. To check which version of Paper a user is on, use /users/features/get_values. If the
+/// paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to
+/// the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_list<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListPaperDocsArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<ListPaperDocsResponse, crate::NoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/list",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`docs_list()`](docs_list), use this to paginate through
+/// all Paper doc. Note that this endpoint will continue to work for content created by users on the
+/// older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_list_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListPaperDocsContinueArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<ListPaperDocsResponse, ListDocsCursorError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/list/continue",
+        arg,
+        None)
+}
+
+/// Permanently deletes the given Paper doc. This operation is final as the doc cannot be recovered.
+/// This action can be performed only by the doc owner. Note that this endpoint will continue to
+/// work for content created by users on the older version of Paper. To check which version of Paper
+/// a user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_permanently_delete<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RefPaperDoc,
+) -> impl std::future::Future<Output=crate::Result<Result<(), DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/permanently_delete",
+        arg,
+        None)
+}
+
+/// Gets the default sharing policy for the given Paper doc. Note that this endpoint will continue
+/// to work for content created by users on the older version of Paper. To check which version of
+/// Paper a user is on, use /users/features/get_values. If the paper_as_files feature is enabled,
+/// then the user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_sharing_policy_get<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RefPaperDoc,
+) -> impl std::future::Future<Output=crate::Result<Result<SharingPolicy, DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/sharing_policy/get",
+        arg,
+        None)
+}
+
+/// Sets the default sharing policy for the given Paper doc. The default 'team_sharing_policy' can
+/// be changed only by teams, omit this field for personal accounts. The 'public_sharing_policy'
+/// policy can't be set to the value 'disabled' because this setting can be changed only via the
+/// team admin console. Note that this endpoint will continue to work for content created by users
+/// on the older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_sharing_policy_set<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a PaperDocSharingPolicy,
+) -> impl std::future::Future<Output=crate::Result<Result<(), DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/sharing_policy/set",
+        arg,
+        None)
+}
+
+/// Updates an existing Paper doc with the provided content. Note that this endpoint will continue
+/// to work for content created by users on the older version of Paper. To check which version of
+/// Paper a user is on, use /users/features/get_values. If the paper_as_files feature is enabled,
+/// then the user is running the new version of Paper. This endpoint will be retired in September
+/// 2020. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
+/// information.
+#[deprecated]
+pub fn docs_update<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a PaperDocUpdateArgs,
+    body: &'a [u8],
+) -> impl std::future::Future<Output=crate::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Upload,
+        "paper/docs/update",
+        arg,
+        Some(body))
+}
+
+/// Allows an owner or editor to add users to a Paper doc or change their permissions using their
+/// email address or Dropbox account ID. The doc owner's permissions cannot be changed. Note that
+/// this endpoint will continue to work for content created by users on the older version of Paper.
+/// To check which version of Paper a user is on, use /users/features/get_values. If the
+/// paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to
+/// the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_users_add<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a AddPaperDocUser,
+) -> impl std::future::Future<Output=crate::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/users/add",
+        arg,
+        None)
+}
+
+/// Lists all users who visited the Paper doc or users with explicit access. This call excludes
+/// users who have been removed. The list is sorted by the date of the visit or the share date. The
+/// list will include both users, the explicitly shared ones as well as those who came in using the
+/// Paper url link. Note that this endpoint will continue to work for content created by users on
+/// the older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_users_list<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListUsersOnPaperDocArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/users/list",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`docs_users_list()`](docs_users_list), use this to
+/// paginate through all users on the Paper doc. Note that this endpoint will continue to work for
+/// content created by users on the older version of Paper. To check which version of Paper a user
+/// is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the user
+/// is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_users_list_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListUsersOnPaperDocContinueArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/users/list/continue",
+        arg,
+        None)
+}
+
+/// Allows an owner or editor to remove users from a Paper doc using their email address or Dropbox
+/// account ID. The doc owner cannot be removed. Note that this endpoint will continue to work for
+/// content created by users on the older version of Paper. To check which version of Paper a user
+/// is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the user
+/// is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn docs_users_remove<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RemovePaperDocUser,
+) -> impl std::future::Future<Output=crate::Result<Result<(), DocLookupError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/docs/users/remove",
+        arg,
+        None)
+}
+
+/// Create a new Paper folder with the provided info. Note that this endpoint will continue to work
+/// for content created by users on the older version of Paper. To check which version of Paper a
+/// user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+#[deprecated]
+pub fn folders_create<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a PaperFolderCreateArg,
+) -> impl std::future::Future<Output=crate::Result<Result<PaperFolderCreateResult, PaperFolderCreateError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "paper/folders/create",
+        arg,
+        None)
+}
+

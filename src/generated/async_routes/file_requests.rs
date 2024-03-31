@@ -10,4 +10,131 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::file_requests::*;
 
-compile_error!("async routes not implemented yet");
+/// Returns the total number of file requests owned by this user. Includes both open and closed file
+/// requests.
+pub fn count(
+    client: &impl crate::async_client_trait::UserAuthClient,
+) -> impl std::future::Future<Output=crate::Result<Result<CountFileRequestsResult, CountFileRequestsError>>> + Send + '_ {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/count",
+        &(),
+        None)
+}
+
+/// Creates a file request for this user.
+pub fn create<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a CreateFileRequestArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<FileRequest, CreateFileRequestError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/create",
+        arg,
+        None)
+}
+
+/// Delete a batch of closed file requests.
+pub fn delete<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a DeleteFileRequestArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<DeleteFileRequestsResult, DeleteFileRequestError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/delete",
+        arg,
+        None)
+}
+
+/// Delete all closed file requests owned by this user.
+pub fn delete_all_closed(
+    client: &impl crate::async_client_trait::UserAuthClient,
+) -> impl std::future::Future<Output=crate::Result<Result<DeleteAllClosedFileRequestsResult, DeleteAllClosedFileRequestsError>>> + Send + '_ {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/delete_all_closed",
+        &(),
+        None)
+}
+
+/// Returns the specified file request.
+pub fn get<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetFileRequestArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<FileRequest, GetFileRequestError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/get",
+        arg,
+        None)
+}
+
+/// Returns a list of file requests owned by this user. For apps with the app folder permission,
+/// this will only return file requests with destinations in the app folder.
+pub fn list_v2<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFileRequestsArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/list_v2",
+        arg,
+        None)
+}
+
+/// Returns a list of file requests owned by this user. For apps with the app folder permission,
+/// this will only return file requests with destinations in the app folder.
+pub fn list(
+    client: &impl crate::async_client_trait::UserAuthClient,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFileRequestsResult, ListFileRequestsError>>> + Send + '_ {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/list",
+        &(),
+        None)
+}
+
+/// Once a cursor has been retrieved from [`list_v2()`](list_v2), use this to paginate through all
+/// file requests. The cursor must come from a previous call to [`list_v2()`](list_v2) or
+/// [`list_continue()`](list_continue).
+pub fn list_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFileRequestsContinueArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsContinueError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/list/continue",
+        arg,
+        None)
+}
+
+/// Update a file request.
+pub fn update<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UpdateFileRequestArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<FileRequest, UpdateFileRequestError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/update",
+        arg,
+        None)
+}
+

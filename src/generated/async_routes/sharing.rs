@@ -10,4 +10,671 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::sharing::*;
 
-compile_error!("async routes not implemented yet");
+/// Adds specified members to a file.
+pub fn add_file_member<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a AddFileMemberArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<Vec<FileMemberActionResult>, AddFileMemberError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/add_file_member",
+        arg,
+        None)
+}
+
+/// Allows an owner or editor (if the ACL update policy allows) of a shared folder to add another
+/// member. For the new member to get access to all the functionality for this folder, you will need
+/// to call [`mount_folder()`](mount_folder) on their behalf.
+pub fn add_folder_member<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a AddFolderMemberArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), AddFolderMemberError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/add_folder_member",
+        arg,
+        None)
+}
+
+/// Returns the status of an asynchronous job.
+pub fn check_job_status<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a crate::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<JobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/check_job_status",
+        arg,
+        None)
+}
+
+/// Returns the status of an asynchronous job for sharing a folder.
+pub fn check_remove_member_job_status<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a crate::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<RemoveMemberJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/check_remove_member_job_status",
+        arg,
+        None)
+}
+
+/// Returns the status of an asynchronous job for sharing a folder.
+pub fn check_share_job_status<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a crate::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ShareFolderJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/check_share_job_status",
+        arg,
+        None)
+}
+
+/// Create a shared link. If a shared link already exists for the given path, that link is returned.
+/// Previously, it was technically possible to break a shared link by moving or renaming the
+/// corresponding file or folder. In the future, this will no longer be the case, so your app
+/// shouldn't rely on this behavior. Instead, if your app needs to revoke a shared link, use
+/// [`revoke_shared_link()`](revoke_shared_link).
+#[deprecated(note = "replaced by create_shared_link_with_settings")]
+pub fn create_shared_link<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a CreateSharedLinkArg,
+) -> impl std::future::Future<Output=crate::Result<Result<PathLinkMetadata, CreateSharedLinkError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/create_shared_link",
+        arg,
+        None)
+}
+
+/// Create a shared link with custom settings. If no settings are given then the default visibility
+/// is [`RequestedVisibility::Public`](RequestedVisibility::Public) (The resolved visibility,
+/// though, may depend on other aspects such as team and shared folder settings).
+pub fn create_shared_link_with_settings<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a CreateSharedLinkWithSettingsArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedLinkMetadata, CreateSharedLinkWithSettingsError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/create_shared_link_with_settings",
+        arg,
+        None)
+}
+
+/// Returns shared file metadata.
+pub fn get_file_metadata<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetFileMetadataArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedFileMetadata, GetFileMetadataError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/get_file_metadata",
+        arg,
+        None)
+}
+
+/// Returns shared file metadata.
+pub fn get_file_metadata_batch<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetFileMetadataBatchArg,
+) -> impl std::future::Future<Output=crate::Result<Result<Vec<GetFileMetadataBatchResult>, SharingUserError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/get_file_metadata/batch",
+        arg,
+        None)
+}
+
+/// Returns shared folder metadata by its folder ID.
+pub fn get_folder_metadata<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetMetadataArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMetadata, SharedFolderAccessError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/get_folder_metadata",
+        arg,
+        None)
+}
+
+/// Download the shared link's file from a user's Dropbox.
+pub fn get_shared_link_file<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetSharedLinkFileArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<SharedLinkMetadata>, GetSharedLinkFileError>>> + Send + 'a {
+    crate::client_helpers::request_with_body(
+        client,
+        crate::client_trait_common::Endpoint::Content,
+        crate::client_trait_common::Style::Download,
+        "sharing/get_shared_link_file",
+        arg,
+        None,
+        range_start,
+        range_end)
+}
+
+/// Get the shared link's metadata.
+pub fn get_shared_link_metadata<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetSharedLinkMetadataArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedLinkMetadata, SharedLinkError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/get_shared_link_metadata",
+        arg,
+        None)
+}
+
+/// Get the shared link's metadata.
+pub fn get_shared_link_metadata_app_auth<'a>(
+    client: &'a impl crate::async_client_trait::AppAuthClient,
+    arg: &'a GetSharedLinkMetadataArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedLinkMetadata, SharedLinkError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/get_shared_link_metadata",
+        arg,
+        None)
+}
+
+/// Returns a list of [`LinkMetadata`](LinkMetadata) objects for this user, including collection
+/// links. If no path is given, returns a list of all shared links for the current user, including
+/// collection links, up to a maximum of 1000 links. If a non-empty path is given, returns a list of
+/// all shared links that allow access to the given path.  Collection links are never returned in
+/// this case.
+#[deprecated(note = "replaced by list_shared_links")]
+pub fn get_shared_links<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetSharedLinksArg,
+) -> impl std::future::Future<Output=crate::Result<Result<GetSharedLinksResult, GetSharedLinksError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/get_shared_links",
+        arg,
+        None)
+}
+
+/// Use to obtain the members who have been invited to a file, both inherited and uninherited
+/// members.
+pub fn list_file_members<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFileMembersArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedFileMembers, ListFileMembersError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_file_members",
+        arg,
+        None)
+}
+
+/// Get members of multiple files at once. The arguments to this route are more limited, and the
+/// limit on query result size per file is more strict. To customize the results more, use the
+/// individual file endpoint. Inherited users and groups are not included in the result, and
+/// permissions are not returned for this endpoint.
+pub fn list_file_members_batch<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFileMembersBatchArg,
+) -> impl std::future::Future<Output=crate::Result<Result<Vec<ListFileMembersBatchResult>, SharingUserError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_file_members/batch",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`list_file_members()`](list_file_members) or
+/// [`list_file_members_batch()`](list_file_members_batch), use this to paginate through all shared
+/// file members.
+pub fn list_file_members_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFileMembersContinueArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedFileMembers, ListFileMembersContinueError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_file_members/continue",
+        arg,
+        None)
+}
+
+/// Returns shared folder membership by its folder ID.
+pub fn list_folder_members<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFolderMembersArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMembers, SharedFolderAccessError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_folder_members",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`list_folder_members()`](list_folder_members), use this
+/// to paginate through all shared folder members.
+pub fn list_folder_members_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFolderMembersContinueArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMembers, ListFolderMembersContinueError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_folder_members/continue",
+        arg,
+        None)
+}
+
+/// Return the list of all shared folders the current user has access to.
+pub fn list_folders<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFoldersArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFoldersResult, crate::NoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_folders",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`list_folders()`](list_folders), use this to paginate
+/// through all shared folders. The cursor must come from a previous call to
+/// [`list_folders()`](list_folders) or [`list_folders_continue()`](list_folders_continue).
+pub fn list_folders_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFoldersContinueArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFoldersResult, ListFoldersContinueError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_folders/continue",
+        arg,
+        None)
+}
+
+/// Return the list of all shared folders the current user can mount or unmount.
+pub fn list_mountable_folders<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFoldersArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFoldersResult, crate::NoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_mountable_folders",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`list_mountable_folders()`](list_mountable_folders), use
+/// this to paginate through all mountable shared folders. The cursor must come from a previous call
+/// to [`list_mountable_folders()`](list_mountable_folders) or
+/// [`list_mountable_folders_continue()`](list_mountable_folders_continue).
+pub fn list_mountable_folders_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFoldersContinueArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFoldersResult, ListFoldersContinueError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_mountable_folders/continue",
+        arg,
+        None)
+}
+
+/// Returns a list of all files shared with current user.  Does not include files the user has
+/// received via shared folders, and does  not include unclaimed invitations.
+pub fn list_received_files<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFilesArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFilesResult, SharingUserError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_received_files",
+        arg,
+        None)
+}
+
+/// Get more results with a cursor from [`list_received_files()`](list_received_files).
+pub fn list_received_files_continue<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListFilesContinueArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ListFilesResult, ListFilesContinueError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_received_files/continue",
+        arg,
+        None)
+}
+
+/// List shared links of this user. If no path is given, returns a list of all shared links for the
+/// current user. For members of business teams using team space and member folders, returns all
+/// shared links in the team member's home folder unless the team space ID is specified in the
+/// request header. For more information, refer to the [Namespace
+/// Guide](https://www.dropbox.com/developers/reference/namespace-guide). If a non-empty path is
+/// given, returns a list of all shared links that allow access to the given path - direct links to
+/// the given path and links to parent folders of the given path. Links to parent folders can be
+/// suppressed by setting direct_only to true.
+pub fn list_shared_links<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ListSharedLinksArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ListSharedLinksResult, ListSharedLinksError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/list_shared_links",
+        arg,
+        None)
+}
+
+/// Modify the shared link's settings. If the requested visibility conflict with the shared links
+/// policy of the team or the shared folder (in case the linked file is part of a shared folder)
+/// then the [`LinkPermissions::resolved_visibility`](LinkPermissions) of the returned
+/// [`SharedLinkMetadata`](SharedLinkMetadata) will reflect the actual visibility of the shared link
+/// and the [`LinkPermissions::requested_visibility`](LinkPermissions) will reflect the requested
+/// visibility.
+pub fn modify_shared_link_settings<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ModifySharedLinkSettingsArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedLinkMetadata, ModifySharedLinkSettingsError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/modify_shared_link_settings",
+        arg,
+        None)
+}
+
+/// The current user mounts the designated folder. Mount a shared folder for a user after they have
+/// been added as a member. Once mounted, the shared folder will appear in their Dropbox.
+pub fn mount_folder<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a MountFolderArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMetadata, MountFolderError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/mount_folder",
+        arg,
+        None)
+}
+
+/// The current user relinquishes their membership in the designated file. Note that the current
+/// user may still have inherited access to this file through the parent folder.
+pub fn relinquish_file_membership<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RelinquishFileMembershipArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), RelinquishFileMembershipError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/relinquish_file_membership",
+        arg,
+        None)
+}
+
+/// The current user relinquishes their membership in the designated shared folder and will no
+/// longer have access to the folder.  A folder owner cannot relinquish membership in their own
+/// folder. This will run synchronously if leave_a_copy is false, and asynchronously if leave_a_copy
+/// is true.
+pub fn relinquish_folder_membership<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RelinquishFolderMembershipArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/relinquish_folder_membership",
+        arg,
+        None)
+}
+
+/// Identical to remove_file_member_2 but with less information returned.
+#[deprecated(note = "replaced by remove_file_member_2")]
+pub fn remove_file_member<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RemoveFileMemberArg,
+) -> impl std::future::Future<Output=crate::Result<Result<FileMemberActionIndividualResult, RemoveFileMemberError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/remove_file_member",
+        arg,
+        None)
+}
+
+/// Removes a specified member from the file.
+pub fn remove_file_member_2<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RemoveFileMemberArg,
+) -> impl std::future::Future<Output=crate::Result<Result<FileMemberRemoveActionResult, RemoveFileMemberError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/remove_file_member_2",
+        arg,
+        None)
+}
+
+/// Allows an owner or editor (if the ACL update policy allows) of a shared folder to remove another
+/// member.
+pub fn remove_folder_member<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RemoveFolderMemberArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchResultBase, RemoveFolderMemberError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/remove_folder_member",
+        arg,
+        None)
+}
+
+/// Revoke a shared link. Note that even after revoking a shared link to a file, the file may be
+/// accessible if there are shared links leading to any of the file parent folders. To list all
+/// shared links that enable access to a specific file, you can use the
+/// [`list_shared_links()`](list_shared_links) with the file as the
+/// [`ListSharedLinksArg::path`](ListSharedLinksArg) argument.
+pub fn revoke_shared_link<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RevokeSharedLinkArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), RevokeSharedLinkError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/revoke_shared_link",
+        arg,
+        None)
+}
+
+/// Change the inheritance policy of an existing Shared Folder. Only permitted for shared folders in
+/// a shared team root. If a [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is
+/// returned, you'll need to call [`check_share_job_status()`](check_share_job_status) until the
+/// action completes to get the metadata for the folder.
+pub fn set_access_inheritance<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a SetAccessInheritanceArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ShareFolderLaunch, SetAccessInheritanceError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/set_access_inheritance",
+        arg,
+        None)
+}
+
+/// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders
+/// will be completed asynchronously. To make testing the async case repeatable, set
+/// `ShareFolderArg.force_async`. If a
+/// [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is returned, you'll need to
+/// call [`check_share_job_status()`](check_share_job_status) until the action completes to get the
+/// metadata for the folder.
+pub fn share_folder<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a ShareFolderArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ShareFolderLaunch, ShareFolderError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/share_folder",
+        arg,
+        None)
+}
+
+/// Transfer ownership of a shared folder to a member of the shared folder. User must have
+/// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to perform a transfer.
+pub fn transfer_folder<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a TransferFolderArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), TransferFolderError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/transfer_folder",
+        arg,
+        None)
+}
+
+/// The current user unmounts the designated folder. They can re-mount the folder at a later time
+/// using [`mount_folder()`](mount_folder).
+pub fn unmount_folder<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UnmountFolderArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), UnmountFolderError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/unmount_folder",
+        arg,
+        None)
+}
+
+/// Remove all members from this file. Does not remove inherited members.
+pub fn unshare_file<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UnshareFileArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), UnshareFileError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/unshare_file",
+        arg,
+        None)
+}
+
+/// Allows a shared folder owner to unshare the folder. You'll need to call
+/// [`check_job_status()`](check_job_status) to determine if the action has completed successfully.
+pub fn unshare_folder<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UnshareFolderArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchEmptyResult, UnshareFolderError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/unshare_folder",
+        arg,
+        None)
+}
+
+/// Changes a member's access on a shared file.
+pub fn update_file_member<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UpdateFileMemberArgs,
+) -> impl std::future::Future<Output=crate::Result<Result<MemberAccessLevelResult, FileMemberActionError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/update_file_member",
+        arg,
+        None)
+}
+
+/// Allows an owner or editor of a shared folder to update another member's permissions.
+pub fn update_folder_member<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UpdateFolderMemberArg,
+) -> impl std::future::Future<Output=crate::Result<Result<MemberAccessLevelResult, UpdateFolderMemberError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/update_folder_member",
+        arg,
+        None)
+}
+
+/// Update the sharing policies for a shared folder. User must have
+/// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to update its policies.
+pub fn update_folder_policy<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UpdateFolderPolicyArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMetadata, UpdateFolderPolicyError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/update_folder_policy",
+        arg,
+        None)
+}
+

@@ -10,4 +10,3 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::seen_state::*;
 
-compile_error!("async routes not implemented yet");

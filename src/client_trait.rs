@@ -7,7 +7,7 @@ use std::sync::Arc;
 use crate::client_trait_common::{HttpRequest, TeamSelect};
 
 /// The base HTTP synchronous client trait.
-pub trait HttpClient {
+pub trait HttpClient: Sync {
     /// The concrete type of request supported by the client.
     type Request: HttpRequest;
 

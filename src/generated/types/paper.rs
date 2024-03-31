@@ -13,10 +13,10 @@
 //! and /sharing endpoints to interact with their Paper content. Read more in the [Paper Migration
 //! Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
 
-#[cfg(feature = "async_routes")]
+#[cfg(not(feature = "sync_routes_default"))]
 #[allow(unused_imports)]
 pub use crate::generated::async_routes::paper::*;
-#[cfg(not(feature = "async_routes"))]
+#[cfg(feature = "sync_routes_default")]
 #[allow(unused_imports)]
 pub use crate::generated::routes::paper::*;
 

@@ -9,10 +9,10 @@
 
 //! This namespace contains common data types used within the users namespace.
 
-#[cfg(feature = "async_routes")]
+#[cfg(not(feature = "sync_routes_default"))]
 #[allow(unused_imports)]
 pub use crate::generated::async_routes::users_common::*;
-#[cfg(not(feature = "async_routes"))]
+#[cfg(feature = "sync_routes_default")]
 #[allow(unused_imports)]
 pub use crate::generated::routes::users_common::*;
 

@@ -10,7 +10,7 @@ use crate::client_trait as sync;
 use crate::client_trait_common::{HttpRequest, TeamSelect};
 
 /// The base HTTP asynchronous client trait.
-pub trait HttpClient {
+pub trait HttpClient: Sync {
     /// The concrete type of request supported by the client.
     type Request: HttpRequest;
 
@@ -83,7 +83,7 @@ pub struct HttpRequestResult<T> {
 /// Blanket implementation of the async interface for all sync clients.
 /// This is necessary because all the machinery is actually implemented in terms of the async
 /// client.
-impl<T: sync::HttpClient> HttpClient for T {
+impl<T: sync::HttpClient + Sync> HttpClient for T {
     type Request = T::Request;
 
     fn execute(&self, request: Self::Request) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {

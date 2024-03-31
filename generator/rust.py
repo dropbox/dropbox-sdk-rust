@@ -1,3 +1,4 @@
+import contextlib
 from abc import ABC
 from contextlib import contextmanager
 from typing import Optional, Iterator
@@ -58,6 +59,7 @@ class RustHelperBackend(CodeBackend, ABC):
             args: Optional[list[str]] = None,
             return_type: Optional[str] = None,
             access: Optional[str] = None,
+            is_async: bool = False,
     ) -> Iterator[None]:
         """
         A Rust function definition context manager.
@@ -68,6 +70,14 @@ class RustHelperBackend(CodeBackend, ABC):
             access = ''
         else:
             access += ' '
+        if is_async:
+            return_type = f'impl std::future::Future<Output={return_type}> + Send'
+            if len(args) > 1:
+                name += "<'a>"
+                args = [arg.replace('&', "&'a ") for arg in args]
+                return_type += " + 'a"
+            else:
+                return_type += " + '_"
         ret = f' -> {return_type}' if return_type is not None else ''
         one_line = f'{access}fn {name}({_arg_list(args)}){ret} {{'
         if self._dent_len() + len(one_line) < 100:
@@ -100,6 +110,14 @@ class RustHelperBackend(CodeBackend, ABC):
             with self.indent():
                 for i, arg in enumerate(args):
                     self.emit(arg + (',' if i + 1 < len(args) else (')' + end)))
+
+    @contextmanager
+    def conditional_wrapper(self, do_emit: bool, func_name: str) -> Iterator[None]:
+        if do_emit:
+            with self.block(func_name + '(', delim=(None, ')')):
+                yield
+        else:
+            yield
 
     def is_enum_type(self, typ: ir.DataType) -> bool:
         return isinstance(typ, ir.Union) or \

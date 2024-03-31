@@ -10,4 +10,31 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::contacts::*;
 
-compile_error!("async routes not implemented yet");
+/// Removes all manually added contacts. You'll still keep contacts who are on your team or who you
+/// imported. New contacts will be added when you share.
+pub fn delete_manual_contacts(
+    client: &impl crate::async_client_trait::UserAuthClient,
+) -> impl std::future::Future<Output=crate::Result<Result<(), crate::NoError>>> + Send + '_ {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "contacts/delete_manual_contacts",
+        &(),
+        None)
+}
+
+/// Removes manually added contacts from the given list.
+pub fn delete_manual_contacts_batch<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a DeleteManualContactsArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), DeleteManualContactsError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "contacts/delete_manual_contacts_batch",
+        arg,
+        None)
+}
+

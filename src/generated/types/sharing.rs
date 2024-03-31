@@ -10,10 +10,10 @@
 //! This namespace contains endpoints and data types for creating and managing shared links and
 //! shared folders.
 
-#[cfg(feature = "async_routes")]
+#[cfg(not(feature = "sync_routes_default"))]
 #[allow(unused_imports)]
 pub use crate::generated::async_routes::sharing::*;
-#[cfg(not(feature = "async_routes"))]
+#[cfg(feature = "sync_routes_default")]
 #[allow(unused_imports)]
 pub use crate::generated::routes::sharing::*;
 

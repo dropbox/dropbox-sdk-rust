@@ -10,4 +10,71 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::users::*;
 
-compile_error!("async routes not implemented yet");
+/// Get a list of feature values that may be configured for the current account.
+pub fn features_get_values<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UserFeaturesGetValuesBatchArg,
+) -> impl std::future::Future<Output=crate::Result<Result<UserFeaturesGetValuesBatchResult, UserFeaturesGetValuesBatchError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "users/features/get_values",
+        arg,
+        None)
+}
+
+/// Get information about a user's account.
+pub fn get_account<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetAccountArg,
+) -> impl std::future::Future<Output=crate::Result<Result<BasicAccount, GetAccountError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "users/get_account",
+        arg,
+        None)
+}
+
+/// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
+pub fn get_account_batch<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetAccountBatchArg,
+) -> impl std::future::Future<Output=crate::Result<Result<GetAccountBatchResult, GetAccountBatchError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "users/get_account_batch",
+        arg,
+        None)
+}
+
+/// Get information about the current user's account.
+pub fn get_current_account(
+    client: &impl crate::async_client_trait::UserAuthClient,
+) -> impl std::future::Future<Output=crate::Result<Result<FullAccount, crate::NoError>>> + Send + '_ {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "users/get_current_account",
+        &(),
+        None)
+}
+
+/// Get the space usage information for the current user's account.
+pub fn get_space_usage(
+    client: &impl crate::async_client_trait::UserAuthClient,
+) -> impl std::future::Future<Output=crate::Result<Result<SpaceUsage, crate::NoError>>> + Send + '_ {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "users/get_space_usage",
+        &(),
+        None)
+}
+

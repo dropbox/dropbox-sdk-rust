@@ -10,4 +10,33 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::auth::*;
 
-compile_error!("async routes not implemented yet");
+/// Creates an OAuth 2.0 access token from the supplied OAuth 1.0 access token.
+#[deprecated]
+pub fn token_from_oauth1<'a>(
+    client: &'a impl crate::async_client_trait::AppAuthClient,
+    arg: &'a TokenFromOAuth1Arg,
+) -> impl std::future::Future<Output=crate::Result<Result<TokenFromOAuth1Result, TokenFromOAuth1Error>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "auth/token/from_oauth1",
+        arg,
+        None)
+}
+
+/// Disables the access token used to authenticate the call. If there is a corresponding refresh
+/// token for the access token, this disables that refresh token, as well as any other access tokens
+/// for that refresh token.
+pub fn token_revoke(
+    client: &impl crate::async_client_trait::UserAuthClient,
+) -> impl std::future::Future<Output=crate::Result<Result<(), crate::NoError>>> + Send + '_ {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "auth/token/revoke",
+        &(),
+        None)
+}
+
