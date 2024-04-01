@@ -162,6 +162,16 @@ pub trait TeamAuthClient: HttpClient {}
 /// to the HTTP request.
 pub trait AppAuthClient: HttpClient {}
 
+// blanket impls to convert the sync marker traits to the async ones:
+#[cfg(feature = "sync_routes")]
+impl<T: crate::client_trait::NoauthClient + Sync> NoauthClient for T {}
+#[cfg(feature = "sync_routes")]
+impl<T: crate::client_trait::UserAuthClient + Sync> UserAuthClient for T {}
+#[cfg(feature = "sync_routes")]
+impl<T: crate::client_trait::TeamAuthClient + Sync> TeamAuthClient for T {}
+#[cfg(feature = "sync_routes")]
+impl<T: crate::client_trait::AppAuthClient + Sync> AppAuthClient for T {}
+
 #[cfg(feature = "sync_routes")]
 pub(crate) struct SyncReadAdapter {
     pub inner: Box<dyn std::io::Read + Send>,
