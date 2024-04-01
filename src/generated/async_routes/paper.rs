@@ -42,7 +42,7 @@ pub fn docs_archive<'a>(
 pub fn docs_create<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperDocCreateArgs,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -50,7 +50,7 @@ pub fn docs_create<'a>(
         crate::client_trait_common::Style::Upload,
         "paper/docs/create",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// Exports and downloads Paper doc either as HTML or markdown. Note that this endpoint will
@@ -263,7 +263,7 @@ pub fn docs_sharing_policy_set<'a>(
 pub fn docs_update<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperDocUpdateArgs,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -271,7 +271,7 @@ pub fn docs_update<'a>(
         crate::client_trait_common::Style::Upload,
         "paper/docs/update",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// Allows an owner or editor to add users to a Paper doc or change their permissions using their

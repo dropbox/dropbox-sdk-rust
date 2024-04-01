@@ -11,13 +11,13 @@
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SecondaryEmail {
     /// Secondary email address.
-    pub email: crate::common::EmailAddress,
+    pub email: crate::types::common::EmailAddress,
     /// Whether or not the secondary email address is verified to be owned by a user.
     pub is_verified: bool,
 }
 
 impl SecondaryEmail {
-    pub fn new(email: crate::common::EmailAddress, is_verified: bool) -> Self {
+    pub fn new(email: crate::types::common::EmailAddress, is_verified: bool) -> Self {
         SecondaryEmail {
             email,
             is_verified,

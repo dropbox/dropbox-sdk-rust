@@ -1,14 +1,9 @@
 //! Types common to the sync and async HTTP clients.
 
-use bytes::Bytes;
-
 /// A builder for a HTTP request.
 pub trait HttpRequest {
     /// Set a HTTP header.
     fn set_header(self, name: &str, value: &str) -> Self;
-
-    /// Set the request body.
-    fn set_body(self, body: Bytes) -> Self;
 }
 
 /// The API base endpoint for a request. Determines which hostname the request should go to.

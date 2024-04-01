@@ -53,7 +53,7 @@ pub fn docs_create(
             crate::client_trait_common::Style::Upload,
             "paper/docs/create",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 
@@ -295,7 +295,7 @@ pub fn docs_update(
             crate::client_trait_common::Style::Upload,
             "paper/docs/update",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 

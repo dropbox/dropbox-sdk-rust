@@ -130,7 +130,7 @@ pub fn groups_create<'a>(
 pub fn groups_delete<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupSelector,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchEmptyResult, GroupDeleteError>>> + Send + 'a {
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, GroupDeleteError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -163,8 +163,8 @@ pub fn groups_get_info<'a>(
 /// management.
 pub fn groups_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::PollEmptyResult, GroupsPollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::PollEmptyResult, GroupsPollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -626,8 +626,8 @@ pub fn members_add<'a>(
 /// the status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersAddJobStatusV2Result, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<MembersAddJobStatusV2Result, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -641,8 +641,8 @@ pub fn members_add_job_status_get_v2<'a>(
 /// status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersAddJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<MembersAddJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -792,7 +792,7 @@ pub fn members_list_continue<'a>(
 pub fn members_move_former_member_files<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersDataTransferArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -807,8 +807,8 @@ pub fn members_move_former_member_files<'a>(
 /// status of the asynchronous request. Permission : Team member management.
 pub fn members_move_former_member_files_job_status_check<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::PollEmptyResult, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::PollEmptyResult, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -846,7 +846,7 @@ pub fn members_recover<'a>(
 pub fn members_remove<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersRemoveArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchEmptyResult, MembersRemoveError>>> + Send + 'a {
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, MembersRemoveError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -860,8 +860,8 @@ pub fn members_remove<'a>(
 /// the status of the asynchronous request. Permission : Team member management.
 pub fn members_remove_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::PollEmptyResult, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::PollEmptyResult, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1082,8 +1082,8 @@ pub fn namespaces_list_continue<'a>(
 #[deprecated]
 pub fn properties_template_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::file_properties::AddTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::file_properties::AddTemplateResult, crate::file_properties::ModifyTemplateError>>> + Send + 'a {
+    arg: &'a crate::types::file_properties::AddTemplateArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::AddTemplateResult, crate::types::file_properties::ModifyTemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1097,8 +1097,8 @@ pub fn properties_template_add<'a>(
 #[deprecated]
 pub fn properties_template_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::file_properties::GetTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::file_properties::GetTemplateResult, crate::file_properties::TemplateError>>> + Send + 'a {
+    arg: &'a crate::types::file_properties::GetTemplateArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::GetTemplateResult, crate::types::file_properties::TemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1112,7 +1112,7 @@ pub fn properties_template_get<'a>(
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::async_client_trait::TeamAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::file_properties::ListTemplateResult, crate::file_properties::TemplateError>>> + Send + '_ {
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::ListTemplateResult, crate::types::file_properties::TemplateError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1126,8 +1126,8 @@ pub fn properties_template_list(
 #[deprecated]
 pub fn properties_template_update<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::file_properties::UpdateTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::file_properties::UpdateTemplateResult, crate::file_properties::ModifyTemplateError>>> + Send + 'a {
+    arg: &'a crate::types::file_properties::UpdateTemplateArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::UpdateTemplateResult, crate::types::file_properties::ModifyTemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1321,8 +1321,8 @@ pub fn team_folder_archive<'a>(
 /// file access.
 pub fn team_folder_archive_check<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderArchiveJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderArchiveJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

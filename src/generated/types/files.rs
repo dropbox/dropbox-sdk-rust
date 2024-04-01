@@ -245,10 +245,10 @@ pub struct AlphaGetMetadataArg {
     pub include_has_explicit_shared_members: bool,
     /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
     /// set if there exists property data associated with the file and each of the listed templates.
-    pub include_property_groups: Option<crate::file_properties::TemplateFilterBase>,
+    pub include_property_groups: Option<crate::types::file_properties::TemplateFilterBase>,
     /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
     /// set for files with custom properties.
-    pub include_property_templates: Option<Vec<crate::file_properties::TemplateId>>,
+    pub include_property_templates: Option<Vec<crate::types::file_properties::TemplateId>>,
 }
 
 impl AlphaGetMetadataArg {
@@ -280,7 +280,7 @@ impl AlphaGetMetadataArg {
 
     pub fn with_include_property_groups(
         mut self,
-        value: crate::file_properties::TemplateFilterBase,
+        value: crate::types::file_properties::TemplateFilterBase,
     ) -> Self {
         self.include_property_groups = Some(value);
         self
@@ -288,7 +288,7 @@ impl AlphaGetMetadataArg {
 
     pub fn with_include_property_templates(
         mut self,
-        value: Vec<crate::file_properties::TemplateId>,
+        value: Vec<crate::types::file_properties::TemplateId>,
     ) -> Self {
         self.include_property_templates = Some(value);
         self
@@ -446,7 +446,7 @@ impl From<AlphaGetMetadataArg> for GetMetadataArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum AlphaGetMetadataError {
     Path(LookupError),
-    PropertiesError(crate::file_properties::LookUpPropertiesError),
+    PropertiesError(crate::types::file_properties::LookUpPropertiesError),
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataError {
@@ -633,13 +633,13 @@ pub struct CommitInfo {
     /// time at which the file was written to the Dropbox servers. It can also record an additional
     /// timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of when the
     /// file was actually created or modified.
-    pub client_modified: Option<crate::common::DropboxTimestamp>,
+    pub client_modified: Option<crate::types::common::DropboxTimestamp>,
     /// Normally, users are made aware of any file modifications in their Dropbox account via
     /// notifications in the client software. If `true`, this tells the clients that this
     /// modification shouldn't result in a user notification.
     pub mute: bool,
     /// List of custom properties to add to file.
-    pub property_groups: Option<Vec<crate::file_properties::PropertyGroup>>,
+    pub property_groups: Option<Vec<crate::types::file_properties::PropertyGroup>>,
     /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
     /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
     /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
@@ -671,7 +671,7 @@ impl CommitInfo {
         self
     }
 
-    pub fn with_client_modified(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_client_modified(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.client_modified = Some(value);
         self
     }
@@ -683,7 +683,7 @@ impl CommitInfo {
 
     pub fn with_property_groups(
         mut self,
-        value: Vec<crate::file_properties::PropertyGroup>,
+        value: Vec<crate::types::file_properties::PropertyGroup>,
     ) -> Self {
         self.property_groups = Some(value);
         self
@@ -1446,11 +1446,11 @@ impl ::serde::ser::Serialize for CreateFolderBatchJobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for CreateFolderBatchJobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for CreateFolderBatchJobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => CreateFolderBatchJobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => CreateFolderBatchJobStatus::InProgress,
         }
     }
 }
@@ -1461,7 +1461,7 @@ impl From<crate::dbx_async::PollResultBase> for CreateFolderBatchJobStatus {
 pub enum CreateFolderBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(crate::dbx_async::AsyncJobId),
+    AsyncJobId(crate::types::dbx_async::AsyncJobId),
     Complete(CreateFolderBatchResult),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -1529,11 +1529,11 @@ impl ::serde::ser::Serialize for CreateFolderBatchLaunch {
     }
 }
 
-// union extends crate::dbx_async::LaunchResultBase
-impl From<crate::dbx_async::LaunchResultBase> for CreateFolderBatchLaunch {
-    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+// union extends crate::types::dbx_async::LaunchResultBase
+impl From<crate::types::dbx_async::LaunchResultBase> for CreateFolderBatchLaunch {
+    fn from(parent: crate::types::dbx_async::LaunchResultBase) -> Self {
         match parent {
-            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => CreateFolderBatchLaunch::AsyncJobId(x),
+            crate::types::dbx_async::LaunchResultBase::AsyncJobId(x) => CreateFolderBatchLaunch::AsyncJobId(x),
         }
     }
 }
@@ -2389,11 +2389,11 @@ impl ::serde::ser::Serialize for DeleteBatchJobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for DeleteBatchJobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for DeleteBatchJobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => DeleteBatchJobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => DeleteBatchJobStatus::InProgress,
         }
     }
 }
@@ -2404,7 +2404,7 @@ impl From<crate::dbx_async::PollResultBase> for DeleteBatchJobStatus {
 pub enum DeleteBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(crate::dbx_async::AsyncJobId),
+    AsyncJobId(crate::types::dbx_async::AsyncJobId),
     Complete(DeleteBatchResult),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2472,11 +2472,11 @@ impl ::serde::ser::Serialize for DeleteBatchLaunch {
     }
 }
 
-// union extends crate::dbx_async::LaunchResultBase
-impl From<crate::dbx_async::LaunchResultBase> for DeleteBatchLaunch {
-    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+// union extends crate::types::dbx_async::LaunchResultBase
+impl From<crate::types::dbx_async::LaunchResultBase> for DeleteBatchLaunch {
+    fn from(parent: crate::types::dbx_async::LaunchResultBase) -> Self {
         match parent {
-            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => DeleteBatchLaunch::AsyncJobId(x),
+            crate::types::dbx_async::LaunchResultBase::AsyncJobId(x) => DeleteBatchLaunch::AsyncJobId(x),
         }
     }
 }
@@ -2968,7 +2968,7 @@ pub struct DeletedMetadata {
     pub path_display: Option<String>,
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
-    pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
     pub preview_url: Option<String>,
 }
@@ -2994,7 +2994,10 @@ impl DeletedMetadata {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: crate::types::common::SharedFolderId,
+    ) -> Self {
         self.parent_shared_folder_id = Some(value);
         self
     }
@@ -4609,9 +4612,9 @@ pub struct FileLockMetadata {
     /// The display name of the lock holder.
     pub lockholder_name: Option<String>,
     /// The account ID of the lock holder if known.
-    pub lockholder_account_id: Option<crate::users_common::AccountId>,
+    pub lockholder_account_id: Option<crate::types::users_common::AccountId>,
     /// The timestamp of the lock was created.
-    pub created: Option<crate::common::DropboxTimestamp>,
+    pub created: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl FileLockMetadata {
@@ -4625,12 +4628,15 @@ impl FileLockMetadata {
         self
     }
 
-    pub fn with_lockholder_account_id(mut self, value: crate::users_common::AccountId) -> Self {
+    pub fn with_lockholder_account_id(
+        mut self,
+        value: crate::types::users_common::AccountId,
+    ) -> Self {
         self.lockholder_account_id = Some(value);
         self
     }
 
-    pub fn with_created(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_created(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.created = Some(value);
         self
     }
@@ -4750,9 +4756,9 @@ pub struct FileMetadata {
     /// to Dropbox. Since this time is not verified (the Dropbox server stores whatever the desktop
     /// client sends up), this should only be used for display purposes (such as sorting) and not,
     /// for example, to determine if a file has changed or not.
-    pub client_modified: crate::common::DropboxTimestamp,
+    pub client_modified: crate::types::common::DropboxTimestamp,
     /// The last time the file was modified on Dropbox.
-    pub server_modified: crate::common::DropboxTimestamp,
+    pub server_modified: crate::types::common::DropboxTimestamp,
     /// A unique identifier for the current revision of a file. This field is the same rev as
     /// elsewhere in the API and can be used to detect changes and avoid conflicts.
     pub rev: Rev,
@@ -4770,7 +4776,7 @@ pub struct FileMetadata {
     pub path_display: Option<String>,
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
-    pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
     pub preview_url: Option<String>,
     /// Additional information if the file is a photo or video. This field will not be set on
@@ -4789,7 +4795,7 @@ pub struct FileMetadata {
     pub export_info: Option<ExportInfo>,
     /// Additional information if the file has custom properties with the property template
     /// specified.
-    pub property_groups: Option<Vec<crate::file_properties::PropertyGroup>>,
+    pub property_groups: Option<Vec<crate::types::file_properties::PropertyGroup>>,
     /// This flag will only be present if include_has_explicit_shared_members  is true in
     /// [`list_folder()`](list_folder) or [`get_metadata()`](get_metadata). If this  flag is
     /// present, it will be true if this file has any explicit shared  members. This is different
@@ -4808,8 +4814,8 @@ impl FileMetadata {
     pub fn new(
         name: String,
         id: Id,
-        client_modified: crate::common::DropboxTimestamp,
-        server_modified: crate::common::DropboxTimestamp,
+        client_modified: crate::types::common::DropboxTimestamp,
+        server_modified: crate::types::common::DropboxTimestamp,
         rev: Rev,
         size: u64,
     ) -> Self {
@@ -4846,7 +4852,10 @@ impl FileMetadata {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: crate::types::common::SharedFolderId,
+    ) -> Self {
         self.parent_shared_folder_id = Some(value);
         self
     }
@@ -4883,7 +4892,7 @@ impl FileMetadata {
 
     pub fn with_property_groups(
         mut self,
-        value: Vec<crate::file_properties::PropertyGroup>,
+        value: Vec<crate::types::file_properties::PropertyGroup>,
     ) -> Self {
         self.property_groups = Some(value);
         self
@@ -5243,14 +5252,17 @@ pub struct FileSharingInfo {
     /// True if the file or folder is inside a read-only shared folder.
     pub read_only: bool,
     /// ID of shared folder that holds this file.
-    pub parent_shared_folder_id: crate::common::SharedFolderId,
+    pub parent_shared_folder_id: crate::types::common::SharedFolderId,
     /// The last user who modified the file. This field will be null if the user's account has been
     /// deleted.
-    pub modified_by: Option<crate::users_common::AccountId>,
+    pub modified_by: Option<crate::types::users_common::AccountId>,
 }
 
 impl FileSharingInfo {
-    pub fn new(read_only: bool, parent_shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(
+        read_only: bool,
+        parent_shared_folder_id: crate::types::common::SharedFolderId,
+    ) -> Self {
         FileSharingInfo {
             read_only,
             parent_shared_folder_id,
@@ -5258,7 +5270,7 @@ impl FileSharingInfo {
         }
     }
 
-    pub fn with_modified_by(mut self, value: crate::users_common::AccountId) -> Self {
+    pub fn with_modified_by(mut self, value: crate::types::users_common::AccountId) -> Self {
         self.modified_by = Some(value);
         self
     }
@@ -5452,17 +5464,17 @@ pub struct FolderMetadata {
     pub path_display: Option<String>,
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
-    pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
     pub preview_url: Option<String>,
     /// Please use `sharing_info` instead.
-    pub shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// Set if the folder is contained in a shared folder or is a shared folder mount point.
     pub sharing_info: Option<FolderSharingInfo>,
     /// Additional information if the file has custom properties with the property template
     /// specified. Note that only properties associated with user-owned templates, not team-owned
     /// templates, can be attached to folders.
-    pub property_groups: Option<Vec<crate::file_properties::PropertyGroup>>,
+    pub property_groups: Option<Vec<crate::types::file_properties::PropertyGroup>>,
 }
 
 impl FolderMetadata {
@@ -5490,7 +5502,10 @@ impl FolderMetadata {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: crate::types::common::SharedFolderId,
+    ) -> Self {
         self.parent_shared_folder_id = Some(value);
         self
     }
@@ -5500,7 +5515,7 @@ impl FolderMetadata {
         self
     }
 
-    pub fn with_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_shared_folder_id(mut self, value: crate::types::common::SharedFolderId) -> Self {
         self.shared_folder_id = Some(value);
         self
     }
@@ -5512,7 +5527,7 @@ impl FolderMetadata {
 
     pub fn with_property_groups(
         mut self,
-        value: Vec<crate::file_properties::PropertyGroup>,
+        value: Vec<crate::types::file_properties::PropertyGroup>,
     ) -> Self {
         self.property_groups = Some(value);
         self
@@ -5703,10 +5718,10 @@ pub struct FolderSharingInfo {
     /// True if the file or folder is inside a read-only shared folder.
     pub read_only: bool,
     /// Set if the folder is contained by a shared folder.
-    pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this
     /// location.
-    pub shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// Specifies that the folder can only be traversed and the user can only see a limited subset
     /// of the contents of this folder because they don't have read access to this folder. They do,
     /// however, have access to some sub folder.
@@ -5726,12 +5741,15 @@ impl FolderSharingInfo {
         }
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: crate::types::common::SharedFolderId,
+    ) -> Self {
         self.parent_shared_folder_id = Some(value);
         self
     }
 
-    pub fn with_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_shared_folder_id(mut self, value: crate::types::common::SharedFolderId) -> Self {
         self.shared_folder_id = Some(value);
         self
     }
@@ -6058,14 +6076,14 @@ pub struct GetCopyReferenceResult {
     pub copy_reference: String,
     /// The expiration date of the copy reference. This value is currently set to be far enough in
     /// the future so that expiration is effectively not an issue.
-    pub expires: crate::common::DropboxTimestamp,
+    pub expires: crate::types::common::DropboxTimestamp,
 }
 
 impl GetCopyReferenceResult {
     pub fn new(
         metadata: Metadata,
         copy_reference: String,
-        expires: crate::common::DropboxTimestamp,
+        expires: crate::types::common::DropboxTimestamp,
     ) -> Self {
         GetCopyReferenceResult {
             metadata,
@@ -6186,7 +6204,7 @@ pub struct GetMetadataArg {
     pub include_has_explicit_shared_members: bool,
     /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
     /// set if there exists property data associated with the file and each of the listed templates.
-    pub include_property_groups: Option<crate::file_properties::TemplateFilterBase>,
+    pub include_property_groups: Option<crate::types::file_properties::TemplateFilterBase>,
 }
 
 impl GetMetadataArg {
@@ -6217,7 +6235,7 @@ impl GetMetadataArg {
 
     pub fn with_include_property_groups(
         mut self,
-        value: crate::file_properties::TemplateFilterBase,
+        value: crate::types::file_properties::TemplateFilterBase,
     ) -> Self {
         self.include_property_groups = Some(value);
         self
@@ -7852,7 +7870,7 @@ pub struct ListFolderArg {
     pub shared_link: Option<SharedLink>,
     /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
     /// set if there exists property data associated with the file and each of the listed templates.
-    pub include_property_groups: Option<crate::file_properties::TemplateFilterBase>,
+    pub include_property_groups: Option<crate::types::file_properties::TemplateFilterBase>,
     /// If true, include files that are not downloadable, i.e. Google Docs.
     pub include_non_downloadable_files: bool,
 }
@@ -7910,7 +7928,7 @@ impl ListFolderArg {
 
     pub fn with_include_property_groups(
         mut self,
-        value: crate::file_properties::TemplateFilterBase,
+        value: crate::types::file_properties::TemplateFilterBase,
     ) -> Self {
         self.include_property_groups = Some(value);
         self
@@ -8292,7 +8310,7 @@ impl ::std::fmt::Display for ListFolderContinueError {
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFolderError {
     Path(LookupError),
-    TemplateError(crate::file_properties::TemplateError),
+    TemplateError(crate::types::file_properties::TemplateError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -9174,7 +9192,7 @@ pub struct ListRevisionsResult {
     /// The revisions for the file. Only revisions that are not deleted will show up here.
     pub entries: Vec<FileMetadata>,
     /// The time of deletion if the file was deleted.
-    pub server_deleted: Option<crate::common::DropboxTimestamp>,
+    pub server_deleted: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl ListRevisionsResult {
@@ -9186,7 +9204,7 @@ impl ListRevisionsResult {
         }
     }
 
-    pub fn with_server_deleted(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_server_deleted(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.server_deleted = Some(value);
         self
     }
@@ -11973,7 +11991,7 @@ pub struct PhotoMetadata {
     /// The GPS coordinate of the photo/video.
     pub location: Option<GpsCoordinates>,
     /// The timestamp when the photo/video is taken.
-    pub time_taken: Option<crate::common::DropboxTimestamp>,
+    pub time_taken: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl PhotoMetadata {
@@ -11987,7 +12005,7 @@ impl PhotoMetadata {
         self
     }
 
-    pub fn with_time_taken(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_time_taken(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.time_taken = Some(value);
         self
     }
@@ -13305,11 +13323,11 @@ impl ::serde::ser::Serialize for RelocationBatchJobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for RelocationBatchJobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for RelocationBatchJobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => RelocationBatchJobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => RelocationBatchJobStatus::InProgress,
         }
     }
 }
@@ -13320,7 +13338,7 @@ impl From<crate::dbx_async::PollResultBase> for RelocationBatchJobStatus {
 pub enum RelocationBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(crate::dbx_async::AsyncJobId),
+    AsyncJobId(crate::types::dbx_async::AsyncJobId),
     Complete(RelocationBatchResult),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -13388,11 +13406,11 @@ impl ::serde::ser::Serialize for RelocationBatchLaunch {
     }
 }
 
-// union extends crate::dbx_async::LaunchResultBase
-impl From<crate::dbx_async::LaunchResultBase> for RelocationBatchLaunch {
-    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+// union extends crate::types::dbx_async::LaunchResultBase
+impl From<crate::types::dbx_async::LaunchResultBase> for RelocationBatchLaunch {
+    fn from(parent: crate::types::dbx_async::LaunchResultBase) -> Self {
         match parent {
-            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => RelocationBatchLaunch::AsyncJobId(x),
+            crate::types::dbx_async::LaunchResultBase::AsyncJobId(x) => RelocationBatchLaunch::AsyncJobId(x),
         }
     }
 }
@@ -13723,11 +13741,11 @@ impl ::serde::ser::Serialize for RelocationBatchV2JobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for RelocationBatchV2JobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for RelocationBatchV2JobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => RelocationBatchV2JobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => RelocationBatchV2JobStatus::InProgress,
         }
     }
 }
@@ -13737,7 +13755,7 @@ impl From<crate::dbx_async::PollResultBase> for RelocationBatchV2JobStatus {
 pub enum RelocationBatchV2Launch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(crate::dbx_async::AsyncJobId),
+    AsyncJobId(crate::types::dbx_async::AsyncJobId),
     Complete(RelocationBatchV2Result),
 }
 
@@ -13800,11 +13818,11 @@ impl ::serde::ser::Serialize for RelocationBatchV2Launch {
     }
 }
 
-// union extends crate::dbx_async::LaunchResultBase
-impl From<crate::dbx_async::LaunchResultBase> for RelocationBatchV2Launch {
-    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+// union extends crate::types::dbx_async::LaunchResultBase
+impl From<crate::types::dbx_async::LaunchResultBase> for RelocationBatchV2Launch {
+    fn from(parent: crate::types::dbx_async::LaunchResultBase) -> Self {
         match parent {
-            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => RelocationBatchV2Launch::AsyncJobId(x),
+            crate::types::dbx_async::LaunchResultBase::AsyncJobId(x) => RelocationBatchV2Launch::AsyncJobId(x),
         }
     }
 }
@@ -15401,11 +15419,11 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for SaveUrlJobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for SaveUrlJobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => SaveUrlJobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => SaveUrlJobStatus::InProgress,
         }
     }
 }
@@ -15413,7 +15431,7 @@ impl From<crate::dbx_async::PollResultBase> for SaveUrlJobStatus {
 pub enum SaveUrlResult {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(crate::dbx_async::AsyncJobId),
+    AsyncJobId(crate::types::dbx_async::AsyncJobId),
     /// Metadata of the file where the URL is saved to.
     Complete(FileMetadata),
 }
@@ -15477,11 +15495,11 @@ impl ::serde::ser::Serialize for SaveUrlResult {
     }
 }
 
-// union extends crate::dbx_async::LaunchResultBase
-impl From<crate::dbx_async::LaunchResultBase> for SaveUrlResult {
-    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+// union extends crate::types::dbx_async::LaunchResultBase
+impl From<crate::types::dbx_async::LaunchResultBase> for SaveUrlResult {
+    fn from(parent: crate::types::dbx_async::LaunchResultBase) -> Self {
         match parent {
-            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => SaveUrlResult::AsyncJobId(x),
+            crate::types::dbx_async::LaunchResultBase::AsyncJobId(x) => SaveUrlResult::AsyncJobId(x),
         }
     }
 }
@@ -16325,7 +16343,7 @@ pub struct SearchOptions {
     /// search.
     pub file_categories: Option<Vec<FileCategory>>,
     /// Restricts results to the given account id.
-    pub account_id: Option<crate::users_common::AccountId>,
+    pub account_id: Option<crate::types::users_common::AccountId>,
 }
 
 impl Default for SearchOptions {
@@ -16379,7 +16397,7 @@ impl SearchOptions {
         self
     }
 
-    pub fn with_account_id(mut self, value: crate::users_common::AccountId) -> Self {
+    pub fn with_account_id(mut self, value: crate::types::users_common::AccountId) -> Self {
         self.account_id = Some(value);
         self
     }
@@ -17429,17 +17447,17 @@ impl ::serde::ser::Serialize for SharingInfo {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SingleUserLock {
     /// The time the lock was created.
-    pub created: crate::common::DropboxTimestamp,
+    pub created: crate::types::common::DropboxTimestamp,
     /// The account ID of the lock holder if known.
-    pub lock_holder_account_id: crate::users_common::AccountId,
+    pub lock_holder_account_id: crate::types::users_common::AccountId,
     /// The id of the team of the account holder if it exists.
     pub lock_holder_team_id: Option<String>,
 }
 
 impl SingleUserLock {
     pub fn new(
-        created: crate::common::DropboxTimestamp,
-        lock_holder_account_id: crate::users_common::AccountId,
+        created: crate::types::common::DropboxTimestamp,
+        lock_holder_account_id: crate::types::users_common::AccountId,
     ) -> Self {
         SingleUserLock {
             created,
@@ -18944,13 +18962,13 @@ pub struct UploadArg {
     /// time at which the file was written to the Dropbox servers. It can also record an additional
     /// timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of when the
     /// file was actually created or modified.
-    pub client_modified: Option<crate::common::DropboxTimestamp>,
+    pub client_modified: Option<crate::types::common::DropboxTimestamp>,
     /// Normally, users are made aware of any file modifications in their Dropbox account via
     /// notifications in the client software. If `true`, this tells the clients that this
     /// modification shouldn't result in a user notification.
     pub mute: bool,
     /// List of custom properties to add to file.
-    pub property_groups: Option<Vec<crate::file_properties::PropertyGroup>>,
+    pub property_groups: Option<Vec<crate::types::file_properties::PropertyGroup>>,
     /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
     /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
     /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
@@ -18987,7 +19005,7 @@ impl UploadArg {
         self
     }
 
-    pub fn with_client_modified(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_client_modified(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.client_modified = Some(value);
         self
     }
@@ -18999,7 +19017,7 @@ impl UploadArg {
 
     pub fn with_property_groups(
         mut self,
-        value: Vec<crate::file_properties::PropertyGroup>,
+        value: Vec<crate::types::file_properties::PropertyGroup>,
     ) -> Self {
         self.property_groups = Some(value);
         self
@@ -19196,7 +19214,7 @@ pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
     /// The supplied property group is invalid. The file has uploaded without property groups.
-    PropertiesError(crate::file_properties::InvalidPropertyGroupError),
+    PropertiesError(crate::types::file_properties::InvalidPropertyGroupError),
     /// The request payload must be at most 150 MB.
     PayloadTooLarge,
     /// The content received by the Dropbox server in this call does not match the provided content
@@ -19999,11 +20017,11 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchJobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for UploadSessionFinishBatchJobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for UploadSessionFinishBatchJobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => UploadSessionFinishBatchJobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => UploadSessionFinishBatchJobStatus::InProgress,
         }
     }
 }
@@ -20014,7 +20032,7 @@ impl From<crate::dbx_async::PollResultBase> for UploadSessionFinishBatchJobStatu
 pub enum UploadSessionFinishBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(crate::dbx_async::AsyncJobId),
+    AsyncJobId(crate::types::dbx_async::AsyncJobId),
     Complete(UploadSessionFinishBatchResult),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -20082,11 +20100,11 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchLaunch {
     }
 }
 
-// union extends crate::dbx_async::LaunchResultBase
-impl From<crate::dbx_async::LaunchResultBase> for UploadSessionFinishBatchLaunch {
-    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+// union extends crate::types::dbx_async::LaunchResultBase
+impl From<crate::types::dbx_async::LaunchResultBase> for UploadSessionFinishBatchLaunch {
+    fn from(parent: crate::types::dbx_async::LaunchResultBase) -> Self {
         match parent {
-            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => UploadSessionFinishBatchLaunch::AsyncJobId(x),
+            crate::types::dbx_async::LaunchResultBase::AsyncJobId(x) => UploadSessionFinishBatchLaunch::AsyncJobId(x),
         }
     }
 }
@@ -20257,7 +20275,7 @@ pub enum UploadSessionFinishError {
     /// session. Please retry with empty data body and updated offset.
     Path(WriteError),
     /// The supplied property group is invalid. The file has uploaded without property groups.
-    PropertiesError(crate::file_properties::InvalidPropertyGroupError),
+    PropertiesError(crate::types::file_properties::InvalidPropertyGroupError),
     /// The batch request commits files into too many different shared folders. Please limit your
     /// batch request to files contained in a single shared folder.
     TooManySharedFolderTargets,
@@ -21480,7 +21498,7 @@ pub struct VideoMetadata {
     /// The GPS coordinate of the photo/video.
     pub location: Option<GpsCoordinates>,
     /// The timestamp when the photo/video is taken.
-    pub time_taken: Option<crate::common::DropboxTimestamp>,
+    pub time_taken: Option<crate::types::common::DropboxTimestamp>,
     /// The duration of the video in milliseconds.
     pub duration: Option<u64>,
 }
@@ -21496,7 +21514,7 @@ impl VideoMetadata {
         self
     }
 
-    pub fn with_time_taken(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_time_taken(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.time_taken = Some(value);
         self
     }

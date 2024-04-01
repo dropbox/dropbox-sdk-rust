@@ -54,7 +54,7 @@ pub fn alpha_upload(
             crate::client_trait_common::Style::Upload,
             "files/alpha/upload",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 
@@ -136,8 +136,8 @@ pub fn copy_batch(
 /// list of results for each entry.
 pub fn copy_batch_check_v2(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<RelocationBatchV2JobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<RelocationBatchV2JobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -154,8 +154,8 @@ pub fn copy_batch_check_v2(
 #[deprecated(note = "replaced by copy_batch_check_v2")]
 pub fn copy_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<RelocationBatchJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<RelocationBatchJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -259,8 +259,8 @@ pub fn create_folder_batch(
 /// success, it returns list of result for each entry.
 pub fn create_folder_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<CreateFolderBatchJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<CreateFolderBatchJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -335,8 +335,8 @@ pub fn delete_batch(
 /// returns list of result for each entry.
 pub fn delete_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<DeleteBatchJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<DeleteBatchJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -649,8 +649,8 @@ pub fn get_thumbnail_batch(
 /// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
 /// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
 /// something at the given path, remove it and all its children. If there's nothing at the given
-/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::auth::RateLimitError) may be
-/// returned if multiple [`list_folder()`](list_folder) or
+/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may
+/// be returned if multiple [`list_folder()`](list_folder) or
 /// [`list_folder_continue()`](list_folder_continue) calls with same parameters are made
 /// simultaneously by same API app for same user. If your app implements retry logic, please hold
 /// off the retry until the previous request finishes.
@@ -684,8 +684,8 @@ pub fn list_folder(
 /// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
 /// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
 /// something at the given path, remove it and all its children. If there's nothing at the given
-/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::auth::RateLimitError) may be
-/// returned if multiple [`list_folder()`](list_folder) or
+/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may
+/// be returned if multiple [`list_folder()`](list_folder) or
 /// [`list_folder_continue()`](list_folder_continue) calls with same parameters are made
 /// simultaneously by same API app for same user. If your app implements retry logic, please hold
 /// off the retry until the previous request finishes.
@@ -900,8 +900,8 @@ pub fn move_batch(
 /// list of results for each entry.
 pub fn move_batch_check_v2(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<RelocationBatchV2JobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<RelocationBatchV2JobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -918,8 +918,8 @@ pub fn move_batch_check_v2(
 #[deprecated(note = "replaced by move_batch_check_v2")]
 pub fn move_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<RelocationBatchJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<RelocationBatchJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -949,7 +949,7 @@ pub fn paper_create(
             crate::client_trait_common::Style::Upload,
             "files/paper/create",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 
@@ -971,7 +971,7 @@ pub fn paper_update(
             crate::client_trait_common::Style::Upload,
             "files/paper/update",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 
@@ -997,8 +997,8 @@ pub fn permanently_delete(
 #[deprecated]
 pub fn properties_add(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::file_properties::AddPropertiesArg,
-) -> crate::Result<Result<(), crate::file_properties::AddPropertiesError>> {
+    arg: &crate::types::file_properties::AddPropertiesArg,
+) -> crate::Result<Result<(), crate::types::file_properties::AddPropertiesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1013,8 +1013,8 @@ pub fn properties_add(
 #[deprecated]
 pub fn properties_overwrite(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::file_properties::OverwritePropertyGroupArg,
-) -> crate::Result<Result<(), crate::file_properties::InvalidPropertyGroupError>> {
+    arg: &crate::types::file_properties::OverwritePropertyGroupArg,
+) -> crate::Result<Result<(), crate::types::file_properties::InvalidPropertyGroupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1029,8 +1029,8 @@ pub fn properties_overwrite(
 #[deprecated]
 pub fn properties_remove(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::file_properties::RemovePropertiesArg,
-) -> crate::Result<Result<(), crate::file_properties::RemovePropertiesError>> {
+    arg: &crate::types::file_properties::RemovePropertiesArg,
+) -> crate::Result<Result<(), crate::types::file_properties::RemovePropertiesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1045,8 +1045,8 @@ pub fn properties_remove(
 #[deprecated]
 pub fn properties_template_get(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::file_properties::GetTemplateArg,
-) -> crate::Result<Result<crate::file_properties::GetTemplateResult, crate::file_properties::TemplateError>> {
+    arg: &crate::types::file_properties::GetTemplateArg,
+) -> crate::Result<Result<crate::types::file_properties::GetTemplateResult, crate::types::file_properties::TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1061,7 +1061,7 @@ pub fn properties_template_get(
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<crate::file_properties::ListTemplateResult, crate::file_properties::TemplateError>> {
+) -> crate::Result<Result<crate::types::file_properties::ListTemplateResult, crate::types::file_properties::TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1076,8 +1076,8 @@ pub fn properties_template_list(
 #[deprecated]
 pub fn properties_update(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::file_properties::UpdatePropertiesArg,
-) -> crate::Result<Result<(), crate::file_properties::UpdatePropertiesError>> {
+    arg: &crate::types::file_properties::UpdatePropertiesArg,
+) -> crate::Result<Result<(), crate::types::file_properties::UpdatePropertiesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1127,8 +1127,8 @@ pub fn save_url(
 /// Check the status of a [`save_url()`](save_url) job.
 pub fn save_url_check_job_status(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<SaveUrlJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<SaveUrlJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1298,7 +1298,7 @@ pub fn upload(
             crate::client_trait_common::Style::Upload,
             "files/upload",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 
@@ -1320,7 +1320,7 @@ pub fn upload_session_append_v2(
             crate::client_trait_common::Style::Upload,
             "files/upload_session/append_v2",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 
@@ -1342,7 +1342,7 @@ pub fn upload_session_append(
             crate::client_trait_common::Style::Upload,
             "files/upload_session/append",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 
@@ -1364,7 +1364,7 @@ pub fn upload_session_finish(
             crate::client_trait_common::Style::Upload,
             "files/upload_session/finish",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 
@@ -1437,8 +1437,8 @@ pub fn upload_session_finish_batch_v2(
 /// result for each entry.
 pub fn upload_session_finish_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<UploadSessionFinishBatchJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<UploadSessionFinishBatchJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1493,7 +1493,7 @@ pub fn upload_session_start(
             crate::client_trait_common::Style::Upload,
             "files/upload_session/start",
             arg,
-            Some(body))
+            Some(crate::client_helpers::Body::from(body)))
     )
 }
 

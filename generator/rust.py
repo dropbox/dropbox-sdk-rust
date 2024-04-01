@@ -231,7 +231,7 @@ class RustHelperBackend(CodeBackend, ABC):
             if typ.namespace.name == current_namespace or no_qualify:
                 return self.alias_name(typ)
             else:
-                return f'{crate}::{self.namespace_name(typ.namespace)}::{self.alias_name(typ)}'
+                return f'{crate}::types::{self.namespace_name(typ.namespace)}::{self.alias_name(typ)}'
         elif isinstance(typ, ir.UserDefined):
             if isinstance(typ, ir.Struct):
                 name = self.struct_name(typ)
@@ -242,6 +242,6 @@ class RustHelperBackend(CodeBackend, ABC):
             if typ.namespace.name == current_namespace or no_qualify:
                 return name
             else:
-                return f'{crate}::{self.namespace_name(typ.namespace)}::{name}'
+                return f'{crate}::types::{self.namespace_name(typ.namespace)}::{name}'
         else:
             raise RuntimeError(f'ERROR: unhandled type "{typ}"')

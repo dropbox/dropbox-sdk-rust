@@ -43,7 +43,7 @@ pub fn alpha_get_metadata<'a>(
 pub fn alpha_upload<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadArg,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<FileMetadata, UploadError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -51,7 +51,7 @@ pub fn alpha_upload<'a>(
         crate::client_trait_common::Style::Upload,
         "files/alpha/upload",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
@@ -124,8 +124,8 @@ pub fn copy_batch<'a>(
 /// list of results for each entry.
 pub fn copy_batch_check_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchV2JobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchV2JobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -140,8 +140,8 @@ pub fn copy_batch_check_v2<'a>(
 #[deprecated(note = "replaced by copy_batch_check_v2")]
 pub fn copy_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -233,8 +233,8 @@ pub fn create_folder_batch<'a>(
 /// success, it returns list of result for each entry.
 pub fn create_folder_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<CreateFolderBatchJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<CreateFolderBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -301,8 +301,8 @@ pub fn delete_batch<'a>(
 /// returns list of result for each entry.
 pub fn delete_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<DeleteBatchJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<DeleteBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -582,8 +582,8 @@ pub fn get_thumbnail_batch<'a>(
 /// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
 /// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
 /// something at the given path, remove it and all its children. If there's nothing at the given
-/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::auth::RateLimitError) may be
-/// returned if multiple [`list_folder()`](list_folder) or
+/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may
+/// be returned if multiple [`list_folder()`](list_folder) or
 /// [`list_folder_continue()`](list_folder_continue) calls with same parameters are made
 /// simultaneously by same API app for same user. If your app implements retry logic, please hold
 /// off the retry until the previous request finishes.
@@ -615,8 +615,8 @@ pub fn list_folder<'a>(
 /// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
 /// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
 /// something at the given path, remove it and all its children. If there's nothing at the given
-/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::auth::RateLimitError) may be
-/// returned if multiple [`list_folder()`](list_folder) or
+/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may
+/// be returned if multiple [`list_folder()`](list_folder) or
 /// [`list_folder_continue()`](list_folder_continue) calls with same parameters are made
 /// simultaneously by same API app for same user. If your app implements retry logic, please hold
 /// off the retry until the previous request finishes.
@@ -809,8 +809,8 @@ pub fn move_batch<'a>(
 /// list of results for each entry.
 pub fn move_batch_check_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchV2JobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchV2JobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -825,8 +825,8 @@ pub fn move_batch_check_v2<'a>(
 #[deprecated(note = "replaced by move_batch_check_v2")]
 pub fn move_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -845,7 +845,7 @@ pub fn move_batch_check<'a>(
 pub fn paper_create<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperCreateArg,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<PaperCreateResult, PaperCreateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -853,7 +853,7 @@ pub fn paper_create<'a>(
         crate::client_trait_common::Style::Upload,
         "files/paper/create",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// Updates an existing Paper doc with the provided content.
@@ -865,7 +865,7 @@ pub fn paper_create<'a>(
 pub fn paper_update<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperUpdateArg,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<PaperUpdateResult, PaperUpdateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -873,7 +873,7 @@ pub fn paper_update<'a>(
         crate::client_trait_common::Style::Upload,
         "files/paper/update",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40).
@@ -896,8 +896,8 @@ pub fn permanently_delete<'a>(
 #[deprecated]
 pub fn properties_add<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::file_properties::AddPropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::file_properties::AddPropertiesError>>> + Send + 'a {
+    arg: &'a crate::types::file_properties::AddPropertiesArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), crate::types::file_properties::AddPropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -910,8 +910,8 @@ pub fn properties_add<'a>(
 #[deprecated]
 pub fn properties_overwrite<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::file_properties::OverwritePropertyGroupArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::file_properties::InvalidPropertyGroupError>>> + Send + 'a {
+    arg: &'a crate::types::file_properties::OverwritePropertyGroupArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), crate::types::file_properties::InvalidPropertyGroupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -924,8 +924,8 @@ pub fn properties_overwrite<'a>(
 #[deprecated]
 pub fn properties_remove<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::file_properties::RemovePropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::file_properties::RemovePropertiesError>>> + Send + 'a {
+    arg: &'a crate::types::file_properties::RemovePropertiesArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), crate::types::file_properties::RemovePropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -938,8 +938,8 @@ pub fn properties_remove<'a>(
 #[deprecated]
 pub fn properties_template_get<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::file_properties::GetTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::file_properties::GetTemplateResult, crate::file_properties::TemplateError>>> + Send + 'a {
+    arg: &'a crate::types::file_properties::GetTemplateArg,
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::GetTemplateResult, crate::types::file_properties::TemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -952,7 +952,7 @@ pub fn properties_template_get<'a>(
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::file_properties::ListTemplateResult, crate::file_properties::TemplateError>>> + Send + '_ {
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::ListTemplateResult, crate::types::file_properties::TemplateError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -965,8 +965,8 @@ pub fn properties_template_list(
 #[deprecated]
 pub fn properties_update<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::file_properties::UpdatePropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::file_properties::UpdatePropertiesError>>> + Send + 'a {
+    arg: &'a crate::types::file_properties::UpdatePropertiesArg,
+) -> impl std::future::Future<Output=crate::Result<Result<(), crate::types::file_properties::UpdatePropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1010,8 +1010,8 @@ pub fn save_url<'a>(
 /// Check the status of a [`save_url()`](save_url) job.
 pub fn save_url_check_job_status<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SaveUrlJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<SaveUrlJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1156,7 +1156,7 @@ pub fn unlock_file_batch<'a>(
 pub fn upload<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadArg,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<FileMetadata, UploadError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -1164,7 +1164,7 @@ pub fn upload<'a>(
         crate::client_trait_common::Style::Upload,
         "files/upload",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// Append more data to an upload session. When the parameter close is set, this call will close the
@@ -1176,7 +1176,7 @@ pub fn upload<'a>(
 pub fn upload_session_append_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionAppendArg,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<(), UploadSessionAppendError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -1184,7 +1184,7 @@ pub fn upload_session_append_v2<'a>(
         crate::client_trait_common::Style::Upload,
         "files/upload_session/append_v2",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// Append more data to an upload session. A single request should not upload more than 150 MB. The
@@ -1196,7 +1196,7 @@ pub fn upload_session_append_v2<'a>(
 pub fn upload_session_append<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionCursor,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<(), UploadSessionAppendError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -1204,7 +1204,7 @@ pub fn upload_session_append<'a>(
         crate::client_trait_common::Style::Upload,
         "files/upload_session/append",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// Finish an upload session and save the uploaded data to the given file path. A single request
@@ -1216,7 +1216,7 @@ pub fn upload_session_append<'a>(
 pub fn upload_session_finish<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionFinishArg,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<FileMetadata, UploadSessionFinishError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -1224,7 +1224,7 @@ pub fn upload_session_finish<'a>(
         crate::client_trait_common::Style::Upload,
         "files/upload_session/finish",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// This route helps you commit many files at once into a user's Dropbox. Use
@@ -1292,8 +1292,8 @@ pub fn upload_session_finish_batch_v2<'a>(
 /// result for each entry.
 pub fn upload_session_finish_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<UploadSessionFinishBatchJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<UploadSessionFinishBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1337,7 +1337,7 @@ pub fn upload_session_finish_batch_check<'a>(
 pub fn upload_session_start<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionStartArg,
-    body: &'a [u8],
+    body: bytes::Bytes,
 ) -> impl std::future::Future<Output=crate::Result<Result<UploadSessionStartResult, UploadSessionStartError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
@@ -1345,7 +1345,7 @@ pub fn upload_session_start<'a>(
         crate::client_trait_common::Style::Upload,
         "files/upload_session/start",
         arg,
-        Some(body))
+        Some(crate::client_helpers::Body::from(body)))
 }
 
 /// This route starts batch of upload_sessions. Please refer to `upload_session/start` usage. Calls

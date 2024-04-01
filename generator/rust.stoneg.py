@@ -54,15 +54,17 @@ class RustBackend(RustHelperBackend):
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
             self.emit('pub mod types;')
-            self.emit('if_feature! { "async_routes", pub mod async_routes; }')
-            self.emit('if_feature! { "sync_routes", pub mod sync_routes; }')
+            with self.block('if_feature! { "async_routes",', delim=(None, '}')):
+                self.emit('pub mod async_routes;')
+                with self.block('if_feature! { not "sync_routes_default",', delim=(None, '}')):
+                    self.emit('#[allow(unused_imports)]')
+                    self.emit(f'pub use crate::generated::async_routes::*;')
             self.emit()
-            with self.block('if_feature! { "sync_routes_default",', delim=(None, '}')):
-                self.emit('#[allow(unused_imports)]')
-                self.emit(f'pub use crate::generated::sync_routes::*;')
-            with self.block('if_feature! { not "sync_routes_default",', delim=(None, '}')):
-                self.emit('#[allow(unused_imports)]')
-                self.emit(f'pub use crate::generated::async_routes::*;')
+            with self.block('if_feature! { "sync_routes",', delim=(None, '}')):
+                self.emit('pub mod sync_routes;')
+                with self.block('if_feature! { "sync_routes_default",', delim=(None, '}')):
+                    self.emit('#[allow(unused_imports)]')
+                    self.emit(f'pub use crate::generated::sync_routes::*;')
             self.emit()
             with self.block('pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
                             ' -> Result<(), V::Error>'
@@ -358,7 +360,7 @@ class RustBackend(RustHelperBackend):
                     route_name,
                     [f'client: &impl {auth_trait}']
                         + ([] if arg_void else [f'arg: &{arg_type}'])
-                        + ['body: &[u8]'],
+                        + ['body: bytes::Bytes' if as_async else 'body: &[u8]'],
                     f'crate::Result<Result<{ret_type}, {error_type}>>',
                     access='pub',
                     is_async=as_async):
@@ -370,7 +372,7 @@ class RustBackend(RustHelperBackend):
                             'crate::client_trait_common::Style::Upload',
                             f'"{ns}/{name_with_version}"',
                             '&()' if arg_void else 'arg',
-                            'Some(body)'])
+                            'Some(crate::client_helpers::Body::from(body))'])
         else:
             raise RuntimeError(f'ERROR: unknown route style: {style}')
         self.emit()

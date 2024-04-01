@@ -12,14 +12,13 @@
 //! This code (and its dependencies) are only built if you use the `default_client` Cargo feature.
 
 use crate::Error;
-use crate::client_trait::*;
 use crate::oauth2::{Authorization, TokenCache};
 use std::borrow::Cow;
 use std::fmt::Write;
 use std::str::FromStr;
 use std::sync::Arc;
-use bytes::Bytes;
 use futures::FutureExt;
+use crate::client_trait::{HttpClient, HttpRequestResultRaw, NoauthClient, TeamAuthClient, UserAuthClient};
 use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::default_client_common::impl_set_path_root;
 
@@ -70,8 +69,8 @@ impl UserAuthDefaultClient {
 impl HttpClient for UserAuthDefaultClient {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
-        self.inner.execute(request)
+    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+        self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
@@ -121,8 +120,8 @@ impl TeamAuthDefaultClient {
 impl HttpClient for TeamAuthDefaultClient {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
-        self.inner.execute(request)
+    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+        self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
@@ -160,8 +159,8 @@ impl NoauthDefaultClient {
 impl HttpClient for NoauthDefaultClient {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
-        self.inner.execute(request)
+    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+        self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
@@ -184,8 +183,8 @@ struct TokenUpdateClient<'a> {
 impl<'a> HttpClient for TokenUpdateClient<'a> {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
-        self.inner.execute(request)
+    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+        self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
@@ -211,11 +210,11 @@ impl Default for UreqClient {
 impl HttpClient for UreqClient {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request) -> crate::Result<HttpRequestResultRaw> {
-        let resp = if request.body.is_empty() {
+    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+        let resp = if body.is_empty() {
             request.req.call()
         } else {
-            request.req.send_bytes(request.body.as_ref())
+            request.req.send_bytes(body)
         };
 
         let (code, status, resp) = match resp {
@@ -233,7 +232,11 @@ impl HttpClient for UreqClient {
         let result_header = resp.header("Dropbox-API-Result").map(String::from);
 
         let content_length = resp.header("Content-Length")
-            .map(|s| u64::from_str(s).map_err(|e| Error::UnexpectedResponse(format!("invalid Content-Length {s:?}: {e}"))))
+            .map(|s| {
+                u64::from_str(s)
+                    .map_err(|e| Error::UnexpectedResponse(
+                        format!("invalid Content-Length {s:?}: {e}")))
+            })
             .transpose()?;
 
         Ok(HttpRequestResultRaw {
@@ -247,7 +250,6 @@ impl HttpClient for UreqClient {
     fn new_request(&self, url: &str) -> Self::Request {
         UreqRequest {
             req: self.agent.post(url),
-            body: Bytes::new(),
         }
     }
 }
@@ -255,7 +257,6 @@ impl HttpClient for UreqClient {
 /// This is an implementation detail of the HTTP client.
 pub struct UreqRequest {
     req: ureq::Request,
-    body: Bytes,
 }
 
 impl HttpRequest for UreqRequest {
@@ -267,11 +268,6 @@ impl HttpRequest for UreqRequest {
         } else {
             self.req = self.req.set(name, value);
         }
-        self
-    }
-
-    fn set_body(mut self, body: Bytes) -> Self {
-        self.body = body;
         self
     }
 }

@@ -69,8 +69,12 @@ impl UserAuthDefaultClient {
 impl HttpClient for UserAuthDefaultClient {
     type Request = ReqwestRequest;
 
-    fn execute(&self, request: Self::Request) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
-        self.inner.execute(request)
+    fn execute(
+        &self,
+        request: Self::Request,
+        body: Bytes,
+    ) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
+        self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
@@ -120,8 +124,12 @@ impl TeamAuthDefaultClient {
 impl HttpClient for TeamAuthDefaultClient {
     type Request = ReqwestRequest;
 
-    fn execute(&self, request: Self::Request) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
-        self.inner.execute(request)
+    fn execute(
+        &self,
+        request: Self::Request,
+        body: Bytes,
+    ) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
+        self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
@@ -159,8 +167,12 @@ impl NoauthDefaultClient {
 impl HttpClient for NoauthDefaultClient {
     type Request = ReqwestRequest;
 
-    fn execute(&self, request: Self::Request) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
-        self.inner.execute(request)
+    fn execute(
+        &self,
+        request: Self::Request,
+        body: Bytes,
+    ) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
+        self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
@@ -183,8 +195,12 @@ struct TokenUpdateClient<'a> {
 impl<'a> HttpClient for TokenUpdateClient<'a> {
     type Request = ReqwestRequest;
 
-    fn execute(&self, request: Self::Request) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
-        self.inner.execute(request)
+    fn execute(
+        &self,
+        request: Self::Request,
+        body: Bytes,
+    ) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
+        self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
@@ -218,7 +234,11 @@ fn unexpected<T: std::error::Error + Send + Sync>(e: T, msg: &str) -> crate::Err
 impl HttpClient for ReqwestClient {
     type Request = ReqwestRequest;
 
-    fn execute(&self, request: Self::Request) -> impl Future<Output = crate::Result<HttpRequestResultRaw>> + Send {
+    fn execute(
+        &self,
+        request: Self::Request,
+        body: Bytes,
+    ) -> impl Future<Output = crate::Result<HttpRequestResultRaw>> + Send {
         let mut req = match request.req.build() {
             Ok(req) => req,
             Err(e) => {
@@ -226,8 +246,8 @@ impl HttpClient for ReqwestClient {
             }
         };
         debug!("request for {}", req.url());
-        if !request.body.is_empty() {
-            *req.body_mut() = Some(reqwest::Body::from(request.body));
+        if !body.is_empty() {
+            *req.body_mut() = Some(reqwest::Body::from(body));
         }
         self.inner.execute(req)
             .map_ok_or_else(
@@ -274,7 +294,6 @@ impl HttpClient for ReqwestClient {
     fn new_request(&self, url: &str) -> Self::Request {
         ReqwestRequest {
             req: self.inner.post(url),
-            body: Bytes::new(),
         }
     }
 }
@@ -282,17 +301,11 @@ impl HttpClient for ReqwestClient {
 /// This is an implementation detail of the HTTP client.
 pub struct ReqwestRequest {
     req: reqwest::RequestBuilder,
-    body: Bytes,
 }
 
 impl HttpRequest for ReqwestRequest {
     fn set_header(mut self, name: &str, value: &str) -> Self {
         self.req = self.req.header(name, value);
-        self
-    }
-
-    fn set_body(mut self, body: Bytes) -> Self {
-        self.body = body;
         self
     }
 }

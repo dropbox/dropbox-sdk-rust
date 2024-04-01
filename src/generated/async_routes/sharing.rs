@@ -43,8 +43,8 @@ pub fn add_folder_member<'a>(
 /// Returns the status of an asynchronous job.
 pub fn check_job_status<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<JobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<JobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -57,8 +57,8 @@ pub fn check_job_status<'a>(
 /// Returns the status of an asynchronous job for sharing a folder.
 pub fn check_remove_member_job_status<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RemoveMemberJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<RemoveMemberJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -71,8 +71,8 @@ pub fn check_remove_member_job_status<'a>(
 /// Returns the status of an asynchronous job for sharing a folder.
 pub fn check_share_job_status<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ShareFolderJobStatus, crate::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=crate::Result<Result<ShareFolderJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -468,7 +468,7 @@ pub fn relinquish_file_membership<'a>(
 pub fn relinquish_folder_membership<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelinquishFolderMembershipArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>>> + Send + 'a {
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -512,7 +512,7 @@ pub fn remove_file_member_2<'a>(
 pub fn remove_folder_member<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RemoveFolderMemberArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchResultBase, RemoveFolderMemberError>>> + Send + 'a {
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchResultBase, RemoveFolderMemberError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -625,7 +625,7 @@ pub fn unshare_file<'a>(
 pub fn unshare_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UnshareFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::dbx_async::LaunchEmptyResult, UnshareFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, UnshareFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

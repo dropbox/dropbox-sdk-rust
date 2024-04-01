@@ -18,7 +18,6 @@ use std::sync::Arc;
 use async_lock::RwLock;
 use base64::Engine;
 use base64::engine::general_purpose::{URL_SAFE, URL_SAFE_NO_PAD};
-use bytes::Bytes;
 use ring::rand::{SecureRandom, SystemRandom};
 use url::form_urlencoded::Serializer as UrlEncoder;
 use url::Url;
@@ -470,23 +469,23 @@ impl Authorization {
             params.finish()
         };
 
-        let req = prepare_request(
+        let (req, body) = prepare_request(
             &client,
             Endpoint::OAuth2,
             Style::Rpc,
             "oauth2/token",
             params,
             ParamsType::Form,
-            Bytes::new(),
             None,
             None,
             None,
             None,
             None,
         );
+        let body = body.unwrap_or_default();
 
         debug!("Requesting OAuth2 token");
-        let mut resp = client.execute(req).await?;
+        let mut resp = client.execute(req, body).await?;
         let result_json = body_to_string(&mut resp.body).await?;
         let result_value = serde_json::from_str(&result_json)?;
 

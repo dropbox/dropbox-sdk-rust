@@ -10,8 +10,8 @@ use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use crate::Error;
 use crate::async_client_trait::{HttpClient, HttpRequestResult, HttpRequestResultRaw};
-use crate::auth::{AccessError, AuthError, RateLimitReason};
 use crate::client_trait_common::{Endpoint, HttpRequest, ParamsType, Style, TeamSelect};
+use crate::types::auth::{AccessError, AuthError, RateLimitReason};
 
 /// When Dropbox returns an error with HTTP 409 or 429, it uses an implicit JSON object with the
 /// following structure, which contains the actual error as a field.
@@ -43,13 +43,12 @@ pub(crate) fn prepare_request<T: HttpClient>(
     function: &str,
     params: String,
     params_type: ParamsType,
-    body: Bytes,
     range_start: Option<u64>,
     range_end: Option<u64>,
     token: Option<&str>,
     path_root: Option<&str>,
     team_select: Option<&TeamSelect>,
-) -> T::Request {
+) -> (T::Request, Option<Bytes>) {
     let url = endpoint.url().to_owned() + function;
 
     let mut req = client.new_request(&url);
@@ -77,28 +76,27 @@ pub(crate) fn prepare_request<T: HttpClient>(
         (None, None) => req,
     };
 
+    let mut params_body = None;
     if !params.is_empty() {
         match style {
             Style::Rpc => {
                 // Send params in the body.
                 req = req.set_header("Content-Type", params_type.content_type());
-                req = req.set_body(Bytes::from(params));
+                params_body = Some(Bytes::from(params));
             }
             Style::Upload => {
                 // Send params in a header.
                 req = req.set_header("Dropbox-API-Arg", &params);
                 req = req.set_header("Content-Type", "application/octet-stream");
-                req = req.set_body(body);
             }
             Style::Download => {
                 // Send params in a header.
                 req = req.set_header("Dropbox-API-Arg", &params);
-                assert!(body.is_empty(), "body can only be set for Style::Upload request");
             }
         }
-    }
+    };
 
-    req
+    (req, params_body)
 }
 
 pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) -> crate::Result<String> {
@@ -120,13 +118,13 @@ pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) ->
 /// etc.). The inner result has an error if the server returned one for the request, otherwise it
 /// has the deserialized JSON response and the body stream (if any).
 #[allow(clippy::too_many_arguments)]
-pub async fn request_with_body<T, E, P, C>(
+pub async fn request_with_body<'a, T, E, P, C>(
     client: &C,
     endpoint: Endpoint,
     style: Style,
     function: &str,
     params: &P,
-    body: Option<&[u8]>,
+    body: Option<Body<'a>>,
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> crate::Result<Result<HttpRequestResult<T>, E>> where
@@ -135,11 +133,6 @@ pub async fn request_with_body<T, E, P, C>(
     P: Serialize,
     C: HttpClient,
 {
-    let body = if let Some(body) = body {
-        Bytes::copy_from_slice(body) // FIXME: input arg should be Bytes instead
-    } else {
-        Bytes::new()
-    };
     let mut retried = false;
     'auth_retry: loop {
         let params_json = serde_json::to_string(params)?;
@@ -148,24 +141,32 @@ pub async fn request_with_body<T, E, P, C>(
             && !retried
             && client.update_token(Arc::new(String::new())).await
         {
-                retried = true;
-                continue 'auth_retry;
+            retried = true;
+            continue 'auth_retry;
         }
-        let req = prepare_request(
+        let (req, params_body) = prepare_request(
             client,
             endpoint,
             style,
             function,
             params_json,
             ParamsType::Json,
-            body.clone(),
             range_start,
             range_end,
             token.as_ref().map(|t| t.as_str()),
             client.path_root(),
             client.team_select(),
         );
-        let result = client.execute(req).await;
+        let result = match (params_body, body.clone()) {
+            (None, None) => client.execute(req, Bytes::new()).await,
+            (Some(params_body), _) => client.execute(req, params_body).await,
+
+            #[cfg(feature = "async_routes")]
+            (None, Some(Body::Owned((body_bytes, ..)))) => client.execute(req, body_bytes).await,
+
+            #[cfg(feature = "sync_routes")]
+            (None, Some(Body::Borrowed(body_slice))) => client.execute_borrowed_body(req, body_slice).await,
+        };
         return match result {
             Ok(HttpRequestResultRaw {
                    status: (code, status),
@@ -283,13 +284,37 @@ pub async fn request_with_body<T, E, P, C>(
     }
 }
 
+#[derive(Debug, Clone)]
+pub(crate) enum Body<'a> {
+    #[cfg(feature = "sync_routes")]
+    Borrowed(&'a [u8]),
+
+    #[cfg(feature = "async_routes")]
+    // PhantomData because otherwise if sync_routes is turned off, nothing uses the 'a lifetime
+    Owned((Bytes, std::marker::PhantomData<&'a ()>)),
+}
+
+#[cfg(feature = "async_routes")]
+impl<'a> From<Bytes> for Body<'a> {
+    fn from(value: Bytes) -> Self {
+        Body::Owned((value, std::marker::PhantomData))
+    }
+}
+
+#[cfg(feature = "sync_routes")]
+impl<'a> From<&'a [u8]> for Body<'a> {
+    fn from(value: &'a [u8]) -> Self {
+        Body::Borrowed(value)
+    }
+}
+
 pub async fn request<T: DeserializeOwned, E: DeserializeOwned + StdError, P: Serialize>(
     client: &impl HttpClient,
     endpoint: Endpoint,
     style: Style,
     function: &str,
     params: &P,
-    body: Option<&[u8]>,
+    body: Option<Body<'_>>,
 ) -> crate::Result<Result<T, E>> {
     request_with_body(client, endpoint, style, function, params, body, None, None)
         .await

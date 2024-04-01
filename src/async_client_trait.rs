@@ -2,18 +2,20 @@
 
 use std::future::{Future, ready};
 use std::sync::Arc;
+use bytes::Bytes;
 use futures::AsyncRead;
 use crate::client_trait_common::{HttpRequest, TeamSelect};
 
 /// The base HTTP asynchronous client trait.
 pub trait HttpClient: Sync {
     /// The concrete type of request supported by the client.
-    type Request: HttpRequest;
+    type Request: HttpRequest + Send;
 
     /// Make a HTTP request.
     fn execute(
         &self,
         request: Self::Request,
+        body: Bytes,
     ) -> impl Future<Output = crate::Result<HttpRequestResultRaw>> + Send;
 
     /// Create a new request instance for the given URL. It should be a POST request.
@@ -43,6 +45,30 @@ pub trait HttpClient: Sync {
     /// The alternate user or team context currently set, if any.
     fn team_select(&self) -> Option<&TeamSelect> {
         None
+    }
+
+    /// This should only be implemented by (or called on) the blanket impl for sync HTTP clients
+    /// implemented in this module.
+    ///
+    /// It's necessary because
+    ///   * there's no efficient way to implement an async client which takes a request body slice
+    ///     (making a Bytes involves a copy)
+    ///   * there IS a way to do it for sync clients
+    ///   * the signature of the sync upload routes takes the body this way
+    ///   * we don't want to break compatibility
+    ///
+    /// Only the sync routes take a body arg this way, and this logic only gets invoked for those,
+    /// so only the sync HTTP client wrapper needs to implement it.
+    #[doc(hidden)]
+    #[cfg(feature = "sync_routes")]
+    fn execute_borrowed_body(
+        &self,
+        _request: Self::Request,
+        _body_slice: &[u8],
+    ) -> impl Future<Output = crate::Result<HttpRequestResultRaw>> + Send {
+        unimplemented!();
+        #[allow(unreachable_code)] // otherwise it complains that `()` is not a future.
+        async move { unimplemented!() }
     }
 }
 
@@ -83,15 +109,19 @@ pub struct HttpRequestResult<T> {
 impl<T: crate::client_trait::HttpClient + Sync> HttpClient for T {
     type Request = T::Request;
 
-    fn execute(&self, request: Self::Request) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
-        ready(self.execute(request).map(|r| {
+    async fn execute(&self, request: Self::Request, body: Bytes) -> crate::Result<HttpRequestResultRaw> {
+        self.execute_borrowed_body(request, &body).await
+    }
+
+    async fn execute_borrowed_body(&self, request: Self::Request, body_slice: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+        self.execute(request, body_slice).map(|r| {
             HttpRequestResultRaw {
                 status: r.status,
                 result_header: r.result_header,
                 content_length: r.content_length,
                 body: Box::new(SyncReadAdapter { inner: r.body }),
             }
-        }))
+        })
     }
 
     fn new_request(&self, url: &str) -> Self::Request {

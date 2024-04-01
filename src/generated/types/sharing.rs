@@ -12,12 +12,12 @@
 
 pub type DropboxId = String;
 pub type GetSharedLinkFileArg = GetSharedLinkMetadataArg;
-pub type Id = crate::files::Id;
-pub type Path = crate::files::Path;
+pub type Id = crate::types::files::Id;
+pub type Path = crate::types::files::Path;
 pub type PathOrId = String;
-pub type ReadPath = crate::files::ReadPath;
-pub type Rev = crate::files::Rev;
-pub type TeamInfo = crate::users::Team;
+pub type ReadPath = crate::types::files::ReadPath;
+pub type Rev = crate::types::files::Rev;
+pub type TeamInfo = crate::types::users::Team;
 
 /// Information about the inheritance policy of a shared folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -573,7 +573,7 @@ impl ::std::fmt::Display for AddFileMemberError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddFolderMemberArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// The intended list of members to add.  Added members will receive invites to join the shared
     /// folder.
     pub members: Vec<AddMember>,
@@ -584,7 +584,10 @@ pub struct AddFolderMemberArg {
 }
 
 impl AddFolderMemberArg {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId, members: Vec<AddMember>) -> Self {
+    pub fn new(
+        shared_folder_id: crate::types::common::SharedFolderId,
+        members: Vec<AddMember>,
+    ) -> Self {
         AddFolderMemberArg {
             shared_folder_id,
             members,
@@ -1072,7 +1075,7 @@ pub enum AddMemberSelectorError {
     /// The value is the ID that could not be identified.
     InvalidDropboxId(DropboxId),
     /// The value is the e-email address that is malformed.
-    InvalidEmail(crate::common::EmailAddress),
+    InvalidEmail(crate::types::common::EmailAddress),
     /// The value is the ID of the Dropbox user with an unverified email address. Invite unverified
     /// users by email address instead of by their Dropbox ID.
     UnverifiedDropboxId(DropboxId),
@@ -1548,7 +1551,7 @@ impl ::serde::ser::Serialize for AudienceExceptions {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AudienceRestrictingSharedFolder {
     /// The ID of the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// The name of the shared folder.
     pub name: String,
     /// The link audience of the shared folder.
@@ -1557,7 +1560,7 @@ pub struct AudienceRestrictingSharedFolder {
 
 impl AudienceRestrictingSharedFolder {
     pub fn new(
-        shared_folder_id: crate::common::SharedFolderId,
+        shared_folder_id: crate::types::common::SharedFolderId,
         name: String,
         audience: LinkAudience,
     ) -> Self {
@@ -1674,7 +1677,7 @@ pub struct CollectionLinkMetadata {
     /// Who can access the link.
     pub visibility: Visibility,
     /// Expiration time, if set. By default the link won't expire.
-    pub expires: Option<crate::common::DropboxTimestamp>,
+    pub expires: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl CollectionLinkMetadata {
@@ -1686,7 +1689,7 @@ impl CollectionLinkMetadata {
         }
     }
 
-    pub fn with_expires(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_expires(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.expires = Some(value);
         self
     }
@@ -1932,7 +1935,7 @@ impl ::serde::ser::Serialize for CreateSharedLinkArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CreateSharedLinkError {
-    Path(crate::files::LookupError),
+    Path(crate::types::files::LookupError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2121,7 +2124,7 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsArg {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CreateSharedLinkWithSettingsError {
-    Path(crate::files::LookupError),
+    Path(crate::types::files::LookupError),
     /// This user's email address is not verified. This functionality is only available on accounts
     /// with a verified email address. Users can verify their email address
     /// [here](https://www.dropbox.com/help/317).
@@ -2277,7 +2280,7 @@ pub struct ExpectedSharedContentLinkMetadata {
     pub audience_restricting_shared_folder: Option<AudienceRestrictingSharedFolder>,
     /// Whether the link has an expiry set on it. A link with an expiry will have its  audience
     /// changed to members when the expiry is reached.
-    pub expiry: Option<crate::common::DropboxTimestamp>,
+    pub expiry: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl ExpectedSharedContentLinkMetadata {
@@ -2311,7 +2314,7 @@ impl ExpectedSharedContentLinkMetadata {
         self
     }
 
-    pub fn with_expiry(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_expiry(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.expiry = Some(value);
         self
     }
@@ -2643,11 +2646,11 @@ impl ::serde::ser::Serialize for FileAction {
 #[non_exhaustive] // variants may be added in the future
 pub enum FileErrorResult {
     /// File specified by id was not found.
-    FileNotFoundError(crate::files::Id),
+    FileNotFoundError(crate::types::files::Id),
     /// User does not have permission to take the specified action on the file.
-    InvalidFileActionError(crate::files::Id),
+    InvalidFileActionError(crate::types::files::Id),
     /// User does not have permission to access file specified by file.Id.
-    PermissionDeniedError(crate::files::Id),
+    PermissionDeniedError(crate::types::files::Id),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2749,9 +2752,9 @@ pub struct FileLinkMetadata {
     /// this time is not verified (the Dropbox server stores whatever the desktop client sends up),
     /// this should only be used for display purposes (such as sorting) and not, for example, to
     /// determine if a file has changed or not.
-    pub client_modified: crate::common::DropboxTimestamp,
+    pub client_modified: crate::types::common::DropboxTimestamp,
     /// The last time the file was modified on Dropbox.
-    pub server_modified: crate::common::DropboxTimestamp,
+    pub server_modified: crate::types::common::DropboxTimestamp,
     /// A unique identifier for the current revision of a file. This field is the same rev as
     /// elsewhere in the API and can be used to detect changes and avoid conflicts.
     pub rev: Rev,
@@ -2760,7 +2763,7 @@ pub struct FileLinkMetadata {
     /// A unique identifier for the linked file.
     pub id: Option<Id>,
     /// Expiration time, if set. By default the link won't expire.
-    pub expires: Option<crate::common::DropboxTimestamp>,
+    pub expires: Option<crate::types::common::DropboxTimestamp>,
     /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field
     /// will only be present only if the linked file is in the authenticated user's  dropbox.
     pub path_lower: Option<String>,
@@ -2778,8 +2781,8 @@ impl FileLinkMetadata {
         url: String,
         name: String,
         link_permissions: LinkPermissions,
-        client_modified: crate::common::DropboxTimestamp,
-        server_modified: crate::common::DropboxTimestamp,
+        client_modified: crate::types::common::DropboxTimestamp,
+        server_modified: crate::types::common::DropboxTimestamp,
         rev: Rev,
         size: u64,
     ) -> Self {
@@ -2804,7 +2807,7 @@ impl FileLinkMetadata {
         self
     }
 
-    pub fn with_expires(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_expires(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.expires = Some(value);
         self
     }
@@ -3762,7 +3765,7 @@ pub struct FolderLinkMetadata {
     /// A unique identifier for the linked file.
     pub id: Option<Id>,
     /// Expiration time, if set. By default the link won't expire.
-    pub expires: Option<crate::common::DropboxTimestamp>,
+    pub expires: Option<crate::types::common::DropboxTimestamp>,
     /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field
     /// will only be present only if the linked file is in the authenticated user's  dropbox.
     pub path_lower: Option<String>,
@@ -3794,7 +3797,7 @@ impl FolderLinkMetadata {
         self
     }
 
-    pub fn with_expires(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_expires(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.expires = Some(value);
         self
     }
@@ -4781,7 +4784,7 @@ impl ::serde::ser::Serialize for GetFileMetadataIndividualResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMetadataArgs {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
     /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
     /// actions the  authenticated user can perform on the folder.
@@ -4789,7 +4792,7 @@ pub struct GetMetadataArgs {
 }
 
 impl GetMetadataArgs {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(shared_folder_id: crate::types::common::SharedFolderId) -> Self {
         GetMetadataArgs {
             shared_folder_id,
             actions: None,
@@ -5216,7 +5219,7 @@ impl ::serde::ser::Serialize for GetSharedLinksArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetSharedLinksError {
-    Path(crate::files::MalformedPathError),
+    Path(crate::types::files::MalformedPathError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -5386,11 +5389,11 @@ impl ::serde::ser::Serialize for GetSharedLinksResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupInfo {
     pub group_name: String,
-    pub group_id: crate::team_common::GroupId,
+    pub group_id: crate::types::team_common::GroupId,
     /// Who is allowed to manage the group.
-    pub group_management_type: crate::team_common::GroupManagementType,
+    pub group_management_type: crate::types::team_common::GroupManagementType,
     /// The type of group.
-    pub group_type: crate::team_common::GroupType,
+    pub group_type: crate::types::team_common::GroupType,
     /// If the current user is a member of the group.
     pub is_member: bool,
     /// If the current user is an owner of the group.
@@ -5398,7 +5401,7 @@ pub struct GroupInfo {
     /// If the group is owned by the current user's team.
     pub same_team: bool,
     /// External ID of group. This is an arbitrary ID that an admin can attach to a group.
-    pub group_external_id: Option<crate::team_common::GroupExternalId>,
+    pub group_external_id: Option<crate::types::team_common::GroupExternalId>,
     /// The number of members in the group.
     pub member_count: Option<u32>,
 }
@@ -5406,9 +5409,9 @@ pub struct GroupInfo {
 impl GroupInfo {
     pub fn new(
         group_name: String,
-        group_id: crate::team_common::GroupId,
-        group_management_type: crate::team_common::GroupManagementType,
-        group_type: crate::team_common::GroupType,
+        group_id: crate::types::team_common::GroupId,
+        group_management_type: crate::types::team_common::GroupManagementType,
+        group_type: crate::types::team_common::GroupType,
         is_member: bool,
         is_owner: bool,
         same_team: bool,
@@ -5426,7 +5429,10 @@ impl GroupInfo {
         }
     }
 
-    pub fn with_group_external_id(mut self, value: crate::team_common::GroupExternalId) -> Self {
+    pub fn with_group_external_id(
+        mut self,
+        value: crate::types::team_common::GroupExternalId,
+    ) -> Self {
         self.group_external_id = Some(value);
         self
     }
@@ -5597,8 +5603,8 @@ impl ::serde::ser::Serialize for GroupInfo {
     }
 }
 
-// struct extends crate::team_common::GroupSummary
-impl From<GroupInfo> for crate::team_common::GroupSummary {
+// struct extends crate::types::team_common::GroupSummary
+impl From<GroupInfo> for crate::types::team_common::GroupSummary {
     fn from(subtype: GroupInfo) -> Self {
         Self {
             group_name: subtype.group_name,
@@ -6021,7 +6027,7 @@ impl ::serde::ser::Serialize for InsufficientQuotaAmounts {
 #[non_exhaustive] // variants may be added in the future
 pub enum InviteeInfo {
     /// Email address of invited user.
-    Email(crate::common::EmailAddress),
+    Email(crate::types::common::EmailAddress),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -6474,11 +6480,11 @@ impl ::serde::ser::Serialize for JobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for JobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for JobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => JobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => JobStatus::InProgress,
         }
     }
 }
@@ -7003,7 +7009,7 @@ pub enum LinkExpiry {
     /// Remove the currently set expiry for the link.
     RemoveExpiry,
     /// Set a new expiry or change an existing expiry.
-    SetExpiry(crate::common::DropboxTimestamp),
+    SetExpiry(crate::types::common::DropboxTimestamp),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -9148,7 +9154,7 @@ impl ::serde::ser::Serialize for ListFilesResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersArgs {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// This is a list indicating whether each returned member will include a boolean value
     /// [`MemberPermission::allow`](MemberPermission) that describes whether the current user can
     /// perform the MemberAction on the member.
@@ -9159,7 +9165,7 @@ pub struct ListFolderMembersArgs {
 }
 
 impl ListFolderMembersArgs {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(shared_folder_id: crate::types::common::SharedFolderId) -> Self {
         ListFolderMembersArgs {
             shared_folder_id,
             actions: None,
@@ -10087,7 +10093,7 @@ impl ::serde::ser::Serialize for ListSharedLinksArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListSharedLinksError {
-    Path(crate::files::LookupError),
+    Path(crate::types::files::LookupError),
     /// Indicates that the cursor has been invalidated. Call
     /// [`list_shared_links()`](list_shared_links) to obtain a new cursor.
     Reset,
@@ -10727,7 +10733,7 @@ pub enum MemberSelector {
     /// Dropbox account, team member, or group ID of member.
     DropboxId(DropboxId),
     /// Email address of member.
-    Email(crate::common::EmailAddress),
+    Email(crate::types::common::EmailAddress),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -11217,11 +11223,11 @@ impl From<SharedLinkError> for ModifySharedLinkSettingsError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MountFolderArg {
     /// The ID of the shared folder to mount.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
 }
 
 impl MountFolderArg {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(shared_folder_id: crate::types::common::SharedFolderId) -> Self {
         MountFolderArg {
             shared_folder_id,
         }
@@ -11447,7 +11453,7 @@ pub struct ParentFolderAccessInfo {
     /// Display name for the folder.
     pub folder_name: String,
     /// The identifier of the parent shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// The user's permissions for the parent shared folder.
     pub permissions: Vec<MemberPermission>,
     /// The full path to the parent shared folder relative to the acting user's root.
@@ -11457,7 +11463,7 @@ pub struct ParentFolderAccessInfo {
 impl ParentFolderAccessInfo {
     pub fn new(
         folder_name: String,
-        shared_folder_id: crate::common::SharedFolderId,
+        shared_folder_id: crate::types::common::SharedFolderId,
         permissions: Vec<MemberPermission>,
         path: String,
     ) -> Self {
@@ -11587,7 +11593,7 @@ pub struct PathLinkMetadata {
     /// Path in user's Dropbox.
     pub path: String,
     /// Expiration time, if set. By default the link won't expire.
-    pub expires: Option<crate::common::DropboxTimestamp>,
+    pub expires: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl PathLinkMetadata {
@@ -11600,7 +11606,7 @@ impl PathLinkMetadata {
         }
     }
 
-    pub fn with_expires(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_expires(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.expires = Some(value);
         self
     }
@@ -12173,14 +12179,14 @@ impl ::std::fmt::Display for RelinquishFileMembershipError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelinquishFolderMembershipArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// Keep a copy of the folder's contents upon relinquishing membership. This must be set to
     /// false when the folder is within a team folder or another shared folder.
     pub leave_a_copy: bool,
 }
 
 impl RelinquishFolderMembershipArg {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(shared_folder_id: crate::types::common::SharedFolderId) -> Self {
         RelinquishFolderMembershipArg {
             shared_folder_id,
             leave_a_copy: false,
@@ -12652,7 +12658,7 @@ impl ::std::fmt::Display for RemoveFileMemberError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveFolderMemberArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// The member to remove from the folder.
     pub member: MemberSelector,
     /// If true, the removed user will keep their copy of the folder after it's unshared, assuming
@@ -12663,7 +12669,7 @@ pub struct RemoveFolderMemberArg {
 
 impl RemoveFolderMemberArg {
     pub fn new(
-        shared_folder_id: crate::common::SharedFolderId,
+        shared_folder_id: crate::types::common::SharedFolderId,
         member: MemberSelector,
         leave_a_copy: bool,
     ) -> Self {
@@ -13002,11 +13008,11 @@ impl ::serde::ser::Serialize for RemoveMemberJobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for RemoveMemberJobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for RemoveMemberJobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => RemoveMemberJobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => RemoveMemberJobStatus::InProgress,
         }
     }
 }
@@ -13506,13 +13512,13 @@ impl From<SharedLinkError> for RevokeSharedLinkError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetAccessInheritanceArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// The access inheritance settings for the folder.
     pub access_inheritance: AccessInheritance,
 }
 
 impl SetAccessInheritanceArg {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(shared_folder_id: crate::types::common::SharedFolderId) -> Self {
         SetAccessInheritanceArg {
             shared_folder_id,
             access_inheritance: AccessInheritance::Inherit,
@@ -13709,7 +13715,7 @@ impl ::std::fmt::Display for SetAccessInheritanceError {
 pub struct ShareFolderArg {
     /// The path or the file id to the folder to share. If it does not exist, then a new one is
     /// created.
-    pub path: crate::files::WritePathOrId,
+    pub path: crate::types::files::WritePathOrId,
     /// Who can add and remove members of this shared folder.
     pub acl_update_policy: Option<AclUpdatePolicy>,
     /// Whether to force the share to happen asynchronously.
@@ -13733,7 +13739,7 @@ pub struct ShareFolderArg {
 }
 
 impl ShareFolderArg {
-    pub fn new(path: crate::files::WritePathOrId) -> Self {
+    pub fn new(path: crate::types::files::WritePathOrId) -> Self {
         ShareFolderArg {
             path,
             acl_update_policy: None,
@@ -13979,7 +13985,7 @@ impl From<ShareFolderArg> for ShareFolderArgBase {
 pub struct ShareFolderArgBase {
     /// The path or the file id to the folder to share. If it does not exist, then a new one is
     /// created.
-    pub path: crate::files::WritePathOrId,
+    pub path: crate::types::files::WritePathOrId,
     /// Who can add and remove members of this shared folder.
     pub acl_update_policy: Option<AclUpdatePolicy>,
     /// Whether to force the share to happen asynchronously.
@@ -13997,7 +14003,7 @@ pub struct ShareFolderArgBase {
 }
 
 impl ShareFolderArgBase {
-    pub fn new(path: crate::files::WritePathOrId) -> Self {
+    pub fn new(path: crate::types::files::WritePathOrId) -> Self {
         ShareFolderArgBase {
             path,
             acl_update_policy: None,
@@ -14495,11 +14501,11 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
     }
 }
 
-// union extends crate::dbx_async::PollResultBase
-impl From<crate::dbx_async::PollResultBase> for ShareFolderJobStatus {
-    fn from(parent: crate::dbx_async::PollResultBase) -> Self {
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for ShareFolderJobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
         match parent {
-            crate::dbx_async::PollResultBase::InProgress => ShareFolderJobStatus::InProgress,
+            crate::types::dbx_async::PollResultBase::InProgress => ShareFolderJobStatus::InProgress,
         }
     }
 }
@@ -14507,7 +14513,7 @@ impl From<crate::dbx_async::PollResultBase> for ShareFolderJobStatus {
 pub enum ShareFolderLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(crate::dbx_async::AsyncJobId),
+    AsyncJobId(crate::types::dbx_async::AsyncJobId),
     Complete(SharedFolderMetadata),
 }
 
@@ -14570,11 +14576,11 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
     }
 }
 
-// union extends crate::dbx_async::LaunchResultBase
-impl From<crate::dbx_async::LaunchResultBase> for ShareFolderLaunch {
-    fn from(parent: crate::dbx_async::LaunchResultBase) -> Self {
+// union extends crate::types::dbx_async::LaunchResultBase
+impl From<crate::types::dbx_async::LaunchResultBase> for ShareFolderLaunch {
+    fn from(parent: crate::types::dbx_async::LaunchResultBase) -> Self {
         match parent {
-            crate::dbx_async::LaunchResultBase::AsyncJobId(x) => ShareFolderLaunch::AsyncJobId(x),
+            crate::types::dbx_async::LaunchResultBase::AsyncJobId(x) => ShareFolderLaunch::AsyncJobId(x),
         }
     }
 }
@@ -14834,7 +14840,7 @@ pub struct SharedContentLinkMetadata {
     pub audience_restricting_shared_folder: Option<AudienceRestrictingSharedFolder>,
     /// Whether the link has an expiry set on it. A link with an expiry will have its  audience
     /// changed to members when the expiry is reached.
-    pub expiry: Option<crate::common::DropboxTimestamp>,
+    pub expiry: Option<crate::types::common::DropboxTimestamp>,
     /// The content inside this folder with link audience different than this folder's. This is only
     /// returned when an endpoint that returns metadata for a single shared folder is called, e.g.
     /// /get_folder_metadata.
@@ -14875,7 +14881,7 @@ impl SharedContentLinkMetadata {
         self
     }
 
-    pub fn with_expiry(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_expiry(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.expiry = Some(value);
         self
     }
@@ -15084,7 +15090,7 @@ pub struct SharedContentLinkMetadataBase {
     pub audience_restricting_shared_folder: Option<AudienceRestrictingSharedFolder>,
     /// Whether the link has an expiry set on it. A link with an expiry will have its  audience
     /// changed to members when the expiry is reached.
-    pub expiry: Option<crate::common::DropboxTimestamp>,
+    pub expiry: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl SharedContentLinkMetadataBase {
@@ -15118,7 +15124,7 @@ impl SharedContentLinkMetadataBase {
         self
     }
 
-    pub fn with_expiry(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_expiry(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.expiry = Some(value);
         self
     }
@@ -15418,7 +15424,7 @@ impl ::serde::ser::Serialize for SharedFileMembers {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFileMetadata {
     /// The ID of the file.
-    pub id: crate::files::FileId,
+    pub id: crate::types::files::FileId,
     /// The name of this file.
     pub name: String,
     /// Policies governing this shared file.
@@ -15438,10 +15444,10 @@ pub struct SharedFileMetadata {
     /// be fetched.
     pub owner_display_names: Option<Vec<String>>,
     /// The team that owns the file. This field is not present if the file is not owned by a team.
-    pub owner_team: Option<crate::users::Team>,
+    pub owner_team: Option<crate::types::users::Team>,
     /// The ID of the parent shared folder. This field is present only if the file is contained
     /// within a shared folder.
-    pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The cased path to be used for display purposes only. In rare instances the casing will not
     /// correctly match the user's filesystem, but this behavior will match the path provided in the
     /// Core API v1. Absent for unmounted files.
@@ -15455,12 +15461,12 @@ pub struct SharedFileMetadata {
     /// Timestamp indicating when the current user was invited to this shared file. If the user was
     /// not invited to the shared file, the timestamp will indicate when the user was invited to the
     /// parent shared folder. This value may be absent.
-    pub time_invited: Option<crate::common::DropboxTimestamp>,
+    pub time_invited: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl SharedFileMetadata {
     pub fn new(
-        id: crate::files::FileId,
+        id: crate::types::files::FileId,
         name: String,
         policy: FolderPolicy,
         preview_url: String,
@@ -15506,12 +15512,15 @@ impl SharedFileMetadata {
         self
     }
 
-    pub fn with_owner_team(mut self, value: crate::users::Team) -> Self {
+    pub fn with_owner_team(mut self, value: crate::types::users::Team) -> Self {
         self.owner_team = Some(value);
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: crate::types::common::SharedFolderId,
+    ) -> Self {
         self.parent_shared_folder_id = Some(value);
         self
     }
@@ -15531,7 +15540,7 @@ impl SharedFileMetadata {
         self
     }
 
-    pub fn with_time_invited(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_time_invited(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.time_invited = Some(value);
         self
     }
@@ -16126,19 +16135,19 @@ pub struct SharedFolderMetadata {
     /// URL for displaying a web preview of the shared folder.
     pub preview_url: String,
     /// The ID of the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// Timestamp indicating when the current user was invited to this shared folder.
-    pub time_invited: crate::common::DropboxTimestamp,
+    pub time_invited: crate::types::common::DropboxTimestamp,
     /// The display names of the users that own the folder. If the folder is part of a team folder,
     /// the display names of the team admins are also included. Absent if the owner display names
     /// cannot be fetched.
     pub owner_display_names: Option<Vec<String>>,
     /// The team that owns the folder. This field is not present if the folder is not owned by a
     /// team.
-    pub owner_team: Option<crate::users::Team>,
+    pub owner_team: Option<crate::types::users::Team>,
     /// The ID of the parent shared folder. This field is present only if the folder is contained
     /// within another shared folder.
-    pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The full path of this shared folder. Absent for unmounted folders.
     pub path_display: Option<String>,
     /// The lower-cased full path of this shared folder. Absent for unmounted folders.
@@ -16163,8 +16172,8 @@ impl SharedFolderMetadata {
         name: String,
         policy: FolderPolicy,
         preview_url: String,
-        shared_folder_id: crate::common::SharedFolderId,
-        time_invited: crate::common::DropboxTimestamp,
+        shared_folder_id: crate::types::common::SharedFolderId,
+        time_invited: crate::types::common::DropboxTimestamp,
     ) -> Self {
         SharedFolderMetadata {
             access_type,
@@ -16192,12 +16201,15 @@ impl SharedFolderMetadata {
         self
     }
 
-    pub fn with_owner_team(mut self, value: crate::users::Team) -> Self {
+    pub fn with_owner_team(mut self, value: crate::types::users::Team) -> Self {
         self.owner_team = Some(value);
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: crate::types::common::SharedFolderId,
+    ) -> Self {
         self.parent_shared_folder_id = Some(value);
         self
     }
@@ -16519,10 +16531,10 @@ pub struct SharedFolderMetadataBase {
     pub owner_display_names: Option<Vec<String>>,
     /// The team that owns the folder. This field is not present if the folder is not owned by a
     /// team.
-    pub owner_team: Option<crate::users::Team>,
+    pub owner_team: Option<crate::types::users::Team>,
     /// The ID of the parent shared folder. This field is present only if the folder is contained
     /// within another shared folder.
-    pub parent_shared_folder_id: Option<crate::common::SharedFolderId>,
+    pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The full path of this shared folder. Absent for unmounted folders.
     pub path_display: Option<String>,
     /// The lower-cased full path of this shared folder. Absent for unmounted folders.
@@ -16555,12 +16567,15 @@ impl SharedFolderMetadataBase {
         self
     }
 
-    pub fn with_owner_team(mut self, value: crate::users::Team) -> Self {
+    pub fn with_owner_team(mut self, value: crate::types::users::Team) -> Self {
         self.owner_team = Some(value);
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: crate::common::SharedFolderId) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: crate::types::common::SharedFolderId,
+    ) -> Self {
         self.parent_shared_folder_id = Some(value);
         self
     }
@@ -17144,7 +17159,7 @@ pub struct SharedLinkSettings {
     /// If `require_password` is true, this is needed to specify the password to access the link.
     pub link_password: Option<String>,
     /// Expiration time of the shared link. By default the link won't expire.
-    pub expires: Option<crate::common::DropboxTimestamp>,
+    pub expires: Option<crate::types::common::DropboxTimestamp>,
     /// The new audience who can benefit from the access level specified by the link's access level
     /// specified in the `link_access_level` field of `LinkPermissions`. This is used in conjunction
     /// with team policies and shared folder policies to determine the final effective audience type
@@ -17170,7 +17185,7 @@ impl SharedLinkSettings {
         self
     }
 
-    pub fn with_expires(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_expires(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.expires = Some(value);
         self
     }
@@ -17719,13 +17734,16 @@ impl ::serde::ser::Serialize for TeamMemberInfo {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TransferFolderArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// A account or team member ID to transfer ownership to.
     pub to_dropbox_id: DropboxId,
 }
 
 impl TransferFolderArg {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId, to_dropbox_id: DropboxId) -> Self {
+    pub fn new(
+        shared_folder_id: crate::types::common::SharedFolderId,
+        to_dropbox_id: DropboxId,
+    ) -> Self {
         TransferFolderArg {
             shared_folder_id,
             to_dropbox_id,
@@ -17968,11 +17986,11 @@ impl ::std::fmt::Display for TransferFolderError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnmountFolderArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
 }
 
 impl UnmountFolderArg {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(shared_folder_id: crate::types::common::SharedFolderId) -> Self {
         UnmountFolderArg {
             shared_folder_id,
         }
@@ -18351,7 +18369,7 @@ impl ::std::fmt::Display for UnshareFileError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnshareFolderArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// If true, members of this shared folder will get a copy of this folder after it's unshared.
     /// Otherwise, it will be removed from their Dropbox. The current user, who is an owner, will
     /// always retain their copy.
@@ -18359,7 +18377,7 @@ pub struct UnshareFolderArg {
 }
 
 impl UnshareFolderArg {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(shared_folder_id: crate::types::common::SharedFolderId) -> Self {
         UnshareFolderArg {
             shared_folder_id,
             leave_a_copy: false,
@@ -18694,7 +18712,7 @@ impl ::serde::ser::Serialize for UpdateFileMemberArgs {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFolderMemberArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// The member of the shared folder to update.  Only the
     /// [`MemberSelector::DropboxId`](MemberSelector::DropboxId) may be set at this time.
     pub member: MemberSelector,
@@ -18704,7 +18722,7 @@ pub struct UpdateFolderMemberArg {
 
 impl UpdateFolderMemberArg {
     pub fn new(
-        shared_folder_id: crate::common::SharedFolderId,
+        shared_folder_id: crate::types::common::SharedFolderId,
         member: MemberSelector,
         access_level: AccessLevel,
     ) -> Self {
@@ -18958,7 +18976,7 @@ impl ::std::fmt::Display for UpdateFolderMemberError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFolderPolicyArg {
     /// The ID for the shared folder.
-    pub shared_folder_id: crate::common::SharedFolderId,
+    pub shared_folder_id: crate::types::common::SharedFolderId,
     /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
     pub member_policy: Option<MemberPolicy>,
     /// Who can add and remove members of this shared folder.
@@ -18978,7 +18996,7 @@ pub struct UpdateFolderPolicyArg {
 }
 
 impl UpdateFolderPolicyArg {
-    pub fn new(shared_folder_id: crate::common::SharedFolderId) -> Self {
+    pub fn new(shared_folder_id: crate::types::common::SharedFolderId) -> Self {
         UpdateFolderPolicyArg {
             shared_folder_id,
             member_policy: None,
@@ -19320,9 +19338,9 @@ pub struct UserFileMembershipInfo {
     pub is_inherited: bool,
     /// The UTC timestamp of when the user has last seen the content. Only populated if the user has
     /// seen the content and the caller has a plan that includes viewer history.
-    pub time_last_seen: Option<crate::common::DropboxTimestamp>,
+    pub time_last_seen: Option<crate::types::common::DropboxTimestamp>,
     /// The platform on which the user has last seen the content, or unknown.
-    pub platform_type: Option<crate::seen_state::PlatformType>,
+    pub platform_type: Option<crate::types::seen_state::PlatformType>,
 }
 
 impl UserFileMembershipInfo {
@@ -19353,12 +19371,12 @@ impl UserFileMembershipInfo {
         self
     }
 
-    pub fn with_time_last_seen(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_time_last_seen(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.time_last_seen = Some(value);
         self
     }
 
-    pub fn with_platform_type(mut self, value: crate::seen_state::PlatformType) -> Self {
+    pub fn with_platform_type(mut self, value: crate::types::seen_state::PlatformType) -> Self {
         self.platform_type = Some(value);
         self
     }
@@ -19529,7 +19547,7 @@ impl From<UserFileMembershipInfo> for UserMembershipInfo {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfo {
     /// The account ID of the user.
-    pub account_id: crate::users_common::AccountId,
+    pub account_id: crate::types::users_common::AccountId,
     /// Email address of user.
     pub email: String,
     /// The display name of the user.
@@ -19542,7 +19560,7 @@ pub struct UserInfo {
 
 impl UserInfo {
     pub fn new(
-        account_id: crate::users_common::AccountId,
+        account_id: crate::types::users_common::AccountId,
         email: String,
         display_name: String,
         same_team: bool,

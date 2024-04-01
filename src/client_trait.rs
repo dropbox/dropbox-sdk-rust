@@ -9,12 +9,13 @@ use crate::client_trait_common::{HttpRequest, TeamSelect};
 /// The base HTTP synchronous client trait.
 pub trait HttpClient: Sync {
     /// The concrete type of request supported by the client.
-    type Request: HttpRequest;
+    type Request: HttpRequest + Send;
 
     /// Make a HTTP request.
     fn execute(
         &self,
         request: Self::Request,
+        body: &[u8],
     ) -> crate::Result<HttpRequestResultRaw>;
 
     /// Create a new request instance for the given URL. It should be a POST request.

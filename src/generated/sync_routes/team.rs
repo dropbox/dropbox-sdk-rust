@@ -146,7 +146,7 @@ pub fn groups_create(
 pub fn groups_delete(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupSelector,
-) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, GroupDeleteError>> {
+) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, GroupDeleteError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -183,8 +183,8 @@ pub fn groups_get_info(
 /// management.
 pub fn groups_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<crate::dbx_async::PollEmptyResult, GroupsPollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<crate::types::dbx_async::PollEmptyResult, GroupsPollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -706,8 +706,8 @@ pub fn members_add(
 /// the status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get_v2(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<MembersAddJobStatusV2Result, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<MembersAddJobStatusV2Result, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -723,8 +723,8 @@ pub fn members_add_job_status_get_v2(
 /// status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<MembersAddJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<MembersAddJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -894,7 +894,7 @@ pub fn members_list_continue(
 pub fn members_move_former_member_files(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersDataTransferArg,
-) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>> {
+) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -911,8 +911,8 @@ pub fn members_move_former_member_files(
 /// status of the asynchronous request. Permission : Team member management.
 pub fn members_move_former_member_files_job_status_check(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<crate::dbx_async::PollEmptyResult, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<crate::types::dbx_async::PollEmptyResult, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -954,7 +954,7 @@ pub fn members_recover(
 pub fn members_remove(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersRemoveArg,
-) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, MembersRemoveError>> {
+) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, MembersRemoveError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -970,8 +970,8 @@ pub fn members_remove(
 /// the status of the asynchronous request. Permission : Team member management.
 pub fn members_remove_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<crate::dbx_async::PollEmptyResult, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<crate::types::dbx_async::PollEmptyResult, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1222,8 +1222,8 @@ pub fn namespaces_list_continue(
 #[deprecated]
 pub fn properties_template_add(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::file_properties::AddTemplateArg,
-) -> crate::Result<Result<crate::file_properties::AddTemplateResult, crate::file_properties::ModifyTemplateError>> {
+    arg: &crate::types::file_properties::AddTemplateArg,
+) -> crate::Result<Result<crate::types::file_properties::AddTemplateResult, crate::types::file_properties::ModifyTemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1239,8 +1239,8 @@ pub fn properties_template_add(
 #[deprecated]
 pub fn properties_template_get(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::file_properties::GetTemplateArg,
-) -> crate::Result<Result<crate::file_properties::GetTemplateResult, crate::file_properties::TemplateError>> {
+    arg: &crate::types::file_properties::GetTemplateArg,
+) -> crate::Result<Result<crate::types::file_properties::GetTemplateResult, crate::types::file_properties::TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1256,7 +1256,7 @@ pub fn properties_template_get(
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<crate::file_properties::ListTemplateResult, crate::file_properties::TemplateError>> {
+) -> crate::Result<Result<crate::types::file_properties::ListTemplateResult, crate::types::file_properties::TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1272,8 +1272,8 @@ pub fn properties_template_list(
 #[deprecated]
 pub fn properties_template_update(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::file_properties::UpdateTemplateArg,
-) -> crate::Result<Result<crate::file_properties::UpdateTemplateResult, crate::file_properties::ModifyTemplateError>> {
+    arg: &crate::types::file_properties::UpdateTemplateArg,
+) -> crate::Result<Result<crate::types::file_properties::UpdateTemplateResult, crate::types::file_properties::ModifyTemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1489,8 +1489,8 @@ pub fn team_folder_archive(
 /// file access.
 pub fn team_folder_archive_check(
     client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<TeamFolderArchiveJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<TeamFolderArchiveJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

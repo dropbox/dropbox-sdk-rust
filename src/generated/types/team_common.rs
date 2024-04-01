@@ -400,18 +400,18 @@ impl ::serde::ser::Serialize for MemberSpaceLimitType {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TimeRange {
     /// Optional starting time (inclusive).
-    pub start_time: Option<crate::common::DropboxTimestamp>,
+    pub start_time: Option<crate::types::common::DropboxTimestamp>,
     /// Optional ending time (exclusive).
-    pub end_time: Option<crate::common::DropboxTimestamp>,
+    pub end_time: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl TimeRange {
-    pub fn with_start_time(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_start_time(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.start_time = Some(value);
         self
     }
 
-    pub fn with_end_time(mut self, value: crate::common::DropboxTimestamp) -> Self {
+    pub fn with_end_time(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
         self.end_time = Some(value);
         self
     }

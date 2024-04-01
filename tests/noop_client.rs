@@ -1,5 +1,4 @@
 use std::fmt::{Debug, Display, Formatter};
-use bytes::Bytes;
 use dropbox_sdk::client_trait::*;
 use dropbox_sdk::client_trait_common::HttpRequest;
 
@@ -13,7 +12,11 @@ macro_rules! noop_client {
             impl HttpClient for Client {
                 type Request = NoopRequest;
 
-                fn execute(&self, _request: Self::Request) -> dropbox_sdk::Result<HttpRequestResultRaw> {
+                fn execute(
+                    &self,
+                    _request: Self::Request,
+                    _body: &[u8],
+                ) -> dropbox_sdk::Result<HttpRequestResultRaw> {
                     Err(dropbox_sdk::Error::HttpClient(Box::new(super::ErrMsg("noop client called".to_owned()))))
                 }
 
@@ -34,10 +37,6 @@ pub struct NoopRequest {}
 
 impl HttpRequest for NoopRequest {
     fn set_header(self, _name: &str, _value: &str) -> Self {
-        self
-    }
-
-    fn set_body(self, _body: Bytes) -> Self {
         self
     }
 }

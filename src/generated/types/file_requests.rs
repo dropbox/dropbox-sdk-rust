@@ -189,7 +189,7 @@ pub struct CreateFileRequestArgs {
     pub title: String,
     /// The path of the folder in the Dropbox where uploaded files will be sent. For apps with the
     /// app folder permission, this will be relative to the app folder.
-    pub destination: crate::files::Path,
+    pub destination: crate::types::files::Path,
     /// The deadline for the file request. Deadlines can only be set by Professional and Business
     /// accounts.
     pub deadline: Option<FileRequestDeadline>,
@@ -201,7 +201,7 @@ pub struct CreateFileRequestArgs {
 }
 
 impl CreateFileRequestArgs {
-    pub fn new(title: String, destination: crate::files::Path) -> Self {
+    pub fn new(title: String, destination: crate::types::files::Path) -> Self {
         CreateFileRequestArgs {
             title,
             destination,
@@ -1127,7 +1127,7 @@ pub struct FileRequest {
     /// The title of the file request.
     pub title: String,
     /// When this file request was created.
-    pub created: crate::common::DropboxTimestamp,
+    pub created: crate::types::common::DropboxTimestamp,
     /// Whether or not the file request is open. If the file request is closed, it will not accept
     /// any more file submissions.
     pub is_open: bool,
@@ -1136,7 +1136,7 @@ pub struct FileRequest {
     /// The path of the folder in the Dropbox where uploaded files will be sent. This can be `None`
     /// if the destination was removed. For apps with the app folder permission, this will be
     /// relative to the app folder.
-    pub destination: Option<crate::files::Path>,
+    pub destination: Option<crate::types::files::Path>,
     /// The deadline for this file request. Only set if the request has a deadline.
     pub deadline: Option<FileRequestDeadline>,
     /// A description of the file request.
@@ -1148,7 +1148,7 @@ impl FileRequest {
         id: FileRequestId,
         url: String,
         title: String,
-        created: crate::common::DropboxTimestamp,
+        created: crate::types::common::DropboxTimestamp,
         is_open: bool,
         file_count: i64,
     ) -> Self {
@@ -1165,7 +1165,7 @@ impl FileRequest {
         }
     }
 
-    pub fn with_destination(mut self, value: crate::files::Path) -> Self {
+    pub fn with_destination(mut self, value: crate::types::files::Path) -> Self {
         self.destination = Some(value);
         self
     }
@@ -1347,14 +1347,14 @@ impl ::serde::ser::Serialize for FileRequest {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileRequestDeadline {
     /// The deadline for this file request.
-    pub deadline: crate::common::DropboxTimestamp,
+    pub deadline: crate::types::common::DropboxTimestamp,
     /// If set, allow uploads after the deadline has passed. These     uploads will be marked
     /// overdue.
     pub allow_late_uploads: Option<GracePeriod>,
 }
 
 impl FileRequestDeadline {
-    pub fn new(deadline: crate::common::DropboxTimestamp) -> Self {
+    pub fn new(deadline: crate::types::common::DropboxTimestamp) -> Self {
         FileRequestDeadline {
             deadline,
             allow_late_uploads: None,
@@ -2572,7 +2572,7 @@ pub struct UpdateFileRequestArgs {
     pub title: Option<String>,
     /// The new path of the folder in the Dropbox where uploaded files will be sent. For apps with
     /// the app folder permission, this will be relative to the app folder.
-    pub destination: Option<crate::files::Path>,
+    pub destination: Option<crate::types::files::Path>,
     /// The new deadline for the file request. Deadlines can only be set by Professional and
     /// Business accounts.
     pub deadline: UpdateFileRequestDeadline,
@@ -2599,7 +2599,7 @@ impl UpdateFileRequestArgs {
         self
     }
 
-    pub fn with_destination(mut self, value: crate::files::Path) -> Self {
+    pub fn with_destination(mut self, value: crate::types::files::Path) -> Self {
         self.destination = Some(value);
         self
     }

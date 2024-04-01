@@ -60,14 +60,14 @@ pub enum Error {
 
     /// Errors occurred during authentication.
     #[error("Dropbox API indicated a problem with authentication: {0}")]
-    Authentication(auth::AuthError),
+    Authentication(types::auth::AuthError),
 
     /// Your request was rejected due to rate-limiting. You can retry it later.
     #[error("Dropbox API declined the request due to rate-limiting ({reason}), \
         retry after {retry_after_seconds}s")]
     RateLimited {
         /// The server-given reason for the rate-limiting.
-        reason: auth::RateLimitReason,
+        reason: types::auth::RateLimitReason,
 
         /// You can retry this request after this many seconds.
         retry_after_seconds: u32,
@@ -75,7 +75,7 @@ pub enum Error {
 
     /// The user or team account doesn't have access to the endpoint or feature.
     #[error("Dropbox API denied access to the resource: {0}")]
-    AccessDenied(auth::AccessError),
+    AccessDenied(types::auth::AccessError),
 
     /// The Dropbox API server had an internal error.
     #[error("Dropbox API had an internal server error: {0}")]
@@ -123,7 +123,7 @@ pub use generated::*;
 #[derive(Copy, Clone)]
 pub enum NoError {}
 
-impl std::cmp::PartialEq<NoError> for NoError {
+impl PartialEq<NoError> for NoError {
     fn eq(&self, _: &NoError) -> bool {
         unreachable(*self)
     }

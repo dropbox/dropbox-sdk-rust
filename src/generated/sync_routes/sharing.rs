@@ -47,8 +47,8 @@ pub fn add_folder_member(
 /// Returns the status of an asynchronous job.
 pub fn check_job_status(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<JobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<JobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -63,8 +63,8 @@ pub fn check_job_status(
 /// Returns the status of an asynchronous job for sharing a folder.
 pub fn check_remove_member_job_status(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<RemoveMemberJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<RemoveMemberJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -79,8 +79,8 @@ pub fn check_remove_member_job_status(
 /// Returns the status of an asynchronous job for sharing a folder.
 pub fn check_share_job_status(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::dbx_async::PollArg,
-) -> crate::Result<Result<ShareFolderJobStatus, crate::dbx_async::PollError>> {
+    arg: &crate::types::dbx_async::PollArg,
+) -> crate::Result<Result<ShareFolderJobStatus, crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -527,7 +527,7 @@ pub fn relinquish_file_membership(
 pub fn relinquish_folder_membership(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelinquishFolderMembershipArg,
-) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>> {
+) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -577,7 +577,7 @@ pub fn remove_file_member_2(
 pub fn remove_folder_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFolderMemberArg,
-) -> crate::Result<Result<crate::dbx_async::LaunchResultBase, RemoveFolderMemberError>> {
+) -> crate::Result<Result<crate::types::dbx_async::LaunchResultBase, RemoveFolderMemberError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -704,7 +704,7 @@ pub fn unshare_file(
 pub fn unshare_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnshareFolderArg,
-) -> crate::Result<Result<crate::dbx_async::LaunchEmptyResult, UnshareFolderError>> {
+) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, UnshareFolderError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
