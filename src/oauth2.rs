@@ -380,8 +380,8 @@ impl Authorization {
     }
 
     /// Recreate the authorization from a long-lived access token. This token cannot be refreshed;
-    /// any call to [`obtain_access_token`](Authorization::obtain_access_token) will simply return
-    /// the given token. Therefore this requires neither client ID or client secret.
+    /// any call to [`obtain_access_token_async`](Authorization::obtain_access_token_async) will
+    /// simply return the given token. Therefore this requires neither client ID or client secret.
     ///
     /// Long-lived tokens are deprecated and the ability to generate them will be removed in the
     /// future.
@@ -395,9 +395,22 @@ impl Authorization {
         }
     }
 
+    if_feature! { "sync_routes_default",
+        /// Compatibility shim for working with sync HTTP clients.
+        pub fn obtain_access_token(
+            &mut self,
+            sync_client: impl crate::client_trait::NoauthClient
+        ) -> crate::Result<String> {
+            use futures::FutureExt;
+            self.obtain_access_token_async(sync_client)
+                .now_or_never()
+                .expect("sync client future should resolve immediately")
+        }
+    }
+
     /// Obtain an access token. Use this to complete the authorization process, or to obtain an
     /// updated token when a short-lived access token has expired.
-    pub async fn obtain_access_token(&mut self, client: impl NoauthClient) -> crate::Result<String> {
+    pub async fn obtain_access_token_async(&mut self, client: impl NoauthClient) -> crate::Result<String> {
         let mut redirect_uri = None;
         let mut client_secret = None;
         let mut pkce_code = None;
@@ -561,7 +574,7 @@ impl TokenCache {
         // Check if the token changed while we were unlocked; only update it if it
         // didn't.
         if write.1 == old_token {
-            write.1 = Arc::new(write.0.obtain_access_token(client).await?);
+            write.1 = Arc::new(write.0.obtain_access_token_async(client).await?);
         }
         Ok(Arc::clone(&write.1))
     }
