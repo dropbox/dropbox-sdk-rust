@@ -101,6 +101,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 if_feature! { "default_client",
     pub mod default_client;
 
+    // for backwards-compat only; don't match this for async
     if_feature! { "sync_routes_default",
         pub use client_trait::*;
     }

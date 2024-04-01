@@ -95,7 +95,7 @@ dbx_users = ["dbx_common", "dbx_team_common", "dbx_team_policies", "dbx_users_co
 dbx_users_common = ["dbx_common"]
 
 default_async_client = ["async_routes", "dep:reqwest"]
-default_client = ["sync_routes", "dep:ureq"]
+default_client = ["sync_routes", "sync_routes_default", "dep:ureq"]
 
 # Enable unstable ("preview") API routes.
 unstable = []
