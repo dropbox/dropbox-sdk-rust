@@ -8,7 +8,7 @@ macro_rules! impl_set_path_root {
         /// See <https://www.dropbox.com/developers/reference/path-root-header-modes> for more
         /// information.
         #[cfg(feature = "dbx_common")]
-        pub fn set_path_root(&mut $self, path_root: &crate::common::PathRoot) {
+        pub fn set_path_root(&mut $self, path_root: &crate::types::common::PathRoot) {
             // Only way this can fail is if PathRoot::Other was specified, which is a programmer
             // error, so panic if that happens.
             $self.path_root = Some(serde_json::to_string(path_root).expect("invalid path root"));

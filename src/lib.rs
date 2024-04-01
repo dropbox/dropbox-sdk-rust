@@ -98,7 +98,14 @@ pub enum Error {
 /// Shorthand for a Result where the error type is this crate's [`Error`] type.
 pub type Result<T> = std::result::Result<T, Error>;
 
-if_feature! { "default_client", pub mod default_client; }
+if_feature! { "default_client",
+    pub mod default_client;
+
+    if_feature! { "sync_routes_default",
+        pub use client_trait::*;
+    }
+}
+
 if_feature! { "default_async_client", pub mod default_async_client; }
 
 #[cfg(any(feature = "default_client", feature = "default_async_client"))]
