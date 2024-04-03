@@ -87,8 +87,8 @@ pub struct HttpRequestResult<T> {
     /// `None` if `body` is also not `None`.
     pub content_length: Option<u64>,
 
-    /// The response body stream, if any. Only expected to not be `None` for [`Style::Download`]
-    /// endpoints.
+    /// The response body stream, if any. Only expected to not be `None` for
+    /// [`Style::Download`](crate::client_trait_common::Style::Download) endpoints.
     pub body: Option<Box<dyn Read>>,
 }
 
