@@ -567,6 +567,7 @@ impl TokenCache {
     /// Forces an update to the token, for when it is detected that the token is expired.
     ///
     /// To avoid double-updating the token in a race, requires the token which is being replaced.
+    /// For the case where no token is currently present, use the empty string as the token.
     pub async fn update_token(&self, client: impl NoauthClient, old_token: Arc<String>)
         -> crate::Result<Arc<String>>
     {
@@ -577,6 +578,14 @@ impl TokenCache {
             write.1 = Arc::new(write.0.obtain_access_token_async(client).await?);
         }
         Ok(Arc::clone(&write.1))
+    }
+
+    /// Set the current short-lived token to a specific provided value. Normally it should not be
+    /// necessary to call this function; the token should be obtained automatically using the
+    /// refresh token.
+    pub async fn set_access_token(&self, access_token: Arc<String>) {
+        let mut write = self.auth.write().await;
+        write.1 = access_token;
     }
 }
 
