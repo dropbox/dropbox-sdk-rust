@@ -82,16 +82,13 @@ pub enum Error {
     ServerError(String),
 
     /// The Dropbox API returned an unexpected HTTP response code.
-    #[error("Dropbox API returned HTTP {code} {status} - {json}")]
+    #[error("Dropbox API returned HTTP {code} - {response}")]
     UnexpectedHttpError {
         /// HTTP status code returned.
         code: u16,
 
-        /// The HTTP status string.
-        status: String,
-
         /// The response body.
-        json: String,
+        response: String,
     },
 }
 

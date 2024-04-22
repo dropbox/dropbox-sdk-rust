@@ -169,7 +169,7 @@ pub async fn request_with_body<'a, T, E, P, C>(
         };
         return match result {
             Ok(raw_resp) => {
-                let code = raw_resp.status.0;
+                let status = raw_resp.status;
                 let (json, content_length, body) = match parse_response(raw_resp, style).await {
                     Ok(x) => x,
                     Err(e @ Error::Authentication(AuthError::ExpiredAccessToken)) if !retried => {
@@ -181,10 +181,13 @@ pub async fn request_with_body<'a, T, E, P, C>(
                             return Err(e);
                         }
                     }
-                    Err(e) => return Err(e),
+                    Err(e) => {
+                        error!("HTTP {status}: {e}");
+                        return Err(e)
+                    },
                 };
 
-                if code == 409 {
+                if status == 409 {
                     // Response should be JSON-deseraializable into the strongly-typed
                     // error specified by type parameter E.
                     return match serde_json::from_str::<TopLevelError<E>>(&json) {
@@ -213,12 +216,12 @@ pub async fn request_with_body<'a, T, E, P, C>(
 pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
     -> crate::Result<(String, Option<u64>, Option<Box<dyn AsyncRead + Send + Unpin>>)> {
     let HttpRequestResultRaw {
-        status: (code, status),
+        status,
         result_header,
         content_length,
         mut body
     } = raw_resp;
-    if (200..300).contains(&code) {
+    if (200..300).contains(&status) {
         Ok(match style {
             Style::Rpc | Style::Upload => {
                 // Read the response from the body.
@@ -238,9 +241,9 @@ pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
             }
         })
     } else {
-        error!("HTTP {code} {status}");
         let response = body_to_string(&mut body).await?;
-        match code {
+        debug!("HTTP {status}: {response}");
+        match status {
             400 => {
                 Err(Error::BadRequest(response))
             },
@@ -248,13 +251,6 @@ pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
                 match serde_json::from_str::<TopLevelError<AuthError>>(&response) {
                     Ok(deserialized) => {
                         error!("auth error: {}", deserialized.error);
-                        /*if deserialized.error == AuthError::ExpiredAccessToken && !retried {
-                            let old_token = token.unwrap_or_else(|| Arc::new(String::new()));
-                            if client.update_token(old_token).await? {
-                                retried = true;
-                                continue 'auth_retry;
-                            }
-                        }*/
                         Err(Error::Authentication(deserialized.error))
                     }
                     Err(de_error) => {
@@ -298,13 +294,7 @@ pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
             500..=599 => {
                 Err(Error::ServerError(response))
             },
-            _ => {
-                Err(Error::UnexpectedHttpError {
-                    code,
-                    status,
-                    json: response,
-                })
-            }
+            _ => Err(Error::UnexpectedHttpError { code: status, response }),
         }
     }
 }

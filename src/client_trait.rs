@@ -64,8 +64,8 @@ pub trait AppAuthClient: HttpClient {}
 
 /// The raw response from the server, including a sync streaming response body.
 pub struct HttpRequestResultRaw {
-    /// HTTP response code and message
-    pub status: (u16, String),
+    /// HTTP response code.
+    pub status: u16,
 
     /// The value of the `Dropbox-API-Result` header, if present.
     pub result_header: Option<String>,

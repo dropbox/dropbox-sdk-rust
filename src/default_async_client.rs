@@ -255,7 +255,7 @@ impl HttpClient for ReqwestClient {
             .map_ok_or_else(
                 |e| Err(crate::Error::HttpClient(Box::new(e))),
                 |resp| {
-                    let status = resp.status();
+                    let status = resp.status().as_u16();
 
                     let result_header = resp
                         .headers()
@@ -283,7 +283,7 @@ impl HttpClient for ReqwestClient {
                         .into_async_read();
 
                     Ok(HttpRequestResultRaw {
-                        status: (status.as_u16(), status.as_str().to_owned()),
+                        status,
                         result_header,
                         content_length,
                         body: Box::new(body),

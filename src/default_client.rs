@@ -217,12 +217,12 @@ impl HttpClient for UreqClient {
             request.req.send_bytes(body)
         };
 
-        let (code, status, resp) = match resp {
+        let (status, resp) = match resp {
             Ok(resp) => {
-                (resp.status(), resp.status_text().to_owned(), resp)
+                (resp.status(), resp)
             }
-            Err(ureq::Error::Status(code, resp)) => {
-                (code, resp.status_text().to_owned(), resp)
+            Err(ureq::Error::Status(status, resp)) => {
+                (status, resp)
             }
             Err(e @ ureq::Error::Transport(_)) => {
                 return Err(RequestError { inner: e }.into());
@@ -240,7 +240,7 @@ impl HttpClient for UreqClient {
             .transpose()?;
 
         Ok(HttpRequestResultRaw {
-            status: (code, status),
+            status,
             result_header,
             content_length,
             body: resp.into_reader(),
