@@ -24,12 +24,12 @@ pub trait HttpClient: Sync {
     /// Attempt to update the current authentication token. The previously fetched token is given
     /// as a way to avoid repeat updates in case of a race. If the update is successful, return
     /// `true` and the current request will be retried with a newly-fetched token. Return `false` if
-    /// authentication is not supported, or if the update operation fails.
+    /// authentication is not supported, or return an error if the update operation fails.
     fn update_token(
         &self,
         _old_token: Arc<String>,
-    ) -> impl Future<Output = bool> + Send {
-        ready(false)
+    ) -> impl Future<Output = crate::Result<bool>> + Send {
+        ready(Ok(false))
     }
 
     /// The client's current authentication token, if any.
@@ -128,7 +128,9 @@ impl<T: crate::client_trait::HttpClient + Sync> HttpClient for T {
         self.new_request(url)
     }
 
-    fn update_token(&self, old_token: Arc<String>) -> impl Future<Output=bool> + Send {
+    fn update_token(&self, old_token: Arc<String>)
+        -> impl Future<Output=crate::Result<bool>> + Send
+    {
         ready(self.update_token(old_token))
     }
 

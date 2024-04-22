@@ -139,7 +139,7 @@ pub async fn request_with_body<'a, T, E, P, C>(
         let token = client.token();
         if token.is_none()
             && !retried
-            && client.update_token(Arc::new(String::new())).await
+            && client.update_token(Arc::new(String::new())).await?
         {
             retried = true;
             continue 'auth_retry;
@@ -168,119 +168,144 @@ pub async fn request_with_body<'a, T, E, P, C>(
             (None, Some(Body::Borrowed(body_slice))) => client.execute_borrowed_body(req, body_slice).await,
         };
         return match result {
-            Ok(HttpRequestResultRaw {
-                   status: (code, status),
-                   result_header,
-                   content_length,
-                   mut body
-            }) => {
-                let (response, body) = match style {
-                    Style::Rpc | Style::Upload => {
-                        // Read the response from the body.
-                        if let Some(header) = result_header {
-                            return Err(Error::UnexpectedResponse(format!("unexpected response in header, expected it in the body: {header}")));
+            Ok(raw_resp) => {
+                let code = raw_resp.status.0;
+                let (json, content_length, body) = match parse_response(raw_resp, style).await {
+                    Ok(x) => x,
+                    Err(e @ Error::Authentication(AuthError::ExpiredAccessToken)) if !retried => {
+                        let old_token = token.unwrap_or_else(|| Arc::new(String::new()));
+                        if client.update_token(old_token).await? {
+                            retried = true;
+                            continue 'auth_retry;
                         } else {
-                            (body_to_string(&mut body).await?, None)
+                            return Err(e);
                         }
                     }
-                    Style::Download => {
-                        // Get the response from the header.
-                        if let Some(header) = result_header {
-                            (header, Some(body))
-                        } else {
-                            return Err(Error::UnexpectedResponse("expected a Dropbox-API-Result header".to_owned()));
-                        }
-                    }
+                    Err(e) => return Err(e),
                 };
 
-                if (200..300).contains(&code) {
-                    Ok(Ok(HttpRequestResult {
-                        result: serde_json::from_str(&response)?,
-                        content_length,
-                        body,
-                    }))
+                if code == 409 {
+                    // Response should be JSON-deseraializable into the strongly-typed
+                    // error specified by type parameter E.
+                    return match serde_json::from_str::<TopLevelError<E>>(&json) {
+                        Ok(deserialized) => {
+                            error!("API error: {}", deserialized.error);
+                            Ok(Err(deserialized.error))
+                        },
+                        Err(de_error) => {
+                            error!("Failed to deserialize JSON from API error: {}", de_error);
+                            Err(Error::Json(de_error))
+                        }
+                    };
+                }
+
+                Ok(Ok(HttpRequestResult {
+                    result: serde_json::from_str(&json)?,
+                    content_length,
+                    body,
+                }))
+            }
+            Err(e) => Err(e),
+        }
+    }
+}
+
+pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
+    -> crate::Result<(String, Option<u64>, Option<Box<dyn AsyncRead + Send + Unpin>>)> {
+    let HttpRequestResultRaw {
+        status: (code, status),
+        result_header,
+        content_length,
+        mut body
+    } = raw_resp;
+    if (200..300).contains(&code) {
+        Ok(match style {
+            Style::Rpc | Style::Upload => {
+                // Read the response from the body.
+                if let Some(header) = result_header {
+                    return Err(Error::UnexpectedResponse(format!("unexpected response in header, expected it in the body: {header}")));
                 } else {
-                    error!("HTTP {code} {status}");
-                    match code {
-                        400 => {
-                            Err(Error::BadRequest(response))
-                        },
-                        401 => {
-                            match serde_json::from_str::<TopLevelError<AuthError>>(&response) {
-                                Ok(deserialized) => {
-                                    error!("auth error: {}", deserialized.error);
-                                    if deserialized.error == AuthError::ExpiredAccessToken && !retried {
-                                        let old_token = token.unwrap_or_else(|| Arc::new(String::new()));
-                                        if client.update_token(old_token).await {
-                                            retried = true;
-                                            continue 'auth_retry;
-                                        }
-                                    }
-                                    Err(Error::Authentication(deserialized.error))
-                                }
-                                Err(de_error) => {
-                                    error!("Failed to deserialize JSON from API error: {}", de_error);
-                                    Err(Error::Json(de_error))
-                                }
+                    (body_to_string(&mut body).await?, content_length, None)
+                }
+            }
+            Style::Download => {
+                // Get the response from the header.
+                if let Some(header) = result_header {
+                    (header, content_length, Some(body))
+                } else {
+                    return Err(Error::UnexpectedResponse("expected a Dropbox-API-Result header".to_owned()));
+                }
+            }
+        })
+    } else {
+        error!("HTTP {code} {status}");
+        let response = body_to_string(&mut body).await?;
+        match code {
+            400 => {
+                Err(Error::BadRequest(response))
+            },
+            401 => {
+                match serde_json::from_str::<TopLevelError<AuthError>>(&response) {
+                    Ok(deserialized) => {
+                        error!("auth error: {}", deserialized.error);
+                        /*if deserialized.error == AuthError::ExpiredAccessToken && !retried {
+                            let old_token = token.unwrap_or_else(|| Arc::new(String::new()));
+                            if client.update_token(old_token).await? {
+                                retried = true;
+                                continue 'auth_retry;
                             }
-                        },
-                        403 => {
-                            match serde_json::from_str::<TopLevelError<AccessError>>(&response) {
-                                Ok(deserialized) => {
-                                    error!("access denied: {:?}", deserialized.error);
-                                    Err(Error::AccessDenied(deserialized.error))
-                                }
-                                Err(de_error) => {
-                                    error!("Failed to deserialize JSON from API error: {}", de_error);
-                                    Err(Error::Json(de_error))
-                                }
-                            }
-                        }
-                        409 => {
-                            // Response should be JSON-deseraializable into the strongly-typed
-                            // error specified by type parameter E.
-                            match serde_json::from_str::<TopLevelError<E>>(&response) {
-                                Ok(deserialized) => {
-                                    error!("API error: {}", deserialized.error);
-                                    Ok(Err(deserialized.error))
-                                },
-                                Err(de_error) => {
-                                    error!("Failed to deserialize JSON from API error: {}", de_error);
-                                    Err(Error::Json(de_error))
-                                }
-                            }
-                        },
-                        429 => {
-                            match serde_json::from_str::<TopLevelError<RateLimitedError>>(&response) {
-                                Ok(deserialized) => {
-                                    let e = Error::RateLimited {
-                                        reason: deserialized.error.reason,
-                                        retry_after_seconds: deserialized.error.retry_after,
-                                    };
-                                    error!("{}", e);
-                                    Err(e)
-                                }
-                                Err(de_error) => {
-                                    error!("Failed to deserialize JSON from API error: {}", de_error);
-                                    Err(Error::Json(de_error))
-                                }
-                            }
-                        },
-                        500..=599 => {
-                            Err(Error::ServerError(response))
-                        },
-                        _ => {
-                            Err(Error::UnexpectedHttpError {
-                                code,
-                                status,
-                                json: response,
-                            })
-                        }
+                        }*/
+                        Err(Error::Authentication(deserialized.error))
+                    }
+                    Err(de_error) => {
+                        error!("Failed to deserialize JSON from API error: {}", de_error);
+                        Err(Error::Json(de_error))
+                    }
+                }
+            },
+            403 => {
+                match serde_json::from_str::<TopLevelError<AccessError>>(&response) {
+                    Ok(deserialized) => {
+                        error!("access denied: {:?}", deserialized.error);
+                        Err(Error::AccessDenied(deserialized.error))
+                    }
+                    Err(de_error) => {
+                        error!("Failed to deserialize JSON from API error: {}", de_error);
+                        Err(Error::Json(de_error))
                     }
                 }
             }
-            Err(e) => Err(e),
-        };
+            409 => {
+                // Pretend it's okay for now; caller will parse it specially.
+                Ok((response, None, None))
+            },
+            429 => {
+                match serde_json::from_str::<TopLevelError<RateLimitedError>>(&response) {
+                    Ok(deserialized) => {
+                        let e = Error::RateLimited {
+                            reason: deserialized.error.reason,
+                            retry_after_seconds: deserialized.error.retry_after,
+                        };
+                        error!("{}", e);
+                        Err(e)
+                    }
+                    Err(de_error) => {
+                        error!("Failed to deserialize JSON from API error: {}", de_error);
+                        Err(Error::Json(de_error))
+                    }
+                }
+            },
+            500..=599 => {
+                Err(Error::ServerError(response))
+            },
+            _ => {
+                Err(Error::UnexpectedHttpError {
+                    code,
+                    status,
+                    json: response,
+                })
+            }
+        }
     }
 }
 

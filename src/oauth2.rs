@@ -23,7 +23,7 @@ use url::form_urlencoded::Serializer as UrlEncoder;
 use url::Url;
 use crate::Error;
 use crate::async_client_trait::NoauthClient;
-use crate::client_helpers::{body_to_string, prepare_request};
+use crate::client_helpers::{parse_response, prepare_request};
 use crate::client_trait_common::{Endpoint, ParamsType, Style};
 
 /// Which type of OAuth2 flow to use.
@@ -498,8 +498,8 @@ impl Authorization {
         let body = body.unwrap_or_default();
 
         debug!("Requesting OAuth2 token");
-        let mut resp = client.execute(req, body).await?;
-        let result_json = body_to_string(&mut resp.body).await?;
+        let resp = client.execute(req, body).await?;
+        let (result_json, _, _) = parse_response(resp, Style::Rpc).await?;
         let result_value = serde_json::from_str(&result_json)?;
 
         debug!("OAuth2 response: {:?}", result_value);

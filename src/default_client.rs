@@ -24,16 +24,16 @@ use crate::default_client_common::impl_set_path_root;
 
 macro_rules! impl_update_token {
     ($self:ident) => {
-        fn update_token(&$self, old_token: Arc<String>) -> bool {
+        fn update_token(&$self, old_token: Arc<String>) -> crate::Result<bool> {
             info!("refreshing auth token");
             match $self.tokens.update_token(
                 TokenUpdateClient { inner: &$self.inner },
                 old_token,
             ).now_or_never().unwrap() {
-                Ok(_) => true,
+                Ok(_) => Ok(true),
                 Err(e) => {
                     error!("failed to update auth token: {e}");
-                    false
+                    Err(e.into())
                 }
             }
         }
