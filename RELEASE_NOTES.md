@@ -1,4 +1,4 @@
-# v0.19.0
+# v0.19.0-beta1
 xxxx-yy-zz
 * **BIG UPDATE: async support added**
   * HTTP client traits completely redesigned
