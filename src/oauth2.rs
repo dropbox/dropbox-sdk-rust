@@ -311,6 +311,11 @@ pub struct Authorization {
 }
 
 impl Authorization {
+    /// Get the client ID for this authorization.
+    pub fn client_id(&self) -> &str {
+        &self.client_id
+    }
+
     /// Create a new instance using the authorization code provided upon redirect back to your app
     /// (or via manual user entry if not using a redirect URI) after the user logs in.
     ///
@@ -583,9 +588,9 @@ impl TokenCache {
     /// Set the current short-lived token to a specific provided value. Normally it should not be
     /// necessary to call this function; the token should be obtained automatically using the
     /// refresh token.
-    pub async fn set_access_token(&self, access_token: Arc<String>) {
-        let mut write = self.auth.write().await;
-        write.1 = access_token;
+    pub fn set_access_token(&self, access_token: String) {
+        let mut write = self.auth.write_blocking();
+        write.1 = Arc::new(access_token);
     }
 }
 

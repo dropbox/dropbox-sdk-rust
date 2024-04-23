@@ -4,7 +4,7 @@
 //! the contents of a folder recursively, and fetching a file given its path.
 
 use tokio_util::compat::FuturesAsyncReadCompatExt;
-use dropbox_sdk::default_async_client::UserAuthDefaultClient;
+use dropbox_sdk::default_async_client::{NoauthDefaultClient, UserAuthDefaultClient};
 use dropbox_sdk::async_routes::files;
 
 enum Operation {
@@ -61,7 +61,13 @@ async fn main() {
         std::process::exit(1);
     }
 
-    let auth = dropbox_sdk::oauth2::get_auth_from_env_or_prompt();
+    let mut auth = dropbox_sdk::oauth2::get_auth_from_env_or_prompt();
+    if auth.save().is_none() {
+        auth.obtain_access_token_async(NoauthDefaultClient::default()).await.unwrap();
+        eprintln!("Next time set these environment variables to reuse this authorization:");
+        eprintln!("  DBX_CLIENT_ID={}", auth.client_id());
+        eprintln!("  DBX_OAUTH={}", auth.save().unwrap());
+    }
     let client = UserAuthDefaultClient::new(auth);
 
     if let Operation::Download(path) = op {
