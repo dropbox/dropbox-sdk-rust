@@ -250,11 +250,10 @@ pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
             401 => {
                 match serde_json::from_str::<TopLevelError<AuthError>>(&response) {
                     Ok(deserialized) => {
-                        error!("auth error: {}", deserialized.error);
                         Err(Error::Authentication(deserialized.error))
                     }
                     Err(de_error) => {
-                        error!("Failed to deserialize JSON from API error: {}", de_error);
+                        error!("Failed to deserialize JSON from API error: {response}");
                         Err(Error::Json(de_error))
                     }
                 }
@@ -262,11 +261,10 @@ pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
             403 => {
                 match serde_json::from_str::<TopLevelError<AccessError>>(&response) {
                     Ok(deserialized) => {
-                        error!("access denied: {:?}", deserialized.error);
                         Err(Error::AccessDenied(deserialized.error))
                     }
                     Err(de_error) => {
-                        error!("Failed to deserialize JSON from API error: {}", de_error);
+                        error!("Failed to deserialize JSON from API error: {response}");
                         Err(Error::Json(de_error))
                     }
                 }
@@ -282,11 +280,10 @@ pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
                             reason: deserialized.error.reason,
                             retry_after_seconds: deserialized.error.retry_after,
                         };
-                        error!("{}", e);
                         Err(e)
                     }
                     Err(de_error) => {
-                        error!("Failed to deserialize JSON from API error: {}", de_error);
+                        error!("Failed to deserialize JSON from API error: {response}");
                         Err(Error::Json(de_error))
                     }
                 }
