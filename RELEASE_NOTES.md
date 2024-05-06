@@ -1,8 +1,9 @@
 # v0.18.1
-2024-05-02
+2024-05-06
 * fixed bug when using oauth2 refresh tokens using client secret instead of PKCE:
     * See https://github.com/dropbox/dropbox-sdk-rust/issues/151 for details
     * New function Authorize::from_client_secret_refresh_token() should be used for any refresh tokens previously obtained using this flow
+    * Thanks to Peerat Vichivanives for reporting and testing the fix
 
 # v0.18.0
 2024-01-12
