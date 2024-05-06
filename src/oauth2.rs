@@ -296,6 +296,7 @@ enum AuthorizationState {
     },
     Refresh {
         refresh_token: String,
+        client_secret: Option<String>,
     },
     AccessToken {
         client_secret: Option<String>,
@@ -373,14 +374,34 @@ impl Authorization {
         })
     }
 
-    /// Recreate the authorization from a refresh token.
+    /// Recreate the authorization from a refresh token obtained using the [`Oauth2Type::PKCE`]
+    /// flow.
     pub fn from_refresh_token(
         client_id: String,
         refresh_token: String,
     ) -> Self {
         Self {
             client_id,
-            state: AuthorizationState::Refresh { refresh_token },
+            state: AuthorizationState::Refresh {
+                refresh_token,
+                client_secret: None,
+            },
+        }
+    }
+
+    /// Recreate the authorization from a refresh token obtained using the
+    /// [`Oauth2Type::AuthorizationCode`] flow. This requires the client secret as well.
+    pub fn from_client_secret_refresh_token(
+        client_id: String,
+        client_secret: String,
+        refresh_token: String,
+    ) -> Self {
+        Self {
+            client_id,
+            state: AuthorizationState::Refresh {
+                refresh_token,
+                client_secret: Some(client_secret),
+            },
         }
     }
 
@@ -452,8 +473,11 @@ impl Authorization {
                 auth_code = Some(code);
                 redirect_uri = uri;
             }
-            AuthorizationState::Refresh { refresh_token: refresh } => {
+            AuthorizationState::Refresh { refresh_token: refresh, client_secret: secret } => {
                 refresh_token = Some(refresh);
+                if let Some(secret) = secret {
+                    client_secret = Some(secret);
+                }
             }
         }
 
@@ -469,6 +493,14 @@ impl Authorization {
             }
 
             params.append_pair("client_id", &self.client_id);
+
+            if let Some(client_secret) = client_secret.as_deref() {
+                params.append_pair("client_secret", client_secret);
+            }
+
+            if let Some(pkce) = &pkce_code {
+                params.append_pair("code_verifier", pkce);
+            }
 
             if refresh_token.is_none() {
                 if let Some(pkce) = pkce_code {
@@ -531,7 +563,7 @@ impl Authorization {
 
         match refresh_token {
             Some(refresh) => {
-                self.state = AuthorizationState::Refresh { refresh_token: refresh };
+                self.state = AuthorizationState::Refresh { refresh_token: refresh, client_secret };
             }
             None if !matches!(self.state, AuthorizationState::Refresh {..}) => {
                 self.state = AuthorizationState::AccessToken {
