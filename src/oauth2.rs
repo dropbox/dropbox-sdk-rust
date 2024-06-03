@@ -304,7 +304,8 @@ enum AuthorizationState {
 /// Provides for continuing authorization of the app.
 #[derive(Debug, Clone)]
 pub struct Authorization {
-    client_id: String,
+    /// Dropbox app key
+    pub client_id: String,
     state: AuthorizationState,
 }
 
