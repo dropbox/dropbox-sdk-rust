@@ -18,18 +18,18 @@ fn invalid_path_root() {
         // If the error is due to a change in the user's home nsid, then we get an "invalid_root"
         // error which includes the new nsid, but that's not what we expect here, where we're just
         // giving a bogus nsid.
-        Err(dropbox_sdk::Error::UnexpectedHttpError { code: 422, json, .. }) => {
-            let error = serde_json::from_str::<serde_json::Value>(&json)
-                .unwrap_or_else(|e| panic!("invalid json {:?}: {}", json, e));
+        Err(dropbox_sdk::Error::UnexpectedHttpError { code: 422, response, .. }) => {
+            let error = serde_json::from_str::<serde_json::Value>(&response)
+                .unwrap_or_else(|e| panic!("invalid json {:?}: {}", response, e));
             let tag = error.as_object()
                 .and_then(|map| map.get("error"))
                 .and_then(|v| v.as_object())
                 .and_then(|map| map.get(".tag"))
                 .and_then(|v| v.as_str())
-                .unwrap_or_else(|| panic!("got a weird error {}", json));
+                .unwrap_or_else(|| panic!("got a weird error {}", response));
 
             if tag != "no_permission" {
-                panic!("unexpected error kind in {:?}", json);
+                panic!("unexpected error kind in {:?}", response);
             }
         }
 

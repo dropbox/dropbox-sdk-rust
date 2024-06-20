@@ -25,7 +25,14 @@ macro_rules! if_feature {
             #[cfg_attr(docsrs, doc(cfg(feature = $feature_name)))]
             $item
         )*
-    }
+    };
+    (not $feature_name:expr, $($item:item)*) => {
+        $(
+            #[cfg(not(feature = $feature_name))]
+            #[cfg_attr(docsrs, doc(cfg(not(feature = $feature_name))))]
+            $item
+        )*
+    };
 }
 
 #[macro_use] extern crate log;
@@ -45,7 +52,7 @@ pub enum Error {
 
     /// The Dropbox API response was unexpected or malformed in some way.
     #[error("Dropbox API returned something unexpected: {0}")]
-    UnexpectedResponse(&'static str),
+    UnexpectedResponse(String),
 
     /// The Dropbox API indicated that your request was malformed in some way.
     #[error("Dropbox API indicated that the request was malformed: {0}")]
@@ -53,14 +60,14 @@ pub enum Error {
 
     /// Errors occurred during authentication.
     #[error("Dropbox API indicated a problem with authentication: {0}")]
-    Authentication(auth::AuthError),
+    Authentication(types::auth::AuthError),
 
     /// Your request was rejected due to rate-limiting. You can retry it later.
     #[error("Dropbox API declined the request due to rate-limiting ({reason}), \
         retry after {retry_after_seconds}s")]
     RateLimited {
         /// The server-given reason for the rate-limiting.
-        reason: auth::RateLimitReason,
+        reason: types::auth::RateLimitReason,
 
         /// You can retry this request after this many seconds.
         retry_after_seconds: u32,
@@ -68,37 +75,52 @@ pub enum Error {
 
     /// The user or team account doesn't have access to the endpoint or feature.
     #[error("Dropbox API denied access to the resource: {0}")]
-    AccessDenied(auth::AccessError),
+    AccessDenied(types::auth::AccessError),
 
     /// The Dropbox API server had an internal error.
     #[error("Dropbox API had an internal server error: {0}")]
     ServerError(String),
 
     /// The Dropbox API returned an unexpected HTTP response code.
-    #[error("Dropbox API returned HTTP {code} {status} - {json}")]
+    #[error("Dropbox API returned HTTP {code} - {response}")]
     UnexpectedHttpError {
         /// HTTP status code returned.
         code: u16,
 
-        /// The HTTP status string.
-        status: String,
-
         /// The response body.
-        json: String,
+        response: String,
     },
 }
 
 /// Shorthand for a Result where the error type is this crate's [`Error`] type.
 pub type Result<T> = std::result::Result<T, Error>;
 
-if_feature! { "default_client", pub mod default_client; }
+if_feature! { "default_client",
+    pub mod default_client;
+
+    // for backwards-compat only; don't match this for async
+    if_feature! { "sync_routes_default",
+        pub use client_trait::*;
+    }
+}
+
+if_feature! { "default_async_client", pub mod default_async_client; }
+
+#[cfg(any(feature = "default_client", feature = "default_async_client"))]
+pub(crate) mod default_client_common;
+
+pub mod client_trait_common;
 
 pub mod client_trait;
-pub use client_trait::{AppAuthClient, NoauthClient, UserAuthClient, TeamAuthClient};
+
+pub mod async_client_trait;
+
 pub(crate) mod client_helpers;
 pub mod oauth2;
 
-mod generated; // You need to run the Stone generator to create this module.
+mod generated;
+
+// You need to run the Stone generator to create this module.
 pub use generated::*;
 
 /// A special error type for a method that doesn't have any defined error return. You can't
@@ -106,7 +128,7 @@ pub use generated::*;
 #[derive(Copy, Clone)]
 pub enum NoError {}
 
-impl std::cmp::PartialEq<NoError> for NoError {
+impl PartialEq<NoError> for NoError {
     fn eq(&self, _: &NoError) -> bool {
         unreachable(*self)
     }
