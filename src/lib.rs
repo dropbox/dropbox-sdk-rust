@@ -43,11 +43,11 @@ macro_rules! if_feature {
 pub enum Error<E = NoError> {
     /// An error returned by the API. Its type depends on the endpoint being called.
     #[error("Dropbox API endpoint returned an error: {0}")]
-    Api(E),
+    Api(#[source] E),
 
     /// Some error from the internals of the HTTP client.
     #[error("error from HTTP client: {0}")]
-    HttpClient(Box<dyn std::error::Error + Send + Sync + 'static>),
+    HttpClient(#[source] Box<dyn std::error::Error + Send + Sync + 'static>),
 
     /// Something went wrong in the process of transforming your arguments into a JSON string.
     #[error("JSON serialization error: {0}")]
@@ -63,7 +63,7 @@ pub enum Error<E = NoError> {
 
     /// Errors occurred during authentication.
     #[error("Dropbox API indicated a problem with authentication: {0}")]
-    Authentication(types::auth::AuthError),
+    Authentication(#[source] types::auth::AuthError),
 
     /// Your request was rejected due to rate-limiting. You can retry it later.
     #[error("Dropbox API declined the request due to rate-limiting ({reason}), \
@@ -78,7 +78,7 @@ pub enum Error<E = NoError> {
 
     /// The user or team account doesn't have access to the endpoint or feature.
     #[error("Dropbox API denied access to the resource: {0}")]
-    AccessDenied(types::auth::AccessError),
+    AccessDenied(#[source] types::auth::AccessError),
 
     /// The Dropbox API server had an internal error.
     #[error("Dropbox API had an internal server error: {0}")]
