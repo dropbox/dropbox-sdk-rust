@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -21,7 +22,7 @@ pub use crate::generated::types::paper::*;
 pub fn docs_archive<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RefPaperDoc,
-) -> impl std::future::Future<Output=crate::Result<Result<(), DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -43,7 +44,7 @@ pub fn docs_create<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperDocCreateArgs,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<PaperDocCreateUpdateResult, crate::Error<PaperDocCreateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -65,7 +66,7 @@ pub fn docs_download<'a>(
     arg: &'a PaperDocExport,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<PaperDocExportResult>, crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -89,7 +90,7 @@ pub fn docs_download<'a>(
 pub fn docs_folder_users_list<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListUsersOnFolderArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<ListUsersOnFolderResponse, DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListUsersOnFolderResponse, crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -110,7 +111,7 @@ pub fn docs_folder_users_list<'a>(
 pub fn docs_folder_users_list_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListUsersOnFolderContinueArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListUsersOnFolderResponse, crate::Error<ListUsersCursorError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -135,7 +136,7 @@ pub fn docs_folder_users_list_continue<'a>(
 pub fn docs_get_folder_info<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RefPaperDoc,
-) -> impl std::future::Future<Output=crate::Result<Result<FoldersContainingPaperDoc, DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FoldersContainingPaperDoc, crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -157,7 +158,7 @@ pub fn docs_get_folder_info<'a>(
 pub fn docs_list<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListPaperDocsArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<ListPaperDocsResponse, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListPaperDocsResponse, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -178,7 +179,7 @@ pub fn docs_list<'a>(
 pub fn docs_list_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListPaperDocsContinueArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<ListPaperDocsResponse, ListDocsCursorError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListPaperDocsResponse, crate::Error<ListDocsCursorError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -199,7 +200,7 @@ pub fn docs_list_continue<'a>(
 pub fn docs_permanently_delete<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RefPaperDoc,
-) -> impl std::future::Future<Output=crate::Result<Result<(), DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -219,7 +220,7 @@ pub fn docs_permanently_delete<'a>(
 pub fn docs_sharing_policy_get<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RefPaperDoc,
-) -> impl std::future::Future<Output=crate::Result<Result<SharingPolicy, DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharingPolicy, crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -242,7 +243,7 @@ pub fn docs_sharing_policy_get<'a>(
 pub fn docs_sharing_policy_set<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperDocSharingPolicy,
-) -> impl std::future::Future<Output=crate::Result<Result<(), DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -264,7 +265,7 @@ pub fn docs_update<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperDocUpdateArgs,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<PaperDocCreateUpdateResult, crate::Error<PaperDocUpdateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -286,7 +287,7 @@ pub fn docs_update<'a>(
 pub fn docs_users_add<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a AddPaperDocUser,
-) -> impl std::future::Future<Output=crate::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Vec<AddPaperDocUserMemberResult>, crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -309,7 +310,7 @@ pub fn docs_users_add<'a>(
 pub fn docs_users_list<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListUsersOnPaperDocArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListUsersOnPaperDocResponse, crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -330,7 +331,7 @@ pub fn docs_users_list<'a>(
 pub fn docs_users_list_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListUsersOnPaperDocContinueArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListUsersOnPaperDocResponse, crate::Error<ListUsersCursorError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -351,7 +352,7 @@ pub fn docs_users_list_continue<'a>(
 pub fn docs_users_remove<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RemovePaperDocUser,
-) -> impl std::future::Future<Output=crate::Result<Result<(), DocLookupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<DocLookupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -371,7 +372,7 @@ pub fn docs_users_remove<'a>(
 pub fn folders_create<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperFolderCreateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<PaperFolderCreateResult, PaperFolderCreateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<PaperFolderCreateResult, crate::Error<PaperFolderCreateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

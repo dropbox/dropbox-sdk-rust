@@ -44,7 +44,7 @@ fn fetch_files() {
                 loop {
                     let arg = files::DownloadArg::new(path.clone());
                     match files::download(c.as_ref(), &arg, None, None) {
-                        Ok(Ok(result)) => {
+                        Ok(result) => {
                             let mut read_bytes = Vec::new();
                             result.body.expect("result should have a body")
                                 .read_to_end(&mut read_bytes).expect("read_to_end");
@@ -55,7 +55,6 @@ fn fetch_files() {
                             thread::sleep(Duration::from_secs(retry_after_seconds as u64));
                             continue;
                         }
-                        Ok(Err(e)) => panic!("{}: download failed: {:?}", path, e),
                         Err(e) => panic!("{}: download failed: {:?}", path, e),
                     }
                     break;

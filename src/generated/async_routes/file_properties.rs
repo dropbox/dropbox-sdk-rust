@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -15,7 +16,7 @@ pub use crate::generated::types::file_properties::*;
 pub fn properties_add<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a AddPropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), AddPropertiesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<AddPropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -33,7 +34,7 @@ pub fn properties_add<'a>(
 pub fn properties_overwrite<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a OverwritePropertyGroupArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), InvalidPropertyGroupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<InvalidPropertyGroupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -52,7 +53,7 @@ pub fn properties_overwrite<'a>(
 pub fn properties_remove<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RemovePropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), RemovePropertiesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<RemovePropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -66,7 +67,7 @@ pub fn properties_remove<'a>(
 pub fn properties_search<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PropertiesSearchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<PropertiesSearchResult, PropertiesSearchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<PropertiesSearchResult, crate::Error<PropertiesSearchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -81,7 +82,7 @@ pub fn properties_search<'a>(
 pub fn properties_search_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PropertiesSearchContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<PropertiesSearchResult, PropertiesSearchContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<PropertiesSearchResult, crate::Error<PropertiesSearchContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -100,7 +101,7 @@ pub fn properties_search_continue<'a>(
 pub fn properties_update<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UpdatePropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), UpdatePropertiesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<UpdatePropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -115,7 +116,7 @@ pub fn properties_update<'a>(
 pub fn templates_add_for_team<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a AddTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<AddTemplateResult, ModifyTemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<AddTemplateResult, crate::Error<ModifyTemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -130,7 +131,7 @@ pub fn templates_add_for_team<'a>(
 pub fn templates_add_for_user<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a AddTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<AddTemplateResult, ModifyTemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<AddTemplateResult, crate::Error<ModifyTemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -144,7 +145,7 @@ pub fn templates_add_for_user<'a>(
 pub fn templates_get_for_team<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GetTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetTemplateResult, TemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetTemplateResult, crate::Error<TemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -159,7 +160,7 @@ pub fn templates_get_for_team<'a>(
 pub fn templates_get_for_user<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetTemplateResult, TemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetTemplateResult, crate::Error<TemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -173,7 +174,7 @@ pub fn templates_get_for_user<'a>(
 /// [`templates_get_for_team()`](templates_get_for_team).
 pub fn templates_list_for_team(
     client: &impl crate::async_client_trait::TeamAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<ListTemplateResult, TemplateError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<ListTemplateResult, crate::Error<TemplateError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -188,7 +189,7 @@ pub fn templates_list_for_team(
 /// member or admin's behalf.
 pub fn templates_list_for_user(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<ListTemplateResult, TemplateError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<ListTemplateResult, crate::Error<TemplateError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -204,7 +205,7 @@ pub fn templates_list_for_user(
 pub fn templates_remove_for_team<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a RemoveTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), TemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<TemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -220,7 +221,7 @@ pub fn templates_remove_for_team<'a>(
 pub fn templates_remove_for_user<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RemoveTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), TemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<TemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -235,7 +236,7 @@ pub fn templates_remove_for_user<'a>(
 pub fn templates_update_for_team<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a UpdateTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<UpdateTemplateResult, ModifyTemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<UpdateTemplateResult, crate::Error<ModifyTemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -251,7 +252,7 @@ pub fn templates_update_for_team<'a>(
 pub fn templates_update_for_user<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UpdateTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<UpdateTemplateResult, ModifyTemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<UpdateTemplateResult, crate::Error<ModifyTemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

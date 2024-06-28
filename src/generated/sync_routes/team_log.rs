@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -22,7 +23,7 @@ pub use crate::generated::types::team_log::*;
 pub fn get_events(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GetTeamEventsArg,
-) -> crate::Result<Result<GetTeamEventsResult, GetTeamEventsError>> {
+) -> Result<GetTeamEventsResult, crate::Error<GetTeamEventsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -39,7 +40,7 @@ pub fn get_events(
 pub fn get_events_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GetTeamEventsContinueArg,
-) -> crate::Result<Result<GetTeamEventsResult, GetTeamEventsContinueError>> {
+) -> Result<GetTeamEventsResult, crate::Error<GetTeamEventsContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::account::*;
 pub fn set_profile_photo(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SetProfilePhotoArg,
-) -> crate::Result<Result<SetProfilePhotoResult, SetProfilePhotoError>> {
+) -> Result<SetProfilePhotoResult, crate::Error<SetProfilePhotoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

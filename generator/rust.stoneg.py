@@ -141,6 +141,7 @@ class RustBackend(RustHelperBackend):
         self.emit('#![allow(')
         self.emit('    clippy::too_many_arguments,')
         self.emit('    clippy::large_enum_variant,')
+        self.emit('    clippy::result_large_err,')
         self.emit('    clippy::doc_markdown,')
         self.emit(')]')
         self.emit()
@@ -319,7 +320,7 @@ class RustBackend(RustHelperBackend):
                     route_name,
                     [f'client: &impl {auth_trait}']
                         + ([] if arg_void else [f'arg: &{arg_type}']),
-                    f'crate::Result<Result<{ret_type}, {error_type}>>',
+                    f'Result<{ret_type}, crate::Error<{error_type}>>',
                     access='pub',
                     is_async=as_async):
                 with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async'):
@@ -338,7 +339,7 @@ class RustBackend(RustHelperBackend):
                         + ([] if arg_void else [f'arg: &{arg_type}'])
                         + ['range_start: Option<u64>',
                             'range_end: Option<u64>'],
-                    f'crate::Result<Result<crate::{mod}::HttpRequestResult<{ret_type}>, {error_type}>>',
+                    f'Result<crate::{mod}::HttpRequestResult<{ret_type}>, crate::Error<{error_type}>>',
                     access='pub',
                     is_async=as_async):
                 with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async_body'):
@@ -361,7 +362,7 @@ class RustBackend(RustHelperBackend):
                     [f'client: &impl {auth_trait}']
                         + ([] if arg_void else [f'arg: &{arg_type}'])
                         + ['body: bytes::Bytes' if as_async else 'body: &[u8]'],
-                    f'crate::Result<Result<{ret_type}, {error_type}>>',
+                    f'Result<{ret_type}, crate::Error<{error_type}>>',
                     access='pub',
                     is_async=as_async):
                 with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async'):

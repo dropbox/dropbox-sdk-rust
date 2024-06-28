@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::users::*;
 pub fn features_get_values<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UserFeaturesGetValuesBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<UserFeaturesGetValuesBatchResult, UserFeaturesGetValuesBatchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<UserFeaturesGetValuesBatchResult, crate::Error<UserFeaturesGetValuesBatchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -28,7 +29,7 @@ pub fn features_get_values<'a>(
 pub fn get_account<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetAccountArg,
-) -> impl std::future::Future<Output=crate::Result<Result<BasicAccount, GetAccountError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<BasicAccount, crate::Error<GetAccountError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -42,7 +43,7 @@ pub fn get_account<'a>(
 pub fn get_account_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetAccountBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetAccountBatchResult, GetAccountBatchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetAccountBatchResult, crate::Error<GetAccountBatchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -55,7 +56,7 @@ pub fn get_account_batch<'a>(
 /// Get information about the current user's account.
 pub fn get_current_account(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<FullAccount, crate::NoError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<FullAccount, crate::Error<crate::NoError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -68,7 +69,7 @@ pub fn get_current_account(
 /// Get the space usage information for the current user's account.
 pub fn get_space_usage(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<SpaceUsage, crate::NoError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<SpaceUsage, crate::Error<crate::NoError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

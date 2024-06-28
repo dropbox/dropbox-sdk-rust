@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::contacts::*;
 /// imported. New contacts will be added when you share.
 pub fn delete_manual_contacts(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<(), crate::NoError>> {
+) -> Result<(), crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -30,7 +31,7 @@ pub fn delete_manual_contacts(
 pub fn delete_manual_contacts_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteManualContactsArg,
-) -> crate::Result<Result<(), DeleteManualContactsError>> {
+) -> Result<(), crate::Error<DeleteManualContactsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

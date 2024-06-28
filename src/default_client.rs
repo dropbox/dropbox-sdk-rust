@@ -24,7 +24,7 @@ use crate::default_client_common::impl_set_path_root;
 
 macro_rules! impl_update_token {
     ($self:ident) => {
-        fn update_token(&$self, old_token: Arc<String>) -> crate::Result<bool> {
+        fn update_token(&$self, old_token: Arc<String>) -> Result<bool, Error> {
             info!("refreshing auth token");
             match $self.tokens.update_token(
                 TokenUpdateClient { inner: &$self.inner },
@@ -69,7 +69,7 @@ impl UserAuthDefaultClient {
 impl HttpClient for UserAuthDefaultClient {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+    fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error> {
         self.inner.execute(request, body)
     }
 
@@ -120,7 +120,7 @@ impl TeamAuthDefaultClient {
 impl HttpClient for TeamAuthDefaultClient {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+    fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error> {
         self.inner.execute(request, body)
     }
 
@@ -159,7 +159,7 @@ impl NoauthDefaultClient {
 impl HttpClient for NoauthDefaultClient {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+    fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error> {
         self.inner.execute(request, body)
     }
 
@@ -183,7 +183,7 @@ struct TokenUpdateClient<'a> {
 impl<'a> HttpClient for TokenUpdateClient<'a> {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+    fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error> {
         self.inner.execute(request, body)
     }
 
@@ -210,7 +210,7 @@ impl Default for UreqClient {
 impl HttpClient for UreqClient {
     type Request = UreqRequest;
 
-    fn execute(&self, request: Self::Request, body: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+    fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error> {
         let resp = if body.is_empty() {
             request.req.call()
         } else {

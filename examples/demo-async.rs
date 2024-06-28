@@ -75,7 +75,7 @@ async fn main() {
         eprintln!();
 
         match files::download(&client, &files::DownloadArg::new(path), None, None).await {
-            Ok(Ok(result)) => {
+            Ok(result) => {
                 match tokio::io::copy(
                     &mut result.body.expect("there must be a response body")
                         .compat(),
@@ -89,11 +89,8 @@ async fn main() {
                     }
                 }
             }
-            Ok(Err(e)) => {
-                eprintln!("Error from files/download: {e}");
-            }
             Err(e) => {
-                eprintln!("API request error: {e}");
+                eprintln!("Error from files/download: {e}");
             }
         }
     } else if let Operation::List(mut path) = op {
@@ -108,13 +105,9 @@ async fn main() {
             &client,
             &files::ListFolderArg::new(path).with_recursive(true),
         ).await {
-            Ok(Ok(result)) => result,
-            Ok(Err(e)) => {
-                eprintln!("Error from files/list_folder: {e}");
-                return;
-            }
+            Ok(result) => result,
             Err(e) => {
-                eprintln!("API request error: {e}");
+                eprintln!("Error from files/list_folder: {e}");
                 return;
             }
         };
@@ -145,17 +138,13 @@ async fn main() {
                 &client,
                 &files::ListFolderContinueArg::new(result.cursor),
             ).await {
-                Ok(Ok(result)) => {
+                Ok(result) => {
                     num_pages += 1;
                     num_entries += result.entries.len();
                     result
                 }
-                Ok(Err(e)) => {
-                    eprintln!("Error from files/list_folder_continue: {e}");
-                    break;
-                }
                 Err(e) => {
-                    eprintln!("API request error: {e}");
+                    eprintln!("Error from files/list_folder_continue: {e}");
                     break;
                 }
             }

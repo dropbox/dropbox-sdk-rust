@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -22,7 +23,7 @@ pub use crate::generated::types::team_log::*;
 pub fn get_events<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GetTeamEventsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetTeamEventsResult, GetTeamEventsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetTeamEventsResult, crate::Error<GetTeamEventsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -37,7 +38,7 @@ pub fn get_events<'a>(
 pub fn get_events_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GetTeamEventsContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetTeamEventsResult, GetTeamEventsContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetTeamEventsResult, crate::Error<GetTeamEventsContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

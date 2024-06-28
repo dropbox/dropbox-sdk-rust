@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::sharing::*;
 pub fn add_file_member<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a AddFileMemberArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<Vec<FileMemberActionResult>, AddFileMemberError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Vec<FileMemberActionResult>, crate::Error<AddFileMemberError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -30,7 +31,7 @@ pub fn add_file_member<'a>(
 pub fn add_folder_member<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a AddFolderMemberArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), AddFolderMemberError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<AddFolderMemberError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -44,7 +45,7 @@ pub fn add_folder_member<'a>(
 pub fn check_job_status<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<JobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<JobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -58,7 +59,7 @@ pub fn check_job_status<'a>(
 pub fn check_remove_member_job_status<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RemoveMemberJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RemoveMemberJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -72,7 +73,7 @@ pub fn check_remove_member_job_status<'a>(
 pub fn check_share_job_status<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ShareFolderJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ShareFolderJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -91,7 +92,7 @@ pub fn check_share_job_status<'a>(
 pub fn create_shared_link<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a CreateSharedLinkArg,
-) -> impl std::future::Future<Output=crate::Result<Result<PathLinkMetadata, CreateSharedLinkError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<PathLinkMetadata, crate::Error<CreateSharedLinkError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -107,7 +108,7 @@ pub fn create_shared_link<'a>(
 pub fn create_shared_link_with_settings<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a CreateSharedLinkWithSettingsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedLinkMetadata, CreateSharedLinkWithSettingsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedLinkMetadata, crate::Error<CreateSharedLinkWithSettingsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -121,7 +122,7 @@ pub fn create_shared_link_with_settings<'a>(
 pub fn get_file_metadata<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetFileMetadataArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedFileMetadata, GetFileMetadataError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedFileMetadata, crate::Error<GetFileMetadataError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -135,7 +136,7 @@ pub fn get_file_metadata<'a>(
 pub fn get_file_metadata_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetFileMetadataBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Vec<GetFileMetadataBatchResult>, SharingUserError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Vec<GetFileMetadataBatchResult>, crate::Error<SharingUserError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -149,7 +150,7 @@ pub fn get_file_metadata_batch<'a>(
 pub fn get_folder_metadata<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetMetadataArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMetadata, SharedFolderAccessError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedFolderMetadata, crate::Error<SharedFolderAccessError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -165,7 +166,7 @@ pub fn get_shared_link_file<'a>(
     arg: &'a GetSharedLinkFileArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<SharedLinkMetadata>, GetSharedLinkFileError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<SharedLinkMetadata>, crate::Error<GetSharedLinkFileError>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -181,7 +182,7 @@ pub fn get_shared_link_file<'a>(
 pub fn get_shared_link_metadata<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetSharedLinkMetadataArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedLinkMetadata, SharedLinkError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedLinkMetadata, crate::Error<SharedLinkError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -195,7 +196,7 @@ pub fn get_shared_link_metadata<'a>(
 pub fn get_shared_link_metadata_app_auth<'a>(
     client: &'a impl crate::async_client_trait::AppAuthClient,
     arg: &'a GetSharedLinkMetadataArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedLinkMetadata, SharedLinkError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedLinkMetadata, crate::Error<SharedLinkError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -214,7 +215,7 @@ pub fn get_shared_link_metadata_app_auth<'a>(
 pub fn get_shared_links<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetSharedLinksArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetSharedLinksResult, GetSharedLinksError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetSharedLinksResult, crate::Error<GetSharedLinksError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -229,7 +230,7 @@ pub fn get_shared_links<'a>(
 pub fn list_file_members<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFileMembersArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedFileMembers, ListFileMembersError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedFileMembers, crate::Error<ListFileMembersError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -246,7 +247,7 @@ pub fn list_file_members<'a>(
 pub fn list_file_members_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFileMembersBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Vec<ListFileMembersBatchResult>, SharingUserError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Vec<ListFileMembersBatchResult>, crate::Error<SharingUserError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -262,7 +263,7 @@ pub fn list_file_members_batch<'a>(
 pub fn list_file_members_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFileMembersContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedFileMembers, ListFileMembersContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedFileMembers, crate::Error<ListFileMembersContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -276,7 +277,7 @@ pub fn list_file_members_continue<'a>(
 pub fn list_folder_members<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFolderMembersArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMembers, SharedFolderAccessError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedFolderMembers, crate::Error<SharedFolderAccessError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -291,7 +292,7 @@ pub fn list_folder_members<'a>(
 pub fn list_folder_members_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFolderMembersContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMembers, ListFolderMembersContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedFolderMembers, crate::Error<ListFolderMembersContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -305,7 +306,7 @@ pub fn list_folder_members_continue<'a>(
 pub fn list_folders<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFoldersArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFoldersResult, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFoldersResult, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -321,7 +322,7 @@ pub fn list_folders<'a>(
 pub fn list_folders_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFoldersContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFoldersResult, ListFoldersContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFoldersResult, crate::Error<ListFoldersContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -335,7 +336,7 @@ pub fn list_folders_continue<'a>(
 pub fn list_mountable_folders<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFoldersArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFoldersResult, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFoldersResult, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -352,7 +353,7 @@ pub fn list_mountable_folders<'a>(
 pub fn list_mountable_folders_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFoldersContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFoldersResult, ListFoldersContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFoldersResult, crate::Error<ListFoldersContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -367,7 +368,7 @@ pub fn list_mountable_folders_continue<'a>(
 pub fn list_received_files<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFilesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFilesResult, SharingUserError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFilesResult, crate::Error<SharingUserError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -381,7 +382,7 @@ pub fn list_received_files<'a>(
 pub fn list_received_files_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFilesContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFilesResult, ListFilesContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFilesResult, crate::Error<ListFilesContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -402,7 +403,7 @@ pub fn list_received_files_continue<'a>(
 pub fn list_shared_links<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListSharedLinksArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListSharedLinksResult, ListSharedLinksError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListSharedLinksResult, crate::Error<ListSharedLinksError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -421,7 +422,7 @@ pub fn list_shared_links<'a>(
 pub fn modify_shared_link_settings<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ModifySharedLinkSettingsArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedLinkMetadata, ModifySharedLinkSettingsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedLinkMetadata, crate::Error<ModifySharedLinkSettingsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -436,7 +437,7 @@ pub fn modify_shared_link_settings<'a>(
 pub fn mount_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a MountFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMetadata, MountFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedFolderMetadata, crate::Error<MountFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -451,7 +452,7 @@ pub fn mount_folder<'a>(
 pub fn relinquish_file_membership<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelinquishFileMembershipArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), RelinquishFileMembershipError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<RelinquishFileMembershipError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -468,7 +469,7 @@ pub fn relinquish_file_membership<'a>(
 pub fn relinquish_folder_membership<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelinquishFolderMembershipArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<RelinquishFolderMembershipError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -483,7 +484,7 @@ pub fn relinquish_folder_membership<'a>(
 pub fn remove_file_member<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RemoveFileMemberArg,
-) -> impl std::future::Future<Output=crate::Result<Result<FileMemberActionIndividualResult, RemoveFileMemberError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileMemberActionIndividualResult, crate::Error<RemoveFileMemberError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -497,7 +498,7 @@ pub fn remove_file_member<'a>(
 pub fn remove_file_member_2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RemoveFileMemberArg,
-) -> impl std::future::Future<Output=crate::Result<Result<FileMemberRemoveActionResult, RemoveFileMemberError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileMemberRemoveActionResult, crate::Error<RemoveFileMemberError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -512,7 +513,7 @@ pub fn remove_file_member_2<'a>(
 pub fn remove_folder_member<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RemoveFolderMemberArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchResultBase, RemoveFolderMemberError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchResultBase, crate::Error<RemoveFolderMemberError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -530,7 +531,7 @@ pub fn remove_folder_member<'a>(
 pub fn revoke_shared_link<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RevokeSharedLinkArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), RevokeSharedLinkError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<RevokeSharedLinkError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -547,7 +548,7 @@ pub fn revoke_shared_link<'a>(
 pub fn set_access_inheritance<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a SetAccessInheritanceArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ShareFolderLaunch, SetAccessInheritanceError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ShareFolderLaunch, crate::Error<SetAccessInheritanceError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -566,7 +567,7 @@ pub fn set_access_inheritance<'a>(
 pub fn share_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ShareFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ShareFolderLaunch, ShareFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ShareFolderLaunch, crate::Error<ShareFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -581,7 +582,7 @@ pub fn share_folder<'a>(
 pub fn transfer_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a TransferFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), TransferFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<TransferFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -596,7 +597,7 @@ pub fn transfer_folder<'a>(
 pub fn unmount_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UnmountFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), UnmountFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<UnmountFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -610,7 +611,7 @@ pub fn unmount_folder<'a>(
 pub fn unshare_file<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UnshareFileArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), UnshareFileError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<UnshareFileError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -625,7 +626,7 @@ pub fn unshare_file<'a>(
 pub fn unshare_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UnshareFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, UnshareFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<UnshareFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -639,7 +640,7 @@ pub fn unshare_folder<'a>(
 pub fn update_file_member<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UpdateFileMemberArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<MemberAccessLevelResult, FileMemberActionError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MemberAccessLevelResult, crate::Error<FileMemberActionError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -653,7 +654,7 @@ pub fn update_file_member<'a>(
 pub fn update_folder_member<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UpdateFolderMemberArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MemberAccessLevelResult, UpdateFolderMemberError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MemberAccessLevelResult, crate::Error<UpdateFolderMemberError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -668,7 +669,7 @@ pub fn update_folder_member<'a>(
 pub fn update_folder_policy<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UpdateFolderPolicyArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharedFolderMetadata, UpdateFolderPolicyError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharedFolderMetadata, crate::Error<UpdateFolderPolicyError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

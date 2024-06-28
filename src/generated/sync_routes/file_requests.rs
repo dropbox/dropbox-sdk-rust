@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::file_requests::*;
 /// requests.
 pub fn count(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<CountFileRequestsResult, CountFileRequestsError>> {
+) -> Result<CountFileRequestsResult, crate::Error<CountFileRequestsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -30,7 +31,7 @@ pub fn count(
 pub fn create(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFileRequestArgs,
-) -> crate::Result<Result<FileRequest, CreateFileRequestError>> {
+) -> Result<FileRequest, crate::Error<CreateFileRequestError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -46,7 +47,7 @@ pub fn create(
 pub fn delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteFileRequestArgs,
-) -> crate::Result<Result<DeleteFileRequestsResult, DeleteFileRequestError>> {
+) -> Result<DeleteFileRequestsResult, crate::Error<DeleteFileRequestError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -61,7 +62,7 @@ pub fn delete(
 /// Delete all closed file requests owned by this user.
 pub fn delete_all_closed(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<DeleteAllClosedFileRequestsResult, DeleteAllClosedFileRequestsError>> {
+) -> Result<DeleteAllClosedFileRequestsResult, crate::Error<DeleteAllClosedFileRequestsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -77,7 +78,7 @@ pub fn delete_all_closed(
 pub fn get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetFileRequestArgs,
-) -> crate::Result<Result<FileRequest, GetFileRequestError>> {
+) -> Result<FileRequest, crate::Error<GetFileRequestError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -94,7 +95,7 @@ pub fn get(
 pub fn list_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsArg,
-) -> crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsError>> {
+) -> Result<ListFileRequestsV2Result, crate::Error<ListFileRequestsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -110,7 +111,7 @@ pub fn list_v2(
 /// this will only return file requests with destinations in the app folder.
 pub fn list(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
+) -> Result<ListFileRequestsResult, crate::Error<ListFileRequestsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -128,7 +129,7 @@ pub fn list(
 pub fn list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsContinueArg,
-) -> crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsContinueError>> {
+) -> Result<ListFileRequestsV2Result, crate::Error<ListFileRequestsContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -144,7 +145,7 @@ pub fn list_continue(
 pub fn update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFileRequestArgs,
-) -> crate::Result<Result<FileRequest, UpdateFileRequestError>> {
+) -> Result<FileRequest, crate::Error<UpdateFileRequestError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

@@ -18,12 +18,13 @@ use futures::{FutureExt, TryFutureExt, TryStreamExt};
 use crate::async_client_trait::{HttpClient, HttpRequestResultRaw, NoauthClient, TeamAuthClient, UserAuthClient};
 use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::default_client_common::impl_set_path_root;
+use crate::Error;
 use crate::oauth2::{Authorization, TokenCache};
 
 macro_rules! impl_update_token {
     ($self:ident) => {
         fn update_token(&$self, old_token: Arc<String>)
-            -> impl Future<Output = crate::Result<bool>> + Send
+            -> impl Future<Output = Result<bool, Error>> + Send
         {
             info!("refreshing auth token");
             $self.tokens
@@ -75,7 +76,7 @@ impl HttpClient for UserAuthDefaultClient {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
+    ) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
@@ -130,7 +131,7 @@ impl HttpClient for TeamAuthDefaultClient {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
+    ) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
@@ -173,7 +174,7 @@ impl HttpClient for NoauthDefaultClient {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
+    ) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
@@ -201,7 +202,7 @@ impl<'a> HttpClient for TokenUpdateClient<'a> {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output=crate::Result<HttpRequestResultRaw>> + Send {
+    ) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
@@ -229,8 +230,8 @@ impl Default for ReqwestClient {
     }
 }
 
-fn unexpected<T: std::error::Error + Send + Sync>(e: T, msg: &str) -> crate::Error {
-    crate::Error::UnexpectedResponse(format!("{msg}: {e}"))
+fn unexpected<T: std::error::Error + Send + Sync>(e: T, msg: &str) -> Error {
+    Error::UnexpectedResponse(format!("{msg}: {e}"))
 }
 
 impl HttpClient for ReqwestClient {
@@ -240,11 +241,11 @@ impl HttpClient for ReqwestClient {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output = crate::Result<HttpRequestResultRaw>> + Send {
+    ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send {
         let mut req = match request.req.build() {
             Ok(req) => req,
             Err(e) => {
-                return ready(Err(crate::Error::HttpClient(Box::new(e)))).boxed();
+                return ready(Err(Error::HttpClient(Box::new(e)))).boxed();
             }
         };
         debug!("request for {}", req.url());
@@ -253,7 +254,7 @@ impl HttpClient for ReqwestClient {
         }
         self.inner.execute(req)
             .map_ok_or_else(
-                |e| Err(crate::Error::HttpClient(Box::new(e))),
+                |e| Err(Error::HttpClient(Box::new(e))),
                 |resp| {
                     let status = resp.status().as_u16();
 

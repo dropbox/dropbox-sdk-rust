@@ -5,6 +5,7 @@
 use std::io::Read;
 use std::sync::Arc;
 use crate::client_trait_common::{HttpRequest, TeamSelect};
+use crate::Error;
 
 /// The base HTTP synchronous client trait.
 pub trait HttpClient: Sync {
@@ -16,7 +17,7 @@ pub trait HttpClient: Sync {
         &self,
         request: Self::Request,
         body: &[u8],
-    ) -> crate::Result<HttpRequestResultRaw>;
+    ) -> Result<HttpRequestResultRaw, Error>;
 
     /// Create a new request instance for the given URL. It should be a POST request.
     fn new_request(&self, url: &str) -> Self::Request;
@@ -25,7 +26,7 @@ pub trait HttpClient: Sync {
     /// as a way to avoid repeat updates in case of a race. If the update is successful, return
     /// `true` and the current request will be retried with a newly-fetched token. Return `false` if
     /// authentication is not supported, or return an error if the update operation fails.
-    fn update_token(&self, _old_token: Arc<String>) -> crate::Result<bool> {
+    fn update_token(&self, _old_token: Arc<String>) -> Result<bool, Error> {
         Ok(false)
     }
 

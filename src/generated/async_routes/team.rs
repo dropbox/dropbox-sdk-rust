@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::team::*;
 pub fn devices_list_member_devices<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ListMemberDevicesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListMemberDevicesResult, ListMemberDevicesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListMemberDevicesResult, crate::Error<ListMemberDevicesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -28,7 +29,7 @@ pub fn devices_list_member_devices<'a>(
 pub fn devices_list_members_devices<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ListMembersDevicesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListMembersDevicesResult, ListMembersDevicesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListMembersDevicesResult, crate::Error<ListMembersDevicesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -43,7 +44,7 @@ pub fn devices_list_members_devices<'a>(
 pub fn devices_list_team_devices<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ListTeamDevicesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListTeamDevicesResult, ListTeamDevicesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListTeamDevicesResult, crate::Error<ListTeamDevicesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -57,7 +58,7 @@ pub fn devices_list_team_devices<'a>(
 pub fn devices_revoke_device_session<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a RevokeDeviceSessionArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), RevokeDeviceSessionError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<RevokeDeviceSessionError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -71,7 +72,7 @@ pub fn devices_revoke_device_session<'a>(
 pub fn devices_revoke_device_session_batch<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a RevokeDeviceSessionBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RevokeDeviceSessionBatchResult, RevokeDeviceSessionBatchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RevokeDeviceSessionBatchResult, crate::Error<RevokeDeviceSessionBatchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -87,7 +88,7 @@ pub fn devices_revoke_device_session_batch<'a>(
 pub fn features_get_values<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a FeaturesGetValuesBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<FeaturesGetValuesBatchResult, FeaturesGetValuesBatchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FeaturesGetValuesBatchResult, crate::Error<FeaturesGetValuesBatchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -100,7 +101,7 @@ pub fn features_get_values<'a>(
 /// Retrieves information about a team.
 pub fn get_info(
     client: &impl crate::async_client_trait::TeamAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamGetInfoResult, crate::NoError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<TeamGetInfoResult, crate::Error<crate::NoError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -114,7 +115,7 @@ pub fn get_info(
 pub fn groups_create<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupCreateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupFullInfo, GroupCreateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupFullInfo, crate::Error<GroupCreateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -130,7 +131,7 @@ pub fn groups_create<'a>(
 pub fn groups_delete<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupSelector,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, GroupDeleteError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<GroupDeleteError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -146,7 +147,7 @@ pub fn groups_delete<'a>(
 pub fn groups_get_info<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupsSelector,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupsGetInfoResult, GroupsGetInfoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupsGetInfoResult, crate::Error<GroupsGetInfoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -164,7 +165,7 @@ pub fn groups_get_info<'a>(
 pub fn groups_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::PollEmptyResult, GroupsPollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::PollEmptyResult, crate::Error<GroupsPollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -178,7 +179,7 @@ pub fn groups_job_status_get<'a>(
 pub fn groups_list<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupsListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupsListResult, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupsListResult, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -193,7 +194,7 @@ pub fn groups_list<'a>(
 pub fn groups_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupsListContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupsListResult, GroupsListContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupsListResult, crate::Error<GroupsListContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -209,7 +210,7 @@ pub fn groups_list_continue<'a>(
 pub fn groups_members_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupMembersAddArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupMembersChangeResult, GroupMembersAddError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupMembersChangeResult, crate::Error<GroupMembersAddError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -223,7 +224,7 @@ pub fn groups_members_add<'a>(
 pub fn groups_members_list<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupsMembersListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupsMembersListResult, GroupSelectorError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupsMembersListResult, crate::Error<GroupSelectorError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -238,7 +239,7 @@ pub fn groups_members_list<'a>(
 pub fn groups_members_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupsMembersListContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupsMembersListResult, GroupsMembersListContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupsMembersListResult, crate::Error<GroupsMembersListContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -256,7 +257,7 @@ pub fn groups_members_list_continue<'a>(
 pub fn groups_members_remove<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupMembersRemoveArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupMembersChangeResult, GroupMembersRemoveError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupMembersChangeResult, crate::Error<GroupMembersRemoveError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -270,7 +271,7 @@ pub fn groups_members_remove<'a>(
 pub fn groups_members_set_access_type<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupMembersSetAccessTypeArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupsGetInfoResult, GroupMemberSetAccessTypeError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupsGetInfoResult, crate::Error<GroupMemberSetAccessTypeError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -284,7 +285,7 @@ pub fn groups_members_set_access_type<'a>(
 pub fn groups_update<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupUpdateArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<GroupFullInfo, GroupUpdateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GroupFullInfo, crate::Error<GroupUpdateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -299,7 +300,7 @@ pub fn groups_update<'a>(
 pub fn legal_holds_create_policy<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a LegalHoldsPolicyCreateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LegalHoldsPolicyCreateResult, LegalHoldsPolicyCreateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LegalHoldsPolicyCreateResult, crate::Error<LegalHoldsPolicyCreateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -314,7 +315,7 @@ pub fn legal_holds_create_policy<'a>(
 pub fn legal_holds_get_policy<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a LegalHoldsGetPolicyArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LegalHoldsGetPolicyResult, LegalHoldsGetPolicyError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LegalHoldsGetPolicyResult, crate::Error<LegalHoldsGetPolicyError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -329,7 +330,7 @@ pub fn legal_holds_get_policy<'a>(
 pub fn legal_holds_list_held_revisions<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a LegalHoldsListHeldRevisionsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LegalHoldsListHeldRevisionResult, LegalHoldsListHeldRevisionsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LegalHoldsListHeldRevisionResult, crate::Error<LegalHoldsListHeldRevisionsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -344,7 +345,7 @@ pub fn legal_holds_list_held_revisions<'a>(
 pub fn legal_holds_list_held_revisions_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a LegalHoldsListHeldRevisionsContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LegalHoldsListHeldRevisionResult, LegalHoldsListHeldRevisionsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LegalHoldsListHeldRevisionResult, crate::Error<LegalHoldsListHeldRevisionsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -359,7 +360,7 @@ pub fn legal_holds_list_held_revisions_continue<'a>(
 pub fn legal_holds_list_policies<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a LegalHoldsListPoliciesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LegalHoldsListPoliciesResult, LegalHoldsListPoliciesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LegalHoldsListPoliciesResult, crate::Error<LegalHoldsListPoliciesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -374,7 +375,7 @@ pub fn legal_holds_list_policies<'a>(
 pub fn legal_holds_release_policy<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a LegalHoldsPolicyReleaseArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), LegalHoldsPolicyReleaseError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<LegalHoldsPolicyReleaseError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -389,7 +390,7 @@ pub fn legal_holds_release_policy<'a>(
 pub fn legal_holds_update_policy<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a LegalHoldsPolicyUpdateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LegalHoldsPolicyUpdateResult, LegalHoldsPolicyUpdateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LegalHoldsPolicyUpdateResult, crate::Error<LegalHoldsPolicyUpdateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -404,7 +405,7 @@ pub fn legal_holds_update_policy<'a>(
 pub fn linked_apps_list_member_linked_apps<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ListMemberAppsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListMemberAppsResult, ListMemberAppsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListMemberAppsResult, crate::Error<ListMemberAppsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -419,7 +420,7 @@ pub fn linked_apps_list_member_linked_apps<'a>(
 pub fn linked_apps_list_members_linked_apps<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ListMembersAppsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListMembersAppsResult, ListMembersAppsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListMembersAppsResult, crate::Error<ListMembersAppsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -435,7 +436,7 @@ pub fn linked_apps_list_members_linked_apps<'a>(
 pub fn linked_apps_list_team_linked_apps<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ListTeamAppsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListTeamAppsResult, ListTeamAppsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListTeamAppsResult, crate::Error<ListTeamAppsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -449,7 +450,7 @@ pub fn linked_apps_list_team_linked_apps<'a>(
 pub fn linked_apps_revoke_linked_app<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a RevokeLinkedApiAppArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), RevokeLinkedAppError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<RevokeLinkedAppError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -463,7 +464,7 @@ pub fn linked_apps_revoke_linked_app<'a>(
 pub fn linked_apps_revoke_linked_app_batch<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a RevokeLinkedApiAppBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RevokeLinkedAppBatchResult, RevokeLinkedAppBatchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RevokeLinkedAppBatchResult, crate::Error<RevokeLinkedAppBatchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -477,7 +478,7 @@ pub fn linked_apps_revoke_linked_app_batch<'a>(
 pub fn member_space_limits_excluded_users_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ExcludedUsersUpdateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ExcludedUsersUpdateResult, crate::Error<ExcludedUsersUpdateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -491,7 +492,7 @@ pub fn member_space_limits_excluded_users_add<'a>(
 pub fn member_space_limits_excluded_users_list<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ExcludedUsersListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ExcludedUsersListResult, ExcludedUsersListError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ExcludedUsersListResult, crate::Error<ExcludedUsersListError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -505,7 +506,7 @@ pub fn member_space_limits_excluded_users_list<'a>(
 pub fn member_space_limits_excluded_users_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ExcludedUsersListContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ExcludedUsersListResult, ExcludedUsersListContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ExcludedUsersListResult, crate::Error<ExcludedUsersListContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -519,7 +520,7 @@ pub fn member_space_limits_excluded_users_list_continue<'a>(
 pub fn member_space_limits_excluded_users_remove<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ExcludedUsersUpdateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ExcludedUsersUpdateResult, crate::Error<ExcludedUsersUpdateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -535,7 +536,7 @@ pub fn member_space_limits_excluded_users_remove<'a>(
 pub fn member_space_limits_get_custom_quota<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a CustomQuotaUsersArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Vec<CustomQuotaResult>, crate::Error<CustomQuotaError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -551,7 +552,7 @@ pub fn member_space_limits_get_custom_quota<'a>(
 pub fn member_space_limits_remove_custom_quota<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a CustomQuotaUsersArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Vec<RemoveCustomQuotaResult>, CustomQuotaError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Vec<RemoveCustomQuotaResult>, crate::Error<CustomQuotaError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -568,7 +569,7 @@ pub fn member_space_limits_remove_custom_quota<'a>(
 pub fn member_space_limits_set_custom_quota<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a SetCustomQuotaArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Vec<CustomQuotaResult>, SetCustomQuotaError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Vec<CustomQuotaResult>, crate::Error<SetCustomQuotaError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -590,7 +591,7 @@ pub fn member_space_limits_set_custom_quota<'a>(
 pub fn members_add_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersAddV2Arg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersAddLaunchV2Result, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersAddLaunchV2Result, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -612,7 +613,7 @@ pub fn members_add_v2<'a>(
 pub fn members_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersAddArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersAddLaunch, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersAddLaunch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -627,7 +628,7 @@ pub fn members_add<'a>(
 pub fn members_add_job_status_get_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersAddJobStatusV2Result, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersAddJobStatusV2Result, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -642,7 +643,7 @@ pub fn members_add_job_status_get_v2<'a>(
 pub fn members_add_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersAddJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersAddJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -656,7 +657,7 @@ pub fn members_add_job_status_get<'a>(
 pub fn members_delete_profile_photo_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersDeleteProfilePhotoArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamMemberInfoV2Result, MembersDeleteProfilePhotoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersDeleteProfilePhotoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -670,7 +671,7 @@ pub fn members_delete_profile_photo_v2<'a>(
 pub fn members_delete_profile_photo<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersDeleteProfilePhotoArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamMemberInfo, MembersDeleteProfilePhotoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamMemberInfo, crate::Error<MembersDeleteProfilePhotoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -685,7 +686,7 @@ pub fn members_delete_profile_photo<'a>(
 /// member management.
 pub fn members_get_available_team_member_roles(
     client: &impl crate::async_client_trait::TeamAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersGetAvailableTeamMemberRolesResult, crate::NoError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<MembersGetAvailableTeamMemberRolesResult, crate::Error<crate::NoError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -701,7 +702,7 @@ pub fn members_get_available_team_member_roles(
 pub fn members_get_info_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersGetInfoV2Arg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersGetInfoV2Result, MembersGetInfoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersGetInfoV2Result, crate::Error<MembersGetInfoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -717,7 +718,7 @@ pub fn members_get_info_v2<'a>(
 pub fn members_get_info<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersGetInfoArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersGetInfoResult, MembersGetInfoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersGetInfoResult, crate::Error<MembersGetInfoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -731,7 +732,7 @@ pub fn members_get_info<'a>(
 pub fn members_list_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersListV2Result, MembersListError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersListV2Result, crate::Error<MembersListError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -745,7 +746,7 @@ pub fn members_list_v2<'a>(
 pub fn members_list<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersListResult, MembersListError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersListResult, crate::Error<MembersListError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -760,7 +761,7 @@ pub fn members_list<'a>(
 pub fn members_list_continue_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersListContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersListV2Result, MembersListContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersListV2Result, crate::Error<MembersListContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -775,7 +776,7 @@ pub fn members_list_continue_v2<'a>(
 pub fn members_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersListContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersListResult, MembersListContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersListResult, crate::Error<MembersListContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -792,7 +793,7 @@ pub fn members_list_continue<'a>(
 pub fn members_move_former_member_files<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersDataTransferArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<MembersTransferFormerMembersFilesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -808,7 +809,7 @@ pub fn members_move_former_member_files<'a>(
 pub fn members_move_former_member_files_job_status_check<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::PollEmptyResult, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::PollEmptyResult, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -823,7 +824,7 @@ pub fn members_move_former_member_files_job_status_check<'a>(
 pub fn members_recover<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersRecoverArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), MembersRecoverError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<MembersRecoverError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -846,7 +847,7 @@ pub fn members_recover<'a>(
 pub fn members_remove<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersRemoveArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, MembersRemoveError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<MembersRemoveError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -861,7 +862,7 @@ pub fn members_remove<'a>(
 pub fn members_remove_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::dbx_async::PollEmptyResult, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::PollEmptyResult, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -877,7 +878,7 @@ pub fn members_remove_job_status_get<'a>(
 pub fn members_secondary_emails_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a AddSecondaryEmailsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<AddSecondaryEmailsResult, AddSecondaryEmailsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<AddSecondaryEmailsResult, crate::Error<AddSecondaryEmailsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -892,7 +893,7 @@ pub fn members_secondary_emails_add<'a>(
 pub fn members_secondary_emails_delete<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a DeleteSecondaryEmailsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<DeleteSecondaryEmailsResult, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<DeleteSecondaryEmailsResult, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -906,7 +907,7 @@ pub fn members_secondary_emails_delete<'a>(
 pub fn members_secondary_emails_resend_verification_emails<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a ResendVerificationEmailArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ResendVerificationEmailResult, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ResendVerificationEmailResult, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -922,7 +923,7 @@ pub fn members_secondary_emails_resend_verification_emails<'a>(
 pub fn members_send_welcome_email<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a UserSelectorArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), MembersSendWelcomeError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<MembersSendWelcomeError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -936,7 +937,7 @@ pub fn members_send_welcome_email<'a>(
 pub fn members_set_admin_permissions_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersSetPermissions2Arg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersSetPermissions2Result, MembersSetPermissions2Error>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersSetPermissions2Result, crate::Error<MembersSetPermissions2Error>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -950,7 +951,7 @@ pub fn members_set_admin_permissions_v2<'a>(
 pub fn members_set_admin_permissions<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersSetPermissionsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<MembersSetPermissionsResult, MembersSetPermissionsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<MembersSetPermissionsResult, crate::Error<MembersSetPermissionsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -964,7 +965,7 @@ pub fn members_set_admin_permissions<'a>(
 pub fn members_set_profile_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersSetProfileArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamMemberInfoV2Result, MembersSetProfileError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersSetProfileError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -978,7 +979,7 @@ pub fn members_set_profile_v2<'a>(
 pub fn members_set_profile<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersSetProfileArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamMemberInfo, MembersSetProfileError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamMemberInfo, crate::Error<MembersSetProfileError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -992,7 +993,7 @@ pub fn members_set_profile<'a>(
 pub fn members_set_profile_photo_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersSetProfilePhotoArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamMemberInfoV2Result, MembersSetProfilePhotoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersSetProfilePhotoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1006,7 +1007,7 @@ pub fn members_set_profile_photo_v2<'a>(
 pub fn members_set_profile_photo<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersSetProfilePhotoArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamMemberInfo, MembersSetProfilePhotoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamMemberInfo, crate::Error<MembersSetProfilePhotoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1021,7 +1022,7 @@ pub fn members_set_profile_photo<'a>(
 pub fn members_suspend<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersDeactivateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), MembersSuspendError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<MembersSuspendError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1036,7 +1037,7 @@ pub fn members_suspend<'a>(
 pub fn members_unsuspend<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersUnsuspendArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), MembersUnsuspendError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<MembersUnsuspendError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1053,7 +1054,7 @@ pub fn members_unsuspend<'a>(
 pub fn namespaces_list<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamNamespacesListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamNamespacesListResult, TeamNamespacesListError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamNamespacesListResult, crate::Error<TeamNamespacesListError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1068,7 +1069,7 @@ pub fn namespaces_list<'a>(
 pub fn namespaces_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamNamespacesListContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamNamespacesListResult, TeamNamespacesListContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamNamespacesListResult, crate::Error<TeamNamespacesListContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1083,7 +1084,7 @@ pub fn namespaces_list_continue<'a>(
 pub fn properties_template_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::file_properties::AddTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::AddTemplateResult, crate::types::file_properties::ModifyTemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::file_properties::AddTemplateResult, crate::Error<crate::types::file_properties::ModifyTemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1098,7 +1099,7 @@ pub fn properties_template_add<'a>(
 pub fn properties_template_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::file_properties::GetTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::GetTemplateResult, crate::types::file_properties::TemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::file_properties::GetTemplateResult, crate::Error<crate::types::file_properties::TemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1112,7 +1113,7 @@ pub fn properties_template_get<'a>(
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::async_client_trait::TeamAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::ListTemplateResult, crate::types::file_properties::TemplateError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<crate::types::file_properties::ListTemplateResult, crate::Error<crate::types::file_properties::TemplateError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1127,7 +1128,7 @@ pub fn properties_template_list(
 pub fn properties_template_update<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::file_properties::UpdateTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::UpdateTemplateResult, crate::types::file_properties::ModifyTemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::file_properties::UpdateTemplateResult, crate::Error<crate::types::file_properties::ModifyTemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1143,7 +1144,7 @@ pub fn properties_template_update<'a>(
 pub fn reports_get_activity<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a DateRange,
-) -> impl std::future::Future<Output=crate::Result<Result<GetActivityReport, DateRangeError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetActivityReport, crate::Error<DateRangeError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1159,7 +1160,7 @@ pub fn reports_get_activity<'a>(
 pub fn reports_get_devices<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a DateRange,
-) -> impl std::future::Future<Output=crate::Result<Result<GetDevicesReport, DateRangeError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetDevicesReport, crate::Error<DateRangeError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1175,7 +1176,7 @@ pub fn reports_get_devices<'a>(
 pub fn reports_get_membership<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a DateRange,
-) -> impl std::future::Future<Output=crate::Result<Result<GetMembershipReport, DateRangeError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetMembershipReport, crate::Error<DateRangeError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1191,7 +1192,7 @@ pub fn reports_get_membership<'a>(
 pub fn reports_get_storage<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a DateRange,
-) -> impl std::future::Future<Output=crate::Result<Result<GetStorageReport, DateRangeError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetStorageReport, crate::Error<DateRangeError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1213,7 +1214,7 @@ pub fn reports_get_storage<'a>(
 pub fn sharing_allowlist_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a SharingAllowlistAddArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<SharingAllowlistAddResponse, SharingAllowlistAddError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharingAllowlistAddResponse, crate::Error<SharingAllowlistAddError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1235,7 +1236,7 @@ pub fn sharing_allowlist_add<'a>(
 pub fn sharing_allowlist_list<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a SharingAllowlistListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharingAllowlistListResponse, SharingAllowlistListError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharingAllowlistListResponse, crate::Error<SharingAllowlistListError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1255,7 +1256,7 @@ pub fn sharing_allowlist_list<'a>(
 pub fn sharing_allowlist_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a SharingAllowlistListContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SharingAllowlistListResponse, SharingAllowlistListContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharingAllowlistListResponse, crate::Error<SharingAllowlistListContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1277,7 +1278,7 @@ pub fn sharing_allowlist_list_continue<'a>(
 pub fn sharing_allowlist_remove<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a SharingAllowlistRemoveArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<SharingAllowlistRemoveResponse, SharingAllowlistRemoveError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SharingAllowlistRemoveResponse, crate::Error<SharingAllowlistRemoveError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1291,7 +1292,7 @@ pub fn sharing_allowlist_remove<'a>(
 pub fn team_folder_activate<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderIdArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderMetadata, TeamFolderActivateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamFolderMetadata, crate::Error<TeamFolderActivateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1307,7 +1308,7 @@ pub fn team_folder_activate<'a>(
 pub fn team_folder_archive<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderArchiveArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderArchiveLaunch, TeamFolderArchiveError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamFolderArchiveLaunch, crate::Error<TeamFolderArchiveError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1322,7 +1323,7 @@ pub fn team_folder_archive<'a>(
 pub fn team_folder_archive_check<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderArchiveJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamFolderArchiveJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1337,7 +1338,7 @@ pub fn team_folder_archive_check<'a>(
 pub fn team_folder_create<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderCreateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderMetadata, TeamFolderCreateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamFolderMetadata, crate::Error<TeamFolderCreateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1351,7 +1352,7 @@ pub fn team_folder_create<'a>(
 pub fn team_folder_get_info<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderIdListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Vec<TeamFolderGetInfoItem>, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Vec<TeamFolderGetInfoItem>, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1365,7 +1366,7 @@ pub fn team_folder_get_info<'a>(
 pub fn team_folder_list<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderListArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderListResult, TeamFolderListError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamFolderListResult, crate::Error<TeamFolderListError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1380,7 +1381,7 @@ pub fn team_folder_list<'a>(
 pub fn team_folder_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderListContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderListResult, TeamFolderListContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamFolderListResult, crate::Error<TeamFolderListContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1395,7 +1396,7 @@ pub fn team_folder_list_continue<'a>(
 pub fn team_folder_permanently_delete<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderIdArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), TeamFolderPermanentlyDeleteError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<TeamFolderPermanentlyDeleteError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1409,7 +1410,7 @@ pub fn team_folder_permanently_delete<'a>(
 pub fn team_folder_rename<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderRenameArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderMetadata, TeamFolderRenameError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamFolderMetadata, crate::Error<TeamFolderRenameError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1424,7 +1425,7 @@ pub fn team_folder_rename<'a>(
 pub fn team_folder_update_sync_settings<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderUpdateSyncSettingsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<TeamFolderMetadata, TeamFolderUpdateSyncSettingsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TeamFolderMetadata, crate::Error<TeamFolderUpdateSyncSettingsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1438,7 +1439,7 @@ pub fn team_folder_update_sync_settings<'a>(
 /// call.
 pub fn token_get_authenticated_admin(
     client: &impl crate::async_client_trait::TeamAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<TokenGetAuthenticatedAdminResult, TokenGetAuthenticatedAdminError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<TokenGetAuthenticatedAdminResult, crate::Error<TokenGetAuthenticatedAdminError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

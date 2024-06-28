@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::users::*;
 pub fn features_get_values(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UserFeaturesGetValuesBatchArg,
-) -> crate::Result<Result<UserFeaturesGetValuesBatchResult, UserFeaturesGetValuesBatchError>> {
+) -> Result<UserFeaturesGetValuesBatchResult, crate::Error<UserFeaturesGetValuesBatchError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -30,7 +31,7 @@ pub fn features_get_values(
 pub fn get_account(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetAccountArg,
-) -> crate::Result<Result<BasicAccount, GetAccountError>> {
+) -> Result<BasicAccount, crate::Error<GetAccountError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -46,7 +47,7 @@ pub fn get_account(
 pub fn get_account_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetAccountBatchArg,
-) -> crate::Result<Result<GetAccountBatchResult, GetAccountBatchError>> {
+) -> Result<GetAccountBatchResult, crate::Error<GetAccountBatchError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -61,7 +62,7 @@ pub fn get_account_batch(
 /// Get information about the current user's account.
 pub fn get_current_account(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<FullAccount, crate::NoError>> {
+) -> Result<FullAccount, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -76,7 +77,7 @@ pub fn get_current_account(
 /// Get the space usage information for the current user's account.
 pub fn get_space_usage(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<SpaceUsage, crate::NoError>> {
+) -> Result<SpaceUsage, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

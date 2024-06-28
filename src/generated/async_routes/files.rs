@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -21,7 +22,7 @@ pub use crate::generated::types::files::*;
 pub fn alpha_get_metadata<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a AlphaGetMetadataArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Metadata, AlphaGetMetadataError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Metadata, crate::Error<AlphaGetMetadataError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -44,7 +45,7 @@ pub fn alpha_upload<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadArg,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<FileMetadata, UploadError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileMetadata, crate::Error<UploadError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -59,7 +60,7 @@ pub fn alpha_upload<'a>(
 pub fn copy_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelocationArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationResult, RelocationError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationResult, crate::Error<RelocationError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -75,7 +76,7 @@ pub fn copy_v2<'a>(
 pub fn copy<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelocationArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Metadata, RelocationError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Metadata, crate::Error<RelocationError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -93,7 +94,7 @@ pub fn copy<'a>(
 pub fn copy_batch_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a CopyBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchV2Launch, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationBatchV2Launch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -110,7 +111,7 @@ pub fn copy_batch_v2<'a>(
 pub fn copy_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelocationBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchLaunch, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -125,7 +126,7 @@ pub fn copy_batch<'a>(
 pub fn copy_batch_check_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchV2JobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationBatchV2JobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -141,7 +142,7 @@ pub fn copy_batch_check_v2<'a>(
 pub fn copy_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -157,7 +158,7 @@ pub fn copy_batch_check<'a>(
 pub fn copy_reference_get<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetCopyReferenceArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetCopyReferenceResult, GetCopyReferenceError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetCopyReferenceResult, crate::Error<GetCopyReferenceError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -172,7 +173,7 @@ pub fn copy_reference_get<'a>(
 pub fn copy_reference_save<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a SaveCopyReferenceArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SaveCopyReferenceResult, SaveCopyReferenceError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SaveCopyReferenceResult, crate::Error<SaveCopyReferenceError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -186,7 +187,7 @@ pub fn copy_reference_save<'a>(
 pub fn create_folder_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a CreateFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<CreateFolderResult, CreateFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<CreateFolderResult, crate::Error<CreateFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -201,7 +202,7 @@ pub fn create_folder_v2<'a>(
 pub fn create_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a CreateFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<FolderMetadata, CreateFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FolderMetadata, crate::Error<CreateFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -219,7 +220,7 @@ pub fn create_folder<'a>(
 pub fn create_folder_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a CreateFolderBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<CreateFolderBatchLaunch, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<CreateFolderBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -234,7 +235,7 @@ pub fn create_folder_batch<'a>(
 pub fn create_folder_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<CreateFolderBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<CreateFolderBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -252,7 +253,7 @@ pub fn create_folder_batch_check<'a>(
 pub fn delete_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a DeleteArg,
-) -> impl std::future::Future<Output=crate::Result<Result<DeleteResult, DeleteError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<DeleteResult, crate::Error<DeleteError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -271,7 +272,7 @@ pub fn delete_v2<'a>(
 pub fn delete<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a DeleteArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Metadata, DeleteError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Metadata, crate::Error<DeleteError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -287,7 +288,7 @@ pub fn delete<'a>(
 pub fn delete_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a DeleteBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<DeleteBatchLaunch, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<DeleteBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -302,7 +303,7 @@ pub fn delete_batch<'a>(
 pub fn delete_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<DeleteBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<DeleteBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -318,7 +319,7 @@ pub fn download<'a>(
     arg: &'a DownloadArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<FileMetadata>, DownloadError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<FileMetadata>, crate::Error<DownloadError>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -339,7 +340,7 @@ pub fn download_zip<'a>(
     arg: &'a DownloadZipArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<DownloadZipResult>, DownloadZipError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<DownloadZipResult>, crate::Error<DownloadZipError>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -364,7 +365,7 @@ pub fn export<'a>(
     arg: &'a ExportArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<ExportResult>, ExportError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<ExportResult>, crate::Error<ExportError>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -380,7 +381,7 @@ pub fn export<'a>(
 pub fn get_file_lock_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a LockFileBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LockFileBatchResult, LockFileError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LockFileBatchResult, crate::Error<LockFileError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -394,7 +395,7 @@ pub fn get_file_lock_batch<'a>(
 pub fn get_metadata<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetMetadataArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Metadata, GetMetadataError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Metadata, crate::Error<GetMetadataError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -414,7 +415,7 @@ pub fn get_preview<'a>(
     arg: &'a PreviewArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<FileMetadata>, PreviewError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<FileMetadata>, crate::Error<PreviewError>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -432,7 +433,7 @@ pub fn get_preview<'a>(
 pub fn get_temporary_link<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetTemporaryLinkArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetTemporaryLinkResult, GetTemporaryLinkError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetTemporaryLinkResult, crate::Error<GetTemporaryLinkError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -481,7 +482,7 @@ pub fn get_temporary_link<'a>(
 pub fn get_temporary_upload_link<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetTemporaryUploadLinkArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetTemporaryUploadLinkResult, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetTemporaryUploadLinkResult, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -499,7 +500,7 @@ pub fn get_thumbnail<'a>(
     arg: &'a ThumbnailArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<FileMetadata>, ThumbnailError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<FileMetadata>, crate::Error<ThumbnailError>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -519,7 +520,7 @@ pub fn get_thumbnail_v2<'a>(
     arg: &'a ThumbnailV2Arg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<PreviewResult>, ThumbnailV2Error>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<PreviewResult>, crate::Error<ThumbnailV2Error>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -539,7 +540,7 @@ pub fn get_thumbnail_v2_app_auth<'a>(
     arg: &'a ThumbnailV2Arg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::async_client_trait::HttpRequestResult<PreviewResult>, ThumbnailV2Error>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<PreviewResult>, crate::Error<ThumbnailV2Error>>> + Send + 'a {
     crate::client_helpers::request_with_body(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -557,7 +558,7 @@ pub fn get_thumbnail_v2_app_auth<'a>(
 pub fn get_thumbnail_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetThumbnailBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetThumbnailBatchResult, GetThumbnailBatchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetThumbnailBatchResult, crate::Error<GetThumbnailBatchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -590,7 +591,7 @@ pub fn get_thumbnail_batch<'a>(
 pub fn list_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFolderResult, ListFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFolderResult, crate::Error<ListFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -623,7 +624,7 @@ pub fn list_folder<'a>(
 pub fn list_folder_app_auth<'a>(
     client: &'a impl crate::async_client_trait::AppAuthClient,
     arg: &'a ListFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFolderResult, ListFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFolderResult, crate::Error<ListFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -639,7 +640,7 @@ pub fn list_folder_app_auth<'a>(
 pub fn list_folder_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFolderContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFolderResult, ListFolderContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFolderResult, crate::Error<ListFolderContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -655,7 +656,7 @@ pub fn list_folder_continue<'a>(
 pub fn list_folder_continue_app_auth<'a>(
     client: &'a impl crate::async_client_trait::AppAuthClient,
     arg: &'a ListFolderContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFolderResult, ListFolderContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFolderResult, crate::Error<ListFolderContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -672,7 +673,7 @@ pub fn list_folder_continue_app_auth<'a>(
 pub fn list_folder_get_latest_cursor<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFolderArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFolderGetLatestCursorResult, ListFolderError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFolderGetLatestCursorResult, crate::Error<ListFolderError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -691,7 +692,7 @@ pub fn list_folder_get_latest_cursor<'a>(
 pub fn list_folder_longpoll<'a>(
     client: &'a impl crate::async_client_trait::NoauthClient,
     arg: &'a ListFolderLongpollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFolderLongpollResult, ListFolderLongpollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFolderLongpollResult, crate::Error<ListFolderLongpollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Notify,
@@ -712,7 +713,7 @@ pub fn list_folder_longpoll<'a>(
 pub fn list_revisions<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListRevisionsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListRevisionsResult, ListRevisionsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListRevisionsResult, crate::Error<ListRevisionsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -728,7 +729,7 @@ pub fn list_revisions<'a>(
 pub fn lock_file_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a LockFileBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LockFileBatchResult, LockFileError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LockFileBatchResult, crate::Error<LockFileError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -743,7 +744,7 @@ pub fn lock_file_batch<'a>(
 pub fn move_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelocationArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationResult, RelocationError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationResult, crate::Error<RelocationError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -759,7 +760,7 @@ pub fn move_v2<'a>(
 pub fn do_move<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelocationArg,
-) -> impl std::future::Future<Output=crate::Result<Result<Metadata, RelocationError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<Metadata, crate::Error<RelocationError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -778,7 +779,7 @@ pub fn do_move<'a>(
 pub fn move_batch_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a MoveBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchV2Launch, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationBatchV2Launch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -795,7 +796,7 @@ pub fn move_batch_v2<'a>(
 pub fn move_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelocationBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchLaunch, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -810,7 +811,7 @@ pub fn move_batch<'a>(
 pub fn move_batch_check_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchV2JobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationBatchV2JobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -826,7 +827,7 @@ pub fn move_batch_check_v2<'a>(
 pub fn move_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<RelocationBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<RelocationBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -846,7 +847,7 @@ pub fn paper_create<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperCreateArg,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<PaperCreateResult, PaperCreateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<PaperCreateResult, crate::Error<PaperCreateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -866,7 +867,7 @@ pub fn paper_update<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a PaperUpdateArg,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<PaperUpdateResult, PaperUpdateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<PaperUpdateResult, crate::Error<PaperUpdateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -883,7 +884,7 @@ pub fn paper_update<'a>(
 pub fn permanently_delete<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a DeleteArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), DeleteError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<DeleteError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -897,7 +898,7 @@ pub fn permanently_delete<'a>(
 pub fn properties_add<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::file_properties::AddPropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::types::file_properties::AddPropertiesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<crate::types::file_properties::AddPropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -911,7 +912,7 @@ pub fn properties_add<'a>(
 pub fn properties_overwrite<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::file_properties::OverwritePropertyGroupArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::types::file_properties::InvalidPropertyGroupError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<crate::types::file_properties::InvalidPropertyGroupError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -925,7 +926,7 @@ pub fn properties_overwrite<'a>(
 pub fn properties_remove<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::file_properties::RemovePropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::types::file_properties::RemovePropertiesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<crate::types::file_properties::RemovePropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -939,7 +940,7 @@ pub fn properties_remove<'a>(
 pub fn properties_template_get<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::file_properties::GetTemplateArg,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::GetTemplateResult, crate::types::file_properties::TemplateError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<crate::types::file_properties::GetTemplateResult, crate::Error<crate::types::file_properties::TemplateError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -952,7 +953,7 @@ pub fn properties_template_get<'a>(
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<crate::types::file_properties::ListTemplateResult, crate::types::file_properties::TemplateError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<crate::types::file_properties::ListTemplateResult, crate::Error<crate::types::file_properties::TemplateError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -966,7 +967,7 @@ pub fn properties_template_list(
 pub fn properties_update<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::file_properties::UpdatePropertiesArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::types::file_properties::UpdatePropertiesError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<crate::types::file_properties::UpdatePropertiesError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -980,7 +981,7 @@ pub fn properties_update<'a>(
 pub fn restore<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RestoreArg,
-) -> impl std::future::Future<Output=crate::Result<Result<FileMetadata, RestoreError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileMetadata, crate::Error<RestoreError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -997,7 +998,7 @@ pub fn restore<'a>(
 pub fn save_url<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a SaveUrlArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SaveUrlResult, SaveUrlError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SaveUrlResult, crate::Error<SaveUrlError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1011,7 +1012,7 @@ pub fn save_url<'a>(
 pub fn save_url_check_job_status<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SaveUrlJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SaveUrlJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1028,7 +1029,7 @@ pub fn save_url_check_job_status<'a>(
 pub fn search<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a SearchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SearchResult, SearchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SearchResult, crate::Error<SearchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1045,7 +1046,7 @@ pub fn search<'a>(
 pub fn search_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a SearchV2Arg,
-) -> impl std::future::Future<Output=crate::Result<Result<SearchV2Result, SearchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SearchV2Result, crate::Error<SearchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1063,7 +1064,7 @@ pub fn search_v2<'a>(
 pub fn search_continue_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a SearchV2ContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<SearchV2Result, SearchError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<SearchV2Result, crate::Error<SearchError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1083,7 +1084,7 @@ pub fn search_continue_v2<'a>(
 pub fn tags_add<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a AddTagArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), AddTagError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<AddTagError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1102,7 +1103,7 @@ pub fn tags_add<'a>(
 pub fn tags_get<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetTagsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<GetTagsResult, BaseTagError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<GetTagsResult, crate::Error<BaseTagError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1121,7 +1122,7 @@ pub fn tags_get<'a>(
 pub fn tags_remove<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RemoveTagArg,
-) -> impl std::future::Future<Output=crate::Result<Result<(), RemoveTagError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<RemoveTagError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1137,7 +1138,7 @@ pub fn tags_remove<'a>(
 pub fn unlock_file_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UnlockFileBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<LockFileBatchResult, LockFileError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<LockFileBatchResult, crate::Error<LockFileError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1157,7 +1158,7 @@ pub fn upload<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadArg,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<FileMetadata, UploadError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileMetadata, crate::Error<UploadError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -1177,7 +1178,7 @@ pub fn upload_session_append_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionAppendArg,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<(), UploadSessionAppendError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<UploadSessionAppendError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -1197,7 +1198,7 @@ pub fn upload_session_append<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionCursor,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<(), UploadSessionAppendError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<(), crate::Error<UploadSessionAppendError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -1217,7 +1218,7 @@ pub fn upload_session_finish<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionFinishArg,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<FileMetadata, UploadSessionFinishError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileMetadata, crate::Error<UploadSessionFinishError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -1249,7 +1250,7 @@ pub fn upload_session_finish<'a>(
 pub fn upload_session_finish_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionFinishBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<UploadSessionFinishBatchLaunch, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<UploadSessionFinishBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1277,7 +1278,7 @@ pub fn upload_session_finish_batch<'a>(
 pub fn upload_session_finish_batch_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionFinishBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<UploadSessionFinishBatchResult, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<UploadSessionFinishBatchResult, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1293,7 +1294,7 @@ pub fn upload_session_finish_batch_v2<'a>(
 pub fn upload_session_finish_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=crate::Result<Result<UploadSessionFinishBatchJobStatus, crate::types::dbx_async::PollError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<UploadSessionFinishBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -1338,7 +1339,7 @@ pub fn upload_session_start<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionStartArg,
     body: bytes::Bytes,
-) -> impl std::future::Future<Output=crate::Result<Result<UploadSessionStartResult, UploadSessionStartError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<UploadSessionStartResult, crate::Error<UploadSessionStartError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Content,
@@ -1355,7 +1356,7 @@ pub fn upload_session_start<'a>(
 pub fn upload_session_start_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UploadSessionStartBatchArg,
-) -> impl std::future::Future<Output=crate::Result<Result<UploadSessionStartBatchResult, crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<UploadSessionStartBatchResult, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

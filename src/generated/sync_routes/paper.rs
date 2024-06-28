@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -21,7 +22,7 @@ pub use crate::generated::types::paper::*;
 pub fn docs_archive(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
-) -> crate::Result<Result<(), DocLookupError>> {
+) -> Result<(), crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -45,7 +46,7 @@ pub fn docs_create(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocCreateArgs,
     body: &[u8],
-) -> crate::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>> {
+) -> Result<PaperDocCreateUpdateResult, crate::Error<PaperDocCreateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -69,7 +70,7 @@ pub fn docs_download(
     arg: &PaperDocExport,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> crate::Result<Result<crate::client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>> {
+) -> Result<crate::client_trait::HttpRequestResult<PaperDocExportResult>, crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async_body(
         crate::client_helpers::request_with_body(
             client,
@@ -96,7 +97,7 @@ pub fn docs_download(
 pub fn docs_folder_users_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnFolderArgs,
-) -> crate::Result<Result<ListUsersOnFolderResponse, DocLookupError>> {
+) -> Result<ListUsersOnFolderResponse, crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -119,7 +120,7 @@ pub fn docs_folder_users_list(
 pub fn docs_folder_users_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnFolderContinueArgs,
-) -> crate::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>> {
+) -> Result<ListUsersOnFolderResponse, crate::Error<ListUsersCursorError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -146,7 +147,7 @@ pub fn docs_folder_users_list_continue(
 pub fn docs_get_folder_info(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
-) -> crate::Result<Result<FoldersContainingPaperDoc, DocLookupError>> {
+) -> Result<FoldersContainingPaperDoc, crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -170,7 +171,7 @@ pub fn docs_get_folder_info(
 pub fn docs_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsArgs,
-) -> crate::Result<Result<ListPaperDocsResponse, crate::NoError>> {
+) -> Result<ListPaperDocsResponse, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -193,7 +194,7 @@ pub fn docs_list(
 pub fn docs_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsContinueArgs,
-) -> crate::Result<Result<ListPaperDocsResponse, ListDocsCursorError>> {
+) -> Result<ListPaperDocsResponse, crate::Error<ListDocsCursorError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -216,7 +217,7 @@ pub fn docs_list_continue(
 pub fn docs_permanently_delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
-) -> crate::Result<Result<(), DocLookupError>> {
+) -> Result<(), crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -238,7 +239,7 @@ pub fn docs_permanently_delete(
 pub fn docs_sharing_policy_get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
-) -> crate::Result<Result<SharingPolicy, DocLookupError>> {
+) -> Result<SharingPolicy, crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -263,7 +264,7 @@ pub fn docs_sharing_policy_get(
 pub fn docs_sharing_policy_set(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocSharingPolicy,
-) -> crate::Result<Result<(), DocLookupError>> {
+) -> Result<(), crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -287,7 +288,7 @@ pub fn docs_update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocUpdateArgs,
     body: &[u8],
-) -> crate::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>> {
+) -> Result<PaperDocCreateUpdateResult, crate::Error<PaperDocUpdateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -311,7 +312,7 @@ pub fn docs_update(
 pub fn docs_users_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddPaperDocUser,
-) -> crate::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>> {
+) -> Result<Vec<AddPaperDocUserMemberResult>, crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -336,7 +337,7 @@ pub fn docs_users_add(
 pub fn docs_users_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnPaperDocArgs,
-) -> crate::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>> {
+) -> Result<ListUsersOnPaperDocResponse, crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -359,7 +360,7 @@ pub fn docs_users_list(
 pub fn docs_users_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnPaperDocContinueArgs,
-) -> crate::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>> {
+) -> Result<ListUsersOnPaperDocResponse, crate::Error<ListUsersCursorError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -382,7 +383,7 @@ pub fn docs_users_list_continue(
 pub fn docs_users_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemovePaperDocUser,
-) -> crate::Result<Result<(), DocLookupError>> {
+) -> Result<(), crate::Error<DocLookupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -404,7 +405,7 @@ pub fn docs_users_remove(
 pub fn folders_create(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperFolderCreateArg,
-) -> crate::Result<Result<PaperFolderCreateResult, PaperFolderCreateError>> {
+) -> Result<PaperFolderCreateResult, crate::Error<PaperFolderCreateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

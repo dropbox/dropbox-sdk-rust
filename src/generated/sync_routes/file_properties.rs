@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -15,7 +16,7 @@ pub use crate::generated::types::file_properties::*;
 pub fn properties_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddPropertiesArg,
-) -> crate::Result<Result<(), AddPropertiesError>> {
+) -> Result<(), crate::Error<AddPropertiesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -35,7 +36,7 @@ pub fn properties_add(
 pub fn properties_overwrite(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &OverwritePropertyGroupArg,
-) -> crate::Result<Result<(), InvalidPropertyGroupError>> {
+) -> Result<(), crate::Error<InvalidPropertyGroupError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -56,7 +57,7 @@ pub fn properties_overwrite(
 pub fn properties_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemovePropertiesArg,
-) -> crate::Result<Result<(), RemovePropertiesError>> {
+) -> Result<(), crate::Error<RemovePropertiesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -72,7 +73,7 @@ pub fn properties_remove(
 pub fn properties_search(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PropertiesSearchArg,
-) -> crate::Result<Result<PropertiesSearchResult, PropertiesSearchError>> {
+) -> Result<PropertiesSearchResult, crate::Error<PropertiesSearchError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -89,7 +90,7 @@ pub fn properties_search(
 pub fn properties_search_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PropertiesSearchContinueArg,
-) -> crate::Result<Result<PropertiesSearchResult, PropertiesSearchContinueError>> {
+) -> Result<PropertiesSearchResult, crate::Error<PropertiesSearchContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -110,7 +111,7 @@ pub fn properties_search_continue(
 pub fn properties_update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdatePropertiesArg,
-) -> crate::Result<Result<(), UpdatePropertiesError>> {
+) -> Result<(), crate::Error<UpdatePropertiesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -127,7 +128,7 @@ pub fn properties_update(
 pub fn templates_add_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &AddTemplateArg,
-) -> crate::Result<Result<AddTemplateResult, ModifyTemplateError>> {
+) -> Result<AddTemplateResult, crate::Error<ModifyTemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -144,7 +145,7 @@ pub fn templates_add_for_team(
 pub fn templates_add_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddTemplateArg,
-) -> crate::Result<Result<AddTemplateResult, ModifyTemplateError>> {
+) -> Result<AddTemplateResult, crate::Error<ModifyTemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -160,7 +161,7 @@ pub fn templates_add_for_user(
 pub fn templates_get_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GetTemplateArg,
-) -> crate::Result<Result<GetTemplateResult, TemplateError>> {
+) -> Result<GetTemplateResult, crate::Error<TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -177,7 +178,7 @@ pub fn templates_get_for_team(
 pub fn templates_get_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetTemplateArg,
-) -> crate::Result<Result<GetTemplateResult, TemplateError>> {
+) -> Result<GetTemplateResult, crate::Error<TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -193,7 +194,7 @@ pub fn templates_get_for_user(
 /// [`templates_get_for_team()`](templates_get_for_team).
 pub fn templates_list_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<ListTemplateResult, TemplateError>> {
+) -> Result<ListTemplateResult, crate::Error<TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -210,7 +211,7 @@ pub fn templates_list_for_team(
 /// member or admin's behalf.
 pub fn templates_list_for_user(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<ListTemplateResult, TemplateError>> {
+) -> Result<ListTemplateResult, crate::Error<TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -228,7 +229,7 @@ pub fn templates_list_for_user(
 pub fn templates_remove_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &RemoveTemplateArg,
-) -> crate::Result<Result<(), TemplateError>> {
+) -> Result<(), crate::Error<TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -246,7 +247,7 @@ pub fn templates_remove_for_team(
 pub fn templates_remove_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveTemplateArg,
-) -> crate::Result<Result<(), TemplateError>> {
+) -> Result<(), crate::Error<TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -263,7 +264,7 @@ pub fn templates_remove_for_user(
 pub fn templates_update_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &UpdateTemplateArg,
-) -> crate::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
+) -> Result<UpdateTemplateResult, crate::Error<ModifyTemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -281,7 +282,7 @@ pub fn templates_update_for_team(
 pub fn templates_update_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateTemplateArg,
-) -> crate::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
+) -> Result<UpdateTemplateResult, crate::Error<ModifyTemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::team::*;
 pub fn devices_list_member_devices(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListMemberDevicesArg,
-) -> crate::Result<Result<ListMemberDevicesResult, ListMemberDevicesError>> {
+) -> Result<ListMemberDevicesResult, crate::Error<ListMemberDevicesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -30,7 +31,7 @@ pub fn devices_list_member_devices(
 pub fn devices_list_members_devices(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListMembersDevicesArg,
-) -> crate::Result<Result<ListMembersDevicesResult, ListMembersDevicesError>> {
+) -> Result<ListMembersDevicesResult, crate::Error<ListMembersDevicesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -47,7 +48,7 @@ pub fn devices_list_members_devices(
 pub fn devices_list_team_devices(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListTeamDevicesArg,
-) -> crate::Result<Result<ListTeamDevicesResult, ListTeamDevicesError>> {
+) -> Result<ListTeamDevicesResult, crate::Error<ListTeamDevicesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -63,7 +64,7 @@ pub fn devices_list_team_devices(
 pub fn devices_revoke_device_session(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &RevokeDeviceSessionArg,
-) -> crate::Result<Result<(), RevokeDeviceSessionError>> {
+) -> Result<(), crate::Error<RevokeDeviceSessionError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -79,7 +80,7 @@ pub fn devices_revoke_device_session(
 pub fn devices_revoke_device_session_batch(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &RevokeDeviceSessionBatchArg,
-) -> crate::Result<Result<RevokeDeviceSessionBatchResult, RevokeDeviceSessionBatchError>> {
+) -> Result<RevokeDeviceSessionBatchResult, crate::Error<RevokeDeviceSessionBatchError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -97,7 +98,7 @@ pub fn devices_revoke_device_session_batch(
 pub fn features_get_values(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &FeaturesGetValuesBatchArg,
-) -> crate::Result<Result<FeaturesGetValuesBatchResult, FeaturesGetValuesBatchError>> {
+) -> Result<FeaturesGetValuesBatchResult, crate::Error<FeaturesGetValuesBatchError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -112,7 +113,7 @@ pub fn features_get_values(
 /// Retrieves information about a team.
 pub fn get_info(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<TeamGetInfoResult, crate::NoError>> {
+) -> Result<TeamGetInfoResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -128,7 +129,7 @@ pub fn get_info(
 pub fn groups_create(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupCreateArg,
-) -> crate::Result<Result<GroupFullInfo, GroupCreateError>> {
+) -> Result<GroupFullInfo, crate::Error<GroupCreateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -146,7 +147,7 @@ pub fn groups_create(
 pub fn groups_delete(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupSelector,
-) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, GroupDeleteError>> {
+) -> Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<GroupDeleteError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -164,7 +165,7 @@ pub fn groups_delete(
 pub fn groups_get_info(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupsSelector,
-) -> crate::Result<Result<GroupsGetInfoResult, GroupsGetInfoError>> {
+) -> Result<GroupsGetInfoResult, crate::Error<GroupsGetInfoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -184,7 +185,7 @@ pub fn groups_get_info(
 pub fn groups_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<crate::types::dbx_async::PollEmptyResult, GroupsPollError>> {
+) -> Result<crate::types::dbx_async::PollEmptyResult, crate::Error<GroupsPollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -200,7 +201,7 @@ pub fn groups_job_status_get(
 pub fn groups_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupsListArg,
-) -> crate::Result<Result<GroupsListResult, crate::NoError>> {
+) -> Result<GroupsListResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -217,7 +218,7 @@ pub fn groups_list(
 pub fn groups_list_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupsListContinueArg,
-) -> crate::Result<Result<GroupsListResult, GroupsListContinueError>> {
+) -> Result<GroupsListResult, crate::Error<GroupsListContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -235,7 +236,7 @@ pub fn groups_list_continue(
 pub fn groups_members_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupMembersAddArg,
-) -> crate::Result<Result<GroupMembersChangeResult, GroupMembersAddError>> {
+) -> Result<GroupMembersChangeResult, crate::Error<GroupMembersAddError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -251,7 +252,7 @@ pub fn groups_members_add(
 pub fn groups_members_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupsMembersListArg,
-) -> crate::Result<Result<GroupsMembersListResult, GroupSelectorError>> {
+) -> Result<GroupsMembersListResult, crate::Error<GroupSelectorError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -268,7 +269,7 @@ pub fn groups_members_list(
 pub fn groups_members_list_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupsMembersListContinueArg,
-) -> crate::Result<Result<GroupsMembersListResult, GroupsMembersListContinueError>> {
+) -> Result<GroupsMembersListResult, crate::Error<GroupsMembersListContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -288,7 +289,7 @@ pub fn groups_members_list_continue(
 pub fn groups_members_remove(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupMembersRemoveArg,
-) -> crate::Result<Result<GroupMembersChangeResult, GroupMembersRemoveError>> {
+) -> Result<GroupMembersChangeResult, crate::Error<GroupMembersRemoveError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -304,7 +305,7 @@ pub fn groups_members_remove(
 pub fn groups_members_set_access_type(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupMembersSetAccessTypeArg,
-) -> crate::Result<Result<GroupsGetInfoResult, GroupMemberSetAccessTypeError>> {
+) -> Result<GroupsGetInfoResult, crate::Error<GroupMemberSetAccessTypeError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -320,7 +321,7 @@ pub fn groups_members_set_access_type(
 pub fn groups_update(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupUpdateArgs,
-) -> crate::Result<Result<GroupFullInfo, GroupUpdateError>> {
+) -> Result<GroupFullInfo, crate::Error<GroupUpdateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -337,7 +338,7 @@ pub fn groups_update(
 pub fn legal_holds_create_policy(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &LegalHoldsPolicyCreateArg,
-) -> crate::Result<Result<LegalHoldsPolicyCreateResult, LegalHoldsPolicyCreateError>> {
+) -> Result<LegalHoldsPolicyCreateResult, crate::Error<LegalHoldsPolicyCreateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -354,7 +355,7 @@ pub fn legal_holds_create_policy(
 pub fn legal_holds_get_policy(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &LegalHoldsGetPolicyArg,
-) -> crate::Result<Result<LegalHoldsGetPolicyResult, LegalHoldsGetPolicyError>> {
+) -> Result<LegalHoldsGetPolicyResult, crate::Error<LegalHoldsGetPolicyError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -371,7 +372,7 @@ pub fn legal_holds_get_policy(
 pub fn legal_holds_list_held_revisions(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &LegalHoldsListHeldRevisionsArg,
-) -> crate::Result<Result<LegalHoldsListHeldRevisionResult, LegalHoldsListHeldRevisionsError>> {
+) -> Result<LegalHoldsListHeldRevisionResult, crate::Error<LegalHoldsListHeldRevisionsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -388,7 +389,7 @@ pub fn legal_holds_list_held_revisions(
 pub fn legal_holds_list_held_revisions_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &LegalHoldsListHeldRevisionsContinueArg,
-) -> crate::Result<Result<LegalHoldsListHeldRevisionResult, LegalHoldsListHeldRevisionsError>> {
+) -> Result<LegalHoldsListHeldRevisionResult, crate::Error<LegalHoldsListHeldRevisionsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -405,7 +406,7 @@ pub fn legal_holds_list_held_revisions_continue(
 pub fn legal_holds_list_policies(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &LegalHoldsListPoliciesArg,
-) -> crate::Result<Result<LegalHoldsListPoliciesResult, LegalHoldsListPoliciesError>> {
+) -> Result<LegalHoldsListPoliciesResult, crate::Error<LegalHoldsListPoliciesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -422,7 +423,7 @@ pub fn legal_holds_list_policies(
 pub fn legal_holds_release_policy(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &LegalHoldsPolicyReleaseArg,
-) -> crate::Result<Result<(), LegalHoldsPolicyReleaseError>> {
+) -> Result<(), crate::Error<LegalHoldsPolicyReleaseError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -439,7 +440,7 @@ pub fn legal_holds_release_policy(
 pub fn legal_holds_update_policy(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &LegalHoldsPolicyUpdateArg,
-) -> crate::Result<Result<LegalHoldsPolicyUpdateResult, LegalHoldsPolicyUpdateError>> {
+) -> Result<LegalHoldsPolicyUpdateResult, crate::Error<LegalHoldsPolicyUpdateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -456,7 +457,7 @@ pub fn legal_holds_update_policy(
 pub fn linked_apps_list_member_linked_apps(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListMemberAppsArg,
-) -> crate::Result<Result<ListMemberAppsResult, ListMemberAppsError>> {
+) -> Result<ListMemberAppsResult, crate::Error<ListMemberAppsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -473,7 +474,7 @@ pub fn linked_apps_list_member_linked_apps(
 pub fn linked_apps_list_members_linked_apps(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListMembersAppsArg,
-) -> crate::Result<Result<ListMembersAppsResult, ListMembersAppsError>> {
+) -> Result<ListMembersAppsResult, crate::Error<ListMembersAppsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -491,7 +492,7 @@ pub fn linked_apps_list_members_linked_apps(
 pub fn linked_apps_list_team_linked_apps(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListTeamAppsArg,
-) -> crate::Result<Result<ListTeamAppsResult, ListTeamAppsError>> {
+) -> Result<ListTeamAppsResult, crate::Error<ListTeamAppsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -507,7 +508,7 @@ pub fn linked_apps_list_team_linked_apps(
 pub fn linked_apps_revoke_linked_app(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &RevokeLinkedApiAppArg,
-) -> crate::Result<Result<(), RevokeLinkedAppError>> {
+) -> Result<(), crate::Error<RevokeLinkedAppError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -523,7 +524,7 @@ pub fn linked_apps_revoke_linked_app(
 pub fn linked_apps_revoke_linked_app_batch(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &RevokeLinkedApiAppBatchArg,
-) -> crate::Result<Result<RevokeLinkedAppBatchResult, RevokeLinkedAppBatchError>> {
+) -> Result<RevokeLinkedAppBatchResult, crate::Error<RevokeLinkedAppBatchError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -539,7 +540,7 @@ pub fn linked_apps_revoke_linked_app_batch(
 pub fn member_space_limits_excluded_users_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ExcludedUsersUpdateArg,
-) -> crate::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>> {
+) -> Result<ExcludedUsersUpdateResult, crate::Error<ExcludedUsersUpdateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -555,7 +556,7 @@ pub fn member_space_limits_excluded_users_add(
 pub fn member_space_limits_excluded_users_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ExcludedUsersListArg,
-) -> crate::Result<Result<ExcludedUsersListResult, ExcludedUsersListError>> {
+) -> Result<ExcludedUsersListResult, crate::Error<ExcludedUsersListError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -571,7 +572,7 @@ pub fn member_space_limits_excluded_users_list(
 pub fn member_space_limits_excluded_users_list_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ExcludedUsersListContinueArg,
-) -> crate::Result<Result<ExcludedUsersListResult, ExcludedUsersListContinueError>> {
+) -> Result<ExcludedUsersListResult, crate::Error<ExcludedUsersListContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -587,7 +588,7 @@ pub fn member_space_limits_excluded_users_list_continue(
 pub fn member_space_limits_excluded_users_remove(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ExcludedUsersUpdateArg,
-) -> crate::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>> {
+) -> Result<ExcludedUsersUpdateResult, crate::Error<ExcludedUsersUpdateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -605,7 +606,7 @@ pub fn member_space_limits_excluded_users_remove(
 pub fn member_space_limits_get_custom_quota(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &CustomQuotaUsersArg,
-) -> crate::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
+) -> Result<Vec<CustomQuotaResult>, crate::Error<CustomQuotaError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -623,7 +624,7 @@ pub fn member_space_limits_get_custom_quota(
 pub fn member_space_limits_remove_custom_quota(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &CustomQuotaUsersArg,
-) -> crate::Result<Result<Vec<RemoveCustomQuotaResult>, CustomQuotaError>> {
+) -> Result<Vec<RemoveCustomQuotaResult>, crate::Error<CustomQuotaError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -642,7 +643,7 @@ pub fn member_space_limits_remove_custom_quota(
 pub fn member_space_limits_set_custom_quota(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &SetCustomQuotaArg,
-) -> crate::Result<Result<Vec<CustomQuotaResult>, SetCustomQuotaError>> {
+) -> Result<Vec<CustomQuotaResult>, crate::Error<SetCustomQuotaError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -666,7 +667,7 @@ pub fn member_space_limits_set_custom_quota(
 pub fn members_add_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersAddV2Arg,
-) -> crate::Result<Result<MembersAddLaunchV2Result, crate::NoError>> {
+) -> Result<MembersAddLaunchV2Result, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -690,7 +691,7 @@ pub fn members_add_v2(
 pub fn members_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersAddArg,
-) -> crate::Result<Result<MembersAddLaunch, crate::NoError>> {
+) -> Result<MembersAddLaunch, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -707,7 +708,7 @@ pub fn members_add(
 pub fn members_add_job_status_get_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<MembersAddJobStatusV2Result, crate::types::dbx_async::PollError>> {
+) -> Result<MembersAddJobStatusV2Result, crate::Error<crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -724,7 +725,7 @@ pub fn members_add_job_status_get_v2(
 pub fn members_add_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<MembersAddJobStatus, crate::types::dbx_async::PollError>> {
+) -> Result<MembersAddJobStatus, crate::Error<crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -740,7 +741,7 @@ pub fn members_add_job_status_get(
 pub fn members_delete_profile_photo_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersDeleteProfilePhotoArg,
-) -> crate::Result<Result<TeamMemberInfoV2Result, MembersDeleteProfilePhotoError>> {
+) -> Result<TeamMemberInfoV2Result, crate::Error<MembersDeleteProfilePhotoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -756,7 +757,7 @@ pub fn members_delete_profile_photo_v2(
 pub fn members_delete_profile_photo(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersDeleteProfilePhotoArg,
-) -> crate::Result<Result<TeamMemberInfo, MembersDeleteProfilePhotoError>> {
+) -> Result<TeamMemberInfo, crate::Error<MembersDeleteProfilePhotoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -773,7 +774,7 @@ pub fn members_delete_profile_photo(
 /// member management.
 pub fn members_get_available_team_member_roles(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<MembersGetAvailableTeamMemberRolesResult, crate::NoError>> {
+) -> Result<MembersGetAvailableTeamMemberRolesResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -791,7 +792,7 @@ pub fn members_get_available_team_member_roles(
 pub fn members_get_info_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersGetInfoV2Arg,
-) -> crate::Result<Result<MembersGetInfoV2Result, MembersGetInfoError>> {
+) -> Result<MembersGetInfoV2Result, crate::Error<MembersGetInfoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -809,7 +810,7 @@ pub fn members_get_info_v2(
 pub fn members_get_info(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersGetInfoArgs,
-) -> crate::Result<Result<MembersGetInfoResult, MembersGetInfoError>> {
+) -> Result<MembersGetInfoResult, crate::Error<MembersGetInfoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -825,7 +826,7 @@ pub fn members_get_info(
 pub fn members_list_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersListArg,
-) -> crate::Result<Result<MembersListV2Result, MembersListError>> {
+) -> Result<MembersListV2Result, crate::Error<MembersListError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -841,7 +842,7 @@ pub fn members_list_v2(
 pub fn members_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersListArg,
-) -> crate::Result<Result<MembersListResult, MembersListError>> {
+) -> Result<MembersListResult, crate::Error<MembersListError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -858,7 +859,7 @@ pub fn members_list(
 pub fn members_list_continue_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersListContinueArg,
-) -> crate::Result<Result<MembersListV2Result, MembersListContinueError>> {
+) -> Result<MembersListV2Result, crate::Error<MembersListContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -875,7 +876,7 @@ pub fn members_list_continue_v2(
 pub fn members_list_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersListContinueArg,
-) -> crate::Result<Result<MembersListResult, MembersListContinueError>> {
+) -> Result<MembersListResult, crate::Error<MembersListContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -894,7 +895,7 @@ pub fn members_list_continue(
 pub fn members_move_former_member_files(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersDataTransferArg,
-) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>> {
+) -> Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<MembersTransferFormerMembersFilesError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -912,7 +913,7 @@ pub fn members_move_former_member_files(
 pub fn members_move_former_member_files_job_status_check(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<crate::types::dbx_async::PollEmptyResult, crate::types::dbx_async::PollError>> {
+) -> Result<crate::types::dbx_async::PollEmptyResult, crate::Error<crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -929,7 +930,7 @@ pub fn members_move_former_member_files_job_status_check(
 pub fn members_recover(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersRecoverArg,
-) -> crate::Result<Result<(), MembersRecoverError>> {
+) -> Result<(), crate::Error<MembersRecoverError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -954,7 +955,7 @@ pub fn members_recover(
 pub fn members_remove(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersRemoveArg,
-) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, MembersRemoveError>> {
+) -> Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<MembersRemoveError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -971,7 +972,7 @@ pub fn members_remove(
 pub fn members_remove_job_status_get(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<crate::types::dbx_async::PollEmptyResult, crate::types::dbx_async::PollError>> {
+) -> Result<crate::types::dbx_async::PollEmptyResult, crate::Error<crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -989,7 +990,7 @@ pub fn members_remove_job_status_get(
 pub fn members_secondary_emails_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &AddSecondaryEmailsArg,
-) -> crate::Result<Result<AddSecondaryEmailsResult, AddSecondaryEmailsError>> {
+) -> Result<AddSecondaryEmailsResult, crate::Error<AddSecondaryEmailsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1006,7 +1007,7 @@ pub fn members_secondary_emails_add(
 pub fn members_secondary_emails_delete(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DeleteSecondaryEmailsArg,
-) -> crate::Result<Result<DeleteSecondaryEmailsResult, crate::NoError>> {
+) -> Result<DeleteSecondaryEmailsResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1022,7 +1023,7 @@ pub fn members_secondary_emails_delete(
 pub fn members_secondary_emails_resend_verification_emails(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ResendVerificationEmailArg,
-) -> crate::Result<Result<ResendVerificationEmailResult, crate::NoError>> {
+) -> Result<ResendVerificationEmailResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1040,7 +1041,7 @@ pub fn members_secondary_emails_resend_verification_emails(
 pub fn members_send_welcome_email(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &UserSelectorArg,
-) -> crate::Result<Result<(), MembersSendWelcomeError>> {
+) -> Result<(), crate::Error<MembersSendWelcomeError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1056,7 +1057,7 @@ pub fn members_send_welcome_email(
 pub fn members_set_admin_permissions_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersSetPermissions2Arg,
-) -> crate::Result<Result<MembersSetPermissions2Result, MembersSetPermissions2Error>> {
+) -> Result<MembersSetPermissions2Result, crate::Error<MembersSetPermissions2Error>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1072,7 +1073,7 @@ pub fn members_set_admin_permissions_v2(
 pub fn members_set_admin_permissions(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersSetPermissionsArg,
-) -> crate::Result<Result<MembersSetPermissionsResult, MembersSetPermissionsError>> {
+) -> Result<MembersSetPermissionsResult, crate::Error<MembersSetPermissionsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1088,7 +1089,7 @@ pub fn members_set_admin_permissions(
 pub fn members_set_profile_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersSetProfileArg,
-) -> crate::Result<Result<TeamMemberInfoV2Result, MembersSetProfileError>> {
+) -> Result<TeamMemberInfoV2Result, crate::Error<MembersSetProfileError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1104,7 +1105,7 @@ pub fn members_set_profile_v2(
 pub fn members_set_profile(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersSetProfileArg,
-) -> crate::Result<Result<TeamMemberInfo, MembersSetProfileError>> {
+) -> Result<TeamMemberInfo, crate::Error<MembersSetProfileError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1120,7 +1121,7 @@ pub fn members_set_profile(
 pub fn members_set_profile_photo_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersSetProfilePhotoArg,
-) -> crate::Result<Result<TeamMemberInfoV2Result, MembersSetProfilePhotoError>> {
+) -> Result<TeamMemberInfoV2Result, crate::Error<MembersSetProfilePhotoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1136,7 +1137,7 @@ pub fn members_set_profile_photo_v2(
 pub fn members_set_profile_photo(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersSetProfilePhotoArg,
-) -> crate::Result<Result<TeamMemberInfo, MembersSetProfilePhotoError>> {
+) -> Result<TeamMemberInfo, crate::Error<MembersSetProfilePhotoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1153,7 +1154,7 @@ pub fn members_set_profile_photo(
 pub fn members_suspend(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersDeactivateArg,
-) -> crate::Result<Result<(), MembersSuspendError>> {
+) -> Result<(), crate::Error<MembersSuspendError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1170,7 +1171,7 @@ pub fn members_suspend(
 pub fn members_unsuspend(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersUnsuspendArg,
-) -> crate::Result<Result<(), MembersUnsuspendError>> {
+) -> Result<(), crate::Error<MembersUnsuspendError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1189,7 +1190,7 @@ pub fn members_unsuspend(
 pub fn namespaces_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamNamespacesListArg,
-) -> crate::Result<Result<TeamNamespacesListResult, TeamNamespacesListError>> {
+) -> Result<TeamNamespacesListResult, crate::Error<TeamNamespacesListError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1206,7 +1207,7 @@ pub fn namespaces_list(
 pub fn namespaces_list_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamNamespacesListContinueArg,
-) -> crate::Result<Result<TeamNamespacesListResult, TeamNamespacesListContinueError>> {
+) -> Result<TeamNamespacesListResult, crate::Error<TeamNamespacesListContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1223,7 +1224,7 @@ pub fn namespaces_list_continue(
 pub fn properties_template_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::file_properties::AddTemplateArg,
-) -> crate::Result<Result<crate::types::file_properties::AddTemplateResult, crate::types::file_properties::ModifyTemplateError>> {
+) -> Result<crate::types::file_properties::AddTemplateResult, crate::Error<crate::types::file_properties::ModifyTemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1240,7 +1241,7 @@ pub fn properties_template_add(
 pub fn properties_template_get(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::file_properties::GetTemplateArg,
-) -> crate::Result<Result<crate::types::file_properties::GetTemplateResult, crate::types::file_properties::TemplateError>> {
+) -> Result<crate::types::file_properties::GetTemplateResult, crate::Error<crate::types::file_properties::TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1256,7 +1257,7 @@ pub fn properties_template_get(
 #[deprecated]
 pub fn properties_template_list(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<crate::types::file_properties::ListTemplateResult, crate::types::file_properties::TemplateError>> {
+) -> Result<crate::types::file_properties::ListTemplateResult, crate::Error<crate::types::file_properties::TemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1273,7 +1274,7 @@ pub fn properties_template_list(
 pub fn properties_template_update(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::file_properties::UpdateTemplateArg,
-) -> crate::Result<Result<crate::types::file_properties::UpdateTemplateResult, crate::types::file_properties::ModifyTemplateError>> {
+) -> Result<crate::types::file_properties::UpdateTemplateResult, crate::Error<crate::types::file_properties::ModifyTemplateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1291,7 +1292,7 @@ pub fn properties_template_update(
 pub fn reports_get_activity(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
-) -> crate::Result<Result<GetActivityReport, DateRangeError>> {
+) -> Result<GetActivityReport, crate::Error<DateRangeError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1309,7 +1310,7 @@ pub fn reports_get_activity(
 pub fn reports_get_devices(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
-) -> crate::Result<Result<GetDevicesReport, DateRangeError>> {
+) -> Result<GetDevicesReport, crate::Error<DateRangeError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1327,7 +1328,7 @@ pub fn reports_get_devices(
 pub fn reports_get_membership(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
-) -> crate::Result<Result<GetMembershipReport, DateRangeError>> {
+) -> Result<GetMembershipReport, crate::Error<DateRangeError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1345,7 +1346,7 @@ pub fn reports_get_membership(
 pub fn reports_get_storage(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
-) -> crate::Result<Result<GetStorageReport, DateRangeError>> {
+) -> Result<GetStorageReport, crate::Error<DateRangeError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1369,7 +1370,7 @@ pub fn reports_get_storage(
 pub fn sharing_allowlist_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &SharingAllowlistAddArgs,
-) -> crate::Result<Result<SharingAllowlistAddResponse, SharingAllowlistAddError>> {
+) -> Result<SharingAllowlistAddResponse, crate::Error<SharingAllowlistAddError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1393,7 +1394,7 @@ pub fn sharing_allowlist_add(
 pub fn sharing_allowlist_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &SharingAllowlistListArg,
-) -> crate::Result<Result<SharingAllowlistListResponse, SharingAllowlistListError>> {
+) -> Result<SharingAllowlistListResponse, crate::Error<SharingAllowlistListError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1415,7 +1416,7 @@ pub fn sharing_allowlist_list(
 pub fn sharing_allowlist_list_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &SharingAllowlistListContinueArg,
-) -> crate::Result<Result<SharingAllowlistListResponse, SharingAllowlistListContinueError>> {
+) -> Result<SharingAllowlistListResponse, crate::Error<SharingAllowlistListContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1439,7 +1440,7 @@ pub fn sharing_allowlist_list_continue(
 pub fn sharing_allowlist_remove(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &SharingAllowlistRemoveArgs,
-) -> crate::Result<Result<SharingAllowlistRemoveResponse, SharingAllowlistRemoveError>> {
+) -> Result<SharingAllowlistRemoveResponse, crate::Error<SharingAllowlistRemoveError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1455,7 +1456,7 @@ pub fn sharing_allowlist_remove(
 pub fn team_folder_activate(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderIdArg,
-) -> crate::Result<Result<TeamFolderMetadata, TeamFolderActivateError>> {
+) -> Result<TeamFolderMetadata, crate::Error<TeamFolderActivateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1473,7 +1474,7 @@ pub fn team_folder_activate(
 pub fn team_folder_archive(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderArchiveArg,
-) -> crate::Result<Result<TeamFolderArchiveLaunch, TeamFolderArchiveError>> {
+) -> Result<TeamFolderArchiveLaunch, crate::Error<TeamFolderArchiveError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1490,7 +1491,7 @@ pub fn team_folder_archive(
 pub fn team_folder_archive_check(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<TeamFolderArchiveJobStatus, crate::types::dbx_async::PollError>> {
+) -> Result<TeamFolderArchiveJobStatus, crate::Error<crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1507,7 +1508,7 @@ pub fn team_folder_archive_check(
 pub fn team_folder_create(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderCreateArg,
-) -> crate::Result<Result<TeamFolderMetadata, TeamFolderCreateError>> {
+) -> Result<TeamFolderMetadata, crate::Error<TeamFolderCreateError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1523,7 +1524,7 @@ pub fn team_folder_create(
 pub fn team_folder_get_info(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderIdListArg,
-) -> crate::Result<Result<Vec<TeamFolderGetInfoItem>, crate::NoError>> {
+) -> Result<Vec<TeamFolderGetInfoItem>, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1539,7 +1540,7 @@ pub fn team_folder_get_info(
 pub fn team_folder_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderListArg,
-) -> crate::Result<Result<TeamFolderListResult, TeamFolderListError>> {
+) -> Result<TeamFolderListResult, crate::Error<TeamFolderListError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1556,7 +1557,7 @@ pub fn team_folder_list(
 pub fn team_folder_list_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderListContinueArg,
-) -> crate::Result<Result<TeamFolderListResult, TeamFolderListContinueError>> {
+) -> Result<TeamFolderListResult, crate::Error<TeamFolderListContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1573,7 +1574,7 @@ pub fn team_folder_list_continue(
 pub fn team_folder_permanently_delete(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderIdArg,
-) -> crate::Result<Result<(), TeamFolderPermanentlyDeleteError>> {
+) -> Result<(), crate::Error<TeamFolderPermanentlyDeleteError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1589,7 +1590,7 @@ pub fn team_folder_permanently_delete(
 pub fn team_folder_rename(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderRenameArg,
-) -> crate::Result<Result<TeamFolderMetadata, TeamFolderRenameError>> {
+) -> Result<TeamFolderMetadata, crate::Error<TeamFolderRenameError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1606,7 +1607,7 @@ pub fn team_folder_rename(
 pub fn team_folder_update_sync_settings(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderUpdateSyncSettingsArg,
-) -> crate::Result<Result<TeamFolderMetadata, TeamFolderUpdateSyncSettingsError>> {
+) -> Result<TeamFolderMetadata, crate::Error<TeamFolderUpdateSyncSettingsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -1622,7 +1623,7 @@ pub fn team_folder_update_sync_settings(
 /// call.
 pub fn token_get_authenticated_admin(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<TokenGetAuthenticatedAdminResult, TokenGetAuthenticatedAdminError>> {
+) -> Result<TokenGetAuthenticatedAdminResult, crate::Error<TokenGetAuthenticatedAdminError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::file_requests::*;
 /// requests.
 pub fn count(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<CountFileRequestsResult, CountFileRequestsError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<CountFileRequestsResult, crate::Error<CountFileRequestsError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -28,7 +29,7 @@ pub fn count(
 pub fn create<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a CreateFileRequestArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<FileRequest, CreateFileRequestError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileRequest, crate::Error<CreateFileRequestError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -42,7 +43,7 @@ pub fn create<'a>(
 pub fn delete<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a DeleteFileRequestArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<DeleteFileRequestsResult, DeleteFileRequestError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<DeleteFileRequestsResult, crate::Error<DeleteFileRequestError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -55,7 +56,7 @@ pub fn delete<'a>(
 /// Delete all closed file requests owned by this user.
 pub fn delete_all_closed(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<DeleteAllClosedFileRequestsResult, DeleteAllClosedFileRequestsError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<DeleteAllClosedFileRequestsResult, crate::Error<DeleteAllClosedFileRequestsError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -69,7 +70,7 @@ pub fn delete_all_closed(
 pub fn get<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a GetFileRequestArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<FileRequest, GetFileRequestError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileRequest, crate::Error<GetFileRequestError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -84,7 +85,7 @@ pub fn get<'a>(
 pub fn list_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFileRequestsArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFileRequestsV2Result, crate::Error<ListFileRequestsError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -98,7 +99,7 @@ pub fn list_v2<'a>(
 /// this will only return file requests with destinations in the app folder.
 pub fn list(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFileRequestsResult, ListFileRequestsError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<ListFileRequestsResult, crate::Error<ListFileRequestsError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -114,7 +115,7 @@ pub fn list(
 pub fn list_continue<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFileRequestsContinueArg,
-) -> impl std::future::Future<Output=crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsContinueError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<ListFileRequestsV2Result, crate::Error<ListFileRequestsContinueError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -128,7 +129,7 @@ pub fn list_continue<'a>(
 pub fn update<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a UpdateFileRequestArgs,
-) -> impl std::future::Future<Output=crate::Result<Result<FileRequest, UpdateFileRequestError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<FileRequest, crate::Error<UpdateFileRequestError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

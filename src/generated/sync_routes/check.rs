@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -23,7 +24,7 @@ pub use crate::generated::types::check::*;
 pub fn app(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &EchoArg,
-) -> crate::Result<Result<EchoResult, crate::NoError>> {
+) -> Result<EchoResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -47,7 +48,7 @@ pub fn app(
 pub fn user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &EchoArg,
-) -> crate::Result<Result<EchoResult, crate::NoError>> {
+) -> Result<EchoResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

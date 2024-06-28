@@ -75,7 +75,7 @@ fn main() {
         eprintln!();
 
         match files::download(&client, &files::DownloadArg::new(path), None, None) {
-            Ok(Ok(result)) => {
+            Ok(result) => {
                 match io::copy(
                     &mut result.body.expect("there must be a response body"),
                     &mut io::stdout(),
@@ -88,11 +88,8 @@ fn main() {
                     }
                 }
             }
-            Ok(Err(e)) => {
-                eprintln!("Error from files/download: {e}");
-            }
             Err(e) => {
-                eprintln!("API request error: {e}");
+                eprintln!("Error from files/download: {e}");
             }
         }
     } else if let Operation::List(mut path) = op {
@@ -107,13 +104,9 @@ fn main() {
             &client,
             &files::ListFolderArg::new(path).with_recursive(true),
         ) {
-            Ok(Ok(result)) => result,
-            Ok(Err(e)) => {
-                eprintln!("Error from files/list_folder: {e}");
-                return;
-            }
+            Ok(result) => result,
             Err(e) => {
-                eprintln!("API request error: {e}");
+                eprintln!("Error from files/list_folder: {e}");
                 return;
             }
         };
@@ -144,17 +137,13 @@ fn main() {
                 &client,
                 &files::ListFolderContinueArg::new(result.cursor),
             ) {
-                Ok(Ok(result)) => {
+                Ok(result) => {
                     num_pages += 1;
                     num_entries += result.entries.len();
                     result
                 }
-                Ok(Err(e)) => {
-                    eprintln!("Error from files/list_folder_continue: {e}");
-                    break;
-                }
                 Err(e) => {
-                    eprintln!("API request error: {e}");
+                    eprintln!("Error from files/list_folder_continue: {e}");
                     break;
                 }
             }

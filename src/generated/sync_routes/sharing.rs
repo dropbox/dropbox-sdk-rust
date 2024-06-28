@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -14,7 +15,7 @@ pub use crate::generated::types::sharing::*;
 pub fn add_file_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddFileMemberArgs,
-) -> crate::Result<Result<Vec<FileMemberActionResult>, AddFileMemberError>> {
+) -> Result<Vec<FileMemberActionResult>, crate::Error<AddFileMemberError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -32,7 +33,7 @@ pub fn add_file_member(
 pub fn add_folder_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddFolderMemberArg,
-) -> crate::Result<Result<(), AddFolderMemberError>> {
+) -> Result<(), crate::Error<AddFolderMemberError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -48,7 +49,7 @@ pub fn add_folder_member(
 pub fn check_job_status(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<JobStatus, crate::types::dbx_async::PollError>> {
+) -> Result<JobStatus, crate::Error<crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -64,7 +65,7 @@ pub fn check_job_status(
 pub fn check_remove_member_job_status(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<RemoveMemberJobStatus, crate::types::dbx_async::PollError>> {
+) -> Result<RemoveMemberJobStatus, crate::Error<crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -80,7 +81,7 @@ pub fn check_remove_member_job_status(
 pub fn check_share_job_status(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::types::dbx_async::PollArg,
-) -> crate::Result<Result<ShareFolderJobStatus, crate::types::dbx_async::PollError>> {
+) -> Result<ShareFolderJobStatus, crate::Error<crate::types::dbx_async::PollError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -101,7 +102,7 @@ pub fn check_share_job_status(
 pub fn create_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateSharedLinkArg,
-) -> crate::Result<Result<PathLinkMetadata, CreateSharedLinkError>> {
+) -> Result<PathLinkMetadata, crate::Error<CreateSharedLinkError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -119,7 +120,7 @@ pub fn create_shared_link(
 pub fn create_shared_link_with_settings(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateSharedLinkWithSettingsArg,
-) -> crate::Result<Result<SharedLinkMetadata, CreateSharedLinkWithSettingsError>> {
+) -> Result<SharedLinkMetadata, crate::Error<CreateSharedLinkWithSettingsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -135,7 +136,7 @@ pub fn create_shared_link_with_settings(
 pub fn get_file_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetFileMetadataArg,
-) -> crate::Result<Result<SharedFileMetadata, GetFileMetadataError>> {
+) -> Result<SharedFileMetadata, crate::Error<GetFileMetadataError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -151,7 +152,7 @@ pub fn get_file_metadata(
 pub fn get_file_metadata_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetFileMetadataBatchArg,
-) -> crate::Result<Result<Vec<GetFileMetadataBatchResult>, SharingUserError>> {
+) -> Result<Vec<GetFileMetadataBatchResult>, crate::Error<SharingUserError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -167,7 +168,7 @@ pub fn get_file_metadata_batch(
 pub fn get_folder_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetMetadataArgs,
-) -> crate::Result<Result<SharedFolderMetadata, SharedFolderAccessError>> {
+) -> Result<SharedFolderMetadata, crate::Error<SharedFolderAccessError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -185,7 +186,7 @@ pub fn get_shared_link_file(
     arg: &GetSharedLinkFileArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> crate::Result<Result<crate::client_trait::HttpRequestResult<SharedLinkMetadata>, GetSharedLinkFileError>> {
+) -> Result<crate::client_trait::HttpRequestResult<SharedLinkMetadata>, crate::Error<GetSharedLinkFileError>> {
     crate::client_helpers::unwrap_async_body(
         crate::client_helpers::request_with_body(
             client,
@@ -204,7 +205,7 @@ pub fn get_shared_link_file(
 pub fn get_shared_link_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetSharedLinkMetadataArg,
-) -> crate::Result<Result<SharedLinkMetadata, SharedLinkError>> {
+) -> Result<SharedLinkMetadata, crate::Error<SharedLinkError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -220,7 +221,7 @@ pub fn get_shared_link_metadata(
 pub fn get_shared_link_metadata_app_auth(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &GetSharedLinkMetadataArg,
-) -> crate::Result<Result<SharedLinkMetadata, SharedLinkError>> {
+) -> Result<SharedLinkMetadata, crate::Error<SharedLinkError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -241,7 +242,7 @@ pub fn get_shared_link_metadata_app_auth(
 pub fn get_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetSharedLinksArg,
-) -> crate::Result<Result<GetSharedLinksResult, GetSharedLinksError>> {
+) -> Result<GetSharedLinksResult, crate::Error<GetSharedLinksError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -258,7 +259,7 @@ pub fn get_shared_links(
 pub fn list_file_members(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileMembersArg,
-) -> crate::Result<Result<SharedFileMembers, ListFileMembersError>> {
+) -> Result<SharedFileMembers, crate::Error<ListFileMembersError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -277,7 +278,7 @@ pub fn list_file_members(
 pub fn list_file_members_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileMembersBatchArg,
-) -> crate::Result<Result<Vec<ListFileMembersBatchResult>, SharingUserError>> {
+) -> Result<Vec<ListFileMembersBatchResult>, crate::Error<SharingUserError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -295,7 +296,7 @@ pub fn list_file_members_batch(
 pub fn list_file_members_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileMembersContinueArg,
-) -> crate::Result<Result<SharedFileMembers, ListFileMembersContinueError>> {
+) -> Result<SharedFileMembers, crate::Error<ListFileMembersContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -311,7 +312,7 @@ pub fn list_file_members_continue(
 pub fn list_folder_members(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFolderMembersArgs,
-) -> crate::Result<Result<SharedFolderMembers, SharedFolderAccessError>> {
+) -> Result<SharedFolderMembers, crate::Error<SharedFolderAccessError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -328,7 +329,7 @@ pub fn list_folder_members(
 pub fn list_folder_members_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFolderMembersContinueArg,
-) -> crate::Result<Result<SharedFolderMembers, ListFolderMembersContinueError>> {
+) -> Result<SharedFolderMembers, crate::Error<ListFolderMembersContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -344,7 +345,7 @@ pub fn list_folder_members_continue(
 pub fn list_folders(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersArgs,
-) -> crate::Result<Result<ListFoldersResult, crate::NoError>> {
+) -> Result<ListFoldersResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -362,7 +363,7 @@ pub fn list_folders(
 pub fn list_folders_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersContinueArg,
-) -> crate::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
+) -> Result<ListFoldersResult, crate::Error<ListFoldersContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -378,7 +379,7 @@ pub fn list_folders_continue(
 pub fn list_mountable_folders(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersArgs,
-) -> crate::Result<Result<ListFoldersResult, crate::NoError>> {
+) -> Result<ListFoldersResult, crate::Error<crate::NoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -397,7 +398,7 @@ pub fn list_mountable_folders(
 pub fn list_mountable_folders_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersContinueArg,
-) -> crate::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
+) -> Result<ListFoldersResult, crate::Error<ListFoldersContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -414,7 +415,7 @@ pub fn list_mountable_folders_continue(
 pub fn list_received_files(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFilesArg,
-) -> crate::Result<Result<ListFilesResult, SharingUserError>> {
+) -> Result<ListFilesResult, crate::Error<SharingUserError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -430,7 +431,7 @@ pub fn list_received_files(
 pub fn list_received_files_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFilesContinueArg,
-) -> crate::Result<Result<ListFilesResult, ListFilesContinueError>> {
+) -> Result<ListFilesResult, crate::Error<ListFilesContinueError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -453,7 +454,7 @@ pub fn list_received_files_continue(
 pub fn list_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListSharedLinksArg,
-) -> crate::Result<Result<ListSharedLinksResult, ListSharedLinksError>> {
+) -> Result<ListSharedLinksResult, crate::Error<ListSharedLinksError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -474,7 +475,7 @@ pub fn list_shared_links(
 pub fn modify_shared_link_settings(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ModifySharedLinkSettingsArgs,
-) -> crate::Result<Result<SharedLinkMetadata, ModifySharedLinkSettingsError>> {
+) -> Result<SharedLinkMetadata, crate::Error<ModifySharedLinkSettingsError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -491,7 +492,7 @@ pub fn modify_shared_link_settings(
 pub fn mount_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &MountFolderArg,
-) -> crate::Result<Result<SharedFolderMetadata, MountFolderError>> {
+) -> Result<SharedFolderMetadata, crate::Error<MountFolderError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -508,7 +509,7 @@ pub fn mount_folder(
 pub fn relinquish_file_membership(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelinquishFileMembershipArg,
-) -> crate::Result<Result<(), RelinquishFileMembershipError>> {
+) -> Result<(), crate::Error<RelinquishFileMembershipError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -527,7 +528,7 @@ pub fn relinquish_file_membership(
 pub fn relinquish_folder_membership(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelinquishFolderMembershipArg,
-) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>> {
+) -> Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<RelinquishFolderMembershipError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -544,7 +545,7 @@ pub fn relinquish_folder_membership(
 pub fn remove_file_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFileMemberArg,
-) -> crate::Result<Result<FileMemberActionIndividualResult, RemoveFileMemberError>> {
+) -> Result<FileMemberActionIndividualResult, crate::Error<RemoveFileMemberError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -560,7 +561,7 @@ pub fn remove_file_member(
 pub fn remove_file_member_2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFileMemberArg,
-) -> crate::Result<Result<FileMemberRemoveActionResult, RemoveFileMemberError>> {
+) -> Result<FileMemberRemoveActionResult, crate::Error<RemoveFileMemberError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -577,7 +578,7 @@ pub fn remove_file_member_2(
 pub fn remove_folder_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFolderMemberArg,
-) -> crate::Result<Result<crate::types::dbx_async::LaunchResultBase, RemoveFolderMemberError>> {
+) -> Result<crate::types::dbx_async::LaunchResultBase, crate::Error<RemoveFolderMemberError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -597,7 +598,7 @@ pub fn remove_folder_member(
 pub fn revoke_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RevokeSharedLinkArg,
-) -> crate::Result<Result<(), RevokeSharedLinkError>> {
+) -> Result<(), crate::Error<RevokeSharedLinkError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -616,7 +617,7 @@ pub fn revoke_shared_link(
 pub fn set_access_inheritance(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SetAccessInheritanceArg,
-) -> crate::Result<Result<ShareFolderLaunch, SetAccessInheritanceError>> {
+) -> Result<ShareFolderLaunch, crate::Error<SetAccessInheritanceError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -637,7 +638,7 @@ pub fn set_access_inheritance(
 pub fn share_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ShareFolderArg,
-) -> crate::Result<Result<ShareFolderLaunch, ShareFolderError>> {
+) -> Result<ShareFolderLaunch, crate::Error<ShareFolderError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -654,7 +655,7 @@ pub fn share_folder(
 pub fn transfer_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &TransferFolderArg,
-) -> crate::Result<Result<(), TransferFolderError>> {
+) -> Result<(), crate::Error<TransferFolderError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -671,7 +672,7 @@ pub fn transfer_folder(
 pub fn unmount_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnmountFolderArg,
-) -> crate::Result<Result<(), UnmountFolderError>> {
+) -> Result<(), crate::Error<UnmountFolderError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -687,7 +688,7 @@ pub fn unmount_folder(
 pub fn unshare_file(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnshareFileArg,
-) -> crate::Result<Result<(), UnshareFileError>> {
+) -> Result<(), crate::Error<UnshareFileError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -704,7 +705,7 @@ pub fn unshare_file(
 pub fn unshare_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnshareFolderArg,
-) -> crate::Result<Result<crate::types::dbx_async::LaunchEmptyResult, UnshareFolderError>> {
+) -> Result<crate::types::dbx_async::LaunchEmptyResult, crate::Error<UnshareFolderError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -720,7 +721,7 @@ pub fn unshare_folder(
 pub fn update_file_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFileMemberArgs,
-) -> crate::Result<Result<MemberAccessLevelResult, FileMemberActionError>> {
+) -> Result<MemberAccessLevelResult, crate::Error<FileMemberActionError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -736,7 +737,7 @@ pub fn update_file_member(
 pub fn update_folder_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFolderMemberArg,
-) -> crate::Result<Result<MemberAccessLevelResult, UpdateFolderMemberError>> {
+) -> Result<MemberAccessLevelResult, crate::Error<UpdateFolderMemberError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -753,7 +754,7 @@ pub fn update_folder_member(
 pub fn update_folder_policy(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFolderPolicyArg,
-) -> crate::Result<Result<SharedFolderMetadata, UpdateFolderPolicyError>> {
+) -> Result<SharedFolderMetadata, crate::Error<UpdateFolderPolicyError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

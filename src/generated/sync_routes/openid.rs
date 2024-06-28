@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -21,7 +22,7 @@ pub use crate::generated::types::openid::*;
 pub fn userinfo(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UserInfoArgs,
-) -> crate::Result<Result<UserInfoResult, UserInfoError>> {
+) -> Result<UserInfoResult, crate::Error<UserInfoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

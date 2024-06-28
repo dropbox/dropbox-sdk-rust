@@ -1,3 +1,4 @@
+use dropbox_sdk::Error::Api;
 use dropbox_sdk::files;
 use dropbox_sdk::client_trait::UserAuthClient;
 use std::sync::Arc;
@@ -31,14 +32,14 @@ pub fn create_files(
             loop {
                 println!("{}: writing", path);
                 match files::upload(c.as_ref(), &arg, &file_bytes(i)) {
-                    Ok(Ok(_)) => (),
+                    Ok(_) => (),
                     Err(dropbox_sdk::Error::RateLimited { retry_after_seconds, .. }) => {
                         println!("{}: rate limited; sleeping {} seconds",
                             path, retry_after_seconds);
                         thread::sleep(Duration::from_secs(retry_after_seconds as u64));
                         continue;
                     }
-                    e => panic!("{}: upload failed: {:?}", path, e),
+                    Err(e) => panic!("{}: upload failed: {:?}", path, e),
                 }
                 println!("{}: done", path);
                 break;
@@ -53,15 +54,15 @@ pub fn create_files(
 pub fn create_clean_folder(client: &impl UserAuthClient, path: &str) {
     println!("Deleting any existing {} folder", path);
     match files::delete_v2(client, &files::DeleteArg::new(path.to_owned())) {
-        Ok(Ok(_)) | Ok(Err(files::DeleteError::PathLookup(files::LookupError::NotFound))) => (),
-        e => panic!("unexpected result when deleting {}: {:?}", path, e),
+        Ok(_) | Err(Api(files::DeleteError::PathLookup(files::LookupError::NotFound))) => (),
+        Err(e) => panic!("unexpected result when deleting {}: {:?}", path, e),
     }
 
     println!("Creating folder {}", path);
     match files::create_folder_v2(
         client, &files::CreateFolderArg::new(path.to_owned()).with_autorename(false))
     {
-        Ok(Ok(_)) => (),
-        e => panic!("unexpected result when creating {}: {:?}", path, e),
+        Ok(_) => (),
+        Err(e) => panic!("unexpected result when creating {}: {:?}", path, e),
     }
 }

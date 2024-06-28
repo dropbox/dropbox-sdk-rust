@@ -287,7 +287,7 @@ class TestBackend(RustHelperBackend):
         with self._test_fn(f'route_{fn_name}'):
             if arg_typ != '()':
                 self.emit(f'let arg: {arg_typ} = serde_json::from_str(r#"{json}"#).unwrap();')
-            self.emit(f'let ret: dropbox_sdk::Result<Result<{ok_typ}, {err_typ}>>')
+            self.emit(f'let ret: Result<{ok_typ}, dropbox_sdk::Error<{err_typ}>>')
             with self.indent():
                 self.emit(f'= {ns_path}::{fn_name}(')
                 with self.indent():

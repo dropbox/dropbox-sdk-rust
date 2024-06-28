@@ -16,7 +16,7 @@ macro_rules! noop_client {
                     &self,
                     _request: Self::Request,
                     _body: &[u8],
-                ) -> dropbox_sdk::Result<HttpRequestResultRaw> {
+                ) -> Result<HttpRequestResultRaw, dropbox_sdk::Error> {
                     Err(dropbox_sdk::Error::HttpClient(Box::new(super::ErrMsg("noop client called".to_owned()))))
                 }
 

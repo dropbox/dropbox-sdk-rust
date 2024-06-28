@@ -4,6 +4,7 @@
 //! files that would not fit in a single HTTP request, including allowing the user to resume
 //! interrupted uploads, and uploading blocks in parallel.
 
+use dropbox_sdk::Error::Api;
 use dropbox_sdk::files;
 use dropbox_sdk::default_client::UserAuthDefaultClient;
 use std::collections::HashMap;
@@ -121,8 +122,7 @@ fn get_destination_path(client: &UserAuthDefaultClient, given_path: &str, source
     }
 
     let meta_result = files::get_metadata(
-        client, &files::GetMetadataArg::new(given_path.to_owned()))
-        .map_err(|e| format!("Request error while looking up destination: {}", e))?;
+        client, &files::GetMetadataArg::new(given_path.to_owned()));
 
     match meta_result {
         Ok(files::Metadata::File(_)) => {
@@ -140,7 +140,7 @@ fn get_destination_path(client: &UserAuthDefaultClient, given_path: &str, source
             Ok(path)
         }
         Ok(files::Metadata::Deleted(_)) => panic!("unexpected deleted metadata received"),
-        Err(files::GetMetadataError::Path(files::LookupError::NotFound)) => {
+        Err(Api(files::GetMetadataError::Path(files::LookupError::NotFound))) => {
             // Given destination path doesn't exist, which is just fine. Use the given path as-is.
             // Note that it's fine if the path's parents don't exist either; folders will be
             // automatically created as needed.
@@ -168,8 +168,8 @@ impl UploadSession {
                 .with_session_type(files::UploadSessionType::Concurrent),
             &[],
         ) {
-            Ok(Ok(result)) => result.session_id,
-            error => return Err(format!("Starting upload session failed: {:?}", error)),
+            Ok(result) => result.session_id,
+            Err(e) => return Err(format!("Starting upload session failed: {:?}", e)),
         };
 
         Ok(Self {
@@ -358,13 +358,13 @@ fn upload_file(
     let mut retry = 0;
     while retry < 3 {
         match files::upload_session_finish(client.as_ref(), &finish, &[]) {
-            Ok(Ok(file_metadata)) => {
+            Ok(file_metadata) => {
                 println!("Upload succeeded!");
                 println!("{:#?}", file_metadata);
                 return Ok(());
             }
-            error => {
-                eprintln!("Error finishing upload: {:?}", error);
+            Err(e) => {
+                eprintln!("Error finishing upload: {:?}", e);
                 retry += 1;
                 sleep(Duration::from_secs(1));
             }
@@ -390,14 +390,14 @@ fn upload_block_with_retry(
     let mut errors = 0;
     loop {
         match files::upload_session_append_v2(client, arg, buf) {
-            Ok(Ok(())) => { break; }
+            Ok(()) => { break; }
             Err(dropbox_sdk::Error::RateLimited { reason, retry_after_seconds }) => {
                 eprintln!("rate-limited ({}), waiting {} seconds", reason, retry_after_seconds);
                 if retry_after_seconds > 0 {
                     sleep(Duration::from_secs(u64::from(retry_after_seconds)));
                 }
             }
-            error => {
+            Err(error) => {
                 errors += 1;
                 let msg = format!("Error calling upload_session_append: {:?}", error);
                 if errors == 3 {

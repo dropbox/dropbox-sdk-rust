@@ -5,6 +5,7 @@ use std::sync::Arc;
 use bytes::Bytes;
 use futures::AsyncRead;
 use crate::client_trait_common::{HttpRequest, TeamSelect};
+use crate::Error;
 
 /// The base HTTP asynchronous client trait.
 pub trait HttpClient: Sync {
@@ -16,7 +17,7 @@ pub trait HttpClient: Sync {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output = crate::Result<HttpRequestResultRaw>> + Send;
+    ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send;
 
     /// Create a new request instance for the given URL. It should be a POST request.
     fn new_request(&self, url: &str) -> Self::Request;
@@ -28,7 +29,7 @@ pub trait HttpClient: Sync {
     fn update_token(
         &self,
         _old_token: Arc<String>,
-    ) -> impl Future<Output = crate::Result<bool>> + Send {
+    ) -> impl Future<Output = Result<bool, Error>> + Send {
         ready(Ok(false))
     }
 
@@ -65,7 +66,7 @@ pub trait HttpClient: Sync {
         &self,
         _request: Self::Request,
         _body_slice: &[u8],
-    ) -> impl Future<Output = crate::Result<HttpRequestResultRaw>> + Send {
+    ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send {
         unimplemented!();
         #[allow(unreachable_code)] // otherwise it complains that `()` is not a future.
         async move { unimplemented!() }
@@ -109,11 +110,15 @@ pub struct HttpRequestResult<T> {
 impl<T: crate::client_trait::HttpClient + Sync> HttpClient for T {
     type Request = T::Request;
 
-    async fn execute(&self, request: Self::Request, body: Bytes) -> crate::Result<HttpRequestResultRaw> {
+    async fn execute(&self, request: Self::Request, body: Bytes)
+        -> Result<HttpRequestResultRaw, Error>
+    {
         self.execute_borrowed_body(request, &body).await
     }
 
-    async fn execute_borrowed_body(&self, request: Self::Request, body_slice: &[u8]) -> crate::Result<HttpRequestResultRaw> {
+    async fn execute_borrowed_body(&self, request: Self::Request, body_slice: &[u8])
+        -> Result<HttpRequestResultRaw, Error>
+    {
         self.execute(request, body_slice).map(|r| {
             HttpRequestResultRaw {
                 status: r.status,
@@ -129,7 +134,7 @@ impl<T: crate::client_trait::HttpClient + Sync> HttpClient for T {
     }
 
     fn update_token(&self, old_token: Arc<String>)
-        -> impl Future<Output=crate::Result<bool>> + Send
+        -> impl Future<Output=Result<bool, Error>> + Send
     {
         ready(self.update_token(old_token))
     }

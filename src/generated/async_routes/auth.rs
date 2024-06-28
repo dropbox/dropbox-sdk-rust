@@ -4,6 +4,7 @@
 #![allow(
     clippy::too_many_arguments,
     clippy::large_enum_variant,
+    clippy::result_large_err,
     clippy::doc_markdown,
 )]
 
@@ -15,7 +16,7 @@ pub use crate::generated::types::auth::*;
 pub fn token_from_oauth1<'a>(
     client: &'a impl crate::async_client_trait::AppAuthClient,
     arg: &'a TokenFromOAuth1Arg,
-) -> impl std::future::Future<Output=crate::Result<Result<TokenFromOAuth1Result, TokenFromOAuth1Error>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<TokenFromOAuth1Result, crate::Error<TokenFromOAuth1Error>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -30,7 +31,7 @@ pub fn token_from_oauth1<'a>(
 /// for that refresh token.
 pub fn token_revoke(
     client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=crate::Result<Result<(), crate::NoError>>> + Send + '_ {
+) -> impl std::future::Future<Output=Result<(), crate::Error<crate::NoError>>> + Send + '_ {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

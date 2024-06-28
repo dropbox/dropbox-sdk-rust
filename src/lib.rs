@@ -40,7 +40,10 @@ macro_rules! if_feature {
 /// An error occurred in the process of making an API call.
 /// This is different from the case where your call succeeded, but the operation returned an error.
 #[derive(thiserror::Error, Debug)]
-pub enum Error {
+pub enum Error<E = NoError> {
+    /// An error returned by the API. Its type depends on the endpoint being called.
+    #[error("Dropbox API endpoint returned an error: {0}")]
+    Api(E),
 
     /// Some error from the internals of the HTTP client.
     #[error("error from HTTP client: {0}")]
@@ -92,8 +95,65 @@ pub enum Error {
     },
 }
 
-/// Shorthand for a Result where the error type is this crate's [`Error`] type.
-pub type Result<T> = std::result::Result<T, Error>;
+impl<E: std::error::Error + 'static> Error<E> {
+    /// Look for an inner error of the given type anywhere within this error, by walking the chain
+    /// of [`Error::source`] recursively until something matches the desired type.
+    pub fn downcast_ref_inner<E2: std::error::Error + 'static>(&self) -> Option<&E2> {
+        let mut inner = Some(self as &dyn std::error::Error);
+        while let Some(e) = inner {
+            if let Some(e) = e.downcast_ref() {
+                return Some(e);
+            }
+            inner = e.source();
+        }
+        None
+    }
+
+    /// Change the concretely-typed API error, if any, into a boxed trait object.
+    ///
+    /// This makes it possible to combine dissimilar errors into one type, which can be broken out
+    /// later using [`Error::downcast_ref`] if desired.
+    pub fn boxed(self) -> Error<Box<dyn std::error::Error>> {
+        match self {
+            Error::Api(e) => Error::Api(Box::new(e)),
+
+            // Other variants unchanged.
+            // These have to be actually re-stated, because the (unstated) generic type of `Error`
+            // is different on the left vs the right.
+            Error::HttpClient(e) => Error::HttpClient(e),
+            Error::Json(e) => Error::Json(e),
+            Error::UnexpectedResponse(e) => Error::UnexpectedResponse(e),
+            Error::BadRequest(e) => Error::BadRequest(e),
+            Error::Authentication(e) => Error::Authentication(e),
+            Error::RateLimited { reason, retry_after_seconds } => Error::RateLimited { reason, retry_after_seconds },
+            Error::AccessDenied(e) => Error::AccessDenied(e),
+            Error::ServerError(e) => Error::ServerError(e),
+            Error::UnexpectedHttpError { code, response } => Error::UnexpectedHttpError { code, response },
+        }
+    }
+}
+
+impl Error<NoError> {
+    /// Lift an error with no possible API error value to a typed error of any type.
+    ///
+    /// Ideally this would just be `impl<E> From<Error<NoError>> for Error<E>` but that conflicts
+    /// with the reflexive conversion (E could be NoError), and Rust doesn't have negative type
+    /// bounds or specialization, so it has to be this method instead.
+    pub fn typed<E>(self) -> Error<E> {
+        match self {
+            Error::Api(x) => unreachable(x),
+            Error::HttpClient(e) => Error::HttpClient(e),
+            Error::Json(e) => Error::Json(e),
+            Error::UnexpectedResponse(e) => Error::UnexpectedResponse(e),
+            Error::BadRequest(e) => Error::BadRequest(e),
+            Error::Authentication(e) => Error::Authentication(e),
+            Error::RateLimited { reason, retry_after_seconds } => Error::RateLimited { reason, retry_after_seconds },
+            Error::AccessDenied(e) => Error::AccessDenied(e),
+            Error::ServerError(e) => Error::ServerError(e),
+            Error::UnexpectedHttpError { code, response } => Error::UnexpectedHttpError { code, response },
+        }
+    }
+}
 
 if_feature! { "default_client",
     pub mod default_client;

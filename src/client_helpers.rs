@@ -99,7 +99,7 @@ pub(crate) fn prepare_request<T: HttpClient>(
     (req, params_body)
 }
 
-pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) -> crate::Result<String> {
+pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) -> Result<String, Error> {
     let mut s = String::new();
     match body.read_to_string(&mut s).await {
         Ok(_) => Ok(s),
@@ -127,7 +127,7 @@ pub async fn request_with_body<'a, T, E, P, C>(
     body: Option<Body<'a>>,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> crate::Result<Result<HttpRequestResult<T>, E>> where
+) -> Result<HttpRequestResult<T>, Error<E>> where
     T: DeserializeOwned,
     E: DeserializeOwned + StdError,
     P: Serialize,
@@ -139,7 +139,7 @@ pub async fn request_with_body<'a, T, E, P, C>(
         let token = client.token();
         if token.is_none()
             && !retried
-            && client.update_token(Arc::new(String::new())).await?
+            && client.update_token(Arc::new(String::new())).await.map_err(Error::typed)?
         {
             retried = true;
             continue 'auth_retry;
@@ -174,16 +174,16 @@ pub async fn request_with_body<'a, T, E, P, C>(
                     Ok(x) => x,
                     Err(e @ Error::Authentication(AuthError::ExpiredAccessToken)) if !retried => {
                         let old_token = token.unwrap_or_else(|| Arc::new(String::new()));
-                        if client.update_token(old_token).await? {
+                        if client.update_token(old_token).await.map_err(Error::typed)? {
                             retried = true;
                             continue 'auth_retry;
                         } else {
-                            return Err(e);
+                            return Err(e.typed());
                         }
                     }
                     Err(e) => {
                         error!("HTTP {status}: {e}");
-                        return Err(e)
+                        return Err(e.typed())
                     },
                 };
 
@@ -193,7 +193,7 @@ pub async fn request_with_body<'a, T, E, P, C>(
                     return match serde_json::from_str::<TopLevelError<E>>(&json) {
                         Ok(deserialized) => {
                             error!("API error: {}", deserialized.error);
-                            Ok(Err(deserialized.error))
+                            Err(Error::Api(deserialized.error))
                         },
                         Err(de_error) => {
                             error!("Failed to deserialize JSON from API error: {}", de_error);
@@ -202,19 +202,19 @@ pub async fn request_with_body<'a, T, E, P, C>(
                     };
                 }
 
-                Ok(Ok(HttpRequestResult {
+                Ok(HttpRequestResult {
                     result: serde_json::from_str(&json)?,
                     content_length,
                     body,
-                }))
+                })
             }
-            Err(e) => Err(e),
+            Err(e) => Err(e.typed()),
         }
     }
 }
 
 pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
-    -> crate::Result<(String, Option<u64>, Option<Box<dyn AsyncRead + Send + Unpin>>)> {
+    -> Result<(String, Option<u64>, Option<Box<dyn AsyncRead + Send + Unpin>>), Error> {
     let HttpRequestResultRaw {
         status,
         result_header,
@@ -327,10 +327,10 @@ pub async fn request<T: DeserializeOwned, E: DeserializeOwned + StdError, P: Ser
     function: &str,
     params: &P,
     body: Option<Body<'_>>,
-) -> crate::Result<Result<T, E>> {
+) -> Result<T, Error<E>> {
     request_with_body(client, endpoint, style, function, params, body, None, None)
         .await
-        .map(|result| result.map(|HttpRequestResult { result, .. }| result))
+        .map(|HttpRequestResult { result, .. }| result)
 }
 
 #[cfg(feature = "sync_routes")]
@@ -339,6 +339,7 @@ mod sync_helpers {
     use futures::{AsyncRead, FutureExt};
     use crate::async_client_trait::{HttpRequestResult, SyncReadAdapter};
     use crate::client_trait as sync;
+    use crate::Error;
 
     /// Given an async HttpRequestResult which was created from a *sync* HttpClient, convert it to the
     /// sync HttpRequestResult by cracking open the SyncReadAdapter in the body.
@@ -376,13 +377,12 @@ mod sync_helpers {
     #[cfg(feature = "sync_routes")]
     #[inline]
     pub(crate) fn unwrap_async_body<T, E>(
-        f: impl Future<Output = crate::Result<Result<HttpRequestResult<T>, E>>>,
+        f: impl Future<Output = Result<HttpRequestResult<T>, Error<E>>>,
         client: &impl sync::HttpClient,
-    ) -> crate::Result<Result<sync::HttpRequestResult<T>, E>> {
+    ) -> Result<sync::HttpRequestResult<T>, Error<E>> {
         let r = f.now_or_never().expect("sync future should resolve immediately");
         match r {
-            Ok(Ok(v)) => Ok(Ok(unwrap_async_result(v, client))),
-            Ok(Err(e)) => Ok(Err(e)),
+            Ok(v) => Ok(unwrap_async_result(v, client)),
             Err(e) => Err(e),
         }
     }
@@ -390,8 +390,8 @@ mod sync_helpers {
     #[cfg(feature = "sync_routes")]
     #[inline]
     pub(crate) fn unwrap_async<T, E>(
-        f: impl Future<Output = crate::Result<Result<T, E>>>,
-    ) -> crate::Result<Result<T, E>> {
+        f: impl Future<Output = Result<T, Error<E>>>,
+    ) -> Result<T, Error<E>> {
         f.now_or_never().expect("sync future should resolve immediately")
     }
 }

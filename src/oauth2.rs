@@ -426,7 +426,7 @@ impl Authorization {
         pub fn obtain_access_token(
             &mut self,
             sync_client: impl crate::client_trait::NoauthClient
-        ) -> crate::Result<String> {
+        ) -> Result<String, Error> {
             use futures::FutureExt;
             self.obtain_access_token_async(sync_client)
                 .now_or_never()
@@ -436,7 +436,7 @@ impl Authorization {
 
     /// Obtain an access token. Use this to complete the authorization process, or to obtain an
     /// updated token when a short-lived access token has expired.
-    pub async fn obtain_access_token_async(&mut self, client: impl NoauthClient) -> crate::Result<String> {
+    pub async fn obtain_access_token_async(&mut self, client: impl NoauthClient) -> Result<String, Error> {
         let mut redirect_uri = None;
         let mut client_secret = None;
         let mut pkce_code = None;
@@ -606,7 +606,7 @@ impl TokenCache {
     /// To avoid double-updating the token in a race, requires the token which is being replaced.
     /// For the case where no token is currently present, use the empty string as the token.
     pub async fn update_token(&self, client: impl NoauthClient, old_token: Arc<String>)
-        -> crate::Result<Arc<String>>
+        -> Result<Arc<String>, Error>
     {
         let mut write = self.auth.write().await;
         // Check if the token changed while we were unlocked; only update it if it
