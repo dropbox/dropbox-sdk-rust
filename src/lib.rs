@@ -95,6 +95,16 @@ pub enum Error<E = NoError> {
     },
 }
 
+/// An [`Error`] without a single concrete type for the API error response, using a boxed trait
+/// object instead.
+///
+/// This is useful if a function needs to return some combination of different error types. They
+/// can be extracted later by using [`std::error::Error::downcast_ref`] or
+/// [`Error::downcast_ref_inner`] if desired.
+///
+/// See [`Error::boxed`] for how to convert a concretely-typed version of [`Error`] into this.
+pub type BoxedError = Error<Box<dyn std::error::Error>>;
+
 impl<E: std::error::Error + 'static> Error<E> {
     /// Look for an inner error of the given type anywhere within this error, by walking the chain
     /// of [`Error::source`] recursively until something matches the desired type.
@@ -113,7 +123,7 @@ impl<E: std::error::Error + 'static> Error<E> {
     ///
     /// This makes it possible to combine dissimilar errors into one type, which can be broken out
     /// later using [`Error::downcast_ref`] if desired.
-    pub fn boxed(self) -> Error<Box<dyn std::error::Error>> {
+    pub fn boxed(self) -> BoxedError {
         match self {
             Error::Api(e) => Error::Api(Box::new(e)),
 
