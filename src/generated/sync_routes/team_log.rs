@@ -12,11 +12,11 @@
 pub use crate::generated::types::team_log::*;
 
 /// Retrieves team events. If the result's [`GetTeamEventsResult::has_more`](GetTeamEventsResult)
-/// field is `true`, call [`get_events_continue()`](get_events_continue) with the returned cursor to
-/// retrieve more entries. If end_time is not specified in your request, you may use the returned
-/// cursor to poll [`get_events_continue()`](get_events_continue) for new events. Many attributes
-/// note 'may be missing due to historical data gap'. Note that the file_operations category and &
-/// analogous paper events are not available on all Dropbox Business
+/// field is `true`, call [`get_events_continue()`](crate::team_log::get_events_continue) with the
+/// returned cursor to retrieve more entries. If end_time is not specified in your request, you may
+/// use the returned cursor to poll [`get_events_continue()`](crate::team_log::get_events_continue)
+/// for new events. Many attributes note 'may be missing due to historical data gap'. Note that the
+/// file_operations category and & analogous paper events are not available on all Dropbox Business
 /// [plans](/business/plans-comparison). Use
 /// [features/get_values](/developers/documentation/http/teams#team-features-get_values) to check
 /// for this feature. Permission : Team Auditing.
@@ -35,8 +35,8 @@ pub fn get_events(
     )
 }
 
-/// Once a cursor has been retrieved from [`get_events()`](get_events), use this to paginate through
-/// all events. Permission : Team Auditing.
+/// Once a cursor has been retrieved from [`get_events()`](crate::team_log::get_events), use this to
+/// paginate through all events. Permission : Team Auditing.
 pub fn get_events_continue(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GetTeamEventsContinueArg,

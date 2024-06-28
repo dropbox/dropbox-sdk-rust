@@ -29,7 +29,7 @@ pub fn add_file_member(
 
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to add another
 /// member. For the new member to get access to all the functionality for this folder, you will need
-/// to call [`mount_folder()`](mount_folder) on their behalf.
+/// to call [`mount_folder()`](crate::sharing::mount_folder) on their behalf.
 pub fn add_folder_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddFolderMemberArg,
@@ -97,7 +97,7 @@ pub fn check_share_job_status(
 /// Previously, it was technically possible to break a shared link by moving or renaming the
 /// corresponding file or folder. In the future, this will no longer be the case, so your app
 /// shouldn't rely on this behavior. Instead, if your app needs to revoke a shared link, use
-/// [`revoke_shared_link()`](revoke_shared_link).
+/// [`revoke_shared_link()`](crate::sharing::revoke_shared_link).
 #[deprecated(note = "replaced by create_shared_link_with_settings")]
 pub fn create_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
@@ -290,9 +290,9 @@ pub fn list_file_members_batch(
     )
 }
 
-/// Once a cursor has been retrieved from [`list_file_members()`](list_file_members) or
-/// [`list_file_members_batch()`](list_file_members_batch), use this to paginate through all shared
-/// file members.
+/// Once a cursor has been retrieved from [`list_file_members()`](crate::sharing::list_file_members)
+/// or [`list_file_members_batch()`](crate::sharing::list_file_members_batch), use this to paginate
+/// through all shared file members.
 pub fn list_file_members_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileMembersContinueArg,
@@ -324,8 +324,9 @@ pub fn list_folder_members(
     )
 }
 
-/// Once a cursor has been retrieved from [`list_folder_members()`](list_folder_members), use this
-/// to paginate through all shared folder members.
+/// Once a cursor has been retrieved from
+/// [`list_folder_members()`](crate::sharing::list_folder_members), use this to paginate through all
+/// shared folder members.
 pub fn list_folder_members_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFolderMembersContinueArg,
@@ -357,9 +358,10 @@ pub fn list_folders(
     )
 }
 
-/// Once a cursor has been retrieved from [`list_folders()`](list_folders), use this to paginate
-/// through all shared folders. The cursor must come from a previous call to
-/// [`list_folders()`](list_folders) or [`list_folders_continue()`](list_folders_continue).
+/// Once a cursor has been retrieved from [`list_folders()`](crate::sharing::list_folders), use this
+/// to paginate through all shared folders. The cursor must come from a previous call to
+/// [`list_folders()`](crate::sharing::list_folders) or
+/// [`list_folders_continue()`](crate::sharing::list_folders_continue).
 pub fn list_folders_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersContinueArg,
@@ -391,10 +393,11 @@ pub fn list_mountable_folders(
     )
 }
 
-/// Once a cursor has been retrieved from [`list_mountable_folders()`](list_mountable_folders), use
-/// this to paginate through all mountable shared folders. The cursor must come from a previous call
-/// to [`list_mountable_folders()`](list_mountable_folders) or
-/// [`list_mountable_folders_continue()`](list_mountable_folders_continue).
+/// Once a cursor has been retrieved from
+/// [`list_mountable_folders()`](crate::sharing::list_mountable_folders), use this to paginate
+/// through all mountable shared folders. The cursor must come from a previous call to
+/// [`list_mountable_folders()`](crate::sharing::list_mountable_folders) or
+/// [`list_mountable_folders_continue()`](crate::sharing::list_mountable_folders_continue).
 pub fn list_mountable_folders_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersContinueArg,
@@ -427,7 +430,8 @@ pub fn list_received_files(
     )
 }
 
-/// Get more results with a cursor from [`list_received_files()`](list_received_files).
+/// Get more results with a cursor from
+/// [`list_received_files()`](crate::sharing::list_received_files).
 pub fn list_received_files_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFilesContinueArg,
@@ -593,7 +597,7 @@ pub fn remove_folder_member(
 /// Revoke a shared link. Note that even after revoking a shared link to a file, the file may be
 /// accessible if there are shared links leading to any of the file parent folders. To list all
 /// shared links that enable access to a specific file, you can use the
-/// [`list_shared_links()`](list_shared_links) with the file as the
+/// [`list_shared_links()`](crate::sharing::list_shared_links) with the file as the
 /// [`ListSharedLinksArg::path`](ListSharedLinksArg) argument.
 pub fn revoke_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
@@ -612,8 +616,9 @@ pub fn revoke_shared_link(
 
 /// Change the inheritance policy of an existing Shared Folder. Only permitted for shared folders in
 /// a shared team root. If a [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is
-/// returned, you'll need to call [`check_share_job_status()`](check_share_job_status) until the
-/// action completes to get the metadata for the folder.
+/// returned, you'll need to call
+/// [`check_share_job_status()`](crate::sharing::check_share_job_status) until the action completes
+/// to get the metadata for the folder.
 pub fn set_access_inheritance(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SetAccessInheritanceArg,
@@ -633,8 +638,8 @@ pub fn set_access_inheritance(
 /// will be completed asynchronously. To make testing the async case repeatable, set
 /// `ShareFolderArg.force_async`. If a
 /// [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is returned, you'll need to
-/// call [`check_share_job_status()`](check_share_job_status) until the action completes to get the
-/// metadata for the folder.
+/// call [`check_share_job_status()`](crate::sharing::check_share_job_status) until the action
+/// completes to get the metadata for the folder.
 pub fn share_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ShareFolderArg,
@@ -668,7 +673,7 @@ pub fn transfer_folder(
 }
 
 /// The current user unmounts the designated folder. They can re-mount the folder at a later time
-/// using [`mount_folder()`](mount_folder).
+/// using [`mount_folder()`](crate::sharing::mount_folder).
 pub fn unmount_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnmountFolderArg,
@@ -701,7 +706,8 @@ pub fn unshare_file(
 }
 
 /// Allows a shared folder owner to unshare the folder. You'll need to call
-/// [`check_job_status()`](check_job_status) to determine if the action has completed successfully.
+/// [`check_job_status()`](crate::sharing::check_job_status) to determine if the action has
+/// completed successfully.
 pub fn unshare_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnshareFolderArg,

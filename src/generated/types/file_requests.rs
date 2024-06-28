@@ -90,7 +90,7 @@ impl From<GeneralFileRequestsError> for CountFileRequestsError {
         }
     }
 }
-/// Result for [`count()`](count).
+/// Result for [`count()`](crate::file_requests::count).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CountFileRequestsResult {
@@ -182,7 +182,7 @@ impl ::serde::ser::Serialize for CountFileRequestsResult {
     }
 }
 
-/// Arguments for [`create()`](create).
+/// Arguments for [`create()`](crate::file_requests::create).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFileRequestArgs {
@@ -677,7 +677,7 @@ impl From<FileRequestError> for DeleteAllClosedFileRequestsError {
         }
     }
 }
-/// Result for [`delete_all_closed()`](delete_all_closed).
+/// Result for [`delete_all_closed()`](crate::file_requests::delete_all_closed).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteAllClosedFileRequestsResult {
@@ -769,7 +769,7 @@ impl ::serde::ser::Serialize for DeleteAllClosedFileRequestsResult {
     }
 }
 
-/// Arguments for [`delete()`](delete).
+/// Arguments for [`delete()`](crate::file_requests::delete).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteFileRequestArgs {
@@ -1024,7 +1024,7 @@ impl From<FileRequestError> for DeleteFileRequestError {
         }
     }
 }
-/// Result for [`delete()`](delete).
+/// Result for [`delete()`](crate::file_requests::delete).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteFileRequestsResult {
@@ -1670,7 +1670,7 @@ impl ::std::fmt::Display for GeneralFileRequestsError {
     }
 }
 
-/// Arguments for [`get()`](get).
+/// Arguments for [`get()`](crate::file_requests::get).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileRequestArgs {
@@ -2004,7 +2004,7 @@ impl ::serde::ser::Serialize for GracePeriod {
     }
 }
 
-/// Arguments for [`list_v2()`](list_v2).
+/// Arguments for [`list_v2()`](crate::file_requests::list_v2).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileRequestsArg {
@@ -2350,7 +2350,7 @@ impl From<GeneralFileRequestsError> for ListFileRequestsError {
         }
     }
 }
-/// Result for [`list()`](list).
+/// Result for [`list()`](crate::file_requests::list).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileRequestsResult {
@@ -2443,14 +2443,16 @@ impl ::serde::ser::Serialize for ListFileRequestsResult {
     }
 }
 
-/// Result for [`list_v2()`](list_v2) and [`list_continue()`](list_continue).
+/// Result for [`list_v2()`](crate::file_requests::list_v2) and
+/// [`list_continue()`](crate::file_requests::list_continue).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileRequestsV2Result {
     /// The file requests owned by this user. Apps with the app folder permission will only see file
     /// requests in their app folder.
     pub file_requests: Vec<FileRequest>,
-    /// Pass the cursor into [`list_continue()`](list_continue) to obtain additional file requests.
+    /// Pass the cursor into [`list_continue()`](crate::file_requests::list_continue) to obtain
+    /// additional file requests.
     pub cursor: String,
     /// Is true if there are additional file requests that have not been returned yet. An additional
     /// call to :route:list/continue` can retrieve them.
@@ -2563,7 +2565,7 @@ impl ::serde::ser::Serialize for ListFileRequestsV2Result {
     }
 }
 
-/// Arguments for [`update()`](update).
+/// Arguments for [`update()`](crate::file_requests::update).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFileRequestArgs {

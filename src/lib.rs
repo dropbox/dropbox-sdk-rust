@@ -9,12 +9,7 @@
 // To enable this manually, run e.g. `cargo rustdoc --all-features -- --cfg docsrs`.
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-// As of Rust 1.56, we can do #![doc = include_str!("../README.md")] to include README.md verbatim.
-// But this is too new of a MSRV, so we're still gating it on the docsrs flag for now. Note the
-// double cfg_attr gate, which is needed because feature(extended_key_value_attributes) makes a
-// change to how this syntax is parsed in older compilers.
-#![cfg_attr(docsrs, feature(extended_key_value_attributes))]
-#![cfg_attr(docsrs, cfg_attr(docsrs, doc = include_str!("../README.md")))]
+#![cfg_attr(docsrs, doc = include_str!("../README.md"))]
 #![cfg_attr(not(docsrs), doc = "Dropbox SDK for Rust. See README.md for more details.")]
 
 /// Feature-gate something and also decorate it with the feature name on docs.rs.
@@ -99,15 +94,16 @@ pub enum Error<E = NoError> {
 /// object instead.
 ///
 /// This is useful if a function needs to return some combination of different error types. They
-/// can be extracted later by using [`std::error::Error::downcast_ref`] or
-/// [`Error::downcast_ref_inner`] if desired.
+/// can be extracted later by using
+/// [`std::error::Error::downcast_ref`](https://doc.rust-lang.org/std/error/trait.Error.html#method.downcast_ref)
+/// or [`Error::downcast_ref_inner`] if desired.
 ///
 /// See [`Error::boxed`] for how to convert a concretely-typed version of [`Error`] into this.
 pub type BoxedError = Error<Box<dyn std::error::Error>>;
 
 impl<E: std::error::Error + 'static> Error<E> {
     /// Look for an inner error of the given type anywhere within this error, by walking the chain
-    /// of [`Error::source`] recursively until something matches the desired type.
+    /// of [`std::error::Error::source`] recursively until something matches the desired type.
     pub fn downcast_ref_inner<E2: std::error::Error + 'static>(&self) -> Option<&E2> {
         let mut inner = Some(self as &dyn std::error::Error);
         while let Some(e) = inner {
@@ -122,7 +118,9 @@ impl<E: std::error::Error + 'static> Error<E> {
     /// Change the concretely-typed API error, if any, into a boxed trait object.
     ///
     /// This makes it possible to combine dissimilar errors into one type, which can be broken out
-    /// later using [`Error::downcast_ref`] if desired.
+    /// later using
+    /// [`std::error::Error::downcast_ref`](https://doc.rust-lang.org/std/error/trait.Error.html#method.downcast_ref)
+    /// if desired.
     pub fn boxed(self) -> BoxedError {
         match self {
             Error::Api(e) => Error::Api(Box::new(e)),
@@ -234,7 +232,7 @@ impl std::fmt::Display for NoError {
 // to implement this trait.
 impl<'de> serde::de::Deserialize<'de> for NoError {
     fn deserialize<D: serde::de::Deserializer<'de>>(_: D)
-        -> std::result::Result<Self, D::Error>
+        -> Result<Self, D::Error>
     {
         Err(serde::de::Error::custom(
                 "method has no defined error type, but an error was returned"))

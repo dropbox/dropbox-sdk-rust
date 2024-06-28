@@ -460,8 +460,8 @@ impl From<AddTemplateArg> for PropertyGroupTemplate {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddTemplateResult {
     /// An identifier for template added by  See
-    /// [`templates_add_for_user()`](templates_add_for_user) or
-    /// [`templates_add_for_team()`](templates_add_for_team).
+    /// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user) or
+    /// [`templates_add_for_team()`](crate::file_properties::templates_add_for_team).
     pub template_id: TemplateId,
 }
 
@@ -553,8 +553,8 @@ impl ::serde::ser::Serialize for AddTemplateResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemplateArg {
     /// An identifier for template added by route  See
-    /// [`templates_add_for_user()`](templates_add_for_user) or
-    /// [`templates_add_for_team()`](templates_add_for_team).
+    /// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user) or
+    /// [`templates_add_for_team()`](crate::file_properties::templates_add_for_team).
     pub template_id: TemplateId,
 }
 
@@ -938,8 +938,8 @@ impl From<PropertiesError> for InvalidPropertyGroupError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTemplateResult {
     /// List of identifiers for templates added by  See
-    /// [`templates_add_for_user()`](templates_add_for_user) or
-    /// [`templates_add_for_team()`](templates_add_for_team).
+    /// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user) or
+    /// [`templates_add_for_team()`](crate::file_properties::templates_add_for_team).
     pub template_ids: Vec<TemplateId>,
 }
 
@@ -1756,8 +1756,9 @@ impl ::serde::ser::Serialize for PropertiesSearchArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertiesSearchContinueArg {
-    /// The cursor returned by your last call to [`properties_search()`](properties_search) or
-    /// [`properties_search_continue()`](properties_search_continue).
+    /// The cursor returned by your last call to
+    /// [`properties_search()`](crate::file_properties::properties_search) or
+    /// [`properties_search_continue()`](crate::file_properties::properties_search_continue).
     pub cursor: PropertiesSearchCursor,
 }
 
@@ -1849,7 +1850,7 @@ impl ::serde::ser::Serialize for PropertiesSearchContinueArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum PropertiesSearchContinueError {
     /// Indicates that the cursor has been invalidated. Call
-    /// [`properties_search()`](properties_search) to obtain a new cursor.
+    /// [`properties_search()`](crate::file_properties::properties_search) to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2315,7 +2316,8 @@ impl ::serde::ser::Serialize for PropertiesSearchQuery {
 pub struct PropertiesSearchResult {
     /// A list (possibly empty) of matches for the query.
     pub matches: Vec<PropertiesSearchMatch>,
-    /// Pass the cursor into [`properties_search_continue()`](properties_search_continue) to
+    /// Pass the cursor into
+    /// [`properties_search_continue()`](crate::file_properties::properties_search_continue) to
     /// continue to receive search results. Cursor will be null when there are no more results.
     pub cursor: Option<PropertiesSearchCursor>,
 }
@@ -3071,8 +3073,8 @@ pub struct RemovePropertiesArg {
     /// A unique identifier for the file or folder.
     pub path: PathOrId,
     /// A list of identifiers for a template created by
-    /// [`templates_add_for_user()`](templates_add_for_user) or
-    /// [`templates_add_for_team()`](templates_add_for_team).
+    /// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user) or
+    /// [`templates_add_for_team()`](crate::file_properties::templates_add_for_team).
     pub property_template_ids: Vec<TemplateId>,
 }
 
@@ -3323,8 +3325,9 @@ impl From<PropertiesError> for RemovePropertiesError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveTemplateArg {
-    /// An identifier for a template created by [`templates_add_for_user()`](templates_add_for_user)
-    /// or [`templates_add_for_team()`](templates_add_for_team).
+    /// An identifier for a template created by
+    /// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user) or
+    /// [`templates_add_for_team()`](crate::file_properties::templates_add_for_team).
     pub template_id: TemplateId,
 }
 
@@ -4000,8 +4003,8 @@ impl From<InvalidPropertyGroupError> for UpdatePropertiesError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateTemplateArg {
     /// An identifier for template added by  See
-    /// [`templates_add_for_user()`](templates_add_for_user) or
-    /// [`templates_add_for_team()`](templates_add_for_team).
+    /// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user) or
+    /// [`templates_add_for_team()`](crate::file_properties::templates_add_for_team).
     pub template_id: TemplateId,
     /// A display name for the template. template names can be up to 256 bytes.
     pub name: Option<String>,
@@ -4154,8 +4157,8 @@ impl ::serde::ser::Serialize for UpdateTemplateArg {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateTemplateResult {
     /// An identifier for template added by route  See
-    /// [`templates_add_for_user()`](templates_add_for_user) or
-    /// [`templates_add_for_team()`](templates_add_for_team).
+    /// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user) or
+    /// [`templates_add_for_team()`](crate::file_properties::templates_add_for_team).
     pub template_id: TemplateId,
 }
 

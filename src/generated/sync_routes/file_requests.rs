@@ -123,9 +123,10 @@ pub fn list(
     )
 }
 
-/// Once a cursor has been retrieved from [`list_v2()`](list_v2), use this to paginate through all
-/// file requests. The cursor must come from a previous call to [`list_v2()`](list_v2) or
-/// [`list_continue()`](list_continue).
+/// Once a cursor has been retrieved from [`list_v2()`](crate::file_requests::list_v2), use this to
+/// paginate through all file requests. The cursor must come from a previous call to
+/// [`list_v2()`](crate::file_requests::list_v2) or
+/// [`list_continue()`](crate::file_requests::list_continue).
 pub fn list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsContinueArg,

@@ -2967,11 +2967,11 @@ pub struct ExcludedUsersListResult {
     pub users: Vec<MemberProfile>,
     /// Is true if there are additional excluded users that have not been returned yet. An
     /// additional call to
-    /// [`member_space_limits_excluded_users_list_continue()`](member_space_limits_excluded_users_list_continue)
+    /// [`member_space_limits_excluded_users_list_continue()`](crate::team::member_space_limits_excluded_users_list_continue)
     /// can retrieve them.
     pub has_more: bool,
     /// Pass the cursor into
-    /// [`member_space_limits_excluded_users_list_continue()`](member_space_limits_excluded_users_list_continue)
+    /// [`member_space_limits_excluded_users_list_continue()`](crate::team::member_space_limits_excluded_users_list_continue)
     /// to obtain additional excluded users.
     pub cursor: Option<String>,
 }
@@ -5834,7 +5834,8 @@ pub enum GroupMembersAddError {
     GroupNotInTeam,
     /// These members are not part of your team. Currently, you cannot add members to a group if
     /// they are not part of your team, though this may change in a subsequent version. To add new
-    /// members to your Dropbox Business team, use the [`members_add()`](members_add) endpoint.
+    /// members to your Dropbox Business team, use the [`members_add()`](crate::team::members_add)
+    /// endpoint.
     MembersNotInTeam(Vec<String>),
     /// These users were not found in Dropbox.
     UsersNotFound(Vec<String>),
@@ -5998,8 +5999,8 @@ impl From<GroupSelectorWithTeamGroupError> for GroupMembersAddError {
         }
     }
 }
-/// Result returned by [`groups_members_add()`](groups_members_add) and
-/// [`groups_members_remove()`](groups_members_remove).
+/// Result returned by [`groups_members_add()`](crate::team::groups_members_add) and
+/// [`groups_members_remove()`](crate::team::groups_members_remove).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersChangeResult {
@@ -7354,9 +7355,9 @@ impl ::std::fmt::Display for GroupsGetInfoError {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupsGetInfoItem {
-    /// An ID that was provided as a parameter to [`groups_get_info()`](groups_get_info), and did
-    /// not match a corresponding group. The ID can be a group ID, or an external ID, depending on
-    /// how the method was called.
+    /// An ID that was provided as a parameter to
+    /// [`groups_get_info()`](crate::team::groups_get_info), and did not match a corresponding
+    /// group. The ID can be a group ID, or an external ID, depending on how the method was called.
     IdNotFound(String),
     /// Info about a group.
     GroupInfo(GroupFullInfo),
@@ -7672,11 +7673,11 @@ impl ::std::fmt::Display for GroupsListContinueError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsListResult {
     pub groups: Vec<crate::types::team_common::GroupSummary>,
-    /// Pass the cursor into [`groups_list_continue()`](groups_list_continue) to obtain the
-    /// additional groups.
+    /// Pass the cursor into [`groups_list_continue()`](crate::team::groups_list_continue) to obtain
+    /// the additional groups.
     pub cursor: String,
     /// Is true if there are additional groups that have not been returned yet. An additional call
-    /// to [`groups_list_continue()`](groups_list_continue) can retrieve them.
+    /// to [`groups_list_continue()`](crate::team::groups_list_continue) can retrieve them.
     pub has_more: bool,
 }
 
@@ -8063,11 +8064,13 @@ impl ::std::fmt::Display for GroupsMembersListContinueError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsMembersListResult {
     pub members: Vec<GroupMemberInfo>,
-    /// Pass the cursor into [`groups_members_list_continue()`](groups_members_list_continue) to
-    /// obtain additional group members.
+    /// Pass the cursor into
+    /// [`groups_members_list_continue()`](crate::team::groups_members_list_continue) to obtain
+    /// additional group members.
     pub cursor: String,
     /// Is true if there are additional group members that have not been returned yet. An additional
-    /// call to [`groups_members_list_continue()`](groups_members_list_continue) can retrieve them.
+    /// call to [`groups_members_list_continue()`](crate::team::groups_members_list_continue) can
+    /// retrieve them.
     pub has_more: bool,
 }
 
@@ -9771,7 +9774,7 @@ pub enum LegalHoldsListHeldRevisionsContinueError {
     /// Temporary infrastructure failure, please retry.
     TransientError,
     /// Indicates that the cursor has been invalidated. Call
-    /// [`legal_holds_list_held_revisions_continue()`](legal_holds_list_held_revisions_continue)
+    /// [`legal_holds_list_held_revisions_continue()`](crate::team::legal_holds_list_held_revisions_continue)
     /// again with an empty cursor to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -11218,7 +11221,7 @@ impl ::serde::ser::Serialize for ListMemberAppsArg {
 }
 
 /// Error returned by
-/// [`linked_apps_list_member_linked_apps()`](linked_apps_list_member_linked_apps).
+/// [`linked_apps_list_member_linked_apps()`](crate::team::linked_apps_list_member_linked_apps).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListMemberAppsError {
@@ -11714,15 +11717,16 @@ impl ::serde::ser::Serialize for ListMemberDevicesResult {
     }
 }
 
-/// Arguments for [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
+/// Arguments for
+/// [`linked_apps_list_members_linked_apps()`](crate::team::linked_apps_list_members_linked_apps).
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMembersAppsArg {
     /// At the first call to the
-    /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) the cursor
-    /// shouldn't be passed. Then, if the result of the call includes a cursor, the following
-    /// requests should include the received cursors in order to receive the next sub list of the
-    /// team applications.
+    /// [`linked_apps_list_members_linked_apps()`](crate::team::linked_apps_list_members_linked_apps)
+    /// the cursor shouldn't be passed. Then, if the result of the call includes a cursor, the
+    /// following requests should include the received cursors in order to receive the next sub list
+    /// of the team applications.
     pub cursor: Option<String>,
 }
 
@@ -11801,13 +11805,13 @@ impl ::serde::ser::Serialize for ListMembersAppsArg {
 }
 
 /// Error returned by
-/// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
+/// [`linked_apps_list_members_linked_apps()`](crate::team::linked_apps_list_members_linked_apps).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListMembersAppsError {
     /// Indicates that the cursor has been invalidated. Call
-    /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) again with
-    /// an empty cursor to obtain a new cursor.
+    /// [`linked_apps_list_members_linked_apps()`](crate::team::linked_apps_list_members_linked_apps)
+    /// again with an empty cursor to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -11869,19 +11873,19 @@ impl ::std::fmt::Display for ListMembersAppsError {
 }
 
 /// Information returned by
-/// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
+/// [`linked_apps_list_members_linked_apps()`](crate::team::linked_apps_list_members_linked_apps).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMembersAppsResult {
     /// The linked applications of each member of the team.
     pub apps: Vec<MemberLinkedApps>,
     /// If true, then there are more apps available. Pass the cursor to
-    /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) to retrieve
-    /// the rest.
+    /// [`linked_apps_list_members_linked_apps()`](crate::team::linked_apps_list_members_linked_apps)
+    /// to retrieve the rest.
     pub has_more: bool,
     /// Pass the cursor into
-    /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) to receive
-    /// the next sub list of team's applications.
+    /// [`linked_apps_list_members_linked_apps()`](crate::team::linked_apps_list_members_linked_apps)
+    /// to receive the next sub list of team's applications.
     pub cursor: Option<String>,
 }
 
@@ -12001,10 +12005,11 @@ impl ::serde::ser::Serialize for ListMembersAppsResult {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMembersDevicesArg {
-    /// At the first call to the [`devices_list_members_devices()`](devices_list_members_devices)
-    /// the cursor shouldn't be passed. Then, if the result of the call includes a cursor, the
-    /// following requests should include the received cursors in order to receive the next sub list
-    /// of team devices.
+    /// At the first call to the
+    /// [`devices_list_members_devices()`](crate::team::devices_list_members_devices) the cursor
+    /// shouldn't be passed. Then, if the result of the call includes a cursor, the following
+    /// requests should include the received cursors in order to receive the next sub list of team
+    /// devices.
     pub cursor: Option<String>,
     /// Whether to list web sessions of the team members.
     pub include_web_sessions: bool,
@@ -12154,8 +12159,8 @@ impl ::serde::ser::Serialize for ListMembersDevicesArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum ListMembersDevicesError {
     /// Indicates that the cursor has been invalidated. Call
-    /// [`devices_list_members_devices()`](devices_list_members_devices) again with an empty cursor
-    /// to obtain a new cursor.
+    /// [`devices_list_members_devices()`](crate::team::devices_list_members_devices) again with an
+    /// empty cursor to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -12222,10 +12227,12 @@ pub struct ListMembersDevicesResult {
     /// The devices of each member of the team.
     pub devices: Vec<MemberDevices>,
     /// If true, then there are more devices available. Pass the cursor to
-    /// [`devices_list_members_devices()`](devices_list_members_devices) to retrieve the rest.
+    /// [`devices_list_members_devices()`](crate::team::devices_list_members_devices) to retrieve
+    /// the rest.
     pub has_more: bool,
-    /// Pass the cursor into [`devices_list_members_devices()`](devices_list_members_devices) to
-    /// receive the next sub list of team's devices.
+    /// Pass the cursor into
+    /// [`devices_list_members_devices()`](crate::team::devices_list_members_devices) to receive the
+    /// next sub list of team's devices.
     pub cursor: Option<String>,
 }
 
@@ -12342,13 +12349,14 @@ impl ::serde::ser::Serialize for ListMembersDevicesResult {
     }
 }
 
-/// Arguments for [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
+/// Arguments for
+/// [`linked_apps_list_team_linked_apps()`](crate::team::linked_apps_list_team_linked_apps).
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTeamAppsArg {
     /// At the first call to the
-    /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) the cursor
-    /// shouldn't be passed. Then, if the result of the call includes a cursor, the following
+    /// [`linked_apps_list_team_linked_apps()`](crate::team::linked_apps_list_team_linked_apps) the
+    /// cursor shouldn't be passed. Then, if the result of the call includes a cursor, the following
     /// requests should include the received cursors in order to receive the next sub list of the
     /// team applications.
     pub cursor: Option<String>,
@@ -12428,13 +12436,14 @@ impl ::serde::ser::Serialize for ListTeamAppsArg {
     }
 }
 
-/// Error returned by [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
+/// Error returned by
+/// [`linked_apps_list_team_linked_apps()`](crate::team::linked_apps_list_team_linked_apps).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListTeamAppsError {
     /// Indicates that the cursor has been invalidated. Call
-    /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) again with an
-    /// empty cursor to obtain a new cursor.
+    /// [`linked_apps_list_team_linked_apps()`](crate::team::linked_apps_list_team_linked_apps)
+    /// again with an empty cursor to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -12496,19 +12505,19 @@ impl ::std::fmt::Display for ListTeamAppsError {
 }
 
 /// Information returned by
-/// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
+/// [`linked_apps_list_team_linked_apps()`](crate::team::linked_apps_list_team_linked_apps).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTeamAppsResult {
     /// The linked applications of each member of the team.
     pub apps: Vec<MemberLinkedApps>,
     /// If true, then there are more apps available. Pass the cursor to
-    /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) to retrieve the
-    /// rest.
+    /// [`linked_apps_list_team_linked_apps()`](crate::team::linked_apps_list_team_linked_apps) to
+    /// retrieve the rest.
     pub has_more: bool,
     /// Pass the cursor into
-    /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) to receive the
-    /// next sub list of team's applications.
+    /// [`linked_apps_list_team_linked_apps()`](crate::team::linked_apps_list_team_linked_apps) to
+    /// receive the next sub list of team's applications.
     pub cursor: Option<String>,
 }
 
@@ -12628,10 +12637,10 @@ impl ::serde::ser::Serialize for ListTeamAppsResult {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTeamDevicesArg {
-    /// At the first call to the [`devices_list_team_devices()`](devices_list_team_devices) the
-    /// cursor shouldn't be passed. Then, if the result of the call includes a cursor, the following
-    /// requests should include the received cursors in order to receive the next sub list of team
-    /// devices.
+    /// At the first call to the
+    /// [`devices_list_team_devices()`](crate::team::devices_list_team_devices) the cursor shouldn't
+    /// be passed. Then, if the result of the call includes a cursor, the following requests should
+    /// include the received cursors in order to receive the next sub list of team devices.
     pub cursor: Option<String>,
     /// Whether to list web sessions of the team members.
     pub include_web_sessions: bool,
@@ -12781,8 +12790,8 @@ impl ::serde::ser::Serialize for ListTeamDevicesArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum ListTeamDevicesError {
     /// Indicates that the cursor has been invalidated. Call
-    /// [`devices_list_team_devices()`](devices_list_team_devices) again with an empty cursor to
-    /// obtain a new cursor.
+    /// [`devices_list_team_devices()`](crate::team::devices_list_team_devices) again with an empty
+    /// cursor to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -12849,10 +12858,11 @@ pub struct ListTeamDevicesResult {
     /// The devices of each member of the team.
     pub devices: Vec<MemberDevices>,
     /// If true, then there are more devices available. Pass the cursor to
-    /// [`devices_list_team_devices()`](devices_list_team_devices) to retrieve the rest.
+    /// [`devices_list_team_devices()`](crate::team::devices_list_team_devices) to retrieve the
+    /// rest.
     pub has_more: bool,
-    /// Pass the cursor into [`devices_list_team_devices()`](devices_list_team_devices) to receive
-    /// the next sub list of team's devices.
+    /// Pass the cursor into [`devices_list_team_devices()`](crate::team::devices_list_team_devices)
+    /// to receive the next sub list of team's devices.
     pub cursor: Option<String>,
 }
 
@@ -15401,8 +15411,8 @@ pub enum MembersAddJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
     /// The asynchronous job has finished. For each member that was specified in the parameter
-    /// [`MembersAddArg`](MembersAddArg) that was provided to [`members_add()`](members_add), a
-    /// corresponding item is returned in this list.
+    /// [`MembersAddArg`](MembersAddArg) that was provided to
+    /// [`members_add()`](crate::team::members_add), a corresponding item is returned in this list.
     Complete(Vec<MemberAddResult>),
     /// The asynchronous job returned an error. The string contains an error message.
     Failed(String),
@@ -15495,8 +15505,9 @@ pub enum MembersAddJobStatusV2Result {
     /// The asynchronous job is still in progress.
     InProgress,
     /// The asynchronous job has finished. For each member that was specified in the parameter
-    /// [`MembersAddArg`](MembersAddArg) that was provided to [`members_add_v2()`](members_add_v2),
-    /// a corresponding item is returned in this list.
+    /// [`MembersAddArg`](MembersAddArg) that was provided to
+    /// [`members_add_v2()`](crate::team::members_add_v2), a corresponding item is returned in this
+    /// list.
     Complete(Vec<MemberAddV2Result>),
     /// The asynchronous job returned an error. The string contains an error message.
     Failed(String),
@@ -16494,7 +16505,7 @@ impl From<MemberSelectorError> for MembersDeleteProfilePhotoError {
     }
 }
 /// Available TeamMemberRole for the connected team. To be used with
-/// [`members_set_admin_permissions_v2()`](members_set_admin_permissions_v2).
+/// [`members_set_admin_permissions_v2()`](crate::team::members_set_admin_permissions_v2).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersGetAvailableTeamMemberRolesResult {
@@ -16730,13 +16741,14 @@ impl ::std::fmt::Display for MembersGetInfoError {
 }
 
 /// Describes a result obtained for a single user whose id was specified in the parameter of
-/// [`members_get_info()`](members_get_info).
+/// [`members_get_info()`](crate::team::members_get_info).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MembersGetInfoItem {
-    /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info) or
-    /// [`members_get_info_v2()`](members_get_info_v2), and did not match a corresponding user. This
-    /// might be a team_member_id, an email, or an external ID, depending on how the method was
-    /// called.
+    /// An ID that was provided as a parameter to
+    /// [`members_get_info()`](crate::team::members_get_info) or
+    /// [`members_get_info_v2()`](crate::team::members_get_info_v2), and did not match a
+    /// corresponding user. This might be a team_member_id, an email, or an external ID, depending
+    /// on how the method was called.
     IdNotFound(String),
     /// Info about a team member.
     MemberInfo(TeamMemberInfo),
@@ -16811,10 +16823,11 @@ impl From<MembersGetInfoItemBase> for MembersGetInfoItem {
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MembersGetInfoItemBase {
-    /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info) or
-    /// [`members_get_info_v2()`](members_get_info_v2), and did not match a corresponding user. This
-    /// might be a team_member_id, an email, or an external ID, depending on how the method was
-    /// called.
+    /// An ID that was provided as a parameter to
+    /// [`members_get_info()`](crate::team::members_get_info) or
+    /// [`members_get_info_v2()`](crate::team::members_get_info_v2), and did not match a
+    /// corresponding user. This might be a team_member_id, an email, or an external ID, depending
+    /// on how the method was called.
     IdNotFound(String),
 }
 
@@ -16869,14 +16882,15 @@ impl ::serde::ser::Serialize for MembersGetInfoItemBase {
 }
 
 /// Describes a result obtained for a single user whose id was specified in the parameter of
-/// [`members_get_info_v2()`](members_get_info_v2).
+/// [`members_get_info_v2()`](crate::team::members_get_info_v2).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersGetInfoItemV2 {
-    /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info) or
-    /// [`members_get_info_v2()`](members_get_info_v2), and did not match a corresponding user. This
-    /// might be a team_member_id, an email, or an external ID, depending on how the method was
-    /// called.
+    /// An ID that was provided as a parameter to
+    /// [`members_get_info()`](crate::team::members_get_info) or
+    /// [`members_get_info_v2()`](crate::team::members_get_info_v2), and did not match a
+    /// corresponding user. This might be a team_member_id, an email, or an external ID, depending
+    /// on how the method was called.
     IdNotFound(String),
     /// Info about a team member.
     MemberInfo(TeamMemberInfoV2),
@@ -17567,11 +17581,11 @@ impl ::std::fmt::Display for MembersListError {
 pub struct MembersListResult {
     /// List of team members.
     pub members: Vec<TeamMemberInfo>,
-    /// Pass the cursor into [`members_list_continue()`](members_list_continue) to obtain the
-    /// additional members.
+    /// Pass the cursor into [`members_list_continue()`](crate::team::members_list_continue) to
+    /// obtain the additional members.
     pub cursor: String,
     /// Is true if there are additional team members that have not been returned yet. An additional
-    /// call to [`members_list_continue()`](members_list_continue) can retrieve them.
+    /// call to [`members_list_continue()`](crate::team::members_list_continue) can retrieve them.
     pub has_more: bool,
 }
 
@@ -17686,11 +17700,12 @@ impl ::serde::ser::Serialize for MembersListResult {
 pub struct MembersListV2Result {
     /// List of team members.
     pub members: Vec<TeamMemberInfoV2>,
-    /// Pass the cursor into [`members_list_continue_v2()`](members_list_continue_v2) to obtain the
-    /// additional members.
+    /// Pass the cursor into [`members_list_continue_v2()`](crate::team::members_list_continue_v2)
+    /// to obtain the additional members.
     pub cursor: String,
     /// Is true if there are additional team members that have not been returned yet. An additional
-    /// call to [`members_list_continue_v2()`](members_list_continue_v2) can retrieve them.
+    /// call to [`members_list_continue_v2()`](crate::team::members_list_continue_v2) can retrieve
+    /// them.
     pub has_more: bool,
 }
 
@@ -22586,7 +22601,7 @@ impl ::serde::ser::Serialize for RevokeLinkedApiAppBatchArg {
 }
 
 /// Error returned by
-/// [`linked_apps_revoke_linked_app_batch()`](linked_apps_revoke_linked_app_batch).
+/// [`linked_apps_revoke_linked_app_batch()`](crate::team::linked_apps_revoke_linked_app_batch).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RevokeLinkedAppBatchError {
@@ -22728,7 +22743,8 @@ impl ::serde::ser::Serialize for RevokeLinkedAppBatchResult {
     }
 }
 
-/// Error returned by [`linked_apps_revoke_linked_app()`](linked_apps_revoke_linked_app).
+/// Error returned by
+/// [`linked_apps_revoke_linked_app()`](crate::team::linked_apps_revoke_linked_app).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RevokeLinkedAppError {
@@ -23484,8 +23500,8 @@ impl ::serde::ser::Serialize for SharingAllowlistListArg {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharingAllowlistListContinueArg {
     /// The cursor returned from a previous call to
-    /// [`sharing_allowlist_list()`](sharing_allowlist_list) or
-    /// [`sharing_allowlist_list_continue()`](sharing_allowlist_list_continue).
+    /// [`sharing_allowlist_list()`](crate::team::sharing_allowlist_list) or
+    /// [`sharing_allowlist_list_continue()`](crate::team::sharing_allowlist_list_continue).
     pub cursor: String,
 }
 
@@ -23702,10 +23718,10 @@ pub struct SharingAllowlistListResponse {
     /// List of emails represented by valid string representation (RFC-5322/822).
     pub emails: Vec<String>,
     /// If this is nonempty, there are more entries that can be fetched with
-    /// [`sharing_allowlist_list_continue()`](sharing_allowlist_list_continue).
+    /// [`sharing_allowlist_list_continue()`](crate::team::sharing_allowlist_list_continue).
     pub cursor: String,
     /// if true indicates that more entries can be fetched with
-    /// [`sharing_allowlist_list_continue()`](sharing_allowlist_list_continue).
+    /// [`sharing_allowlist_list_continue()`](crate::team::sharing_allowlist_list_continue).
     pub has_more: bool,
 }
 
@@ -24674,7 +24690,7 @@ pub enum TeamFolderArchiveJobStatus {
     /// The archive job has finished. The value is the metadata for the resulting team folder.
     Complete(TeamFolderMetadata),
     /// Error occurred while performing an asynchronous job from
-    /// [`team_folder_archive()`](team_folder_archive).
+    /// [`team_folder_archive()`](crate::team::team_folder_archive).
     Failed(TeamFolderArchiveError),
 }
 
@@ -25055,8 +25071,9 @@ impl ::std::fmt::Display for TeamFolderCreateError {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TeamFolderGetInfoItem {
-    /// An ID that was provided as a parameter to [`team_folder_get_info()`](team_folder_get_info)
-    /// did not match any of the team's team folders.
+    /// An ID that was provided as a parameter to
+    /// [`team_folder_get_info()`](crate::team::team_folder_get_info) did not match any of the
+    /// team's team folders.
     IdNotFound(String),
     /// Properties of a team folder.
     TeamFolderMetadata(TeamFolderMetadata),
@@ -25738,18 +25755,19 @@ impl ::std::fmt::Display for TeamFolderListError {
     }
 }
 
-/// Result for [`team_folder_list()`](team_folder_list) and
-/// [`team_folder_list_continue()`](team_folder_list_continue).
+/// Result for [`team_folder_list()`](crate::team::team_folder_list) and
+/// [`team_folder_list_continue()`](crate::team::team_folder_list_continue).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderListResult {
     /// List of all team folders in the authenticated team.
     pub team_folders: Vec<TeamFolderMetadata>,
-    /// Pass the cursor into [`team_folder_list_continue()`](team_folder_list_continue) to obtain
-    /// additional team folders.
+    /// Pass the cursor into [`team_folder_list_continue()`](crate::team::team_folder_list_continue)
+    /// to obtain additional team folders.
     pub cursor: String,
     /// Is true if there are additional team folders that have not been returned yet. An additional
-    /// call to [`team_folder_list_continue()`](team_folder_list_continue) can retrieve them.
+    /// call to [`team_folder_list_continue()`](crate::team::team_folder_list_continue) can retrieve
+    /// them.
     pub has_more: bool,
 }
 
@@ -27237,7 +27255,7 @@ impl ::serde::ser::Serialize for TeamMemberInfoV2 {
 }
 
 /// Information about a team member, after the change, like at
-/// [`members_set_profile_v2()`](members_set_profile_v2).
+/// [`members_set_profile_v2()`](crate::team::members_set_profile_v2).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamMemberInfoV2Result {
@@ -28328,14 +28346,14 @@ impl ::std::fmt::Display for TeamNamespacesListError {
     }
 }
 
-/// Result for [`namespaces_list()`](namespaces_list).
+/// Result for [`namespaces_list()`](crate::team::namespaces_list).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamNamespacesListResult {
     /// List of all namespaces the team can access.
     pub namespaces: Vec<NamespaceMetadata>,
-    /// Pass the cursor into [`namespaces_list_continue()`](namespaces_list_continue) to obtain
-    /// additional namespaces. Note that duplicate namespaces may be returned.
+    /// Pass the cursor into [`namespaces_list_continue()`](crate::team::namespaces_list_continue)
+    /// to obtain additional namespaces. Note that duplicate namespaces may be returned.
     pub cursor: String,
     /// Is true if there are additional namespaces that have not been returned yet.
     pub has_more: bool,
@@ -28524,7 +28542,8 @@ impl ::serde::ser::Serialize for TeamReportFailureReason {
     }
 }
 
-/// Error returned by [`token_get_authenticated_admin()`](token_get_authenticated_admin).
+/// Error returned by
+/// [`token_get_authenticated_admin()`](crate::team::token_get_authenticated_admin).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TokenGetAuthenticatedAdminError {
@@ -28606,7 +28625,7 @@ impl ::std::fmt::Display for TokenGetAuthenticatedAdminError {
     }
 }
 
-/// Results for [`token_get_authenticated_admin()`](token_get_authenticated_admin).
+/// Results for [`token_get_authenticated_admin()`](crate::team::token_get_authenticated_admin).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenGetAuthenticatedAdminResult {

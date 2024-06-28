@@ -54,6 +54,7 @@ class RustBackend(RustHelperBackend):
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
             self.emit('pub mod types;')
+            self.emit()
             with self.block('if_feature! { "async_routes",', delim=(None, '}')):
                 self.emit('pub mod async_routes;')
                 with self.block('if_feature! { not "sync_routes_default",', delim=(None, '}')):
@@ -842,12 +843,17 @@ class RustBackend(RustHelperBackend):
                 version = 1
             if '.' in val:
                 ns, route = val.split('.')
-                rust_fn = self.route_name_raw(route, version)
-                label = ns + '::' + rust_fn
-                target = 'super::' + label
             else:
-                target = self.route_name_raw(val, version)
-                label = target
+                route = val
+                ns = self._current_namespace
+
+            rust_fn = self.route_name_raw(route, version)
+            if ns != self._current_namespace:
+                label = ns + '::' + rust_fn
+            else:
+                label = rust_fn
+
+            target = f'crate::{ns}::{rust_fn}'
             return f'[`{label}()`]({target})'
         elif tag == 'field':
             if '.' in val:

@@ -92,7 +92,7 @@ impl ::serde::ser::Serialize for AccessInheritance {
 pub enum AccessLevel {
     /// The collaborator is the owner of the shared folder. Owners can view and edit the shared
     /// folder as well as set the folder's policies using
-    /// [`update_folder_policy()`](update_folder_policy).
+    /// [`update_folder_policy()`](crate::sharing::update_folder_policy).
     Owner,
     /// The collaborator can both view and edit the shared folder.
     Editor,
@@ -263,7 +263,7 @@ impl ::serde::ser::Serialize for AclUpdatePolicy {
     }
 }
 
-/// Arguments for [`add_file_member()`](add_file_member).
+/// Arguments for [`add_file_member()`](crate::sharing::add_file_member).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddFileMemberArgs {
@@ -450,7 +450,7 @@ impl ::serde::ser::Serialize for AddFileMemberArgs {
     }
 }
 
-/// Errors for [`add_file_member()`](add_file_member).
+/// Errors for [`add_file_member()`](crate::sharing::add_file_member).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AddFileMemberError {
@@ -2130,8 +2130,9 @@ pub enum CreateSharedLinkWithSettingsError {
     /// with a verified email address. Users can verify their email address
     /// [here](https://www.dropbox.com/help/317).
     EmailNotVerified,
-    /// The shared link already exists. You can call [`list_shared_links()`](list_shared_links) to
-    /// get the  existing link, or use the provided metadata if it is returned.
+    /// The shared link already exists. You can call
+    /// [`list_shared_links()`](crate::sharing::list_shared_links) to get the  existing link, or use
+    /// the provided metadata if it is returned.
     SharedLinkAlreadyExists(Option<SharedLinkAlreadyExistsMetadata>),
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
@@ -3223,7 +3224,7 @@ impl ::serde::ser::Serialize for FileMemberActionIndividualResult {
     }
 }
 
-/// Per-member result for [`add_file_member()`](add_file_member).
+/// Per-member result for [`add_file_member()`](crate::sharing::add_file_member).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileMemberActionResult {
@@ -4276,7 +4277,7 @@ impl ::serde::ser::Serialize for FolderPolicy {
     }
 }
 
-/// Arguments of [`get_file_metadata()`](get_file_metadata).
+/// Arguments of [`get_file_metadata()`](crate::sharing::get_file_metadata).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataArg {
@@ -4390,7 +4391,7 @@ impl ::serde::ser::Serialize for GetFileMetadataArg {
     }
 }
 
-/// Arguments of [`get_file_metadata_batch()`](get_file_metadata_batch).
+/// Arguments of [`get_file_metadata_batch()`](crate::sharing::get_file_metadata_batch).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataBatchArg {
@@ -4504,7 +4505,7 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchArg {
     }
 }
 
-/// Per file results of [`get_file_metadata_batch()`](get_file_metadata_batch).
+/// Per file results of [`get_file_metadata_batch()`](crate::sharing::get_file_metadata_batch).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataBatchResult {
@@ -4610,7 +4611,7 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchResult {
     }
 }
 
-/// Error result for [`get_file_metadata()`](get_file_metadata).
+/// Error result for [`get_file_metadata()`](crate::sharing::get_file_metadata).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetFileMetadataError {
@@ -4901,7 +4902,7 @@ pub enum GetSharedLinkFileError {
     SharedLinkNotFound,
     /// The caller is not allowed to access this shared link.
     SharedLinkAccessDenied,
-    /// This type of link is not supported; use [`files::export()`](super::files::export) instead.
+    /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
     UnsupportedLinkType,
     /// Directories cannot be retrieved by this endpoint.
     SharedLinkIsDirectory,
@@ -5139,7 +5140,7 @@ impl ::serde::ser::Serialize for GetSharedLinkMetadataArg {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinksArg {
-    /// See [`get_shared_links()`](get_shared_links) description.
+    /// See [`get_shared_links()`](crate::sharing::get_shared_links) description.
     pub path: Option<String>,
 }
 
@@ -6284,17 +6285,19 @@ impl From<InviteeMembershipInfo> for MembershipInfo {
         }
     }
 }
-/// Error occurred while performing an asynchronous job from [`unshare_folder()`](unshare_folder) or
-/// [`remove_folder_member()`](remove_folder_member).
+/// Error occurred while performing an asynchronous job from
+/// [`unshare_folder()`](crate::sharing::unshare_folder) or
+/// [`remove_folder_member()`](crate::sharing::remove_folder_member).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum JobError {
-    /// Error occurred while performing [`unshare_folder()`](unshare_folder) action.
+    /// Error occurred while performing [`unshare_folder()`](crate::sharing::unshare_folder) action.
     UnshareFolderError(UnshareFolderError),
-    /// Error occurred while performing [`remove_folder_member()`](remove_folder_member) action.
+    /// Error occurred while performing
+    /// [`remove_folder_member()`](crate::sharing::remove_folder_member) action.
     RemoveFolderMemberError(RemoveFolderMemberError),
     /// Error occurred while performing
-    /// [`relinquish_folder_membership()`](relinquish_folder_membership) action.
+    /// [`relinquish_folder_membership()`](crate::sharing::relinquish_folder_membership) action.
     RelinquishFolderMembershipError(RelinquishFolderMembershipError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -7898,7 +7901,7 @@ impl ::serde::ser::Serialize for LinkSettings {
     }
 }
 
-/// Arguments for [`list_file_members()`](list_file_members).
+/// Arguments for [`list_file_members()`](crate::sharing::list_file_members).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersArg {
@@ -8050,7 +8053,7 @@ impl ::serde::ser::Serialize for ListFileMembersArg {
     }
 }
 
-/// Arguments for [`list_file_members_batch()`](list_file_members_batch).
+/// Arguments for [`list_file_members_batch()`](crate::sharing::list_file_members_batch).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersBatchArg {
@@ -8162,7 +8165,7 @@ impl ::serde::ser::Serialize for ListFileMembersBatchArg {
     }
 }
 
-/// Per-file result for [`list_file_members_batch()`](list_file_members_batch).
+/// Per-file result for [`list_file_members_batch()`](crate::sharing::list_file_members_batch).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersBatchResult {
@@ -8267,13 +8270,14 @@ impl ::serde::ser::Serialize for ListFileMembersBatchResult {
     }
 }
 
-/// Arguments for [`list_file_members_continue()`](list_file_members_continue).
+/// Arguments for [`list_file_members_continue()`](crate::sharing::list_file_members_continue).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersContinueArg {
-    /// The cursor returned by your last call to [`list_file_members()`](list_file_members),
-    /// [`list_file_members_continue()`](list_file_members_continue), or
-    /// [`list_file_members_batch()`](list_file_members_batch).
+    /// The cursor returned by your last call to
+    /// [`list_file_members()`](crate::sharing::list_file_members),
+    /// [`list_file_members_continue()`](crate::sharing::list_file_members_continue), or
+    /// [`list_file_members_batch()`](crate::sharing::list_file_members_batch).
     pub cursor: String,
 }
 
@@ -8361,7 +8365,7 @@ impl ::serde::ser::Serialize for ListFileMembersContinueArg {
     }
 }
 
-/// Error for [`list_file_members_continue()`](list_file_members_continue).
+/// Error for [`list_file_members_continue()`](crate::sharing::list_file_members_continue).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFileMembersContinueError {
@@ -8573,7 +8577,7 @@ impl ::serde::ser::Serialize for ListFileMembersCountResult {
     }
 }
 
-/// Error for [`list_file_members()`](list_file_members).
+/// Error for [`list_file_members()`](crate::sharing::list_file_members).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFileMembersError {
@@ -8744,7 +8748,7 @@ impl ::serde::ser::Serialize for ListFileMembersIndividualResult {
     }
 }
 
-/// Arguments for [`list_received_files()`](list_received_files).
+/// Arguments for [`list_received_files()`](crate::sharing::list_received_files).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesArg {
@@ -8856,7 +8860,7 @@ impl ::serde::ser::Serialize for ListFilesArg {
     }
 }
 
-/// Arguments for [`list_received_files_continue()`](list_received_files_continue).
+/// Arguments for [`list_received_files_continue()`](crate::sharing::list_received_files_continue).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesContinueArg {
@@ -8948,7 +8952,8 @@ impl ::serde::ser::Serialize for ListFilesContinueArg {
     }
 }
 
-/// Error results for [`list_received_files_continue()`](list_received_files_continue).
+/// Error results for
+/// [`list_received_files_continue()`](crate::sharing::list_received_files_continue).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFilesContinueError {
@@ -9039,7 +9044,7 @@ impl ::std::fmt::Display for ListFilesContinueError {
     }
 }
 
-/// Success results for [`list_received_files()`](list_received_files).
+/// Success results for [`list_received_files()`](crate::sharing::list_received_files).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesResult {
@@ -9297,8 +9302,9 @@ impl From<ListFolderMembersArgs> for ListFolderMembersCursorArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersContinueArg {
-    /// The cursor returned by your last call to [`list_folder_members()`](list_folder_members) or
-    /// [`list_folder_members_continue()`](list_folder_members_continue).
+    /// The cursor returned by your last call to
+    /// [`list_folder_members()`](crate::sharing::list_folder_members) or
+    /// [`list_folder_members_continue()`](crate::sharing::list_folder_members_continue).
     pub cursor: String,
 }
 
@@ -9853,9 +9859,9 @@ impl ::std::fmt::Display for ListFoldersContinueError {
     }
 }
 
-/// Result for [`list_folders()`](list_folders) or
-/// [`list_mountable_folders()`](list_mountable_folders), depending on which endpoint was requested.
-/// Unmounted shared folders can be identified by the absence of
+/// Result for [`list_folders()`](crate::sharing::list_folders) or
+/// [`list_mountable_folders()`](crate::sharing::list_mountable_folders), depending on which
+/// endpoint was requested. Unmounted shared folders can be identified by the absence of
 /// [`SharedFolderMetadata::path_lower`](SharedFolderMetadata).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -9864,9 +9870,9 @@ pub struct ListFoldersResult {
     pub entries: Vec<SharedFolderMetadata>,
     /// Present if there are additional shared folders that have not been returned yet. Pass the
     /// cursor into the corresponding continue endpoint (either
-    /// [`list_folders_continue()`](list_folders_continue) or
-    /// [`list_mountable_folders_continue()`](list_mountable_folders_continue)) to list additional
-    /// folders.
+    /// [`list_folders_continue()`](crate::sharing::list_folders_continue) or
+    /// [`list_mountable_folders_continue()`](crate::sharing::list_mountable_folders_continue)) to
+    /// list additional folders.
     pub cursor: Option<String>,
 }
 
@@ -9975,11 +9981,12 @@ impl ::serde::ser::Serialize for ListFoldersResult {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListSharedLinksArg {
-    /// See [`list_shared_links()`](list_shared_links) description.
+    /// See [`list_shared_links()`](crate::sharing::list_shared_links) description.
     pub path: Option<ReadPath>,
-    /// The cursor returned by your last call to [`list_shared_links()`](list_shared_links).
+    /// The cursor returned by your last call to
+    /// [`list_shared_links()`](crate::sharing::list_shared_links).
     pub cursor: Option<String>,
-    /// See [`list_shared_links()`](list_shared_links) description.
+    /// See [`list_shared_links()`](crate::sharing::list_shared_links) description.
     pub direct_only: Option<bool>,
 }
 
@@ -10096,7 +10103,7 @@ impl ::serde::ser::Serialize for ListSharedLinksArg {
 pub enum ListSharedLinksError {
     Path(crate::types::files::LookupError),
     /// Indicates that the cursor has been invalidated. Call
-    /// [`list_shared_links()`](list_shared_links) to obtain a new cursor.
+    /// [`list_shared_links()`](crate::sharing::list_shared_links) to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -10187,10 +10194,10 @@ pub struct ListSharedLinksResult {
     /// Shared links applicable to the path argument.
     pub links: Vec<SharedLinkMetadata>,
     /// Is true if there are additional shared links that have not been returned yet. Pass the
-    /// cursor into [`list_shared_links()`](list_shared_links) to retrieve them.
+    /// cursor into [`list_shared_links()`](crate::sharing::list_shared_links) to retrieve them.
     pub has_more: bool,
-    /// Pass the cursor into [`list_shared_links()`](list_shared_links) to obtain the additional
-    /// links. Cursor is returned only if no path is given.
+    /// Pass the cursor into [`list_shared_links()`](crate::sharing::list_shared_links) to obtain
+    /// the additional links. Cursor is returned only if no path is given.
     pub cursor: Option<String>,
 }
 
@@ -11092,7 +11099,7 @@ pub enum ModifySharedLinkSettingsError {
     SharedLinkNotFound,
     /// The caller is not allowed to access this shared link.
     SharedLinkAccessDenied,
-    /// This type of link is not supported; use [`files::export()`](super::files::export) instead.
+    /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
     UnsupportedLinkType,
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
@@ -12437,7 +12444,7 @@ impl ::std::fmt::Display for RelinquishFolderMembershipError {
     }
 }
 
-/// Arguments for [`remove_file_member_2()`](remove_file_member_2).
+/// Arguments for [`remove_file_member_2()`](crate::sharing::remove_file_member_2).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveFileMemberArg {
@@ -12544,7 +12551,7 @@ impl ::serde::ser::Serialize for RemoveFileMemberArg {
     }
 }
 
-/// Errors for [`remove_file_member_2()`](remove_file_member_2).
+/// Errors for [`remove_file_member_2()`](crate::sharing::remove_file_member_2).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RemoveFileMemberError {
@@ -13406,7 +13413,7 @@ pub enum RevokeSharedLinkError {
     SharedLinkNotFound,
     /// The caller is not allowed to access this shared link.
     SharedLinkAccessDenied,
-    /// This type of link is not supported; use [`files::export()`](super::files::export) instead.
+    /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
     UnsupportedLinkType,
     /// Shared link is malformed.
     SharedLinkMalformed,
@@ -15274,9 +15281,9 @@ impl ::serde::ser::Serialize for SharedContentLinkMetadataBase {
 }
 
 /// Shared file user, group, and invitee membership. Used for the results of
-/// [`list_file_members()`](list_file_members) and
-/// [`list_file_members_continue()`](list_file_members_continue), and used as part of the results
-/// for [`list_file_members_batch()`](list_file_members_batch).
+/// [`list_file_members()`](crate::sharing::list_file_members) and
+/// [`list_file_members_continue()`](crate::sharing::list_file_members_continue), and used as part
+/// of the results for [`list_file_members_batch()`](crate::sharing::list_file_members_batch).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFileMembers {
@@ -15287,8 +15294,8 @@ pub struct SharedFileMembers {
     /// The list of invited members of a file, but have not logged in and claimed this.
     pub invitees: Vec<InviteeMembershipInfo>,
     /// Present if there are additional shared file members that have not been returned yet. Pass
-    /// the cursor into [`list_file_members_continue()`](list_file_members_continue) to list
-    /// additional members.
+    /// the cursor into [`list_file_members_continue()`](crate::sharing::list_file_members_continue)
+    /// to list additional members.
     pub cursor: Option<String>,
 }
 
@@ -15986,7 +15993,8 @@ pub struct SharedFolderMembers {
     /// The list of invitees to the shared folder.
     pub invitees: Vec<InviteeMembershipInfo>,
     /// Present if there are additional shared folder members that have not been returned yet. Pass
-    /// the cursor into [`list_folder_members_continue()`](list_folder_members_continue) to list
+    /// the cursor into
+    /// [`list_folder_members_continue()`](crate::sharing::list_folder_members_continue) to list
     /// additional members.
     pub cursor: Option<String>,
 }
@@ -16931,7 +16939,7 @@ pub enum SharedLinkError {
     SharedLinkNotFound,
     /// The caller is not allowed to access this shared link.
     SharedLinkAccessDenied,
-    /// This type of link is not supported; use [`files::export()`](super::files::export) instead.
+    /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
     UnsupportedLinkType,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -18176,7 +18184,7 @@ impl ::std::fmt::Display for UnmountFolderError {
     }
 }
 
-/// Arguments for [`unshare_file()`](unshare_file).
+/// Arguments for [`unshare_file()`](crate::sharing::unshare_file).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnshareFileArg {
@@ -18268,7 +18276,7 @@ impl ::serde::ser::Serialize for UnshareFileArg {
     }
 }
 
-/// Error result for [`unshare_file()`](unshare_file).
+/// Error result for [`unshare_file()`](crate::sharing::unshare_file).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UnshareFileError {
@@ -18591,7 +18599,7 @@ impl ::std::fmt::Display for UnshareFolderError {
     }
 }
 
-/// Arguments for [`update_file_member()`](update_file_member).
+/// Arguments for [`update_file_member()`](crate::sharing::update_file_member).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFileMemberArgs {
@@ -19541,8 +19549,8 @@ impl From<UserFileMembershipInfo> for UserMembershipInfo {
         }
     }
 }
-/// Basic information about a user. Use [`users::get_account()`](super::users::get_account) and
-/// [`users::get_account_batch()`](super::users::get_account_batch) to obtain more detailed
+/// Basic information about a user. Use [`users::get_account()`](crate::users::get_account) and
+/// [`users::get_account_batch()`](crate::users::get_account_batch) to obtain more detailed
 /// information.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.

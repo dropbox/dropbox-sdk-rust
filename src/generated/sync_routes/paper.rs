@@ -109,11 +109,12 @@ pub fn docs_folder_users_list(
     )
 }
 
-/// Once a cursor has been retrieved from [`docs_folder_users_list()`](docs_folder_users_list), use
-/// this to paginate through all users on the Paper folder. Note that this endpoint will continue to
-/// work for content created by users on the older version of Paper. To check which version of Paper
-/// a user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
-/// user is running the new version of Paper. Refer to the [Paper Migration
+/// Once a cursor has been retrieved from
+/// [`docs_folder_users_list()`](crate::paper::docs_folder_users_list), use this to paginate through
+/// all users on the Paper folder. Note that this endpoint will continue to work for content created
+/// by users on the older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 #[deprecated]
@@ -160,11 +161,11 @@ pub fn docs_get_folder_info(
 }
 
 /// Return the list of all Paper docs according to the argument specifications. To iterate over
-/// through the full pagination, pass the cursor to [`docs_list_continue()`](docs_list_continue).
-/// Note that this endpoint will continue to work for content created by users on the older version
-/// of Paper. To check which version of Paper a user is on, use /users/features/get_values. If the
-/// paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to
-/// the [Paper Migration
+/// through the full pagination, pass the cursor to
+/// [`docs_list_continue()`](crate::paper::docs_list_continue). Note that this endpoint will
+/// continue to work for content created by users on the older version of Paper. To check which
+/// version of Paper a user is on, use /users/features/get_values. If the paper_as_files feature is
+/// enabled, then the user is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 #[deprecated]
@@ -183,11 +184,11 @@ pub fn docs_list(
     )
 }
 
-/// Once a cursor has been retrieved from [`docs_list()`](docs_list), use this to paginate through
-/// all Paper doc. Note that this endpoint will continue to work for content created by users on the
-/// older version of Paper. To check which version of Paper a user is on, use
-/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
-/// the new version of Paper. Refer to the [Paper Migration
+/// Once a cursor has been retrieved from [`docs_list()`](crate::paper::docs_list), use this to
+/// paginate through all Paper doc. Note that this endpoint will continue to work for content
+/// created by users on the older version of Paper. To check which version of Paper a user is on,
+/// use /users/features/get_values. If the paper_as_files feature is enabled, then the user is
+/// running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 #[deprecated]
@@ -349,11 +350,11 @@ pub fn docs_users_list(
     )
 }
 
-/// Once a cursor has been retrieved from [`docs_users_list()`](docs_users_list), use this to
-/// paginate through all users on the Paper doc. Note that this endpoint will continue to work for
-/// content created by users on the older version of Paper. To check which version of Paper a user
-/// is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the user
-/// is running the new version of Paper. Refer to the [Paper Migration
+/// Once a cursor has been retrieved from [`docs_users_list()`](crate::paper::docs_users_list), use
+/// this to paginate through all users on the Paper doc. Note that this endpoint will continue to
+/// work for content created by users on the older version of Paper. To check which version of Paper
+/// a user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 #[deprecated]

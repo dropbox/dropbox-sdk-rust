@@ -126,8 +126,9 @@ pub fn groups_create<'a>(
 }
 
 /// Deletes a group. The group is deleted immediately. However the revoking of group-owned resources
-/// may take additional time. Use the [`groups_job_status_get()`](groups_job_status_get) to
-/// determine whether this process has completed. Permission : Team member management.
+/// may take additional time. Use the
+/// [`groups_job_status_get()`](crate::team::groups_job_status_get) to determine whether this
+/// process has completed. Permission : Team member management.
 pub fn groups_delete<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupSelector,
@@ -157,11 +158,11 @@ pub fn groups_get_info<'a>(
         None)
 }
 
-/// Once an async_job_id is returned from [`groups_delete()`](groups_delete),
-/// [`groups_members_add()`](groups_members_add) , or
-/// [`groups_members_remove()`](groups_members_remove) use this method to poll the status of
-/// granting/revoking group members' access to group-owned resources. Permission : Team member
-/// management.
+/// Once an async_job_id is returned from [`groups_delete()`](crate::team::groups_delete),
+/// [`groups_members_add()`](crate::team::groups_members_add) , or
+/// [`groups_members_remove()`](crate::team::groups_members_remove) use this method to poll the
+/// status of granting/revoking group members' access to group-owned resources. Permission : Team
+/// member management.
 pub fn groups_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
@@ -189,8 +190,8 @@ pub fn groups_list<'a>(
         None)
 }
 
-/// Once a cursor has been retrieved from [`groups_list()`](groups_list), use this to paginate
-/// through all groups. Permission : Team Information.
+/// Once a cursor has been retrieved from [`groups_list()`](crate::team::groups_list), use this to
+/// paginate through all groups. Permission : Team Information.
 pub fn groups_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupsListContinueArg,
@@ -205,8 +206,9 @@ pub fn groups_list_continue<'a>(
 }
 
 /// Adds members to a group. The members are added immediately. However the granting of group-owned
-/// resources may take additional time. Use the [`groups_job_status_get()`](groups_job_status_get)
-/// to determine whether this process has completed. Permission : Team member management.
+/// resources may take additional time. Use the
+/// [`groups_job_status_get()`](crate::team::groups_job_status_get) to determine whether this
+/// process has completed. Permission : Team member management.
 pub fn groups_members_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupMembersAddArg,
@@ -234,8 +236,9 @@ pub fn groups_members_list<'a>(
         None)
 }
 
-/// Once a cursor has been retrieved from [`groups_members_list()`](groups_members_list), use this
-/// to paginate through all members of the group. Permission : Team information.
+/// Once a cursor has been retrieved from
+/// [`groups_members_list()`](crate::team::groups_members_list), use this to paginate through all
+/// members of the group. Permission : Team information.
 pub fn groups_members_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupsMembersListContinueArg,
@@ -251,9 +254,9 @@ pub fn groups_members_list_continue<'a>(
 
 /// Removes members from a group. The members are removed immediately. However the revoking of
 /// group-owned resources may take additional time. Use the
-/// [`groups_job_status_get()`](groups_job_status_get) to determine whether this process has
-/// completed. This method permits removing the only owner of a group, even in cases where this is
-/// not possible via the web client. Permission : Team member management.
+/// [`groups_job_status_get()`](crate::team::groups_job_status_get) to determine whether this
+/// process has completed. This method permits removing the only owner of a group, even in cases
+/// where this is not possible via the web client. Permission : Team member management.
 pub fn groups_members_remove<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a GroupMembersRemoveArg,
@@ -623,8 +626,8 @@ pub fn members_add<'a>(
         None)
 }
 
-/// Once an async_job_id is returned from [`members_add_v2()`](members_add_v2) , use this to poll
-/// the status of the asynchronous request. Permission : Team member management.
+/// Once an async_job_id is returned from [`members_add_v2()`](crate::team::members_add_v2) , use
+/// this to poll the status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
@@ -638,8 +641,8 @@ pub fn members_add_job_status_get_v2<'a>(
         None)
 }
 
-/// Once an async_job_id is returned from [`members_add()`](members_add) , use this to poll the
-/// status of the asynchronous request. Permission : Team member management.
+/// Once an async_job_id is returned from [`members_add()`](crate::team::members_add) , use this to
+/// poll the status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
@@ -682,8 +685,8 @@ pub fn members_delete_profile_photo<'a>(
 }
 
 /// Get available TeamMemberRoles for the connected team. To be used with
-/// [`members_set_admin_permissions_v2()`](members_set_admin_permissions_v2). Permission : Team
-/// member management.
+/// [`members_set_admin_permissions_v2()`](crate::team::members_set_admin_permissions_v2).
+/// Permission : Team member management.
 pub fn members_get_available_team_member_roles(
     client: &impl crate::async_client_trait::TeamAuthClient,
 ) -> impl std::future::Future<Output=Result<MembersGetAvailableTeamMemberRolesResult, crate::Error<crate::NoError>>> + Send + '_ {
@@ -756,8 +759,8 @@ pub fn members_list<'a>(
         None)
 }
 
-/// Once a cursor has been retrieved from [`members_list_v2()`](members_list_v2), use this to
-/// paginate through all team members. Permission : Team information.
+/// Once a cursor has been retrieved from [`members_list_v2()`](crate::team::members_list_v2), use
+/// this to paginate through all team members. Permission : Team information.
 pub fn members_list_continue_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersListContinueArg,
@@ -771,8 +774,8 @@ pub fn members_list_continue_v2<'a>(
         None)
 }
 
-/// Once a cursor has been retrieved from [`members_list()`](members_list), use this to paginate
-/// through all team members. Permission : Team information.
+/// Once a cursor has been retrieved from [`members_list()`](crate::team::members_list), use this to
+/// paginate through all team members. Permission : Team information.
 pub fn members_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersListContinueArg,
@@ -788,7 +791,7 @@ pub fn members_list_continue<'a>(
 
 /// Moves removed member's files to a different member. This endpoint initiates an asynchronous job.
 /// To obtain the final result of the job, the client should periodically poll
-/// [`members_move_former_member_files_job_status_check()`](members_move_former_member_files_job_status_check).
+/// [`members_move_former_member_files_job_status_check()`](crate::team::members_move_former_member_files_job_status_check).
 /// Permission : Team member management.
 pub fn members_move_former_member_files<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
@@ -804,8 +807,8 @@ pub fn members_move_former_member_files<'a>(
 }
 
 /// Once an async_job_id is returned from
-/// [`members_move_former_member_files()`](members_move_former_member_files) , use this to poll the
-/// status of the asynchronous request. Permission : Team member management.
+/// [`members_move_former_member_files()`](crate::team::members_move_former_member_files) , use this
+/// to poll the status of the asynchronous request. Permission : Team member management.
 pub fn members_move_former_member_files_job_status_check<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
@@ -836,14 +839,14 @@ pub fn members_recover<'a>(
 
 /// Removes a member from a team. Permission : Team member management Exactly one of team_member_id,
 /// email, or external_id must be provided to identify the user account. Accounts can be recovered
-/// via [`members_recover()`](members_recover) for a 7 day period or until the account has been
-/// permanently deleted or transferred to another account (whichever comes first). Calling
-/// [`members_add()`](members_add) while a user is still recoverable on your team will return with
-/// [`MemberAddResult::UserAlreadyOnTeam`](MemberAddResult::UserAlreadyOnTeam). Accounts can have
-/// their files transferred via the admin console for a limited time, based on the version history
-/// length associated with the team (180 days for most teams). This endpoint may initiate an
+/// via [`members_recover()`](crate::team::members_recover) for a 7 day period or until the account
+/// has been permanently deleted or transferred to another account (whichever comes first). Calling
+/// [`members_add()`](crate::team::members_add) while a user is still recoverable on your team will
+/// return with [`MemberAddResult::UserAlreadyOnTeam`](MemberAddResult::UserAlreadyOnTeam). Accounts
+/// can have their files transferred via the admin console for a limited time, based on the version
+/// history length associated with the team (180 days for most teams). This endpoint may initiate an
 /// asynchronous job. To obtain the final result of the job, the client should periodically poll
-/// [`members_remove_job_status_get()`](members_remove_job_status_get).
+/// [`members_remove_job_status_get()`](crate::team::members_remove_job_status_get).
 pub fn members_remove<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersRemoveArg,
@@ -857,8 +860,8 @@ pub fn members_remove<'a>(
         None)
 }
 
-/// Once an async_job_id is returned from [`members_remove()`](members_remove) , use this to poll
-/// the status of the asynchronous request. Permission : Team member management.
+/// Once an async_job_id is returned from [`members_remove()`](crate::team::members_remove) , use
+/// this to poll the status of the asynchronous request. Permission : Team member management.
 pub fn members_remove_job_status_get<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a crate::types::dbx_async::PollArg,
@@ -1064,8 +1067,8 @@ pub fn namespaces_list<'a>(
         None)
 }
 
-/// Once a cursor has been retrieved from [`namespaces_list()`](namespaces_list), use this to
-/// paginate through all team-accessible namespaces. Duplicates may occur in the list.
+/// Once a cursor has been retrieved from [`namespaces_list()`](crate::team::namespaces_list), use
+/// this to paginate through all team-accessible namespaces. Duplicates may occur in the list.
 pub fn namespaces_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamNamespacesListContinueArg,
@@ -1227,7 +1230,7 @@ pub fn sharing_allowlist_add<'a>(
 /// Lists Approve List entries for given team, from newest to oldest, returning up to `limit`
 /// entries at a time. If there are more than `limit` entries associated with the current team, more
 /// can be fetched by passing the returned `cursor` to
-/// [`sharing_allowlist_list_continue()`](sharing_allowlist_list_continue).
+/// [`sharing_allowlist_list_continue()`](crate::team::sharing_allowlist_list_continue).
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -1247,7 +1250,7 @@ pub fn sharing_allowlist_list<'a>(
 }
 
 /// Lists entries associated with given team, starting from a the cursor. See
-/// [`sharing_allowlist_list()`](sharing_allowlist_list).
+/// [`sharing_allowlist_list()`](crate::team::sharing_allowlist_list).
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -1376,8 +1379,8 @@ pub fn team_folder_list<'a>(
         None)
 }
 
-/// Once a cursor has been retrieved from [`team_folder_list()`](team_folder_list), use this to
-/// paginate through all team folders. Permission : Team member file access.
+/// Once a cursor has been retrieved from [`team_folder_list()`](crate::team::team_folder_list), use
+/// this to paginate through all team folders. Permission : Team member file access.
 pub fn team_folder_list_continue<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a TeamFolderListContinueArg,

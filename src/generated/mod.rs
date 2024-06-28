@@ -9,6 +9,7 @@
 )]
 
 pub mod types;
+
 if_feature! { "async_routes",
     pub mod async_routes;
     if_feature! { not "sync_routes_default",

@@ -11,8 +11,10 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::file_properties::*;
 
-/// Add property groups to a Dropbox file. See [`templates_add_for_user()`](templates_add_for_user)
-/// or [`templates_add_for_team()`](templates_add_for_team) to create new templates.
+/// Add property groups to a Dropbox file. See
+/// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user) or
+/// [`templates_add_for_team()`](crate::file_properties::templates_add_for_team) to create new
+/// templates.
 pub fn properties_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddPropertiesArg,
@@ -29,10 +31,11 @@ pub fn properties_add(
 }
 
 /// Overwrite property groups associated with a file. This endpoint should be used instead of
-/// [`properties_update()`](properties_update) when property groups are being updated via a
-/// "snapshot" instead of via a "delta". In other words, this endpoint will delete all omitted
-/// fields from a property group, whereas [`properties_update()`](properties_update) will only
-/// delete fields that are explicitly marked for deletion.
+/// [`properties_update()`](crate::file_properties::properties_update) when property groups are
+/// being updated via a "snapshot" instead of via a "delta". In other words, this endpoint will
+/// delete all omitted fields from a property group, whereas
+/// [`properties_update()`](crate::file_properties::properties_update) will only delete fields that
+/// are explicitly marked for deletion.
 pub fn properties_overwrite(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &OverwritePropertyGroupArg,
@@ -49,11 +52,12 @@ pub fn properties_overwrite(
 }
 
 /// Permanently removes the specified property group from the file. To remove specific property
-/// field key value pairs, see [`properties_update()`](properties_update). To update a template, see
-/// [`templates_update_for_user()`](templates_update_for_user) or
-/// [`templates_update_for_team()`](templates_update_for_team). To remove a template, see
-/// [`templates_remove_for_user()`](templates_remove_for_user) or
-/// [`templates_remove_for_team()`](templates_remove_for_team).
+/// field key value pairs, see [`properties_update()`](crate::file_properties::properties_update).
+/// To update a template, see
+/// [`templates_update_for_user()`](crate::file_properties::templates_update_for_user) or
+/// [`templates_update_for_team()`](crate::file_properties::templates_update_for_team). To remove a
+/// template, see [`templates_remove_for_user()`](crate::file_properties::templates_remove_for_user)
+/// or [`templates_remove_for_team()`](crate::file_properties::templates_remove_for_team).
 pub fn properties_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemovePropertiesArg,
@@ -85,8 +89,9 @@ pub fn properties_search(
     )
 }
 
-/// Once a cursor has been retrieved from [`properties_search()`](properties_search), use this to
-/// paginate through all search results.
+/// Once a cursor has been retrieved from
+/// [`properties_search()`](crate::file_properties::properties_search), use this to paginate through
+/// all search results.
 pub fn properties_search_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PropertiesSearchContinueArg,
@@ -103,11 +108,12 @@ pub fn properties_search_continue(
 }
 
 /// Add, update or remove properties associated with the supplied file and templates. This endpoint
-/// should be used instead of [`properties_overwrite()`](properties_overwrite) when property groups
+/// should be used instead of
+/// [`properties_overwrite()`](crate::file_properties::properties_overwrite) when property groups
 /// are being updated via a "delta" instead of via a "snapshot" . In other words, this endpoint will
 /// not delete any omitted fields from a property group, whereas
-/// [`properties_overwrite()`](properties_overwrite) will delete any fields that are omitted from a
-/// property group.
+/// [`properties_overwrite()`](crate::file_properties::properties_overwrite) will delete any fields
+/// that are omitted from a property group.
 pub fn properties_update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdatePropertiesArg,
@@ -123,8 +129,9 @@ pub fn properties_update(
     )
 }
 
-/// Add a template associated with a team. See [`properties_add()`](properties_add) to add
-/// properties to a file or folder. Note: this endpoint will create team-owned templates.
+/// Add a template associated with a team. See
+/// [`properties_add()`](crate::file_properties::properties_add) to add properties to a file or
+/// folder. Note: this endpoint will create team-owned templates.
 pub fn templates_add_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &AddTemplateArg,
@@ -140,8 +147,9 @@ pub fn templates_add_for_team(
     )
 }
 
-/// Add a template associated with a user. See [`properties_add()`](properties_add) to add
-/// properties to a file. This endpoint can't be called on a team member or admin's behalf.
+/// Add a template associated with a user. See
+/// [`properties_add()`](crate::file_properties::properties_add) to add properties to a file. This
+/// endpoint can't be called on a team member or admin's behalf.
 pub fn templates_add_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddTemplateArg,
@@ -191,7 +199,7 @@ pub fn templates_get_for_user(
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
-/// [`templates_get_for_team()`](templates_get_for_team).
+/// [`templates_get_for_team()`](crate::file_properties::templates_get_for_team).
 pub fn templates_list_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
 ) -> Result<ListTemplateResult, crate::Error<TemplateError>> {
@@ -207,8 +215,8 @@ pub fn templates_list_for_team(
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
-/// [`templates_get_for_user()`](templates_get_for_user). This endpoint can't be called on a team
-/// member or admin's behalf.
+/// [`templates_get_for_user()`](crate::file_properties::templates_get_for_user). This endpoint
+/// can't be called on a team member or admin's behalf.
 pub fn templates_list_for_user(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> Result<ListTemplateResult, crate::Error<TemplateError>> {
@@ -224,8 +232,8 @@ pub fn templates_list_for_user(
 }
 
 /// Permanently removes the specified template created from
-/// [`templates_add_for_user()`](templates_add_for_user). All properties associated with the
-/// template will also be removed. This action cannot be undone.
+/// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user). All properties
+/// associated with the template will also be removed. This action cannot be undone.
 pub fn templates_remove_for_team(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &RemoveTemplateArg,
@@ -242,8 +250,8 @@ pub fn templates_remove_for_team(
 }
 
 /// Permanently removes the specified template created from
-/// [`templates_add_for_user()`](templates_add_for_user). All properties associated with the
-/// template will also be removed. This action cannot be undone.
+/// [`templates_add_for_user()`](crate::file_properties::templates_add_for_user). All properties
+/// associated with the template will also be removed. This action cannot be undone.
 pub fn templates_remove_for_user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveTemplateArg,

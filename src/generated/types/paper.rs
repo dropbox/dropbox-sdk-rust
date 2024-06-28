@@ -281,7 +281,7 @@ impl From<AddPaperDocUser> for RefPaperDoc {
         }
     }
 }
-/// Per-member result for [`docs_users_add()`](docs_users_add).
+/// Per-member result for [`docs_users_add()`](crate::paper::docs_users_add).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddPaperDocUserMemberResult {
@@ -1623,8 +1623,8 @@ impl ::serde::ser::Serialize for ListPaperDocsArgs {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListPaperDocsContinueArgs {
-    /// The cursor obtained from [`docs_list()`](docs_list) or
-    /// [`docs_list_continue()`](docs_list_continue). Allows for pagination.
+    /// The cursor obtained from [`docs_list()`](crate::paper::docs_list) or
+    /// [`docs_list_continue()`](crate::paper::docs_list_continue). Allows for pagination.
     pub cursor: String,
 }
 
@@ -1782,16 +1782,16 @@ impl ::serde::ser::Serialize for ListPaperDocsFilterBy {
 pub struct ListPaperDocsResponse {
     /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to
     /// other API methods. The list is sorted in the order specified by the initial call to
-    /// [`docs_list()`](docs_list).
+    /// [`docs_list()`](crate::paper::docs_list).
     pub doc_ids: Vec<PaperDocId>,
-    /// Pass the cursor into [`docs_list_continue()`](docs_list_continue) to paginate through all
-    /// files. The cursor preserves all properties as specified in the original call to
-    /// [`docs_list()`](docs_list).
+    /// Pass the cursor into [`docs_list_continue()`](crate::paper::docs_list_continue) to paginate
+    /// through all files. The cursor preserves all properties as specified in the original call to
+    /// [`docs_list()`](crate::paper::docs_list).
     pub cursor: Cursor,
     /// Will be set to True if a subsequent call with the provided cursor to
-    /// [`docs_list_continue()`](docs_list_continue) returns immediately with some results. If set
-    /// to False please allow some delay before making another call to
-    /// [`docs_list_continue()`](docs_list_continue).
+    /// [`docs_list_continue()`](crate::paper::docs_list_continue) returns immediately with some
+    /// results. If set to False please allow some delay before making another call to
+    /// [`docs_list_continue()`](crate::paper::docs_list_continue).
     pub has_more: bool,
 }
 
@@ -2278,9 +2278,9 @@ impl From<ListUsersOnFolderArgs> for RefPaperDoc {
 pub struct ListUsersOnFolderContinueArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
-    /// The cursor obtained from [`docs_folder_users_list()`](docs_folder_users_list) or
-    /// [`docs_folder_users_list_continue()`](docs_folder_users_list_continue). Allows for
-    /// pagination.
+    /// The cursor obtained from [`docs_folder_users_list()`](crate::paper::docs_folder_users_list)
+    /// or [`docs_folder_users_list_continue()`](crate::paper::docs_folder_users_list_continue).
+    /// Allows for pagination.
     pub cursor: String,
 }
 
@@ -2394,14 +2394,16 @@ pub struct ListUsersOnFolderResponse {
     pub invitees: Vec<crate::types::sharing::InviteeInfo>,
     /// List of users that are invited on the Paper folder.
     pub users: Vec<crate::types::sharing::UserInfo>,
-    /// Pass the cursor into [`docs_folder_users_list_continue()`](docs_folder_users_list_continue)
-    /// to paginate through all users. The cursor preserves all properties as specified in the
-    /// original call to [`docs_folder_users_list()`](docs_folder_users_list).
+    /// Pass the cursor into
+    /// [`docs_folder_users_list_continue()`](crate::paper::docs_folder_users_list_continue) to
+    /// paginate through all users. The cursor preserves all properties as specified in the original
+    /// call to [`docs_folder_users_list()`](crate::paper::docs_folder_users_list).
     pub cursor: Cursor,
     /// Will be set to True if a subsequent call with the provided cursor to
-    /// [`docs_folder_users_list_continue()`](docs_folder_users_list_continue) returns immediately
-    /// with some results. If set to False please allow some delay before making another call to
-    /// [`docs_folder_users_list_continue()`](docs_folder_users_list_continue).
+    /// [`docs_folder_users_list_continue()`](crate::paper::docs_folder_users_list_continue) returns
+    /// immediately with some results. If set to False please allow some delay before making another
+    /// call to
+    /// [`docs_folder_users_list_continue()`](crate::paper::docs_folder_users_list_continue).
     pub has_more: bool,
 }
 
@@ -2672,8 +2674,9 @@ impl From<ListUsersOnPaperDocArgs> for RefPaperDoc {
 pub struct ListUsersOnPaperDocContinueArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
-    /// The cursor obtained from [`docs_users_list()`](docs_users_list) or
-    /// [`docs_users_list_continue()`](docs_users_list_continue). Allows for pagination.
+    /// The cursor obtained from [`docs_users_list()`](crate::paper::docs_users_list) or
+    /// [`docs_users_list_continue()`](crate::paper::docs_users_list_continue). Allows for
+    /// pagination.
     pub cursor: String,
 }
 
@@ -2790,14 +2793,14 @@ pub struct ListUsersOnPaperDocResponse {
     pub users: Vec<UserInfoWithPermissionLevel>,
     /// The Paper doc owner. This field is populated on every single response.
     pub doc_owner: crate::types::sharing::UserInfo,
-    /// Pass the cursor into [`docs_users_list_continue()`](docs_users_list_continue) to paginate
-    /// through all users. The cursor preserves all properties as specified in the original call to
-    /// [`docs_users_list()`](docs_users_list).
+    /// Pass the cursor into [`docs_users_list_continue()`](crate::paper::docs_users_list_continue)
+    /// to paginate through all users. The cursor preserves all properties as specified in the
+    /// original call to [`docs_users_list()`](crate::paper::docs_users_list).
     pub cursor: Cursor,
     /// Will be set to True if a subsequent call with the provided cursor to
-    /// [`docs_users_list_continue()`](docs_users_list_continue) returns immediately with some
-    /// results. If set to False please allow some delay before making another call to
-    /// [`docs_users_list_continue()`](docs_users_list_continue).
+    /// [`docs_users_list_continue()`](crate::paper::docs_users_list_continue) returns immediately
+    /// with some results. If set to False please allow some delay before making another call to
+    /// [`docs_users_list_continue()`](crate::paper::docs_users_list_continue).
     pub has_more: bool,
 }
 

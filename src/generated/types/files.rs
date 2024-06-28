@@ -1455,8 +1455,8 @@ impl From<crate::types::dbx_async::PollResultBase> for CreateFolderBatchJobStatu
         }
     }
 }
-/// Result returned by [`create_folder_batch()`](create_folder_batch) that may either launch an
-/// asynchronous job or complete synchronously.
+/// Result returned by [`create_folder_batch()`](crate::files::create_folder_batch) that may either
+/// launch an asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderBatchLaunch {
@@ -2245,8 +2245,8 @@ impl ::serde::ser::Serialize for DeleteBatchArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteBatchError {
     /// Use [`DeleteError::TooManyWriteOperations`](DeleteError::TooManyWriteOperations).
-    /// [`delete_batch()`](delete_batch) now provides smaller granularity about which entry has
-    /// failed because of this.
+    /// [`delete_batch()`](crate::files::delete_batch) now provides smaller granularity about which
+    /// entry has failed because of this.
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2398,8 +2398,8 @@ impl From<crate::types::dbx_async::PollResultBase> for DeleteBatchJobStatus {
         }
     }
 }
-/// Result returned by [`delete_batch()`](delete_batch) that may either launch an asynchronous job
-/// or complete synchronously.
+/// Result returned by [`delete_batch()`](crate::files::delete_batch) that may either launch an
+/// asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteBatchLaunch {
@@ -2964,8 +2964,8 @@ pub struct DeletedMetadata {
     /// correctly match the user's filesystem, but this behavior will match the path provided in the
     /// Core API v1, and at least the last path component will have the correct casing. Changes to
     /// only the casing of paths won't be returned by
-    /// [`list_folder_continue()`](list_folder_continue). This field will be null if the file or
-    /// folder is not mounted.
+    /// [`list_folder_continue()`](crate::files::list_folder_continue). This field will be null if
+    /// the file or folder is not mounted.
     pub path_display: Option<String>,
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
@@ -3359,7 +3359,8 @@ impl ::serde::ser::Serialize for DownloadArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum DownloadError {
     Path(LookupError),
-    /// This file type cannot be downloaded directly; use [`export()`](export) instead.
+    /// This file type cannot be downloaded directly; use [`export()`](crate::files::export)
+    /// instead.
     UnsupportedFile,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -3732,8 +3733,9 @@ pub struct ExportArg {
     /// The path of the file to be exported.
     pub path: ReadPath,
     /// The file format to which the file should be exported. This must be one of the formats listed
-    /// in the file's export_options returned by [`get_metadata()`](get_metadata). If none is
-    /// specified, the default format (specified in export_as in file metadata) will be used.
+    /// in the file's export_options returned by [`get_metadata()`](crate::files::get_metadata). If
+    /// none is specified, the default format (specified in export_as in file metadata) will be
+    /// used.
     pub export_format: Option<String>,
 }
 
@@ -3843,7 +3845,7 @@ impl ::serde::ser::Serialize for ExportArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum ExportError {
     Path(LookupError),
-    /// This file type cannot be exported. Use [`download()`](download) instead.
+    /// This file type cannot be exported. Use [`download()`](crate::files::download) instead.
     NonExportable,
     /// The specified export format is not a valid option for this file type.
     InvalidExportFormat,
@@ -4064,7 +4066,7 @@ pub struct ExportMetadata {
     /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub export_hash: Option<Sha256HexHash>,
     /// If the file is a Paper doc, this gives the latest doc revision which can be used in
-    /// [`paper_update()`](paper_update).
+    /// [`paper_update()`](crate::files::paper_update).
     pub paper_revision: Option<i64>,
 }
 
@@ -4772,8 +4774,8 @@ pub struct FileMetadata {
     /// correctly match the user's filesystem, but this behavior will match the path provided in the
     /// Core API v1, and at least the last path component will have the correct casing. Changes to
     /// only the casing of paths won't be returned by
-    /// [`list_folder_continue()`](list_folder_continue). This field will be null if the file or
-    /// folder is not mounted.
+    /// [`list_folder_continue()`](crate::files::list_folder_continue). This field will be null if
+    /// the file or folder is not mounted.
     pub path_display: Option<String>,
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
@@ -4781,9 +4783,9 @@ pub struct FileMetadata {
     /// The preview URL of the file.
     pub preview_url: Option<String>,
     /// Additional information if the file is a photo or video. This field will not be set on
-    /// entries returned by [`list_folder()`](list_folder),
-    /// [`list_folder_continue()`](list_folder_continue), or
-    /// [`get_thumbnail_batch()`](get_thumbnail_batch), starting December 2, 2019.
+    /// entries returned by [`list_folder()`](crate::files::list_folder),
+    /// [`list_folder_continue()`](crate::files::list_folder_continue), or
+    /// [`get_thumbnail_batch()`](crate::files::get_thumbnail_batch), starting December 2, 2019.
     pub media_info: Option<MediaInfo>,
     /// Set if this file is a symlink.
     pub symlink_info: Option<SymlinkInfo>,
@@ -4798,10 +4800,11 @@ pub struct FileMetadata {
     /// specified.
     pub property_groups: Option<Vec<crate::types::file_properties::PropertyGroup>>,
     /// This flag will only be present if include_has_explicit_shared_members  is true in
-    /// [`list_folder()`](list_folder) or [`get_metadata()`](get_metadata). If this  flag is
-    /// present, it will be true if this file has any explicit shared  members. This is different
-    /// from sharing_info in that this could be true  in the case where a file has explicit members
-    /// but is not contained within  a shared folder.
+    /// [`list_folder()`](crate::files::list_folder) or
+    /// [`get_metadata()`](crate::files::get_metadata). If this  flag is present, it will be true if
+    /// this file has any explicit shared  members. This is different from sharing_info in that this
+    /// could be true  in the case where a file has explicit members but is not contained within  a
+    /// shared folder.
     pub has_explicit_shared_members: Option<bool>,
     /// A hash of the file content. This field can be used to verify data integrity. For more
     /// information see our [Content
@@ -5460,8 +5463,8 @@ pub struct FolderMetadata {
     /// correctly match the user's filesystem, but this behavior will match the path provided in the
     /// Core API v1, and at least the last path component will have the correct casing. Changes to
     /// only the casing of paths won't be returned by
-    /// [`list_folder_continue()`](list_folder_continue). This field will be null if the file or
-    /// folder is not mounted.
+    /// [`list_folder_continue()`](crate::files::list_folder_continue). This field will be null if
+    /// the file or folder is not mounted.
     pub path_display: Option<String>,
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
@@ -6719,7 +6722,7 @@ pub enum GetTemporaryLinkError {
     /// with a verified email address. Users can verify their email address
     /// [here](https://www.dropbox.com/help/317).
     EmailNotVerified,
-    /// Cannot get temporary link to this file type; use [`export()`](export) instead.
+    /// Cannot get temporary link to this file type; use [`export()`](crate::files::export) instead.
     UnsupportedFile,
     /// The user is not allowed to request a temporary link to the specified file. For example, this
     /// can occur if the file is restricted or if the user's links are
@@ -6932,7 +6935,7 @@ impl ::serde::ser::Serialize for GetTemporaryLinkResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemporaryUploadLinkArg {
     /// Contains the path and other optional modifiers for the future upload commit. Equivalent to
-    /// the parameters provided to [`upload()`](upload).
+    /// the parameters provided to [`upload()`](crate::files::upload).
     pub commit_info: CommitInfo,
     /// How long before this link expires, in seconds.  Attempting to start an upload with this link
     /// longer than this period  of time after link creation will result in an error.
@@ -7132,7 +7135,7 @@ impl ::serde::ser::Serialize for GetTemporaryUploadLinkResult {
     }
 }
 
-/// Arguments for [`get_thumbnail_batch()`](get_thumbnail_batch).
+/// Arguments for [`get_thumbnail_batch()`](crate::files::get_thumbnail_batch).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetThumbnailBatchArg {
@@ -8128,8 +8131,8 @@ impl ::serde::ser::Serialize for ListFolderArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderContinueArg {
-    /// The cursor returned by your last call to [`list_folder()`](list_folder) or
-    /// [`list_folder_continue()`](list_folder_continue).
+    /// The cursor returned by your last call to [`list_folder()`](crate::files::list_folder) or
+    /// [`list_folder_continue()`](crate::files::list_folder_continue).
     pub cursor: ListFolderCursor,
 }
 
@@ -8221,8 +8224,8 @@ impl ::serde::ser::Serialize for ListFolderContinueArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFolderContinueError {
     Path(LookupError),
-    /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
-    /// obtain a new cursor.
+    /// Indicates that the cursor has been invalidated. Call
+    /// [`list_folder()`](crate::files::list_folder) to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -8407,8 +8410,8 @@ impl ::std::fmt::Display for ListFolderError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderGetLatestCursorResult {
-    /// Pass the cursor into [`list_folder_continue()`](list_folder_continue) to see what's changed
-    /// in the folder since your previous query.
+    /// Pass the cursor into [`list_folder_continue()`](crate::files::list_folder_continue) to see
+    /// what's changed in the folder since your previous query.
     pub cursor: ListFolderCursor,
 }
 
@@ -8499,8 +8502,8 @@ impl ::serde::ser::Serialize for ListFolderGetLatestCursorResult {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderLongpollArg {
-    /// A cursor as returned by [`list_folder()`](list_folder) or
-    /// [`list_folder_continue()`](list_folder_continue). Cursors retrieved by setting
+    /// A cursor as returned by [`list_folder()`](crate::files::list_folder) or
+    /// [`list_folder_continue()`](crate::files::list_folder_continue). Cursors retrieved by setting
     /// [`ListFolderArg::include_media_info`](ListFolderArg) to `true` are not supported.
     pub cursor: ListFolderCursor,
     /// A timeout in seconds. The request will block for at most this length of time, plus up to 90
@@ -8614,8 +8617,8 @@ impl ::serde::ser::Serialize for ListFolderLongpollArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFolderLongpollError {
-    /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
-    /// obtain a new cursor.
+    /// Indicates that the cursor has been invalidated. Call
+    /// [`list_folder()`](crate::files::list_folder) to obtain a new cursor.
     Reset,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -8680,10 +8683,10 @@ impl ::std::fmt::Display for ListFolderLongpollError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderLongpollResult {
     /// Indicates whether new changes are available. If true, call
-    /// [`list_folder_continue()`](list_folder_continue) to retrieve the changes.
+    /// [`list_folder_continue()`](crate::files::list_folder_continue) to retrieve the changes.
     pub changes: bool,
     /// If present, backoff for at least this many seconds before calling
-    /// [`list_folder_longpoll()`](list_folder_longpoll) again.
+    /// [`list_folder_longpoll()`](crate::files::list_folder_longpoll) again.
     pub backoff: Option<u64>,
 }
 
@@ -8794,11 +8797,11 @@ impl ::serde::ser::Serialize for ListFolderLongpollResult {
 pub struct ListFolderResult {
     /// The files and (direct) subfolders in the folder.
     pub entries: Vec<Metadata>,
-    /// Pass the cursor into [`list_folder_continue()`](list_folder_continue) to see what's changed
-    /// in the folder since your previous query.
+    /// Pass the cursor into [`list_folder_continue()`](crate::files::list_folder_continue) to see
+    /// what's changed in the folder since your previous query.
     pub cursor: ListFolderCursor,
     /// If true, then there are more entries available. Pass the cursor to
-    /// [`list_folder_continue()`](list_folder_continue) to retrieve the rest.
+    /// [`list_folder_continue()`](crate::files::list_folder_continue) to retrieve the rest.
     pub has_more: bool,
 }
 
@@ -13332,8 +13335,9 @@ impl From<crate::types::dbx_async::PollResultBase> for RelocationBatchJobStatus 
         }
     }
 }
-/// Result returned by [`copy_batch()`](copy_batch) or [`move_batch()`](move_batch) that may either
-/// launch an asynchronous job or complete synchronously.
+/// Result returned by [`copy_batch()`](crate::files::copy_batch) or
+/// [`move_batch()`](crate::files::move_batch) that may either launch an asynchronous job or
+/// complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchLaunch {
@@ -13679,9 +13683,9 @@ impl ::serde::ser::Serialize for RelocationBatchResultEntry {
     }
 }
 
-/// Result returned by [`copy_batch_check_v2()`](copy_batch_check_v2) or
-/// [`move_batch_check_v2()`](move_batch_check_v2) that may either be in progress or completed with
-/// result for each entry.
+/// Result returned by [`copy_batch_check_v2()`](crate::files::copy_batch_check_v2) or
+/// [`move_batch_check_v2()`](crate::files::move_batch_check_v2) that may either be in progress or
+/// completed with result for each entry.
 #[derive(Debug, Clone, PartialEq)]
 pub enum RelocationBatchV2JobStatus {
     /// The asynchronous job is still in progress.
@@ -13750,8 +13754,9 @@ impl From<crate::types::dbx_async::PollResultBase> for RelocationBatchV2JobStatu
         }
     }
 }
-/// Result returned by [`copy_batch_v2()`](copy_batch_v2) or [`move_batch_v2()`](move_batch_v2) that
-/// may either launch an asynchronous job or complete synchronously.
+/// Result returned by [`copy_batch_v2()`](crate::files::copy_batch_v2) or
+/// [`move_batch_v2()`](crate::files::move_batch_v2) that may either launch an asynchronous job or
+/// complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
 pub enum RelocationBatchV2Launch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -14811,7 +14816,7 @@ impl ::std::fmt::Display for RestoreError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SaveCopyReferenceArg {
-    /// A copy reference returned by [`copy_reference_get()`](copy_reference_get).
+    /// A copy reference returned by [`copy_reference_get()`](crate::files::copy_reference_get).
     pub copy_reference: String,
     /// Path in the user's Dropbox that is the destination.
     pub path: Path,
@@ -16624,10 +16629,10 @@ pub struct SearchResult {
     /// A list (possibly empty) of matches for the query.
     pub matches: Vec<SearchMatch>,
     /// Used for paging. If true, indicates there is another page of results available that can be
-    /// fetched by calling [`search()`](search) again.
+    /// fetched by calling [`search()`](crate::files::search) again.
     pub more: bool,
-    /// Used for paging. Value to set the start argument to when calling [`search()`](search) to
-    /// fetch the next page of results.
+    /// Used for paging. Value to set the start argument to when calling
+    /// [`search()`](crate::files::search) to fetch the next page of results.
     pub start: u64,
 }
 
@@ -16891,8 +16896,8 @@ impl ::serde::ser::Serialize for SearchV2Arg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchV2ContinueArg {
-    /// The cursor returned by your last call to [`search_v2()`](search_v2). Used to fetch the next
-    /// page of results.
+    /// The cursor returned by your last call to [`search_v2()`](crate::files::search_v2). Used to
+    /// fetch the next page of results.
     pub cursor: SearchV2Cursor,
 }
 
@@ -16986,10 +16991,11 @@ pub struct SearchV2Result {
     /// A list (possibly empty) of matches for the query.
     pub matches: Vec<SearchMatchV2>,
     /// Used for paging. If true, indicates there is another page of results available that can be
-    /// fetched by calling [`search_continue_v2()`](search_continue_v2) with the cursor.
+    /// fetched by calling [`search_continue_v2()`](crate::files::search_continue_v2) with the
+    /// cursor.
     pub has_more: bool,
-    /// Pass the cursor into [`search_continue_v2()`](search_continue_v2) to fetch the next page of
-    /// results.
+    /// Pass the cursor into [`search_continue_v2()`](crate::files::search_continue_v2) to fetch the
+    /// next page of results.
     pub cursor: Option<SearchV2Cursor>,
 }
 
@@ -19330,7 +19336,8 @@ pub struct UploadSessionAppendArg {
     /// Contains the upload session ID and the offset.
     pub cursor: UploadSessionCursor,
     /// If true, the current session will be closed, at which point you won't be able to call
-    /// [`upload_session_append_v2()`](upload_session_append_v2) anymore with the current session.
+    /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) anymore with the
+    /// current session.
     pub close: bool,
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does
     /// not match this hash, an error will be returned. For more information see our [Content
@@ -19639,7 +19646,8 @@ impl From<UploadSessionLookupError> for UploadSessionAppendError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionCursor {
-    /// The upload session ID (returned by [`upload_session_start()`](upload_session_start)).
+    /// The upload session ID (returned by
+    /// [`upload_session_start()`](crate::files::upload_session_start)).
     pub session_id: String,
     /// Offset in bytes at which data should be appended. We use this to make sure upload data isn't
     /// lost or duplicated in the event of a network error.
@@ -19962,7 +19970,8 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchArg {
 pub enum UploadSessionFinishBatchJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
-    /// The [`upload_session_finish_batch()`](upload_session_finish_batch) has finished.
+    /// The [`upload_session_finish_batch()`](crate::files::upload_session_finish_batch) has
+    /// finished.
     Complete(UploadSessionFinishBatchResult),
 }
 
@@ -20026,8 +20035,8 @@ impl From<crate::types::dbx_async::PollResultBase> for UploadSessionFinishBatchJ
         }
     }
 }
-/// Result returned by [`upload_session_finish_batch()`](upload_session_finish_batch) that may
-/// either launch an asynchronous job or complete synchronously.
+/// Result returned by [`upload_session_finish_batch()`](crate::files::upload_session_finish_batch)
+/// that may either launch an asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionFinishBatchLaunch {
@@ -20711,7 +20720,8 @@ impl ::serde::ser::Serialize for UploadSessionOffsetError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionStartArg {
     /// If true, the current session will be closed, at which point you won't be able to call
-    /// [`upload_session_append_v2()`](upload_session_append_v2) anymore with the current session.
+    /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) anymore with the
+    /// current session.
     pub close: bool,
     /// Type of upload session you want to start. If not specified, default is
     /// [`UploadSessionType::Sequential`](UploadSessionType::Sequential).
@@ -20946,8 +20956,8 @@ impl ::serde::ser::Serialize for UploadSessionStartBatchArg {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionStartBatchResult {
     /// A List of unique identifiers for the upload session. Pass each session_id to
-    /// [`upload_session_append_v2()`](upload_session_append_v2) and
-    /// [`upload_session_finish()`](upload_session_finish).
+    /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) and
+    /// [`upload_session_finish()`](crate::files::upload_session_finish).
     pub session_ids: Vec<String>,
 }
 
@@ -21140,8 +21150,8 @@ impl ::std::fmt::Display for UploadSessionStartError {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionStartResult {
     /// A unique identifier for the upload session. Pass this to
-    /// [`upload_session_append_v2()`](upload_session_append_v2) and
-    /// [`upload_session_finish()`](upload_session_finish).
+    /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) and
+    /// [`upload_session_finish()`](crate::files::upload_session_finish).
     pub session_id: String,
 }
 
@@ -21301,7 +21311,7 @@ pub struct UploadWriteFailed {
     pub reason: WriteError,
     /// The upload session ID; data has already been uploaded to the corresponding upload session
     /// and this ID may be used to retry the commit with
-    /// [`upload_session_finish()`](upload_session_finish).
+    /// [`upload_session_finish()`](crate::files::upload_session_finish).
     pub upload_session_id: String,
 }
 
