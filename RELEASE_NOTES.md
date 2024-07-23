@@ -1,11 +1,13 @@
 # v0.19.0-beta1
 xxxx-yy-zz
-* **BIG UPDATE: async support added**
+* **BIG CHANGE: async support added**
   * HTTP client traits completely redesigned
     * Should actually be much simpler to implement now, as the work of setting the right headers has been extracted out
       into client_helpers code, and implementations now just need to provide a generic HttpRequest type which can set
       any header.
   * Users who use the default client shouldn't notice any changes.
+* **BIG CHANGE: no more nested Results**
+  * Functions which used to return `Result<Result<T, E>, dropbox_sdk::Error>` now return `Result<T, dropbox_sdk::Error<E>>`.
 
 # v0.18.1
 2024-05-06
