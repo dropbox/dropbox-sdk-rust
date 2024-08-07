@@ -97,7 +97,8 @@ impl TokenType {
 /// A proof key for OAuth2 PKCE ("Proof Key for Code Exchange") flow.
 #[derive(Debug, Clone)]
 pub struct PkceCode {
-    code: String,
+    /// The value of the code key.
+    pub code: String,
 }
 
 impl PkceCode {
@@ -307,7 +308,8 @@ enum AuthorizationState {
 /// Provides for continuing authorization of the app.
 #[derive(Debug, Clone)]
 pub struct Authorization {
-    client_id: String,
+    /// Dropbox app key
+    pub client_id: String,
     state: AuthorizationState,
 }
 
