@@ -67,7 +67,7 @@ pub enum Error<E = NoError> {
 /// or [`Error::downcast_ref_inner`] if desired.
 ///
 /// See [`Error::boxed`] for how to convert a concretely-typed version of [`Error`] into this.
-pub type BoxedError = Error<Box<dyn std::error::Error>>;
+pub type BoxedError = Error<Box<dyn std::error::Error + Send + Sync>>;
 
 impl<E: std::error::Error + 'static> Error<E> {
     /// Look for an inner error of the given type anywhere within this error, by walking the chain
@@ -82,7 +82,9 @@ impl<E: std::error::Error + 'static> Error<E> {
         }
         None
     }
+}
 
+impl<E: std::error::Error + Send + Sync + 'static> Error<E> {
     /// Change the concretely-typed API error, if any, into a boxed trait object.
     ///
     /// This makes it possible to combine dissimilar errors into one type, which can be broken out
