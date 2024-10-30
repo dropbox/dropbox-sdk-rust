@@ -11,6 +11,7 @@ enum Operation {
     Usage,
     List(String),
     Download(String),
+    Stat(String),
 }
 
 fn parse_args() -> Operation {
@@ -23,6 +24,9 @@ fn parse_args() -> Operation {
             }
             "--download" => {
                 ctor = Some(Operation::Download);
+            }
+            "--stat" => {
+                ctor = Some(Operation::Stat);
             }
             path if path.starts_with('/') => {
                 return if let Some(ctor) = ctor {
@@ -54,6 +58,7 @@ async fn main() {
         eprintln!("        --help | -h          view this text");
         eprintln!("        --download <path>    copy the contents of <path> to stdout");
         eprintln!("        --list <path>        recursively list all files under <path>");
+        eprintln!("        --stat <path>        list all metadata of <path>");
         eprintln!();
         eprintln!("    If a Dropbox OAuth token is given in the environment variable");
         eprintln!("    DBX_OAUTH_TOKEN, it will be used, otherwise you will be prompted for");
@@ -70,86 +75,103 @@ async fn main() {
     }
     let client = UserAuthDefaultClient::new(auth);
 
-    if let Operation::Download(path) = op {
-        eprintln!("Copying file to stdout: {}", path);
-        eprintln!();
+    match op {
+        Operation::Usage => (), // handled above
+        Operation::Download(path) => {
+            eprintln!("Copying file to stdout: {}", path);
+            eprintln!();
 
-        match files::download(&client, &files::DownloadArg::new(path), None, None).await {
-            Ok(result) => {
-                match tokio::io::copy(
-                    &mut result.body.expect("there must be a response body")
-                        .compat(),
-                    &mut tokio::io::stdout(),
-                ).await {
-                    Ok(n) => {
-                        eprintln!("Downloaded {n} bytes");
-                    }
-                    Err(e) => {
-                        eprintln!("I/O error: {e}");
-                    }
-                }
-            }
-            Err(e) => {
-                eprintln!("Error from files/download: {e}");
-            }
-        }
-    } else if let Operation::List(mut path) = op {
-        eprintln!("Listing recursively: {path}");
-
-        // Special case: the root folder is empty string. All other paths need to start with '/'.
-        if path == "/" {
-            path.clear();
-        }
-
-        let mut result = match files::list_folder(
-            &client,
-            &files::ListFolderArg::new(path).with_recursive(true),
-        ).await {
-            Ok(result) => result,
-            Err(e) => {
-                eprintln!("Error from files/list_folder: {e}");
-                return;
-            }
-        };
-
-        let mut num_entries = result.entries.len();
-        let mut num_pages = 1;
-
-        loop {
-            for entry in result.entries {
-                match entry {
-                    files::Metadata::Folder(entry) => {
-                        println!("Folder: {}", entry.path_display.unwrap_or(entry.name));
-                    }
-                    files::Metadata::File(entry) => {
-                        println!("File: {}", entry.path_display.unwrap_or(entry.name));
-                    }
-                    files::Metadata::Deleted(entry) => {
-                        panic!("unexpected deleted entry: {:?}", entry);
-                    }
-                }
-            }
-
-            if !result.has_more {
-                break;
-            }
-
-            result = match files::list_folder_continue(
-                &client,
-                &files::ListFolderContinueArg::new(result.cursor),
-            ).await {
+            match files::download(&client, &files::DownloadArg::new(path), None, None).await {
                 Ok(result) => {
-                    num_pages += 1;
-                    num_entries += result.entries.len();
-                    result
+                    match tokio::io::copy(
+                        &mut result.body.expect("there must be a response body")
+                            .compat(),
+                        &mut tokio::io::stdout(),
+                    ).await {
+                        Ok(n) => {
+                            eprintln!("Downloaded {n} bytes");
+                        }
+                        Err(e) => {
+                            eprintln!("I/O error: {e}");
+                        }
+                    }
                 }
                 Err(e) => {
-                    eprintln!("Error from files/list_folder_continue: {e}");
-                    break;
+                    eprintln!("Error from files/download: {e}");
                 }
             }
         }
+        Operation::List(mut path) => {
+            eprintln!("Listing recursively: {path}");
 
-        eprintln!("{num_entries} entries from {num_pages} result pages");
+            // Special case: the root folder is empty string. All other paths need to start with '/'.
+            if path == "/" {
+                path.clear();
+            }
+
+            let mut result = match files::list_folder(
+                &client,
+                &files::ListFolderArg::new(path).with_recursive(true),
+            ).await {
+                Ok(result) => result,
+                Err(e) => {
+                    eprintln!("Error from files/list_folder: {e}");
+                    return;
+                }
+            };
+
+            let mut num_entries = result.entries.len();
+            let mut num_pages = 1;
+
+            loop {
+                for entry in result.entries {
+                    match entry {
+                        files::Metadata::Folder(entry) => {
+                            println!("Folder: {}", entry.path_display.unwrap_or(entry.name));
+                        }
+                        files::Metadata::File(entry) => {
+                            println!("File: {}", entry.path_display.unwrap_or(entry.name));
+                        }
+                        files::Metadata::Deleted(entry) => {
+                            panic!("unexpected deleted entry: {:?}", entry);
+                        }
+                    }
+                }
+
+                if !result.has_more {
+                    break;
+                }
+
+                result = match files::list_folder_continue(
+                    &client,
+                    &files::ListFolderContinueArg::new(result.cursor),
+                ).await {
+                    Ok(result) => {
+                        num_pages += 1;
+                        num_entries += result.entries.len();
+                        result
+                    }
+                    Err(e) => {
+                        eprintln!("Error from files/list_folder_continue: {e}");
+                        break;
+                    }
+                }
+            }
+
+            eprintln!("{num_entries} entries from {num_pages} result pages");
+        }
+        Operation::Stat(path) => {
+            eprintln!("listing metadata for: {path}");
+
+            let arg = files::GetMetadataArg::new(path)
+                .with_include_media_info(true)
+                .with_include_deleted(true)
+                .with_include_has_explicit_shared_members(true);
+
+            match files::get_metadata(&client, &arg).await {
+                Ok(result) => println!("{result:#?}"),
+                Err(e) => eprintln!("Error from files/get_metadata: {e}"),
+            }
+        }
     }
 }

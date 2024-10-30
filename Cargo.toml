@@ -69,7 +69,7 @@ required-features = ["dbx_files", "default_client"]
 
 [[example]]
 name = "demo-async"
-required-features = ["dbx_files", "default_async_client"]
+required-features = ["dbx_files", "default_async_client", "tokio/io-std"]
 
 [features]
 # dbx_* features each correspond to one Stone spec file.
