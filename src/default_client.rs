@@ -192,7 +192,7 @@ impl<'a> HttpClient for TokenUpdateClient<'a> {
     }
 }
 
-impl<'a> crate::async_client_trait::NoauthClient for TokenUpdateClient<'a> {}
+impl crate::async_client_trait::NoauthClient for TokenUpdateClient<'_> {}
 
 #[derive(Debug)]
 struct UreqClient {

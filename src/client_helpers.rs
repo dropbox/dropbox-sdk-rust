@@ -307,7 +307,7 @@ pub(crate) enum Body<'a> {
 }
 
 #[cfg(feature = "async_routes")]
-impl<'a> From<Bytes> for Body<'a> {
+impl From<Bytes> for Body<'_> {
     fn from(value: Bytes) -> Self {
         Body::Owned((value, std::marker::PhantomData))
     }

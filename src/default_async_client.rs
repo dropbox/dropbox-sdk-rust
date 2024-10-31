@@ -211,7 +211,7 @@ impl<'a> HttpClient for TokenUpdateClient<'a> {
     }
 }
 
-impl<'a> NoauthClient for TokenUpdateClient<'a> {}
+impl NoauthClient for TokenUpdateClient<'_> {}
 
 #[derive(Debug)]
 struct ReqwestClient {
