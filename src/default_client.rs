@@ -180,7 +180,7 @@ struct TokenUpdateClient<'a> {
     inner: &'a UreqClient,
 }
 
-impl<'a> HttpClient for TokenUpdateClient<'a> {
+impl HttpClient for TokenUpdateClient<'_> {
     type Request = UreqRequest;
 
     fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error> {

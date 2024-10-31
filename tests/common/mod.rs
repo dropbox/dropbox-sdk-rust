@@ -11,7 +11,7 @@ pub fn create_files(
     path: &'static str,
     num_files: u32,
     size: usize,
-) -> (Box<impl Fn(u32) -> String>, Box<impl Fn(u32) -> Vec<u8>>) {
+) -> (impl Fn(u32) -> String, impl Fn(u32) -> Vec<u8>) {
     let threadpool = ThreadPool::new(20);
 
     let file_bytes = move |i| format!("This is file {}.\n", i)
@@ -48,7 +48,7 @@ pub fn create_files(
     }
 
     threadpool.join();
-    (Box::new(file_path), Box::new(file_bytes))
+    (file_path, file_bytes)
 }
 
 pub fn create_clean_folder(client: &impl UserAuthClient, path: &str) {
