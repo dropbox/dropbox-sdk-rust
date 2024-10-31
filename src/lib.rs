@@ -36,7 +36,7 @@ if_feature! { "default_client",
     pub mod default_client;
 
     // for backwards-compat only; don't match this for async
-    if_feature! { "sync_routes_default",
+    if_feature! { "sync_routes_in_root",
         pub use client_trait::*;
     }
 }
@@ -60,6 +60,14 @@ mod generated;
 
 // You need to run the Stone generator to create this module.
 pub use generated::*;
+
+#[cfg(feature = "async_routes")]
+#[cfg(not(feature = "sync_routes_in_root"))]
+pub use generated::async_routes::*;
+
+#[cfg(feature = "sync_routes")]
+#[cfg(feature = "sync_routes_in_root")]
+pub use generated::sync_routes::*;
 
 mod error;
 pub use error::{BoxedError, Error, NoError};

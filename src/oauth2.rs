@@ -423,7 +423,7 @@ impl Authorization {
         }
     }
 
-    if_feature! { "sync_routes_default",
+    if_feature! { "sync_routes",
         /// Compatibility shim for working with sync HTTP clients.
         pub fn obtain_access_token(
             &mut self,
