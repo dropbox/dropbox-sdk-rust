@@ -57,15 +57,9 @@ class RustBackend(RustHelperBackend):
             self.emit()
             with self.block('if_feature! { "async_routes",', delim=(None, '}')):
                 self.emit('pub mod async_routes;')
-                with self.block('if_feature! { not "sync_routes_default",', delim=(None, '}')):
-                    self.emit('#[allow(unused_imports)]')
-                    self.emit(f'pub use crate::generated::async_routes::*;')
             self.emit()
             with self.block('if_feature! { "sync_routes",', delim=(None, '}')):
                 self.emit('pub mod sync_routes;')
-                with self.block('if_feature! { "sync_routes_default",', delim=(None, '}')):
-                    self.emit('#[allow(unused_imports)]')
-                    self.emit(f'pub use crate::generated::sync_routes::*;')
             self.emit()
             with self.block('pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
                             ' -> Result<(), V::Error>'

@@ -96,7 +96,7 @@ dbx_users = ["dbx_common", "dbx_team_common", "dbx_team_policies", "dbx_users_co
 dbx_users_common = ["dbx_common"]
 
 default_async_client = ["async_routes", "dep:reqwest"]
-default_client = ["sync_routes", "sync_routes_default", "dep:ureq"]
+default_client = ["sync_routes", "sync_routes_in_root", "dep:ureq"]
 
 # Enable unstable ("preview") API routes.
 unstable = []
@@ -109,7 +109,7 @@ async_routes = []
 
 # Re-export the sync routes as `dropbox_sdk::{namsepace}` directly (matches pre-v0.19 structure).
 # If disabled, export the async routes there instead.
-sync_routes_default = ["sync_routes"]
+sync_routes_in_root = ["sync_routes"]
 
 # Include all namespaces by default.
 # Enable sync default client, sync routes, and make the sync routes default, to match pre-v0.19.
@@ -136,7 +136,7 @@ default = [
     "dbx_users_common",
     "default_client",
     "sync_routes",
-    "sync_routes_default",
+    "sync_routes_in_root",
     ]
 
 [package.metadata.docs.rs]
