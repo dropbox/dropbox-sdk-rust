@@ -1,5 +1,5 @@
 # v0.19.0-beta1
-xxxx-yy-zz
+2024-10-31
 * **BIG CHANGE: async support added**
   * HTTP client traits completely redesigned
     * Should actually be much simpler to implement now, as the work of setting the right headers has been extracted out
