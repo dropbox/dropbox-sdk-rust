@@ -89,24 +89,6 @@ default_features = false
 features = ["dbx_files", "dbx_users"]
 ```
 
-## Result Types and Errors
-
-Routes return a nested result type: `Result<Result<T, E>, dropbox_sdk::Error>`.
-The outer `Result` is `Err` if something went wrong in the course of actually
-making the request, such as network I/O errors or failure to serialize or
-deserialize the request data. This `Result`'s `Ok` variant is another `Result`
-where the `Ok` value is the deserialized successful result of the call, and the
-`Err` value is the strongly-typed error returned by the API. This inner error
-indicates some problem with the request, such as file not found, lacking
-permissions, etc.
-
-The rationale for splitting the errors this way is that the former category
-usually can't be handled in any way other than by retrying the request, whereas
-the latter category indicate problems with the actual request itself and
-probably should not be retried. Since most callers can't handle I/O errors in
-any sensible way, this allows them to use the `?` syntax to pass it up the
-stack, while still handling errors returned by the server.
-
 ## Tests
 
 The tests are auto-generated from the spec as well, but unlike the main code,
