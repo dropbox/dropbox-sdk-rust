@@ -52,7 +52,7 @@ threadpool = "1.8"
 
 [dev-dependencies.tokio]
 version = "1.37.0"
-features = ["rt-multi-thread", "macros"]
+features = ["rt-multi-thread", "macros", "io-std"]
 
 [dev-dependencies.tokio-util]
 version = "0.7.10"
@@ -69,7 +69,7 @@ required-features = ["dbx_files", "default_client"]
 
 [[example]]
 name = "demo-async"
-required-features = ["dbx_files", "default_async_client", "tokio/io-std"]
+required-features = ["dbx_files", "default_async_client"]
 
 [features]
 # dbx_* features each correspond to one Stone spec file.

@@ -5,9 +5,13 @@ xxxx-yy-zz
     * Should actually be much simpler to implement now, as the work of setting the right headers has been extracted out
       into client_helpers code, and implementations now just need to provide a generic HttpRequest type which can set
       any header.
-  * Users who use the default client shouldn't notice any changes.
+  * The default sync client is still the default enabled feature.
+  * To switch to the async mode, enable the `default_async_client` feature (and disable the `default_client`, `sync_routes`, `sync_routes_default` features).
 * **BIG CHANGE: no more nested Results**
   * Functions which used to return `Result<Result<T, E>, dropbox_sdk::Error>` now return `Result<T, dropbox_sdk::Error<E>>`.
+    * in other words, `Ok(Err(e))` is now written `Err(dropbox_sdk::Error::Api(e))` and `Ok(Ok(v))` is just `Ok(v)`.
+    * `dropbox_sdk::Error` now has a type parameter which differs depending on the function being called.
+* MSRV raised to 1.71.0
 
 # v0.18.1
 2024-05-06
