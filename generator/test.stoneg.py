@@ -182,7 +182,7 @@ class TestBackend(RustHelperBackend):
 
             with self._test_fn(type_name + test_value.test_suffix()):
                 self.emit(f'let json = r#"{json}"#;')
-                self.emit(f'let x = ::serde_json::from_str::<::dropbox_sdk::{ns_name}::{rsname}>(json).unwrap();')
+                self.emit(f'let x = ::serde_json::from_str::<::dropbox_sdk::types::{ns_name}::{rsname}>(json).unwrap();')
                 test_value.emit_asserts(self, 'x')
                 self.emit('assert_eq!(x, x.clone());')
 
@@ -191,7 +191,7 @@ class TestBackend(RustHelperBackend):
                     # test it again.
                     self.emit()
                     self.emit('let json2 = ::serde_json::to_string(&x).unwrap();')
-                    de = f'::serde_json::from_str::<::dropbox_sdk::{ns_name}::{rsname}>(&json2).unwrap()'
+                    de = f'::serde_json::from_str::<::dropbox_sdk::types::{ns_name}::{rsname}>(&json2).unwrap()'
 
                     if typ.all_fields:
                         self.emit(f'let x2 = {de};')
@@ -209,13 +209,13 @@ class TestBackend(RustHelperBackend):
         type_name = self.struct_name(typ)
         with self._test_fn("ClosedUnion_" + type_name):
             self.emit('// This test ensures that an exhaustive match compiles.')
-            self.emit(f'let x: Option<::dropbox_sdk::{ns_name}::{self.enum_name(typ)}> = None;')
+            self.emit(f'let x: Option<::dropbox_sdk::types::{ns_name}::{self.enum_name(typ)}> = None;')
             self.emit('match x {')
             with self.indent():
                 var_exps = []
                 for variant in self.get_enum_variants(typ):
                     v_name = self.enum_variant_name(variant)
-                    var_exp = f'::dropbox_sdk::{ns_name}::{type_name}::{v_name}'
+                    var_exp = f'::dropbox_sdk::types::{ns_name}::{type_name}::{v_name}'
                     if not ir.is_void_type(variant.data_type):
                         var_exp += '(_)'
                     var_exps += [var_exp]
@@ -260,7 +260,7 @@ class TestBackend(RustHelperBackend):
         err_typ = self.rust_type(_typ_or_void(route.error_data_type), '', crate='dropbox_sdk')
         if err_typ == '()':
             err_typ = 'dropbox_sdk::NoError'
-        ns_path = 'dropbox_sdk::' + self.namespace_name(ns)
+        ns_path = 'dropbox_sdk::sync_routes::' + self.namespace_name(ns)
         fn_name = self.route_name(route)
 
         if auth_type is None:
@@ -287,7 +287,7 @@ class TestBackend(RustHelperBackend):
         with self._test_fn(f'route_{fn_name}'):
             if arg_typ != '()':
                 self.emit(f'let arg: {arg_typ} = serde_json::from_str(r#"{json}"#).unwrap();')
-            self.emit(f'let ret: dropbox_sdk::Result<Result<{ok_typ}, {err_typ}>>')
+            self.emit(f'let ret: Result<{ok_typ}, dropbox_sdk::Error<{err_typ}>>')
             with self.indent():
                 self.emit(f'= {ns_path}::{fn_name}(')
                 with self.indent():
@@ -480,7 +480,7 @@ class TestUnion(TestValue):
             expression_path = expression_path[1:-1]  # strip off superfluous parens
 
         with codegen.block(f'match {expression_path}'):
-            path = f'::dropbox_sdk::{self._rust_namespace_name}::{self._rust_name}::{self._rust_variant_name}'
+            path = f'::dropbox_sdk::types::{self._rust_namespace_name}::{self._rust_name}::{self._rust_variant_name}'
             if ir.is_void_type(self._variant.data_type):
                 codegen.emit(f'{path} => (),')
             elif codegen.is_nullary_struct(self._variant.data_type):

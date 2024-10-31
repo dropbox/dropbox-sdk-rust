@@ -47,10 +47,35 @@ class RustBackend(RustHelperBackend):
 
         for namespace in api.namespaces.values():
             self._emit_namespace(namespace)
-        self._generate_mod_file()
 
-    def _generate_mod_file(self) -> None:
+        for d in ['async_routes', 'sync_routes', 'types']:
+            self._generate_mod_file(f'{d}/mod.rs')
+
         with self.output_to_relative_path('mod.rs'):
+            self._emit_header()
+            self.emit('pub mod types;')
+            self.emit()
+            with self.block('if_feature! { "async_routes",', delim=(None, '}')):
+                self.emit('pub mod async_routes;')
+                with self.block('if_feature! { not "sync_routes_default",', delim=(None, '}')):
+                    self.emit('#[allow(unused_imports)]')
+                    self.emit(f'pub use crate::generated::async_routes::*;')
+            self.emit()
+            with self.block('if_feature! { "sync_routes",', delim=(None, '}')):
+                self.emit('pub mod sync_routes;')
+                with self.block('if_feature! { "sync_routes_default",', delim=(None, '}')):
+                    self.emit('#[allow(unused_imports)]')
+                    self.emit(f'pub use crate::generated::sync_routes::*;')
+            self.emit()
+            with self.block('pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
+                            ' -> Result<(), V::Error>'
+                            ' where V: ::serde::de::MapAccess<\'de>'):
+                with self.block('while map.next_entry::<&str, ::serde_json::Value>()?.is_some()'):
+                    self.emit('/* ignore */')
+                self.emit('Ok(())')
+
+    def _generate_mod_file(self, path: str) -> None:
+        with self.output_to_relative_path(path):
             self._emit_header()
             self.emit('#![allow(missing_docs)]')
             self.emit()
@@ -61,19 +86,14 @@ class RustBackend(RustHelperBackend):
                 else:
                     self.emit(f'if_feature! {{ "dbx_{module}", pub mod {ns}; }}')
                 self.emit()
-            with self.block('pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
-                            ' -> Result<(), V::Error>'
-                            ' where V: ::serde::de::MapAccess<\'de>'):
-                with self.block('while map.next_entry::<&str, ::serde_json::Value>()?.is_some()'):
-                    self.emit('/* ignore */')
-                self.emit('Ok(())')
 
     # Type Emitters
 
     def _emit_namespace(self, namespace: ir.ApiNamespace) -> None:
         ns = self.namespace_name(namespace)
-        with self.output_to_relative_path(ns + '.rs'):
-            self._current_namespace = namespace.name
+        self._current_namespace = namespace.name
+
+        with self.output_to_relative_path(f'types/{ns}.rs'):
             self._emit_header()
 
             if namespace.doc is not None:
@@ -84,9 +104,6 @@ class RustBackend(RustHelperBackend):
                 self._emit_alias(alias)
             if namespace.aliases:
                 self.emit()
-
-            for fn in namespace.routes:
-                self._emit_route(ns, fn)
 
             for typ in namespace.data_types:
                 self._current_type = typ
@@ -100,6 +117,22 @@ class RustBackend(RustHelperBackend):
                 else:
                     raise RuntimeError(f'WARNING: unhandled type "{type(typ).__name__}" of field "{typ.name}"')
 
+        with self.output_to_relative_path(f'sync_routes/{ns}.rs'):
+            self._emit_header()
+            self.emit('#[allow(unused_imports)]')
+            self.emit(f'pub use crate::generated::types::{ns}::*;')
+            self.emit()
+            for fn in namespace.routes:
+                self._emit_route(ns, fn)
+
+        with self.output_to_relative_path(f'async_routes/{ns}.rs'):
+            self._emit_header()
+            self.emit('#[allow(unused_imports)]')
+            self.emit(f'pub use crate::generated::types::{ns}::*;')
+            self.emit()
+            for fn in namespace.routes:
+                self._emit_route(ns, fn, as_async=True)
+
         self._modules.append(namespace.name)
 
     def _emit_header(self) -> None:
@@ -109,6 +142,7 @@ class RustBackend(RustHelperBackend):
         self.emit('#![allow(')
         self.emit('    clippy::too_many_arguments,')
         self.emit('    clippy::large_enum_variant,')
+        self.emit('    clippy::result_large_err,')
         self.emit('    clippy::doc_markdown,')
         self.emit(')]')
         self.emit()
@@ -209,7 +243,7 @@ class RustBackend(RustHelperBackend):
         if union.parent_type:
             self._impl_from_for_union(union, union.parent_type)
 
-    def _emit_route(self, ns: str, fn: ir.ApiRoute, auth_trait: Optional[str] = None) -> None:
+    def _emit_route(self, ns: str, fn: ir.ApiRoute, auth_trait: Optional[str] = None, as_async: bool = False) -> None:
         # work around lazy init messing with mypy
         assert fn.attrs is not None
         assert fn.arg_data_type is not None
@@ -219,36 +253,37 @@ class RustBackend(RustHelperBackend):
         route_name = self.route_name(fn)
         host = fn.attrs.get('host', 'api')
         if host == 'api':
-            endpoint = 'crate::client_trait::Endpoint::Api'
+            endpoint = 'crate::client_trait_common::Endpoint::Api'
         elif host == 'content':
-            endpoint = 'crate::client_trait::Endpoint::Content'
+            endpoint = 'crate::client_trait_common::Endpoint::Content'
         elif host == 'notify':
-            endpoint = 'crate::client_trait::Endpoint::Notify'
+            endpoint = 'crate::client_trait_common::Endpoint::Notify'
         else:
             raise RuntimeError(f'ERROR: unsupported endpoint: {host}')
 
+        mod = 'async_client_trait' if as_async else 'client_trait'
         if auth_trait is None:
             auths_str = fn.attrs.get('auth', 'user')
             auths = list(map(lambda s: s.strip(), auths_str.split(',')))
             auths.sort()
             if auths == ['user']:
-                auth_trait = 'crate::client_trait::UserAuthClient'
+                auth_trait = f'crate::{mod}::UserAuthClient'
             elif auths == ['team']:
-                auth_trait = 'crate::client_trait::TeamAuthClient'
+                auth_trait = f'crate::{mod}::TeamAuthClient'
             elif auths == ['app']:
-                auth_trait = 'crate::client_trait::AppAuthClient'
+                auth_trait = f'crate::{mod}::AppAuthClient'
             elif auths == ['app', 'user']:
                 # This is kind of lame, but there's no way to have a marker trait for either User
                 # OR App auth, so to get around this, we'll emit two functions, one for each.
 
                 # Emit the User auth route with no suffix via a recursive call.
-                self._emit_route(ns, fn, 'crate::client_trait::UserAuthClient')
+                self._emit_route(ns, fn, f'crate::{mod}::UserAuthClient', as_async=as_async)
 
                 # Now modify the name to add a suffix, and emit the App auth version by continuing.
                 route_name += "_app_auth"
-                auth_trait = 'crate::client_trait::AppAuthClient'
+                auth_trait = f'crate::{mod}::AppAuthClient'
             elif auths == ['noauth']:
-                auth_trait = 'crate::client_trait::NoauthClient'
+                auth_trait = f'crate::{mod}::NoauthClient'
             else:
                 raise Exception(f'route {ns}/{route_name}: unsupported auth type(s): {auths_str}')
 
@@ -286,13 +321,15 @@ class RustBackend(RustHelperBackend):
                     route_name,
                     [f'client: &impl {auth_trait}']
                         + ([] if arg_void else [f'arg: &{arg_type}']),
-                    f'crate::Result<Result<{ret_type}, {error_type}>>',
-                    access='pub'):
-                self.emit_rust_fn_call(
+                    f'Result<{ret_type}, crate::Error<{error_type}>>',
+                    access='pub',
+                    is_async=as_async):
+                with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async'):
+                    self.emit_rust_fn_call(
                     'crate::client_helpers::request',
                     ['client',
                         endpoint,
-                        'crate::client_trait::Style::Rpc',
+                        'crate::client_trait_common::Style::Rpc',
                         f'"{ns}/{name_with_version}"',
                         '&()' if arg_void else 'arg',
                         'None'])
@@ -303,34 +340,41 @@ class RustBackend(RustHelperBackend):
                         + ([] if arg_void else [f'arg: &{arg_type}'])
                         + ['range_start: Option<u64>',
                             'range_end: Option<u64>'],
-                    f'crate::Result<Result<crate::client_trait::HttpRequestResult<{ret_type}>, {error_type}>>',
-                    access='pub'):
-                self.emit_rust_fn_call(
-                    'crate::client_helpers::request_with_body',
-                    ['client',
-                        endpoint,
-                        'crate::client_trait::Style::Download',
-                        f'"{ns}/{name_with_version}"',
-                        '&()' if arg_void else 'arg',
-                        'None',
-                        'range_start',
-                        'range_end'])
+                    f'Result<crate::{mod}::HttpRequestResult<{ret_type}>, crate::Error<{error_type}>>',
+                    access='pub',
+                    is_async=as_async):
+                with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async_body'):
+                    self.emit_rust_fn_call(
+                        'crate::client_helpers::request_with_body',
+                        ['client',
+                            endpoint,
+                            'crate::client_trait_common::Style::Download',
+                            f'"{ns}/{name_with_version}"',
+                            '&()' if arg_void else 'arg',
+                            'None',
+                            'range_start',
+                            'range_end'],
+                        end=None if as_async else ',')
+                    if not as_async:
+                        self.emit('client,')
         elif style == 'upload':
             with self.emit_rust_function_def(
                     route_name,
                     [f'client: &impl {auth_trait}']
                         + ([] if arg_void else [f'arg: &{arg_type}'])
-                        + ['body: &[u8]'],
-                    f'crate::Result<Result<{ret_type}, {error_type}>>',
-                    access='pub'):
-                self.emit_rust_fn_call(
-                    'crate::client_helpers::request',
-                    ['client',
-                        endpoint,
-                        'crate::client_trait::Style::Upload',
-                        f'"{ns}/{name_with_version}"',
-                        '&()' if arg_void else 'arg',
-                        'Some(body)'])
+                        + ['body: bytes::Bytes' if as_async else 'body: &[u8]'],
+                    f'Result<{ret_type}, crate::Error<{error_type}>>',
+                    access='pub',
+                    is_async=as_async):
+                with self.conditional_wrapper(not as_async, 'crate::client_helpers::unwrap_async'):
+                    self.emit_rust_fn_call(
+                        'crate::client_helpers::request',
+                        ['client',
+                            endpoint,
+                            'crate::client_trait_common::Style::Upload',
+                            f'"{ns}/{name_with_version}"',
+                            '&()' if arg_void else 'arg',
+                            'Some(crate::client_helpers::Body::from(body))'])
         else:
             raise RuntimeError(f'ERROR: unknown route style: {style}')
         self.emit()
@@ -799,12 +843,17 @@ class RustBackend(RustHelperBackend):
                 version = 1
             if '.' in val:
                 ns, route = val.split('.')
-                rust_fn = self.route_name_raw(route, version)
-                label = ns + '::' + rust_fn
-                target = 'super::' + label
             else:
-                target = self.route_name_raw(val, version)
-                label = target
+                route = val
+                ns = self._current_namespace
+
+            rust_fn = self.route_name_raw(route, version)
+            if ns != self._current_namespace:
+                label = ns + '::' + rust_fn
+            else:
+                label = rust_fn
+
+            target = f'crate::{ns}::{rust_fn}'
             return f'[`{label}()`]({target})'
         elif tag == 'field':
             if '.' in val:

@@ -26,6 +26,20 @@ However, that said,
 * We are happy to get feedback and/or pull requests from the community! See
 [contributing](CONTRIBUTING.md) for more information.
 
+## Sync and Async
+
+The routes (functions) come in two variants: sync, which do blocking network
+I/O and return their value directly; and async, which return futures.
+
+The sync routes (in the `dropbox_sdk::sync_routes` module) are enabled by
+default or with the `sync_routes` feature, and likewise the async ones are
+in the `dropbox_sdk::async_routes` module and can be enabled with the
+`async_routes` feature.
+
+Additionally, if the `sync_routes_default` feature is on (as it is by
+default), the sync routes are available directly as `dropbox_sdk::{namespace}`,
+which matches the original structure before the async routes were added.
+
 ## HTTP Client
 
 To actually use the API calls, you need a HTTP client -- all functions take a
@@ -35,12 +49,17 @@ pass it as the client argument.
 
 If you don't want to implement your own, this SDK comes with an optional
 default client that uses `ureq` and `rustls`.  To use it, build with the
-`default_client` feature flag, and then there will be a set of clents in the
+`default_client` feature flag, and then there will be a set of clients in the
 `dropbox_sdk::default_client` module that you can use, corresponding to each of
 the authentication types Dropbox uses (see below). The default client needs a
 Dropbox API token; how you get one is up to you and your program. See the
 programs under [examples/](examples/) for examples, and see the helper code in
 the [oauth2](src/oauth2.rs) module.
+
+Async clients can be implemented using a parallel set of traits located in the
+`dropbox_sdk::async_client_trait` module. A default implementation (which uses
+`reqwest` can be enabled with the `default_async_client` feature and is located
+at `dropbox_sdk::default_async_client`.
 
 ## Authentication Types
 
@@ -109,11 +128,9 @@ Some implementation notes, limitations, and TODOs:
  * Stone allows structures to inherit from other structures and be polymorphic.
    Rust doesn't have these paradigms, so instead this SDK represents
    polymorphic parent structs as enums, and the inherited fields are put in all
-   variants.  See `dropbox_sdk::files::Metadata` for an example.
- * This crate only supports synchronous I/O. Eventually we probably want to
-   support async I/O, which will require making incompatible changes to the
-   types returned by routes. This should probably wait until the futures
-   ecosystem and async/await have stabilized some more.
+   variants.  See `dropbox_sdk::files::Metadata` for an example. Upcasting is
+   supported using generated `From` implementations which either construct the
+   right enum variant or copy the subset of common fields.
  * This code does not use `serde_derive` for the most part, and instead uses
    manually-emitted serialization code. Previous work on this crate did attempt
    to use `serde_derive`, but the way the Dropbox API serializes unions
@@ -125,5 +142,10 @@ Some implementation notes, limitations, and TODOs:
  * Types with constraints (such as strings with patterns or min/max lengths, or
    integers with a range) do not check that the data being stored in them meets
    the constraints.
+ * The sync routes and clients are actually implemented in terms of the async
+   client interfaces, but all the futures returned are `std::future::ready()`,
+   which is then removed using `now_or_never()` before being returned to
+   callers. Even though futures are passed around and async functions are used,
+   no executor is actually needed because of this.
 
 ## Happy Dropboxing!
