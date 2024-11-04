@@ -2,4 +2,4 @@
 doc-valid-idents = ["OAuth2"]
 
 # Don't warn about things that can't be used in this version.
-msrv = "1.56.1"
+msrv = "1.75.0"
