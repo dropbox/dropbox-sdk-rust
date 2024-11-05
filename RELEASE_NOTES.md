@@ -1,3 +1,9 @@
+# v0.19.0-beta2
+2024-11-05
+* renamed sync_routes_default feature to sync_routes_in_root
+* improved appearance of docs wrt features
+* added tests for custom clients logic
+
 # v0.19.0-beta1
 2024-10-31
 * **BIG CHANGE: async support added**
