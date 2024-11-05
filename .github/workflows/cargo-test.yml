@@ -32,7 +32,7 @@ jobs:
         run: rustup install 1.75.0 --profile minimal
 
       - name: Run cargo test
-        run: rustup run 1.75.0 cargo test
+        run: rustup run 1.75.0 cargo test --all-features
 
       - name: Install nightly toolchain
         run: |
