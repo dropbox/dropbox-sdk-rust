@@ -118,20 +118,21 @@ pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) ->
 /// etc.). The inner result has an error if the server returned one for the request, otherwise it
 /// has the deserialized JSON response and the body stream (if any).
 #[allow(clippy::too_many_arguments)]
-pub async fn request_with_body<T, E, P, C>(
-    client: &C,
+pub async fn request_with_body<TResponse, TError, TParams, TClient>(
+    client: &TClient,
     endpoint: Endpoint,
     style: Style,
     function: &str,
-    params: &P,
+    params: &TParams,
     body: Option<Body<'_>>,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> Result<HttpRequestResult<T>, Error<E>> where
-    T: DeserializeOwned,
-    E: DeserializeOwned + StdError,
-    P: Serialize,
-    C: HttpClient,
+) -> Result<HttpRequestResult<TResponse>, Error<TError>>
+where
+    TResponse: DeserializeOwned,
+    TError: DeserializeOwned + StdError,
+    TParams: Serialize,
+    TClient: HttpClient,
 {
     let mut retried = false;
     'auth_retry: loop {
@@ -190,7 +191,7 @@ pub async fn request_with_body<T, E, P, C>(
                 if status == 409 {
                     // Response should be JSON-deseraializable into the strongly-typed
                     // error specified by type parameter E.
-                    return match serde_json::from_str::<TopLevelError<E>>(&json) {
+                    return match serde_json::from_str::<TopLevelError<TError>>(&json) {
                         Ok(deserialized) => {
                             error!("API error: {}", deserialized.error);
                             Err(Error::Api(deserialized.error))
@@ -214,7 +215,8 @@ pub async fn request_with_body<T, E, P, C>(
 }
 
 pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
-    -> Result<(String, Option<u64>, Option<Box<dyn AsyncRead + Send + Unpin>>), Error> {
+    -> Result<(String, Option<u64>, Option<Box<dyn AsyncRead + Send + Unpin>>), Error>
+{
     let HttpRequestResultRaw {
         status,
         result_header,
@@ -320,14 +322,20 @@ impl<'a> From<&'a [u8]> for Body<'a> {
     }
 }
 
-pub async fn request<T: DeserializeOwned, E: DeserializeOwned + StdError, P: Serialize>(
-    client: &impl HttpClient,
+pub async fn request<TResponse, TError, TParams, TClient>(
+    client: &TClient,
     endpoint: Endpoint,
     style: Style,
     function: &str,
-    params: &P,
+    params: &TParams,
     body: Option<Body<'_>>,
-) -> Result<T, Error<E>> {
+) -> Result<TResponse, Error<TError>>
+where
+    TResponse: DeserializeOwned,
+    TError: DeserializeOwned + StdError,
+    TParams: Serialize,
+    TClient: HttpClient,
+{
     request_with_body(client, endpoint, style, function, params, body, None, None)
         .await
         .map(|HttpRequestResult { result, .. }| result)
