@@ -45,7 +45,7 @@ default-features = false
 features = ["tls"]
 
 [dev-dependencies]
-env_logger = "0.10"
+env_logger = "0.11"
 chrono = "0.4"
 parallel_reader = "0.1"
 threadpool = "1.8"
