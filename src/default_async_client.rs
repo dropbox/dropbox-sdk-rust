@@ -195,7 +195,7 @@ struct TokenUpdateClient<'a> {
     inner: &'a ReqwestClient,
 }
 
-impl<'a> HttpClient for TokenUpdateClient<'a> {
+impl HttpClient for TokenUpdateClient<'_> {
     type Request = ReqwestRequest;
 
     fn execute(

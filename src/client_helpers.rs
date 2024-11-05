@@ -118,13 +118,13 @@ pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) ->
 /// etc.). The inner result has an error if the server returned one for the request, otherwise it
 /// has the deserialized JSON response and the body stream (if any).
 #[allow(clippy::too_many_arguments)]
-pub async fn request_with_body<'a, T, E, P, C>(
+pub async fn request_with_body<T, E, P, C>(
     client: &C,
     endpoint: Endpoint,
     style: Style,
     function: &str,
     params: &P,
-    body: Option<Body<'a>>,
+    body: Option<Body<'_>>,
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> Result<HttpRequestResult<T>, Error<E>> where
