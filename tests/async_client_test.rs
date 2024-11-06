@@ -1,9 +1,7 @@
-use std::sync::Arc;
 use bytes::Bytes;
 use futures::io::Cursor;
 use dropbox_sdk::async_routes::check;
 use dropbox_sdk::async_client_trait::*;
-use dropbox_sdk::client_trait_common::{HttpRequest, TeamSelect};
 use dropbox_sdk::Error;
 
 struct TestAsyncClient;
@@ -35,22 +33,6 @@ impl HttpClient for TestAsyncClient {
 
     fn new_request(&self, url: &str) -> Self::Request {
         TestRequest{ url: url.to_owned() }
-    }
-
-    async fn update_token(&self, _old_token: Arc<String>) -> Result<bool, Error> {
-        Ok(true)
-    }
-
-    fn token(&self) -> Option<Arc<String>> {
-        Some(Arc::new(String::new()))
-    }
-
-    fn path_root(&self) -> Option<&str> {
-        None
-    }
-
-    fn team_select(&self) -> Option<&TeamSelect> {
-        None
     }
 }
 
