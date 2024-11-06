@@ -18,7 +18,7 @@ use std::fmt::Write;
 use std::str::FromStr;
 use std::sync::Arc;
 use futures::FutureExt;
-use crate::client_trait::{HttpClient, HttpRequestResultRaw, NoauthClient, TeamAuthClient, UserAuthClient};
+use crate::client_trait::{AppAuthClient, HttpClient, HttpRequestResultRaw, NoauthClient, TeamAuthClient, UserAuthClient};
 use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::default_client_common::impl_set_path_root;
 
@@ -144,6 +144,44 @@ impl HttpClient for TeamAuthDefaultClient {
 }
 
 impl TeamAuthClient for TeamAuthDefaultClient {}
+
+/// Default HTTP client using App authorization.
+#[derive(Debug)]
+pub struct AppAuthDefaultClient {
+    inner: UreqClient,
+    path_root: Option<String>,
+    auth: String,
+}
+
+impl AppAuthDefaultClient {
+    /// Create a new App auth client using the given app key and secret, which can be found in the Dropbox app console.
+    pub fn new(app_key: &str, app_secret: &str) -> Self {
+        use base64::prelude::*;
+        let encoded = BASE64_STANDARD.encode(format!("{app_key}:{app_secret}"));
+        Self {
+            inner: UreqClient::default(),
+            path_root: None,
+            auth: format!("Basic {encoded}"),
+        }
+    }
+
+    impl_set_path_root!(self);
+}
+
+impl HttpClient for AppAuthDefaultClient {
+    type Request = UreqRequest;
+
+    fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error> {
+        self.inner.execute(request, body)
+    }
+
+    fn new_request(&self, url: &str) -> Self::Request {
+        self.inner.new_request(url)
+            .set_header("Authorization", &self.auth)
+    }
+}
+
+impl AppAuthClient for AppAuthDefaultClient {}
 
 /// Default HTTP client for unauthenticated API calls.
 #[derive(Debug, Default)]

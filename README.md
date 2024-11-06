@@ -69,9 +69,8 @@ The authentication type is designated by implementing a marker trait in
 addition to the base `HttpClient` trait: one of `NoauthClient`,
 `UserAuthClient`, `TeamAuthClient`, or `AppAuthClient`.
 
-The default client has implementations of all of these (except for
-`AppAuthClient` currently). They all share a common implementation and differ
-only in which HTTP headers they add to the request.
+The default client has implementations of all of these. They all share a common
+implementation and differ only in which HTTP headers they add to the request.
 
 [authentication types]: https://www.dropbox.com/developers/reference/auth-types
 
