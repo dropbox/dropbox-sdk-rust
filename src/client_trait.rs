@@ -4,7 +4,7 @@
 
 use std::io::Read;
 use std::sync::Arc;
-use crate::client_trait_common::{HttpRequest, TeamSelect};
+pub use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::Error;
 
 /// The base HTTP synchronous client trait.

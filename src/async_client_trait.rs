@@ -4,7 +4,7 @@ use std::future::{Future, ready};
 use std::sync::Arc;
 use bytes::Bytes;
 use futures::AsyncRead;
-use crate::client_trait_common::{HttpRequest, TeamSelect};
+pub use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::Error;
 
 /// The base HTTP asynchronous client trait.
