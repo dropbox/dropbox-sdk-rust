@@ -279,9 +279,8 @@ pub fn create_folder_batch_check(
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
-/// metadata will be the corresponding [`FileMetadata`](FileMetadata) or
-/// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
-/// [`DeletedMetadata`](DeletedMetadata) object.
+/// metadata will be the corresponding [`FileMetadata`] or [`FolderMetadata`] for the item at time
+/// of deletion, and not a [`DeletedMetadata`] object.
 pub fn delete_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteArg,
@@ -299,9 +298,8 @@ pub fn delete_v2(
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
-/// metadata will be the corresponding [`FileMetadata`](FileMetadata) or
-/// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
-/// [`DeletedMetadata`](DeletedMetadata) object.
+/// metadata will be the corresponding [`FileMetadata`] or [`FolderMetadata`] for the item at time
+/// of deletion, and not a [`DeletedMetadata`] object.
 #[deprecated(note = "replaced by delete_v2")]
 pub fn delete(
     client: &impl crate::client_trait::UserAuthClient,
@@ -505,14 +503,13 @@ pub fn get_temporary_link(
 ///
 /// This endpoint acts as a delayed [`upload()`](crate::files::upload). The returned temporary
 /// upload link may be used to make a POST request with the data to be uploaded. The upload will
-/// then be perfomed with the [`CommitInfo`](CommitInfo) previously provided to
+/// then be perfomed with the [`CommitInfo`] previously provided to
 /// [`get_temporary_upload_link()`](crate::files::get_temporary_upload_link) but evaluated only upon
-/// consumption. Hence, errors stemming from invalid [`CommitInfo`](CommitInfo) with respect to the
-/// state of the user's Dropbox will only be communicated at consumption time. Additionally, these
-/// errors are surfaced as generic HTTP 409 Conflict responses, potentially hiding issue details.
-/// The maximum temporary upload link duration is 4 hours. Upon consumption or expiration, a new
-/// link will have to be generated. Multiple links may exist for a specific upload path at any given
-/// time.
+/// consumption. Hence, errors stemming from invalid [`CommitInfo`] with respect to the state of the
+/// user's Dropbox will only be communicated at consumption time. Additionally, these errors are
+/// surfaced as generic HTTP 409 Conflict responses, potentially hiding issue details. The maximum
+/// temporary upload link duration is 4 hours. Upon consumption or expiration, a new link will have
+/// to be generated. Multiple links may exist for a specific upload path at any given time.
 ///
 /// The POST request on the temporary upload link must have its Content-Type set to
 /// "application/octet-stream".
@@ -646,17 +643,17 @@ pub fn get_thumbnail_batch(
 /// [`ListFolderResult::cursor`](ListFolderResult) to retrieve more entries. If you're using
 /// [`ListFolderArg::recursive`](ListFolderArg) set to `true` to keep a local cache of the contents
 /// of a Dropbox account, iterate through each entry in order and process them as follows to keep
-/// your local state in sync: For each [`FileMetadata`](FileMetadata), store the new entry at the
-/// given path in your local state. If the required parent folders don't exist yet, create them. If
-/// there's already something else at the given path, replace it and remove all its children. For
-/// each [`FolderMetadata`](FolderMetadata), store the new entry at the given path in your local
-/// state. If the required parent folders don't exist yet, create them. If there's already something
-/// else at the given path, replace it but leave the children as they are. Check the new entry's
+/// your local state in sync: For each [`FileMetadata`], store the new entry at the given path in
+/// your local state. If the required parent folders don't exist yet, create them. If there's
+/// already something else at the given path, replace it and remove all its children. For each
+/// [`FolderMetadata`], store the new entry at the given path in your local state. If the required
+/// parent folders don't exist yet, create them. If there's already something else at the given
+/// path, replace it but leave the children as they are. Check the new entry's
 /// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
-/// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
-/// something at the given path, remove it and all its children. If there's nothing at the given
-/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may
-/// be returned if multiple [`list_folder()`](crate::files::list_folder) or
+/// statuses to match. For each [`DeletedMetadata`], if your local state has something at the given
+/// path, remove it and all its children. If there's nothing at the given path, ignore this entry.
+/// Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may be returned if multiple
+/// [`list_folder()`](crate::files::list_folder) or
 /// [`list_folder_continue()`](crate::files::list_folder_continue) calls with same parameters are
 /// made simultaneously by same API app for same user. If your app implements retry logic, please
 /// hold off the retry until the previous request finishes.
@@ -681,17 +678,17 @@ pub fn list_folder(
 /// [`ListFolderResult::cursor`](ListFolderResult) to retrieve more entries. If you're using
 /// [`ListFolderArg::recursive`](ListFolderArg) set to `true` to keep a local cache of the contents
 /// of a Dropbox account, iterate through each entry in order and process them as follows to keep
-/// your local state in sync: For each [`FileMetadata`](FileMetadata), store the new entry at the
-/// given path in your local state. If the required parent folders don't exist yet, create them. If
-/// there's already something else at the given path, replace it and remove all its children. For
-/// each [`FolderMetadata`](FolderMetadata), store the new entry at the given path in your local
-/// state. If the required parent folders don't exist yet, create them. If there's already something
-/// else at the given path, replace it but leave the children as they are. Check the new entry's
+/// your local state in sync: For each [`FileMetadata`], store the new entry at the given path in
+/// your local state. If the required parent folders don't exist yet, create them. If there's
+/// already something else at the given path, replace it and remove all its children. For each
+/// [`FolderMetadata`], store the new entry at the given path in your local state. If the required
+/// parent folders don't exist yet, create them. If there's already something else at the given
+/// path, replace it but leave the children as they are. Check the new entry's
 /// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
-/// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
-/// something at the given path, remove it and all its children. If there's nothing at the given
-/// path, ignore this entry. Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may
-/// be returned if multiple [`list_folder()`](crate::files::list_folder) or
+/// statuses to match. For each [`DeletedMetadata`], if your local state has something at the given
+/// path, remove it and all its children. If there's nothing at the given path, ignore this entry.
+/// Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may be returned if multiple
+/// [`list_folder()`](crate::files::list_folder) or
 /// [`list_folder_continue()`](crate::files::list_folder_continue) calls with same parameters are
 /// made simultaneously by same API app for same user. If your app implements retry logic, please
 /// hold off the retry until the previous request finishes.
@@ -790,11 +787,10 @@ pub fn list_folder_longpoll(
 /// Returns revisions for files based on a file path or a file id. The file path or file id is
 /// identified from the latest file entry at the given file path or id. This end point allows your
 /// app to query either by file path or file id by setting the mode parameter appropriately. In the
-/// [`ListRevisionsMode::Path`](ListRevisionsMode::Path) (default) mode, all revisions at the same
-/// file path as the latest file entry are returned. If revisions with the same file id are desired,
-/// then mode must be set to [`ListRevisionsMode::Id`](ListRevisionsMode::Id). The
-/// [`ListRevisionsMode::Id`](ListRevisionsMode::Id) mode is useful to retrieve revisions for a
-/// given file across moves or renames.
+/// [`ListRevisionsMode::Path`] (default) mode, all revisions at the same file path as the latest
+/// file entry are returned. If revisions with the same file id are desired, then mode must be set
+/// to [`ListRevisionsMode::Id`]. The [`ListRevisionsMode::Id`] mode is useful to retrieve revisions
+/// for a given file across moves or renames.
 pub fn list_revisions(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListRevisionsArg,
@@ -1473,23 +1469,20 @@ pub fn upload_session_finish_batch_check(
 /// [`UploadSessionStartResult::session_id`](UploadSessionStartResult) with
 /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) or
 /// [`upload_session_finish()`](crate::files::upload_session_finish) more than 7 days after its
-/// creation will return a
-/// [`UploadSessionLookupError::NotFound`](UploadSessionLookupError::NotFound). Calls to this
-/// endpoint will count as data transport calls for any Dropbox Business teams with a limit on the
-/// number of data transport calls allowed per month. For more information, see the [Data transport
-/// limit page](https://www.dropbox.com/developers/reference/data-transport-limit). By default,
-/// upload sessions require you to send content of the file in sequential order via consecutive
+/// creation will return a [`UploadSessionLookupError::NotFound`]. Calls to this endpoint will count
+/// as data transport calls for any Dropbox Business teams with a limit on the number of data
+/// transport calls allowed per month. For more information, see the [Data transport limit
+/// page](https://www.dropbox.com/developers/reference/data-transport-limit). By default, upload
+/// sessions require you to send content of the file in sequential order via consecutive
 /// [`upload_session_start()`](crate::files::upload_session_start),
 /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2),
 /// [`upload_session_finish()`](crate::files::upload_session_finish) calls. For better performance,
-/// you can instead optionally use a
-/// [`UploadSessionType::Concurrent`](UploadSessionType::Concurrent) upload session. To start a new
-/// concurrent session, set [`UploadSessionStartArg::session_type`](UploadSessionStartArg) to
-/// [`UploadSessionType::Concurrent`](UploadSessionType::Concurrent). After that, you can send file
-/// data in concurrent [`upload_session_append_v2()`](crate::files::upload_session_append_v2)
-/// requests. Finally finish the session with
-/// [`upload_session_finish()`](crate::files::upload_session_finish). There are couple of
-/// constraints with concurrent sessions to make them work. You can not send data with
+/// you can instead optionally use a [`UploadSessionType::Concurrent`] upload session. To start a
+/// new concurrent session, set [`UploadSessionStartArg::session_type`](UploadSessionStartArg) to
+/// [`UploadSessionType::Concurrent`]. After that, you can send file data in concurrent
+/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) requests. Finally finish
+/// the session with [`upload_session_finish()`](crate::files::upload_session_finish). There are
+/// couple of constraints with concurrent sessions to make them work. You can not send data with
 /// [`upload_session_start()`](crate::files::upload_session_start) or
 /// [`upload_session_finish()`](crate::files::upload_session_finish) call, only with
 /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) call. Also data uploaded

@@ -27,12 +27,10 @@ pub enum PathRoot {
     /// belongs to a team.
     Home,
     /// Paths are relative to the authenticating user's root namespace (This results in
-    /// [`PathRootError::InvalidRoot`](PathRootError::InvalidRoot) if the user's root namespace has
-    /// changed.).
+    /// [`PathRootError::InvalidRoot`] if the user's root namespace has changed.).
     Root(NamespaceId),
-    /// Paths are relative to given namespace id (This results in
-    /// [`PathRootError::NoPermission`](PathRootError::NoPermission) if you don't have access to
-    /// this namespace.).
+    /// Paths are relative to given namespace id (This results in [`PathRootError::NoPermission`] if
+    /// you don't have access to this namespace.).
     NamespaceId(NamespaceId),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
