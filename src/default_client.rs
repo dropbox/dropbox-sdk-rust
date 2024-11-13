@@ -18,8 +18,8 @@ use std::fmt::Write;
 use std::str::FromStr;
 use std::sync::Arc;
 use futures::FutureExt;
-use crate::client_trait::{AppAuthClient, HttpClient, HttpRequestResultRaw, NoauthClient, TeamAuthClient, UserAuthClient};
-use crate::client_trait_common::{HttpRequest, TeamSelect};
+use crate::client_trait::{AppAuthClient, HttpClient, HttpRequest, HttpRequestResultRaw,
+    NoauthClient, TeamAuthClient, TeamSelect, UserAuthClient};
 use crate::default_client_common::impl_set_path_root;
 
 macro_rules! impl_update_token {

@@ -1,6 +1,5 @@
 use std::fmt::{Debug, Display, Formatter};
 use dropbox_sdk::client_trait::*;
-use dropbox_sdk::client_trait_common::HttpRequest;
 
 macro_rules! noop_client {
     ($name:ident) => {

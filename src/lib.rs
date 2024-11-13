@@ -44,30 +44,29 @@ if_feature! { "default_client",
 if_feature! { "default_async_client", pub mod default_async_client; }
 
 #[cfg(any(feature = "default_client", feature = "default_async_client"))]
-pub(crate) mod default_client_common;
+mod default_client_common;
 
-pub mod client_trait_common;
+mod client_trait_common;
 
 pub mod client_trait;
 
 pub mod async_client_trait;
 
-pub(crate) mod client_helpers;
+mod client_helpers;
 
 pub mod oauth2;
 
-mod generated;
-
 // You need to run the Stone generator to create this module.
+mod generated;
 pub use generated::*;
 
 #[cfg(feature = "async_routes")]
 #[cfg(not(feature = "sync_routes_in_root"))]
-pub use generated::async_routes::*;
+pub use async_routes::*;
 
 #[cfg(feature = "sync_routes")]
 #[cfg(feature = "sync_routes_in_root")]
-pub use generated::sync_routes::*;
+pub use sync_routes::*;
 
 mod error;
 pub use error::{BoxedError, Error, NoError};

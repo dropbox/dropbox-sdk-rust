@@ -15,8 +15,8 @@ use std::str::FromStr;
 use std::sync::Arc;
 use bytes::Bytes;
 use futures::{FutureExt, TryFutureExt, TryStreamExt};
-use crate::async_client_trait::{AppAuthClient, HttpClient, HttpRequestResultRaw, NoauthClient, TeamAuthClient, UserAuthClient};
-use crate::client_trait_common::{HttpRequest, TeamSelect};
+use crate::async_client_trait::{AppAuthClient, HttpClient, HttpRequest, HttpRequestResultRaw,
+    NoauthClient, TeamAuthClient, TeamSelect, UserAuthClient};
 use crate::default_client_common::impl_set_path_root;
 use crate::Error;
 use crate::oauth2::{Authorization, TokenCache};
