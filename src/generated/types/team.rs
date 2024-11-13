@@ -3485,8 +3485,8 @@ impl ::serde::ser::Serialize for Feature {
     }
 }
 
-/// The values correspond to entries in [`Feature`](Feature). You may get different value according
-/// to your Dropbox Business plan.
+/// The values correspond to entries in [`Feature`]. You may get different value according to your
+/// Dropbox Business plan.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FeatureValue {
@@ -3599,8 +3599,8 @@ impl ::serde::ser::Serialize for FeatureValue {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FeaturesGetValuesBatchArg {
-    /// A list of features in [`Feature`](Feature). If the list is empty, this route will return
-    /// [`FeaturesGetValuesBatchError`](FeaturesGetValuesBatchError).
+    /// A list of features in [`Feature`]. If the list is empty, this route will return
+    /// [`FeaturesGetValuesBatchError`].
     pub features: Vec<Feature>,
 }
 
@@ -3691,8 +3691,8 @@ impl ::serde::ser::Serialize for FeaturesGetValuesBatchArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FeaturesGetValuesBatchError {
-    /// At least one [`Feature`](Feature) must be included in the
-    /// [`FeaturesGetValuesBatchArg`](FeaturesGetValuesBatchArg).features list.
+    /// At least one [`Feature`] must be included in the [`FeaturesGetValuesBatchArg`].features
+    /// list.
     EmptyFeaturesList,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -5474,8 +5474,8 @@ impl ::serde::ser::Serialize for GroupMemberSelector {
     }
 }
 
-/// Error that can be raised when [`GroupMemberSelector`](GroupMemberSelector) is used, and the user
-/// is required to be a member of the specified group.
+/// Error that can be raised when [`GroupMemberSelector`] is used, and the user is required to be a
+/// member of the specified group.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupMemberSelectorError {
@@ -5839,8 +5839,7 @@ pub enum GroupMembersAddError {
     MembersNotInTeam(Vec<String>),
     /// These users were not found in Dropbox.
     UsersNotFound(Vec<String>),
-    /// A suspended user cannot be added to a group as
-    /// [`GroupAccessType::Owner`](GroupAccessType::Owner).
+    /// A suspended user cannot be added to a group as [`GroupAccessType::Owner`].
     UserMustBeActiveToBeOwner,
     /// A company-managed group cannot be managed by a user.
     UserCannotBeManagerOfCompanyManagedGroup(Vec<String>),
@@ -6497,8 +6496,8 @@ impl ::serde::ser::Serialize for GroupMembersSelector {
     }
 }
 
-/// Error that can be raised when [`GroupMembersSelector`](GroupMembersSelector) is used, and the
-/// users are required to be members of the specified group.
+/// Error that can be raised when [`GroupMembersSelector`] is used, and the users are required to be
+/// members of the specified group.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupMembersSelectorError {
@@ -6820,7 +6819,7 @@ impl ::serde::ser::Serialize for GroupSelector {
     }
 }
 
-/// Error that can be raised when [`GroupSelector`](GroupSelector) is used.
+/// Error that can be raised when [`GroupSelector`] is used.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupSelectorError {
@@ -6888,8 +6887,8 @@ impl ::std::fmt::Display for GroupSelectorError {
     }
 }
 
-/// Error that can be raised when [`GroupSelector`](GroupSelector) is used and team groups are
-/// disallowed from being used.
+/// Error that can be raised when [`GroupSelector`] is used and team groups are disallowed from
+/// being used.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupSelectorWithTeamGroupError {
@@ -8354,7 +8353,7 @@ impl ::serde::ser::Serialize for GroupsSelector {
     }
 }
 
-/// The value for [`Feature::HasTeamFileEvents`](Feature::HasTeamFileEvents).
+/// The value for [`Feature::HasTeamFileEvents`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum HasTeamFileEventsValue {
@@ -8417,7 +8416,7 @@ impl ::serde::ser::Serialize for HasTeamFileEventsValue {
     }
 }
 
-/// The value for [`Feature::HasTeamSelectiveSync`](Feature::HasTeamSelectiveSync).
+/// The value for [`Feature::HasTeamSelectiveSync`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum HasTeamSelectiveSyncValue {
@@ -8480,7 +8479,7 @@ impl ::serde::ser::Serialize for HasTeamSelectiveSyncValue {
     }
 }
 
-/// The value for [`Feature::HasTeamSharedDropbox`](Feature::HasTeamSharedDropbox).
+/// The value for [`Feature::HasTeamSharedDropbox`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum HasTeamSharedDropboxValue {
@@ -14799,12 +14798,12 @@ pub struct MemberProfile {
     /// Secondary emails of a user.
     pub secondary_emails: Option<Vec<crate::types::secondary_emails::SecondaryEmail>>,
     /// The date and time the user was invited to the team (contains value only when the member's
-    /// status matches [`TeamMemberStatus::Invited`](TeamMemberStatus::Invited)).
+    /// status matches [`TeamMemberStatus::Invited`]).
     pub invited_on: Option<crate::types::common::DropboxTimestamp>,
     /// The date and time the user joined as a member of a specific team.
     pub joined_on: Option<crate::types::common::DropboxTimestamp>,
     /// The date and time the user was suspended from the team (contains value only when the
-    /// member's status matches [`TeamMemberStatus::Suspended`](TeamMemberStatus::Suspended)).
+    /// member's status matches [`TeamMemberStatus::Suspended`]).
     pub suspended_on: Option<crate::types::common::DropboxTimestamp>,
     /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used
     /// for SAML authentication.
@@ -15411,8 +15410,8 @@ pub enum MembersAddJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
     /// The asynchronous job has finished. For each member that was specified in the parameter
-    /// [`MembersAddArg`](MembersAddArg) that was provided to
-    /// [`members_add()`](crate::team::members_add), a corresponding item is returned in this list.
+    /// [`MembersAddArg`] that was provided to [`members_add()`](crate::team::members_add), a
+    /// corresponding item is returned in this list.
     Complete(Vec<MemberAddResult>),
     /// The asynchronous job returned an error. The string contains an error message.
     Failed(String),
@@ -15505,9 +15504,8 @@ pub enum MembersAddJobStatusV2Result {
     /// The asynchronous job is still in progress.
     InProgress,
     /// The asynchronous job has finished. For each member that was specified in the parameter
-    /// [`MembersAddArg`](MembersAddArg) that was provided to
-    /// [`members_add_v2()`](crate::team::members_add_v2), a corresponding item is returned in this
-    /// list.
+    /// [`MembersAddArg`] that was provided to [`members_add_v2()`](crate::team::members_add_v2), a
+    /// corresponding item is returned in this list.
     Complete(Vec<MemberAddV2Result>),
     /// The asynchronous job returned an error. The string contains an error message.
     Failed(String),
@@ -27376,12 +27374,12 @@ pub struct TeamMemberProfile {
     /// Secondary emails of a user.
     pub secondary_emails: Option<Vec<crate::types::secondary_emails::SecondaryEmail>>,
     /// The date and time the user was invited to the team (contains value only when the member's
-    /// status matches [`TeamMemberStatus::Invited`](TeamMemberStatus::Invited)).
+    /// status matches [`TeamMemberStatus::Invited`]).
     pub invited_on: Option<crate::types::common::DropboxTimestamp>,
     /// The date and time the user joined as a member of a specific team.
     pub joined_on: Option<crate::types::common::DropboxTimestamp>,
     /// The date and time the user was suspended from the team (contains value only when the
-    /// member's status matches [`TeamMemberStatus::Suspended`](TeamMemberStatus::Suspended)).
+    /// member's status matches [`TeamMemberStatus::Suspended`]).
     pub suspended_on: Option<crate::types::common::DropboxTimestamp>,
     /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used
     /// for SAML authentication.
@@ -28717,7 +28715,7 @@ impl ::serde::ser::Serialize for TokenGetAuthenticatedAdminResult {
     }
 }
 
-/// The value for [`Feature::UploadApiRateLimit`](Feature::UploadApiRateLimit).
+/// The value for [`Feature::UploadApiRateLimit`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadApiRateLimitValue {
@@ -29767,8 +29765,7 @@ impl ::serde::ser::Serialize for UserSelectorArg {
     }
 }
 
-/// Error that can be returned whenever a struct derived from [`UserSelectorArg`](UserSelectorArg)
-/// is used.
+/// Error that can be returned whenever a struct derived from [`UserSelectorArg`] is used.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UserSelectorError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on

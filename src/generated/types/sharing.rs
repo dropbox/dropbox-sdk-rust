@@ -961,8 +961,8 @@ impl ::std::fmt::Display for AddFolderMemberError {
 pub struct AddMember {
     /// The member to add to the shared folder.
     pub member: MemberSelector,
-    /// The access level to grant `member` to the shared folder.
-    /// [`AccessLevel::Owner`](AccessLevel::Owner) is disallowed.
+    /// The access level to grant `member` to the shared folder.  [`AccessLevel::Owner`] is
+    /// disallowed.
     pub access_level: AccessLevel,
 }
 
@@ -1807,9 +1807,8 @@ pub struct CreateSharedLinkArg {
     pub path: String,
     pub short_url: bool,
     /// If it's okay to share a path that does not yet exist, set this to either
-    /// [`PendingUploadMode::File`](PendingUploadMode::File) or
-    /// [`PendingUploadMode::Folder`](PendingUploadMode::Folder) to indicate whether to assume it's
-    /// a file or folder.
+    /// [`PendingUploadMode::File`] or [`PendingUploadMode::Folder`] to indicate whether to assume
+    /// it's a file or folder.
     pub pending_upload: Option<PendingUploadMode>,
 }
 
@@ -7079,8 +7078,8 @@ impl ::serde::ser::Serialize for LinkExpiry {
     }
 }
 
-/// Metadata for a shared link. This can be either a [`PathLinkMetadata`](PathLinkMetadata) or
-/// [`CollectionLinkMetadata`](CollectionLinkMetadata).
+/// Metadata for a shared link. This can be either a [`PathLinkMetadata`] or
+/// [`CollectionLinkMetadata`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkMetadata {
@@ -13112,8 +13111,8 @@ impl ::serde::ser::Serialize for RequestedLinkAccessLevel {
 
 /// The access permission that can be requested by the caller for the shared link. Note that the
 /// final resolved visibility of the shared link takes into account other aspects, such as team and
-/// shared folder settings. Check the [`ResolvedVisibility`](ResolvedVisibility) for more info on
-/// the possible resolved visibility values of shared links.
+/// shared folder settings. Check the [`ResolvedVisibility`] for more info on the possible resolved
+/// visibility values of shared links.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RequestedVisibility {
     /// Anyone who has received the link can access it. No login required.
@@ -13184,8 +13183,8 @@ impl ::serde::ser::Serialize for RequestedVisibility {
 }
 
 /// The actual access permissions values of shared links after taking into account user preferences
-/// and the team and shared folder settings. Check the [`RequestedVisibility`](RequestedVisibility)
-/// for more info on the possible visibility values that can be set by the shared link's owner.
+/// and the team and shared folder settings. Check the [`RequestedVisibility`] for more info on the
+/// possible visibility values that can be set by the shared link's owner.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ResolvedVisibility {
@@ -13731,8 +13730,7 @@ pub struct ShareFolderArg {
     /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
     pub member_policy: Option<MemberPolicy>,
     /// The policy to apply to shared links created for content inside this shared folder.  The
-    /// current user must be on a team to set this policy to
-    /// [`SharedLinkPolicy::Members`](SharedLinkPolicy::Members).
+    /// current user must be on a team to set this policy to [`SharedLinkPolicy::Members`].
     pub shared_link_policy: Option<SharedLinkPolicy>,
     /// Who can enable/disable viewer info for this shared folder.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
@@ -14001,8 +13999,7 @@ pub struct ShareFolderArgBase {
     /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
     pub member_policy: Option<MemberPolicy>,
     /// The policy to apply to shared links created for content inside this shared folder.  The
-    /// current user must be on a team to set this policy to
-    /// [`SharedLinkPolicy::Members`](SharedLinkPolicy::Members).
+    /// current user must be on a team to set this policy to [`SharedLinkPolicy::Members`].
     pub shared_link_policy: Option<SharedLinkPolicy>,
     /// Who can enable/disable viewer info for this shared folder.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
@@ -17361,14 +17358,13 @@ impl ::serde::ser::Serialize for SharedLinkSettings {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SharedLinkSettingsError {
-    /// The given settings are invalid (for example, all attributes of the
-    /// [`SharedLinkSettings`](SharedLinkSettings) are empty, the requested visibility is
-    /// [`RequestedVisibility::Password`](RequestedVisibility::Password) but the
+    /// The given settings are invalid (for example, all attributes of the [`SharedLinkSettings`]
+    /// are empty, the requested visibility is [`RequestedVisibility::Password`] but the
     /// [`SharedLinkSettings::link_password`](SharedLinkSettings) is missing,
     /// [`SharedLinkSettings::expires`](SharedLinkSettings) is set to the past, etc.).
     InvalidSettings,
     /// User is not allowed to modify the settings of this link. Note that basic users can only set
-    /// [`RequestedVisibility::Public`](RequestedVisibility::Public) as the
+    /// [`RequestedVisibility::Public`] as the
     /// [`SharedLinkSettings::requested_visibility`](SharedLinkSettings) and cannot set
     /// [`SharedLinkSettings::expires`](SharedLinkSettings).
     NotAuthorized,
@@ -18722,10 +18718,10 @@ impl ::serde::ser::Serialize for UpdateFileMemberArgs {
 pub struct UpdateFolderMemberArg {
     /// The ID for the shared folder.
     pub shared_folder_id: crate::types::common::SharedFolderId,
-    /// The member of the shared folder to update.  Only the
-    /// [`MemberSelector::DropboxId`](MemberSelector::DropboxId) may be set at this time.
+    /// The member of the shared folder to update.  Only the [`MemberSelector::DropboxId`] may be
+    /// set at this time.
     pub member: MemberSelector,
-    /// The new access level for `member`. [`AccessLevel::Owner`](AccessLevel::Owner) is disallowed.
+    /// The new access level for `member`. [`AccessLevel::Owner`] is disallowed.
     pub access_level: AccessLevel,
 }
 
@@ -18993,8 +18989,7 @@ pub struct UpdateFolderPolicyArg {
     /// Who can enable/disable viewer info for this shared folder.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
     /// The policy to apply to shared links created for content inside this shared folder. The
-    /// current user must be on a team to set this policy to
-    /// [`SharedLinkPolicy::Members`](SharedLinkPolicy::Members).
+    /// current user must be on a team to set this policy to [`SharedLinkPolicy::Members`].
     pub shared_link_policy: Option<SharedLinkPolicy>,
     /// Settings on the link for this folder.
     pub link_settings: Option<LinkSettings>,

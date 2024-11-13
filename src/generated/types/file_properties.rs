@@ -12,17 +12,16 @@
 //!
 //! These endpoints enable you to tag arbitrary key/value data to Dropbox files.
 //!
-//! The most basic unit in this namespace is the [`PropertyField`](PropertyField). These fields
-//! encapsulate the actual key/value data.
+//! The most basic unit in this namespace is the [`PropertyField`]. These fields encapsulate the
+//! actual key/value data.
 //!
-//! Fields are added to a Dropbox file using a [`PropertyGroup`](PropertyGroup). Property groups
-//! contain a reference to a Dropbox file and a [`PropertyGroupTemplate`](PropertyGroupTemplate).
-//! Property groups are uniquely identified by the combination of their associated Dropbox file and
-//! template.
+//! Fields are added to a Dropbox file using a [`PropertyGroup`]. Property groups contain a
+//! reference to a Dropbox file and a [`PropertyGroupTemplate`]. Property groups are uniquely
+//! identified by the combination of their associated Dropbox file and template.
 //!
-//! The [`PropertyGroupTemplate`](PropertyGroupTemplate) is a way of restricting the possible key
-//! names and value types of the data within a property group. The possible key names and value
-//! types are explicitly enumerated using [`PropertyFieldTemplate`](PropertyFieldTemplate) objects.
+//! The [`PropertyGroupTemplate`] is a way of restricting the possible key names and value types of
+//! the data within a property group. The possible key names and value types are explicitly
+//! enumerated using [`PropertyFieldTemplate`] objects.
 //!
 //! You can think of a property group template as a class definition for a particular key/value
 //! metadata object, and the property groups themselves as the instantiations of these objects.
@@ -2425,7 +2424,7 @@ impl ::serde::ser::Serialize for PropertiesSearchResult {
 }
 
 /// Raw key/value data to be associated with a Dropbox file. Property fields are added to Dropbox
-/// files as a [`PropertyGroup`](PropertyGroup).
+/// files as a [`PropertyGroup`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertyField {
@@ -2532,7 +2531,7 @@ impl ::serde::ser::Serialize for PropertyField {
 }
 
 /// Defines how a single property field may be structured. Used exclusively by
-/// [`PropertyGroupTemplate`](PropertyGroupTemplate).
+/// [`PropertyGroupTemplate`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertyFieldTemplate {
@@ -2651,10 +2650,9 @@ impl ::serde::ser::Serialize for PropertyFieldTemplate {
     }
 }
 
-/// A subset of the property fields described by the corresponding
-/// [`PropertyGroupTemplate`](PropertyGroupTemplate). Properties are always added to a Dropbox file
-/// as a [`PropertyGroup`](PropertyGroup). The possible key names and value types in this group are
-/// defined by the corresponding [`PropertyGroupTemplate`](PropertyGroupTemplate).
+/// A subset of the property fields described by the corresponding [`PropertyGroupTemplate`].
+/// Properties are always added to a Dropbox file as a [`PropertyGroup`]. The possible key names and
+/// value types in this group are defined by the corresponding [`PropertyGroupTemplate`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertyGroup {

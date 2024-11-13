@@ -868,7 +868,7 @@ class RustBackend(RustHelperBackend):
                         field = self.field_name_raw(field)
                         return f'`{field}`'
                     field = self.enum_variant_name_raw(field)
-                    return f'[`{type_name}::{field}`]({type_name}::{field})'
+                    return f'[`{type_name}::{field}`]'
                 else:
                     field = self.field_name_raw(field)
                     # we can't link to the field itself, so just link to the struct
@@ -894,7 +894,7 @@ class RustBackend(RustHelperBackend):
             else:
                 typ = self._all_types[self._current_namespace][val]
                 rust_name = self._rust_type(typ)
-                return f'[`{rust_name}`]({rust_name})'
+                return f'[`{rust_name}`]'
         elif tag == 'link':
             title, url = val.rsplit(' ', 1)
             return f'[{title}]({url})'

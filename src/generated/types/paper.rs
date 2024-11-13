@@ -3578,8 +3578,7 @@ pub struct PaperDocExportResult {
     pub title: String,
     /// The Paper doc revision. Simply an ever increasing number.
     pub revision: i64,
-    /// MIME type of the export. This corresponds to [`ExportFormat`](ExportFormat) specified in the
-    /// request.
+    /// MIME type of the export. This corresponds to [`ExportFormat`] specified in the request.
     pub mime_type: String,
 }
 

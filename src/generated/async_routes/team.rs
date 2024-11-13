@@ -700,8 +700,8 @@ pub fn members_get_available_team_member_roles(
 }
 
 /// Returns information about multiple team members. Permission : Team information This endpoint
-/// will return [`MembersGetInfoItem::IdNotFound`](MembersGetInfoItem::IdNotFound), for IDs (or
-/// emails) that cannot be matched to a valid team member.
+/// will return [`MembersGetInfoItem::IdNotFound`], for IDs (or emails) that cannot be matched to a
+/// valid team member.
 pub fn members_get_info_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersGetInfoV2Arg,
@@ -716,8 +716,8 @@ pub fn members_get_info_v2<'a>(
 }
 
 /// Returns information about multiple team members. Permission : Team information This endpoint
-/// will return [`MembersGetInfoItem::IdNotFound`](MembersGetInfoItem::IdNotFound), for IDs (or
-/// emails) that cannot be matched to a valid team member.
+/// will return [`MembersGetInfoItem::IdNotFound`], for IDs (or emails) that cannot be matched to a
+/// valid team member.
 pub fn members_get_info<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersGetInfoArgs,
@@ -842,10 +842,10 @@ pub fn members_recover<'a>(
 /// via [`members_recover()`](crate::team::members_recover) for a 7 day period or until the account
 /// has been permanently deleted or transferred to another account (whichever comes first). Calling
 /// [`members_add()`](crate::team::members_add) while a user is still recoverable on your team will
-/// return with [`MemberAddResult::UserAlreadyOnTeam`](MemberAddResult::UserAlreadyOnTeam). Accounts
-/// can have their files transferred via the admin console for a limited time, based on the version
-/// history length associated with the team (180 days for most teams). This endpoint may initiate an
-/// asynchronous job. To obtain the final result of the job, the client should periodically poll
+/// return with [`MemberAddResult::UserAlreadyOnTeam`]. Accounts can have their files transferred
+/// via the admin console for a limited time, based on the version history length associated with
+/// the team (180 days for most teams). This endpoint may initiate an asynchronous job. To obtain
+/// the final result of the job, the client should periodically poll
 /// [`members_remove_job_status_get()`](crate::team::members_remove_job_status_get).
 pub fn members_remove<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,

@@ -115,8 +115,8 @@ pub fn create_shared_link(
 }
 
 /// Create a shared link with custom settings. If no settings are given then the default visibility
-/// is [`RequestedVisibility::Public`](RequestedVisibility::Public) (The resolved visibility,
-/// though, may depend on other aspects such as team and shared folder settings).
+/// is [`RequestedVisibility::Public`] (The resolved visibility, though, may depend on other aspects
+/// such as team and shared folder settings).
 pub fn create_shared_link_with_settings(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateSharedLinkWithSettingsArg,
@@ -233,11 +233,10 @@ pub fn get_shared_link_metadata_app_auth(
     )
 }
 
-/// Returns a list of [`LinkMetadata`](LinkMetadata) objects for this user, including collection
-/// links. If no path is given, returns a list of all shared links for the current user, including
-/// collection links, up to a maximum of 1000 links. If a non-empty path is given, returns a list of
-/// all shared links that allow access to the given path.  Collection links are never returned in
-/// this case.
+/// Returns a list of [`LinkMetadata`] objects for this user, including collection links. If no path
+/// is given, returns a list of all shared links for the current user, including collection links,
+/// up to a maximum of 1000 links. If a non-empty path is given, returns a list of all shared links
+/// that allow access to the given path.  Collection links are never returned in this case.
 #[deprecated(note = "replaced by list_shared_links")]
 pub fn get_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
@@ -473,8 +472,8 @@ pub fn list_shared_links(
 /// Modify the shared link's settings. If the requested visibility conflict with the shared links
 /// policy of the team or the shared folder (in case the linked file is part of a shared folder)
 /// then the [`LinkPermissions::resolved_visibility`](LinkPermissions) of the returned
-/// [`SharedLinkMetadata`](SharedLinkMetadata) will reflect the actual visibility of the shared link
-/// and the [`LinkPermissions::requested_visibility`](LinkPermissions) will reflect the requested
+/// [`SharedLinkMetadata`] will reflect the actual visibility of the shared link and the
+/// [`LinkPermissions::requested_visibility`](LinkPermissions) will reflect the requested
 /// visibility.
 pub fn modify_shared_link_settings(
     client: &impl crate::client_trait::UserAuthClient,
@@ -615,8 +614,7 @@ pub fn revoke_shared_link(
 }
 
 /// Change the inheritance policy of an existing Shared Folder. Only permitted for shared folders in
-/// a shared team root. If a [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is
-/// returned, you'll need to call
+/// a shared team root. If a [`ShareFolderLaunch::AsyncJobId`] is returned, you'll need to call
 /// [`check_share_job_status()`](crate::sharing::check_share_job_status) until the action completes
 /// to get the metadata for the folder.
 pub fn set_access_inheritance(
@@ -636,8 +634,7 @@ pub fn set_access_inheritance(
 
 /// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders
 /// will be completed asynchronously. To make testing the async case repeatable, set
-/// `ShareFolderArg.force_async`. If a
-/// [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is returned, you'll need to
+/// `ShareFolderArg.force_async`. If a [`ShareFolderLaunch::AsyncJobId`] is returned, you'll need to
 /// call [`check_share_job_status()`](crate::sharing::check_share_job_status) until the action
 /// completes to get the metadata for the folder.
 pub fn share_folder(
@@ -656,7 +653,7 @@ pub fn share_folder(
 }
 
 /// Transfer ownership of a shared folder to a member of the shared folder. User must have
-/// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to perform a transfer.
+/// [`AccessLevel::Owner`] access to the shared folder to perform a transfer.
 pub fn transfer_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &TransferFolderArg,
@@ -755,8 +752,8 @@ pub fn update_folder_member(
     )
 }
 
-/// Update the sharing policies for a shared folder. User must have
-/// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to update its policies.
+/// Update the sharing policies for a shared folder. User must have [`AccessLevel::Owner`] access to
+/// the shared folder to update its policies.
 pub fn update_folder_policy(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFolderPolicyArg,

@@ -238,8 +238,8 @@ pub struct AlphaGetMetadataArg {
     pub path: ReadPath,
     /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video.
     pub include_media_info: bool,
-    /// If true, [`DeletedMetadata`](DeletedMetadata) will be returned for deleted file or folder,
-    /// otherwise [`LookupError::NotFound`](LookupError::NotFound) will be returned.
+    /// If true, [`DeletedMetadata`] will be returned for deleted file or folder, otherwise
+    /// [`LookupError::NotFound`] will be returned.
     pub include_deleted: bool,
     /// If true, the results will include a flag for each file indicating whether or not  that file
     /// has any explicit members.
@@ -641,11 +641,10 @@ pub struct CommitInfo {
     pub mute: bool,
     /// List of custom properties to add to file.
     pub property_groups: Option<Vec<crate::types::file_properties::PropertyGroup>>,
-    /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
-    /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
-    /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
-    /// This also forces a conflict even when the target path refers to a file with identical
-    /// contents.
+    /// Be more strict about how each [`WriteMode`] detects conflict. For example, always return a
+    /// conflict error when `mode` = [`WriteMode::Update`] and the given "rev" doesn't match the
+    /// existing file's "rev", even if the existing file has been deleted. This also forces a
+    /// conflict even when the target path refers to a file with identical contents.
     pub strict_conflict: bool,
 }
 
@@ -2244,9 +2243,8 @@ impl ::serde::ser::Serialize for DeleteBatchArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteBatchError {
-    /// Use [`DeleteError::TooManyWriteOperations`](DeleteError::TooManyWriteOperations).
-    /// [`delete_batch()`](crate::files::delete_batch) now provides smaller granularity about which
-    /// entry has failed because of this.
+    /// Use [`DeleteError::TooManyWriteOperations`]. [`delete_batch()`](crate::files::delete_batch)
+    /// now provides smaller granularity about which entry has failed because of this.
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -6200,8 +6198,8 @@ pub struct GetMetadataArg {
     pub path: ReadPath,
     /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video.
     pub include_media_info: bool,
-    /// If true, [`DeletedMetadata`](DeletedMetadata) will be returned for deleted file or folder,
-    /// otherwise [`LookupError::NotFound`](LookupError::NotFound) will be returned.
+    /// If true, [`DeletedMetadata`] will be returned for deleted file or folder, otherwise
+    /// [`LookupError::NotFound`] will be returned.
     pub include_deleted: bool,
     /// If true, the results will include a flag for each file indicating whether or not  that file
     /// has any explicit members.
@@ -10556,7 +10554,7 @@ impl ::serde::ser::Serialize for MinimalFileLinkMetadata {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MoveBatchArg {
-    /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
+    /// List of entries to be moved or copied. Each entry is [`RelocationPath`].
     pub entries: Vec<RelocationPath>,
     /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
     /// avoid the conflict.
@@ -12609,7 +12607,7 @@ impl From<RelocationArg> for RelocationPath {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArg {
-    /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
+    /// List of entries to be moved or copied. Each entry is [`RelocationPath`].
     pub entries: Vec<RelocationPath>,
     /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
     /// avoid the conflict.
@@ -12771,7 +12769,7 @@ impl From<RelocationBatchArg> for RelocationBatchArgBase {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArgBase {
-    /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
+    /// List of entries to be moved or copied. Each entry is [`RelocationPath`].
     pub entries: Vec<RelocationPath>,
     /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
     /// avoid the conflict.
@@ -18976,11 +18974,10 @@ pub struct UploadArg {
     pub mute: bool,
     /// List of custom properties to add to file.
     pub property_groups: Option<Vec<crate::types::file_properties::PropertyGroup>>,
-    /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
-    /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
-    /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
-    /// This also forces a conflict even when the target path refers to a file with identical
-    /// contents.
+    /// Be more strict about how each [`WriteMode`] detects conflict. For example, always return a
+    /// conflict error when `mode` = [`WriteMode::Update`] and the given "rev" doesn't match the
+    /// existing file's "rev", even if the existing file has been deleted. This also forces a
+    /// conflict even when the target path refers to a file with identical contents.
     pub strict_conflict: bool,
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does
     /// not match this hash, an error will be returned. For more information see our [Content
@@ -20724,7 +20721,7 @@ pub struct UploadSessionStartArg {
     /// current session.
     pub close: bool,
     /// Type of upload session you want to start. If not specified, default is
-    /// [`UploadSessionType::Sequential`](UploadSessionType::Sequential).
+    /// [`UploadSessionType::Sequential`].
     pub session_type: Option<UploadSessionType>,
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does
     /// not match this hash, an error will be returned. For more information see our [Content
@@ -20846,7 +20843,7 @@ pub struct UploadSessionStartBatchArg {
     /// The number of upload sessions to start.
     pub num_sessions: u64,
     /// Type of upload session you want to start. If not specified, default is
-    /// [`UploadSessionType::Sequential`](UploadSessionType::Sequential).
+    /// [`UploadSessionType::Sequential`].
     pub session_type: Option<UploadSessionType>,
 }
 
@@ -21920,12 +21917,12 @@ pub enum WriteMode {
     /// [`Add`](WriteMode::Add).
     Overwrite,
     /// Overwrite if the given "rev" matches the existing file's "rev". The supplied value should be
-    /// the latest known "rev" of the file, for example, from [`FileMetadata`](FileMetadata), from
-    /// when the file was last downloaded by the app. This will cause the file on the Dropbox
-    /// servers to be overwritten if the given "rev" matches the existing file's current "rev" on
-    /// the Dropbox servers. The autorename strategy is to append the string "conflicted copy" to
-    /// the file name. For example, "document.txt" might become "document (conflicted copy).txt" or
-    /// "document (Panda's conflicted copy).txt".
+    /// the latest known "rev" of the file, for example, from [`FileMetadata`], from when the file
+    /// was last downloaded by the app. This will cause the file on the Dropbox servers to be
+    /// overwritten if the given "rev" matches the existing file's current "rev" on the Dropbox
+    /// servers. The autorename strategy is to append the string "conflicted copy" to the file name.
+    /// For example, "document.txt" might become "document (conflicted copy).txt" or "document
+    /// (Panda's conflicted copy).txt".
     Update(Rev),
 }
 

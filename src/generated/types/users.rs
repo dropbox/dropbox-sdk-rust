@@ -404,7 +404,7 @@ impl From<BasicAccount> for Account {
         }
     }
 }
-/// The value for [`UserFeature::FileLocking`](UserFeature::FileLocking).
+/// The value for [`UserFeature::FileLocking`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileLockingValue {
@@ -1494,7 +1494,7 @@ impl ::serde::ser::Serialize for Name {
     }
 }
 
-/// The value for [`UserFeature::PaperAsFiles`](UserFeature::PaperAsFiles).
+/// The value for [`UserFeature::PaperAsFiles`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperAsFilesValue {
@@ -2054,7 +2054,7 @@ impl ::serde::ser::Serialize for UserFeature {
     }
 }
 
-/// Values that correspond to entries in [`UserFeature`](UserFeature).
+/// Values that correspond to entries in [`UserFeature`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserFeatureValue {
@@ -2135,8 +2135,8 @@ impl ::serde::ser::Serialize for UserFeatureValue {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserFeaturesGetValuesBatchArg {
-    /// A list of features in [`UserFeature`](UserFeature). If the list is empty, this route will
-    /// return [`UserFeaturesGetValuesBatchError`](UserFeaturesGetValuesBatchError).
+    /// A list of features in [`UserFeature`]. If the list is empty, this route will return
+    /// [`UserFeaturesGetValuesBatchError`].
     pub features: Vec<UserFeature>,
 }
 
@@ -2227,8 +2227,8 @@ impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserFeaturesGetValuesBatchError {
-    /// At least one [`UserFeature`](UserFeature) must be included in the
-    /// [`UserFeaturesGetValuesBatchArg`](UserFeaturesGetValuesBatchArg).features list.
+    /// At least one [`UserFeature`] must be included in the
+    /// [`UserFeaturesGetValuesBatchArg`].features list.
     EmptyFeaturesList,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
