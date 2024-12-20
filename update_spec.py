@@ -41,7 +41,7 @@ def main():
     generate_code(args.spec_path, gen_rust=True, gen_test=False)
     update_manifest(args.spec_path)
 
-    cargo_result = subprocess.run(["cargo", "test"])
+    cargo_result = subprocess.run(["cargo", "test", "--all-features"])
     if cargo_result.returncode == 0:
         print()
         print("Tests from the old spec succeeded.")
