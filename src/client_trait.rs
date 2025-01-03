@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2020 Dropbox, Inc.
+// Copyright (c) 2019-2025 Dropbox, Inc.
 
 //! Everything needed to implement your HTTP client.
 

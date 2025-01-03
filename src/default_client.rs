@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2021 Dropbox, Inc.
+// Copyright (c) 2020-2025 Dropbox, Inc.
 
 //! The default HTTP client.
 //!

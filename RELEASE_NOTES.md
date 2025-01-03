@@ -1,15 +1,5 @@
-# v0.19.0-beta3
-xxxx-yy-zz
-* added implementations of AppAuthClient to default HTTP clients
-
-# v0.19.0-beta2
-2024-11-05
-* renamed sync_routes_default feature to sync_routes_in_root
-* improved appearance of docs wrt features
-* added tests for custom clients logic
-
-# v0.19.0-beta1
-2024-10-31
+# v0.19.0
+2025-01-03
 * **BIG CHANGE: async support added**
   * HTTP client traits completely redesigned
     * Should actually be much simpler to implement now, as the work of setting the right headers has been extracted out
@@ -21,7 +11,8 @@ xxxx-yy-zz
   * Functions which used to return `Result<Result<T, E>, dropbox_sdk::Error>` now return `Result<T, dropbox_sdk::Error<E>>`.
     * in other words, `Ok(Err(e))` is now written `Err(dropbox_sdk::Error::Api(e))` and `Ok(Ok(v))` is just `Ok(v)`.
     * `dropbox_sdk::Error` now has a type parameter which differs depending on the function being called.
-* MSRV raised to 1.71.0
+* MSRV raised to 1.75.0
+* added implementations of AppAuthClient to default HTTP clients
 
 # v0.18.1
 2024-05-06
