@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2021 Dropbox, Inc.
+// Copyright (c) 2019-2025 Dropbox, Inc.
 
 use std::error::Error as StdError;
 use std::io::ErrorKind;
