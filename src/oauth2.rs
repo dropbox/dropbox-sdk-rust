@@ -13,7 +13,7 @@
 //! [OAuth types summary]: https://developers.dropbox.com/oauth-guide#summary
 
 use std::env;
-use std::io::{self, Write};
+use std::io::{self, IsTerminal, Write};
 use std::sync::Arc;
 use async_lock::RwLock;
 use base64::Engine;
@@ -664,7 +664,7 @@ pub fn get_auth_from_env_or_prompt() -> Authorization {
         }
     }
 
-    if !atty::is(atty::Stream::Stdin) {
+    if !io::stdin().is_terminal() {
         panic!("DBX_CLIENT_ID and/or DBX_OAUTH not set, and stdin not a TTY; cannot authorize");
     }
 
