@@ -12,12 +12,11 @@ readme = "README.md"
 
 [package.metadata]
 # Keep this at least 1 year old.
-# (or not... 1.75 is required for "-> impl Trait" sadly)
+# 1.75 is required for "-> impl Trait"
 msrv = "1.75.0" # Dec 28, 2023
 
 [dependencies]
 async-lock = "3.3.0"
-atty = "0.2.14"
 base64 = "0.22"
 bytes = "1.6.0"
 log = "0.4"
