@@ -117,10 +117,10 @@ pub(crate) async fn body_to_string(
     }
 }
 
-/// Does the request and returns a two-level result. The outer result has an error if something
-/// went wrong in the process of making the request (I/O errors, parse errors, server 500 errors,
-/// etc.). The inner result has an error if the server returned one for the request, otherwise it
-/// has the deserialized JSON response and the body stream (if any).
+/// Does the request and returns a parsed result, including the response body, if any. If the
+/// request is successful, the JSON response is parsed as a `TResponse`. If the result is a HTTP
+/// 409 error, the response is parsed as the specified error type `TError` and returned as a
+/// [`Error::Api`].
 #[allow(clippy::too_many_arguments)]
 pub async fn request_with_body<TResponse, TError, TParams, TClient>(
     client: &TClient,
@@ -199,7 +199,7 @@ where
 
                 if status == 409 {
                     // Response should be JSON-deseraializable into the strongly-typed
-                    // error specified by type parameter E.
+                    // error specified by type parameter TError.
                     return match serde_json::from_str::<TopLevelError<TError>>(&json) {
                         Ok(deserialized) => {
                             error!("API error: {}", deserialized.error);
