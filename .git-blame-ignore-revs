@@ -1,0 +1,3 @@
+# .git-blame-ignore-revs
+# rustfmt everything except generated code
+3e04628e0c4bfc64247fd68e2924792c7632e783
