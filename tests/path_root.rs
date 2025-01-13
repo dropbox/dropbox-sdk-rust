@@ -11,17 +11,23 @@ fn invalid_path_root() {
     match files::list_folder(&client, &ListFolderArg::new("/".to_owned())) {
         // If the oauth token is for an app which only has access to its app folder, then the path
         // root cannot be specified.
-        Err(dropbox_sdk::Error::BadRequest(msg)) if msg.contains("Path root is not supported for sandbox app") => (),
+        Err(dropbox_sdk::Error::BadRequest(msg))
+            if msg.contains("Path root is not supported for sandbox app") => {}
 
         // If the oauth token is for a "whole dropbox" app, then we should get this error, which
         // inside will have a "no_permission" error.
         // If the error is due to a change in the user's home nsid, then we get an "invalid_root"
         // error which includes the new nsid, but that's not what we expect here, where we're just
         // giving a bogus nsid.
-        Err(dropbox_sdk::Error::UnexpectedHttpError { code: 422, response, .. }) => {
+        Err(dropbox_sdk::Error::UnexpectedHttpError {
+            code: 422,
+            response,
+            ..
+        }) => {
             let error = serde_json::from_str::<serde_json::Value>(&response)
                 .unwrap_or_else(|e| panic!("invalid json {:?}: {}", response, e));
-            let tag = error.as_object()
+            let tag = error
+                .as_object()
                 .and_then(|map| map.get("error"))
                 .and_then(|v| v.as_object())
                 .and_then(|map| map.get(".tag"))

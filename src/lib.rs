@@ -1,16 +1,14 @@
 // Copyright (c) 2019-2025 Dropbox, Inc.
 
-#![deny(
-    missing_docs,
-    rust_2018_idioms,
-)]
-
+#![deny(missing_docs, rust_2018_idioms)]
 // Enable a nightly feature for docs.rs which enables decorating feature-gated items.
 // To enable this manually, run e.g. `cargo rustdoc --all-features -- --cfg docsrs`.
 #![cfg_attr(docsrs, feature(doc_cfg))]
-
 #![cfg_attr(docsrs, doc = include_str!("../README.md"))]
-#![cfg_attr(not(docsrs), doc = "Dropbox SDK for Rust. See README.md for more details.")]
+#![cfg_attr(
+    not(docsrs),
+    doc = "Dropbox SDK for Rust. See README.md for more details."
+)]
 
 /// Feature-gate something and also decorate it with the feature name on docs.rs.
 macro_rules! if_feature {
@@ -30,7 +28,8 @@ macro_rules! if_feature {
     };
 }
 
-#[macro_use] extern crate log;
+#[macro_use]
+extern crate log;
 
 if_feature! { "default_client",
     pub mod default_client;

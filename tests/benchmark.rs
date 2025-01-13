@@ -1,5 +1,5 @@
-use dropbox_sdk::files;
 use dropbox_sdk::default_client::UserAuthDefaultClient;
+use dropbox_sdk::files;
 use std::sync::Arc;
 use std::thread;
 use std::time::{Duration, Instant};
@@ -24,41 +24,45 @@ fn fetch_files() {
 
     common::create_clean_folder(client.as_ref(), FOLDER);
 
-    let (file_path, file_bytes) = common::create_files(
-        client.clone(), FOLDER, NUM_FILES, FILE_SIZE);
+    let (file_path, file_bytes) =
+        common::create_files(client.clone(), FOLDER, NUM_FILES, FILE_SIZE);
 
     threadpool.join();
 
     println!("Test setup complete. Starting benchmark.");
 
     let mut times = vec![];
-    for _ in 0 .. NUM_TEST_RUNS {
+    for _ in 0..NUM_TEST_RUNS {
         println!("sleeping 10 seconds before run");
         thread::sleep(Duration::from_secs(10));
         let start = Instant::now();
-        for i in 0 .. NUM_FILES {
+        for i in 0..NUM_FILES {
             let path = file_path(i);
             let expected_bytes = file_bytes(i);
             let c = client.clone();
-            threadpool.execute(move || {
-                loop {
-                    let arg = files::DownloadArg::new(path.clone());
-                    match files::download(c.as_ref(), &arg, None, None) {
-                        Ok(result) => {
-                            let mut read_bytes = Vec::new();
-                            result.body.expect("result should have a body")
-                                .read_to_end(&mut read_bytes).expect("read_to_end");
-                            assert_eq!(&read_bytes, &expected_bytes);
-                        }
-                        Err(dropbox_sdk::Error::RateLimited { retry_after_seconds, .. }) => {
-                            eprintln!("WARNING: rate-limited {} seconds", retry_after_seconds);
-                            thread::sleep(Duration::from_secs(retry_after_seconds as u64));
-                            continue;
-                        }
-                        Err(e) => panic!("{}: download failed: {:?}", path, e),
+            threadpool.execute(move || loop {
+                let arg = files::DownloadArg::new(path.clone());
+                match files::download(c.as_ref(), &arg, None, None) {
+                    Ok(result) => {
+                        let mut read_bytes = Vec::new();
+                        result
+                            .body
+                            .expect("result should have a body")
+                            .read_to_end(&mut read_bytes)
+                            .expect("read_to_end");
+                        assert_eq!(&read_bytes, &expected_bytes);
                     }
-                    break;
+                    Err(dropbox_sdk::Error::RateLimited {
+                        retry_after_seconds,
+                        ..
+                    }) => {
+                        eprintln!("WARNING: rate-limited {} seconds", retry_after_seconds);
+                        thread::sleep(Duration::from_secs(retry_after_seconds as u64));
+                        continue;
+                    }
+                    Err(e) => panic!("{}: download failed: {:?}", path, e),
                 }
+                break;
             });
         }
 
@@ -69,6 +73,8 @@ fn fetch_files() {
     }
 
     println!("{:?}", times);
-    println!("average: {} seconds",
-        times.iter().map(Duration::as_secs_f64).sum::<f64>() / times.len() as f64)
+    println!(
+        "average: {} seconds",
+        times.iter().map(Duration::as_secs_f64).sum::<f64>() / times.len() as f64
+    )
 }

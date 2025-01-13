@@ -68,7 +68,8 @@ fn main() {
 
     let mut auth = dropbox_sdk::oauth2::get_auth_from_env_or_prompt();
     if auth.save().is_none() {
-        auth.obtain_access_token(NoauthDefaultClient::default()).unwrap();
+        auth.obtain_access_token(NoauthDefaultClient::default())
+            .unwrap();
         eprintln!("Next time set these environment variables to reuse this authorization:");
         eprintln!("  DBX_CLIENT_ID={}", auth.client_id());
         eprintln!("  DBX_OAUTH={}", auth.save().unwrap());

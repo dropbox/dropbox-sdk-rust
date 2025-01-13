@@ -12,6 +12,23 @@ jobs:
         with:
           submodules: true
 
+      - name: Install nightly toolchain
+        run: |
+          rustup install nightly --profile minimal
+          rustup component add clippy --toolchain nightly
+          rustup component add rustfmt --toolchain nightly
+
+      - name: Run rustfmt
+        # Delete the generated code so it doesn't get formatted.
+        # We'll be re-running the generator later, so this is okay.
+        run: |
+          rm -rf src/generated
+          echo "// empty module for rustfmt" > src/generated.rs
+          echo "// empty module for rustfmt" > tests/generated.rs
+          rustup run nightly cargo fmt --check
+          rm src/generated.rs
+          rm tests/generated.rs
+
       - name: Set up Python
         uses: actions/setup-python@v5.3.0
         with:
@@ -33,11 +50,6 @@ jobs:
 
       - name: Run cargo test
         run: rustup run 1.75.0 cargo test --all-features
-
-      - name: Install nightly toolchain
-        run: |
-          rustup install nightly --profile minimal
-          rustup component add clippy --toolchain nightly
 
       - name: Run clippy
         run: rustup run nightly cargo clippy --all-targets --all-features -- --deny warnings
