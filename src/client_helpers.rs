@@ -16,7 +16,7 @@ use std::sync::Arc;
 /// When Dropbox returns an error with HTTP 409 or 429, it uses an implicit JSON object with the
 /// following structure, which contains the actual error as a field.
 #[derive(Debug, Deserialize)]
-pub(crate) struct TopLevelError<T> {
+struct TopLevelError<T> {
     pub error: T,
     // It also has these fields, which we don't expose anywhere:
     //pub error_summary: String,
@@ -35,7 +35,7 @@ struct RateLimitedError {
 }
 
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn prepare_request<T: HttpClient>(
+pub fn prepare_request<T: HttpClient>(
     client: &T,
     endpoint: Endpoint,
     style: Style,
@@ -101,9 +101,7 @@ pub(crate) fn prepare_request<T: HttpClient>(
     (req, params_body)
 }
 
-pub(crate) async fn body_to_string(
-    body: &mut (dyn AsyncRead + Send + Unpin),
-) -> Result<String, Error> {
+async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) -> Result<String, Error> {
     let mut s = String::new();
     match body.read_to_string(&mut s).await {
         Ok(_) => Ok(s),
@@ -223,7 +221,7 @@ where
     }
 }
 
-pub(crate) async fn parse_response(
+pub async fn parse_response(
     raw_resp: HttpRequestResultRaw,
     style: Style,
 ) -> Result<
@@ -309,7 +307,7 @@ pub(crate) async fn parse_response(
 }
 
 #[derive(Debug, Clone)]
-pub(crate) enum Body<'a> {
+pub enum Body<'a> {
     #[cfg(feature = "sync_routes")]
     Borrowed(&'a [u8]),
 
@@ -332,6 +330,10 @@ impl<'a> From<&'a [u8]> for Body<'a> {
     }
 }
 
+/// Does the request and returns a parsed result. If the request is successful, the JSON response
+/// is parsed as a `TResponse`. If the result is a HTTP
+/// 409 error, the response is parsed as the specified error type `TError` and returned as a
+/// [`Error::Api`].
 pub async fn request<TResponse, TError, TParams, TClient>(
     client: &TClient,
     endpoint: Endpoint,
@@ -364,9 +366,8 @@ mod sync_helpers {
     ///
     /// This is ONLY safe if the result was created by a sync HttpClient, so we require it as an
     /// argument just to be extra careful.
-    #[cfg(feature = "sync_routes")]
     #[inline]
-    pub(crate) fn unwrap_async_result<T>(
+    fn unwrap_async_result<T>(
         r: HttpRequestResult<T>,
         _client: &impl sync::HttpClient,
     ) -> sync::HttpRequestResult<T> {
@@ -391,9 +392,8 @@ mod sync_helpers {
         }
     }
 
-    #[cfg(feature = "sync_routes")]
     #[inline]
-    pub(crate) fn unwrap_async_body<T, E>(
+    pub fn unwrap_async_body<T, E>(
         f: impl Future<Output = Result<HttpRequestResult<T>, Error<E>>>,
         client: &impl sync::HttpClient,
     ) -> Result<sync::HttpRequestResult<T>, Error<E>> {
@@ -406,15 +406,12 @@ mod sync_helpers {
         }
     }
 
-    #[cfg(feature = "sync_routes")]
     #[inline]
-    pub(crate) fn unwrap_async<T, E>(
-        f: impl Future<Output = Result<T, Error<E>>>,
-    ) -> Result<T, Error<E>> {
+    pub fn unwrap_async<T, E>(f: impl Future<Output = Result<T, Error<E>>>) -> Result<T, Error<E>> {
         f.now_or_never()
             .expect("sync future should resolve immediately")
     }
 }
 
 #[cfg(feature = "sync_routes")]
-pub(crate) use sync_helpers::*;
+pub use sync_helpers::*;
