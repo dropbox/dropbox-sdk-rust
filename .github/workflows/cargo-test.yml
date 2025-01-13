@@ -19,14 +19,9 @@ jobs:
           rustup component add rustfmt --toolchain nightly
 
       - name: Run rustfmt
-        # Delete the generated code so it doesn't get formatted.
-        # We'll be re-running the generator later, so this is okay.
         run: |
-          rm -rf src/generated
-          echo "// empty module for rustfmt" > src/generated.rs
           echo "// empty module for rustfmt" > tests/generated.rs
           rustup run nightly cargo fmt --check
-          rm src/generated.rs
           rm tests/generated.rs
 
       - name: Set up Python

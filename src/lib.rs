@@ -56,6 +56,7 @@ mod client_helpers;
 pub mod oauth2;
 
 // You need to run the Stone generator to create this module.
+#[rustfmt::skip]
 mod generated;
 pub use generated::*;
 
