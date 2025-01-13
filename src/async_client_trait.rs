@@ -162,7 +162,7 @@ impl<T: crate::client_trait::HttpClient + Sync> HttpClient for T {
 pub trait NoauthClient: HttpClient {}
 
 /// Marker trait to indicate that a HTTP client supports User authentication.
-/// Team authentication works by adding a `Authorization: Bearer <TOKEN>` header.
+/// User authentication works by adding a `Authorization: Bearer <TOKEN>` header.
 pub trait UserAuthClient: HttpClient {}
 
 /// Marker trait to indicate that a HTTP client supports Team authentication.
