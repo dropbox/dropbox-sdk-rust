@@ -1,24 +1,23 @@
 // Copyright (c) 2019-2025 Dropbox, Inc.
 
-use std::error::Error as StdError;
-use std::io::ErrorKind;
-use std::sync::Arc;
-use bytes::Bytes;
-use futures::{AsyncRead, AsyncReadExt};
-use serde::{Deserialize};
-use serde::de::DeserializeOwned;
-use serde::ser::Serialize;
-use crate::Error;
 use crate::async_client_trait::{HttpClient, HttpRequestResult, HttpRequestResultRaw};
 use crate::client_trait_common::{Endpoint, HttpRequest, ParamsType, Style, TeamSelect};
 use crate::types::auth::{AccessError, AuthError, RateLimitReason};
+use crate::Error;
+use bytes::Bytes;
+use futures::{AsyncRead, AsyncReadExt};
+use serde::de::DeserializeOwned;
+use serde::ser::Serialize;
+use serde::Deserialize;
+use std::error::Error as StdError;
+use std::io::ErrorKind;
+use std::sync::Arc;
 
 /// When Dropbox returns an error with HTTP 409 or 429, it uses an implicit JSON object with the
 /// following structure, which contains the actual error as a field.
 #[derive(Debug, Deserialize)]
 pub(crate) struct TopLevelError<T> {
     pub error: T,
-
     // It also has these fields, which we don't expose anywhere:
     //pub error_summary: String,
     //pub user_message: Option<String>,
@@ -52,7 +51,10 @@ pub(crate) fn prepare_request<T: HttpClient>(
     let url = endpoint.url().to_owned() + function;
 
     let mut req = client.new_request(&url);
-    req = req.set_header("User-Agent", concat!("Dropbox-SDK-Rust/", env!("CARGO_PKG_VERSION")));
+    req = req.set_header(
+        "User-Agent",
+        concat!("Dropbox-SDK-Rust/", env!("CARGO_PKG_VERSION")),
+    );
 
     if let Some(token) = token {
         req = req.set_header("Authorization", &format!("Bearer {token}"));
@@ -99,7 +101,9 @@ pub(crate) fn prepare_request<T: HttpClient>(
     (req, params_body)
 }
 
-pub(crate) async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) -> Result<String, Error> {
+pub(crate) async fn body_to_string(
+    body: &mut (dyn AsyncRead + Send + Unpin),
+) -> Result<String, Error> {
     let mut s = String::new();
     match body.read_to_string(&mut s).await {
         Ok(_) => Ok(s),
@@ -140,7 +144,10 @@ where
         let token = client.token();
         if token.is_none()
             && !retried
-            && client.update_token(Arc::new(String::new())).await.map_err(Error::typed)?
+            && client
+                .update_token(Arc::new(String::new()))
+                .await
+                .map_err(Error::typed)?
         {
             retried = true;
             continue 'auth_retry;
@@ -166,7 +173,9 @@ where
             (None, Some(Body::Owned((body_bytes, ..)))) => client.execute(req, body_bytes).await,
 
             #[cfg(feature = "sync_routes")]
-            (None, Some(Body::Borrowed(body_slice))) => client.execute_borrowed_body(req, body_slice).await,
+            (None, Some(Body::Borrowed(body_slice))) => {
+                client.execute_borrowed_body(req, body_slice).await
+            }
         };
         return match result {
             Ok(raw_resp) => {
@@ -184,8 +193,8 @@ where
                     }
                     Err(e) => {
                         error!("HTTP {status}: {e}");
-                        return Err(e.typed())
-                    },
+                        return Err(e.typed());
+                    }
                 };
 
                 if status == 409 {
@@ -195,7 +204,7 @@ where
                         Ok(deserialized) => {
                             error!("API error: {}", deserialized.error);
                             Err(Error::Api(deserialized.error))
-                        },
+                        }
                         Err(de_error) => {
                             error!("Failed to deserialize JSON from API error: {}", de_error);
                             Err(Error::Json(de_error))
@@ -210,25 +219,35 @@ where
                 })
             }
             Err(e) => Err(e.typed()),
-        }
+        };
     }
 }
 
-pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
-    -> Result<(String, Option<u64>, Option<Box<dyn AsyncRead + Send + Unpin>>), Error>
-{
+pub(crate) async fn parse_response(
+    raw_resp: HttpRequestResultRaw,
+    style: Style,
+) -> Result<
+    (
+        String,
+        Option<u64>,
+        Option<Box<dyn AsyncRead + Send + Unpin>>,
+    ),
+    Error,
+> {
     let HttpRequestResultRaw {
         status,
         result_header,
         content_length,
-        mut body
+        mut body,
     } = raw_resp;
     if (200..300).contains(&status) {
         Ok(match style {
             Style::Rpc | Style::Upload => {
                 // Read the response from the body.
                 if let Some(header) = result_header {
-                    return Err(Error::UnexpectedResponse(format!("unexpected response in header, expected it in the body: {header}")));
+                    return Err(Error::UnexpectedResponse(format!(
+                        "unexpected response in header, expected it in the body: {header}"
+                    )));
                 } else {
                     (body_to_string(&mut body).await?, content_length, None)
                 }
@@ -238,7 +257,9 @@ pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
                 if let Some(header) = result_header {
                     (header, content_length, Some(body))
                 } else {
-                    return Err(Error::UnexpectedResponse("expected a Dropbox-API-Result header".to_owned()));
+                    return Err(Error::UnexpectedResponse(
+                        "expected a Dropbox-API-Result header".to_owned(),
+                    ));
                 }
             }
         })
@@ -246,54 +267,43 @@ pub(crate) async fn parse_response(raw_resp: HttpRequestResultRaw, style: Style)
         let response = body_to_string(&mut body).await?;
         debug!("HTTP {status}: {response}");
         match status {
-            400 => {
-                Err(Error::BadRequest(response))
-            },
-            401 => {
-                match serde_json::from_str::<TopLevelError<AuthError>>(&response) {
-                    Ok(deserialized) => {
-                        Err(Error::Authentication(deserialized.error))
-                    }
-                    Err(de_error) => {
-                        error!("Failed to deserialize JSON from API error: {response}");
-                        Err(Error::Json(de_error))
-                    }
+            400 => Err(Error::BadRequest(response)),
+            401 => match serde_json::from_str::<TopLevelError<AuthError>>(&response) {
+                Ok(deserialized) => Err(Error::Authentication(deserialized.error)),
+                Err(de_error) => {
+                    error!("Failed to deserialize JSON from API error: {response}");
+                    Err(Error::Json(de_error))
                 }
             },
-            403 => {
-                match serde_json::from_str::<TopLevelError<AccessError>>(&response) {
-                    Ok(deserialized) => {
-                        Err(Error::AccessDenied(deserialized.error))
-                    }
-                    Err(de_error) => {
-                        error!("Failed to deserialize JSON from API error: {response}");
-                        Err(Error::Json(de_error))
-                    }
+            403 => match serde_json::from_str::<TopLevelError<AccessError>>(&response) {
+                Ok(deserialized) => Err(Error::AccessDenied(deserialized.error)),
+                Err(de_error) => {
+                    error!("Failed to deserialize JSON from API error: {response}");
+                    Err(Error::Json(de_error))
                 }
-            }
+            },
             409 => {
                 // Pretend it's okay for now; caller will parse it specially.
                 Ok((response, None, None))
-            },
-            429 => {
-                match serde_json::from_str::<TopLevelError<RateLimitedError>>(&response) {
-                    Ok(deserialized) => {
-                        let e = Error::RateLimited {
-                            reason: deserialized.error.reason,
-                            retry_after_seconds: deserialized.error.retry_after,
-                        };
-                        Err(e)
-                    }
-                    Err(de_error) => {
-                        error!("Failed to deserialize JSON from API error: {response}");
-                        Err(Error::Json(de_error))
-                    }
+            }
+            429 => match serde_json::from_str::<TopLevelError<RateLimitedError>>(&response) {
+                Ok(deserialized) => {
+                    let e = Error::RateLimited {
+                        reason: deserialized.error.reason,
+                        retry_after_seconds: deserialized.error.retry_after,
+                    };
+                    Err(e)
+                }
+                Err(de_error) => {
+                    error!("Failed to deserialize JSON from API error: {response}");
+                    Err(Error::Json(de_error))
                 }
             },
-            500..=599 => {
-                Err(Error::ServerError(response))
-            },
-            _ => Err(Error::UnexpectedHttpError { code: status, response }),
+            500..=599 => Err(Error::ServerError(response)),
+            _ => Err(Error::UnexpectedHttpError {
+                code: status,
+                response,
+            }),
         }
     }
 }
@@ -343,11 +353,11 @@ where
 
 #[cfg(feature = "sync_routes")]
 mod sync_helpers {
-    use std::future::Future;
-    use futures::{AsyncRead, FutureExt};
     use crate::async_client_trait::{HttpRequestResult, SyncReadAdapter};
     use crate::client_trait as sync;
     use crate::Error;
+    use futures::{AsyncRead, FutureExt};
+    use std::future::Future;
 
     /// Given an async HttpRequestResult which was created from a *sync* HttpClient, convert it to the
     /// sync HttpRequestResult by cracking open the SyncReadAdapter in the body.
@@ -365,9 +375,8 @@ mod sync_helpers {
                 let p: *mut dyn AsyncRead = Box::into_raw(async_read);
                 // SAFETY: the only body value an async HttpRequestResult created for a sync client
                 // can be is a SyncReadAdapter.
-                let adapter = unsafe {
-                    Box::<SyncReadAdapter>::from_raw(p as *mut SyncReadAdapter)
-                };
+                let adapter =
+                    unsafe { Box::<SyncReadAdapter>::from_raw(p as *mut SyncReadAdapter) };
                 sync::HttpRequestResult {
                     result: r.result,
                     content_length: r.content_length,
@@ -378,7 +387,7 @@ mod sync_helpers {
                 result: r.result,
                 content_length: r.content_length,
                 body: None,
-            }
+            },
         }
     }
 
@@ -388,7 +397,9 @@ mod sync_helpers {
         f: impl Future<Output = Result<HttpRequestResult<T>, Error<E>>>,
         client: &impl sync::HttpClient,
     ) -> Result<sync::HttpRequestResult<T>, Error<E>> {
-        let r = f.now_or_never().expect("sync future should resolve immediately");
+        let r = f
+            .now_or_never()
+            .expect("sync future should resolve immediately");
         match r {
             Ok(v) => Ok(unwrap_async_result(v, client)),
             Err(e) => Err(e),
@@ -400,7 +411,8 @@ mod sync_helpers {
     pub(crate) fn unwrap_async<T, E>(
         f: impl Future<Output = Result<T, Error<E>>>,
     ) -> Result<T, Error<E>> {
-        f.now_or_never().expect("sync future should resolve immediately")
+        f.now_or_never()
+            .expect("sync future should resolve immediately")
     }
 }
 

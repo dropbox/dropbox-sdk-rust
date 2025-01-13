@@ -1,7 +1,7 @@
-use std::io::Cursor;
-use dropbox_sdk::sync_routes::check;
 use dropbox_sdk::client_trait::*;
+use dropbox_sdk::sync_routes::check;
 use dropbox_sdk::Error;
+use std::io::Cursor;
 
 struct TestSyncClient;
 struct TestRequest {
@@ -22,12 +22,17 @@ impl HttpClient for TestSyncClient {
                     body: Box::new(Cursor::new(format!(r#"{{"result":"{}"}}"#, arg.query))),
                 })
             }
-            _ => Err(Error::HttpClient(Box::new(std::io::Error::other(format!("unhandled URL {}", request.url))))),
+            _ => Err(Error::HttpClient(Box::new(std::io::Error::other(format!(
+                "unhandled URL {}",
+                request.url
+            ))))),
         }
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
-        TestRequest{ url: url.to_owned() }
+        TestRequest {
+            url: url.to_owned(),
+        }
     }
 }
 

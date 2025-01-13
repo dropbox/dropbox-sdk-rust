@@ -12,19 +12,19 @@
 //! [Dropbox OAuth Guide]: https://developers.dropbox.com/oauth-guide
 //! [OAuth types summary]: https://developers.dropbox.com/oauth-guide#summary
 
-use std::env;
-use std::io::{self, IsTerminal, Write};
-use std::sync::Arc;
-use async_lock::RwLock;
-use base64::Engine;
-use base64::engine::general_purpose::{URL_SAFE, URL_SAFE_NO_PAD};
-use ring::rand::{SecureRandom, SystemRandom};
-use url::form_urlencoded::Serializer as UrlEncoder;
-use url::Url;
-use crate::Error;
 use crate::async_client_trait::NoauthClient;
 use crate::client_helpers::{parse_response, prepare_request};
 use crate::client_trait_common::{Endpoint, ParamsType, Style};
+use crate::Error;
+use async_lock::RwLock;
+use base64::engine::general_purpose::{URL_SAFE, URL_SAFE_NO_PAD};
+use base64::Engine;
+use ring::rand::{SecureRandom, SystemRandom};
+use std::env;
+use std::io::{self, IsTerminal, Write};
+use std::sync::Arc;
+use url::form_urlencoded::Serializer as UrlEncoder;
+use url::Url;
 
 /// Which type of OAuth2 flow to use.
 #[derive(Debug, Clone)]
@@ -89,7 +89,8 @@ impl TokenType {
         match self {
             TokenType::ShortLivedAndRefresh => Some("offline"),
             TokenType::ShortLived => Some("online"),
-            #[allow(deprecated)] TokenType::LongLived => None,
+            #[allow(deprecated)]
+            TokenType::LongLived => None,
         }
     }
 }
@@ -109,7 +110,9 @@ impl PkceCode {
         // A 93-byte input ends up as 125 base64 characters, so let's do that.
         let mut bytes = [0u8; 93];
         // not expecting this to ever actually fail:
-        SystemRandom::new().fill(&mut bytes).expect("failed to get random bytes for PKCE");
+        SystemRandom::new()
+            .fill(&mut bytes)
+            .expect("failed to get random bytes for PKCE");
         let code = URL_SAFE.encode(bytes);
         Self { code }
     }
@@ -333,7 +336,11 @@ impl Authorization {
     ) -> Self {
         Self {
             client_id,
-            state: AuthorizationState::InitialAuth { flow_type, auth_code, redirect_uri },
+            state: AuthorizationState::InitialAuth {
+                flow_type,
+                auth_code,
+                redirect_uri,
+            },
         }
     }
 
@@ -343,13 +350,16 @@ impl Authorization {
     /// token yet).
     pub fn save(&self) -> Option<String> {
         match &self.state {
-            AuthorizationState::AccessToken { token, client_secret } if client_secret.is_none() => {
+            AuthorizationState::AccessToken {
+                token,
+                client_secret,
+            } if client_secret.is_none() => {
                 // Legacy long-lived access token.
                 Some(format!("1&{}", token))
-            },
+            }
             AuthorizationState::Refresh { refresh_token, .. } => {
                 Some(format!("2&{}", refresh_token))
-            },
+            }
             _ => None,
         }
     }
@@ -364,13 +374,14 @@ impl Authorization {
     /// start the authorization procedure from scratch.
     pub fn load(client_id: String, saved: &str) -> Option<Self> {
         Some(match saved.get(0..2) {
-            Some("1&") => {
+            Some("1&") =>
+            {
                 #[allow(deprecated)]
                 Self::from_long_lived_access_token(saved[2..].to_owned())
-            },
+            }
             Some("2&") => Self::from_refresh_token(client_id, saved[2..].to_owned()),
             _ => {
-                error!("unrecognized saved Authorization representation: {:?}", saved);
+                error!("unrecognized saved Authorization representation: {saved:?}");
                 return None;
             }
         })
@@ -378,10 +389,7 @@ impl Authorization {
 
     /// Recreate the authorization from a refresh token obtained using the [`Oauth2Type::PKCE`]
     /// flow.
-    pub fn from_refresh_token(
-        client_id: String,
-        refresh_token: String,
-    ) -> Self {
+    pub fn from_refresh_token(client_id: String, refresh_token: String) -> Self {
         Self {
             client_id,
             state: AuthorizationState::Refresh {
@@ -414,12 +422,13 @@ impl Authorization {
     /// Long-lived tokens are deprecated and the ability to generate them will be removed in the
     /// future.
     #[deprecated]
-    pub fn from_long_lived_access_token(
-        access_token: String,
-    ) -> Self {
+    pub fn from_long_lived_access_token(access_token: String) -> Self {
         Self {
             client_id: String::new(),
-            state: AuthorizationState::AccessToken { token: access_token, client_secret: None },
+            state: AuthorizationState::AccessToken {
+                token: access_token,
+                client_secret: None,
+            },
         }
     }
 
@@ -438,7 +447,10 @@ impl Authorization {
 
     /// Obtain an access token. Use this to complete the authorization process, or to obtain an
     /// updated token when a short-lived access token has expired.
-    pub async fn obtain_access_token_async(&mut self, client: impl NoauthClient) -> Result<String, Error> {
+    pub async fn obtain_access_token_async(
+        &mut self,
+        client: impl NoauthClient,
+    ) -> Result<String, Error> {
         let mut redirect_uri = None;
         let mut client_secret = None;
         let mut pkce_code = None;
@@ -446,26 +458,36 @@ impl Authorization {
         let mut auth_code = None;
 
         match self.state.clone() {
-            AuthorizationState::AccessToken { token, client_secret: secret } => {
+            AuthorizationState::AccessToken {
+                token,
+                client_secret: secret,
+            } => {
                 match secret {
                     None => {
                         // Long-lived token which cannot be refreshed
-                        return Ok(token)
-                    },
+                        return Ok(token);
+                    }
                     Some(secret) => {
                         client_secret = Some(secret);
                     }
                 }
             }
             AuthorizationState::InitialAuth {
-                flow_type, auth_code: code, redirect_uri: uri } =>
-            {
+                flow_type,
+                auth_code: code,
+                redirect_uri: uri,
+            } => {
                 match flow_type {
                     Oauth2Type::ImplicitGrant => {
-                        self.state = AuthorizationState::AccessToken { client_secret: None, token: code.clone() };
+                        self.state = AuthorizationState::AccessToken {
+                            client_secret: None,
+                            token: code.clone(),
+                        };
                         return Ok(code);
                     }
-                    Oauth2Type::AuthorizationCode { client_secret: secret } => {
+                    Oauth2Type::AuthorizationCode {
+                        client_secret: secret,
+                    } => {
                         client_secret = Some(secret);
                     }
                     Oauth2Type::PKCE(pkce) => {
@@ -475,7 +497,10 @@ impl Authorization {
                 auth_code = Some(code);
                 redirect_uri = uri;
             }
-            AuthorizationState::Refresh { refresh_token: refresh, client_secret: secret } => {
+            AuthorizationState::Refresh {
+                refresh_token: refresh,
+                client_secret: secret,
+            } => {
                 refresh_token = Some(refresh);
                 if let Some(secret) = secret {
                     client_secret = Some(secret);
@@ -510,7 +535,10 @@ impl Authorization {
                 } else {
                     params.append_pair(
                         "client_secret",
-                        client_secret.as_ref().expect("need either PKCE code or client secret"));
+                        client_secret
+                            .as_ref()
+                            .expect("need either PKCE code or client secret"),
+                    );
                 }
             }
 
@@ -550,24 +578,37 @@ impl Authorization {
             serde_json::Value::Object(mut map) => {
                 match map.remove("access_token") {
                     Some(serde_json::Value::String(token)) => access_token = token,
-                    _ => return Err(Error::UnexpectedResponse("no access token in response!".to_owned())),
+                    _ => {
+                        return Err(Error::UnexpectedResponse(
+                            "no access token in response!".to_owned(),
+                        ))
+                    }
                 }
                 match map.remove("refresh_token") {
                     Some(serde_json::Value::String(refresh)) => refresh_token = Some(refresh),
                     Some(_) => {
-                        return Err(Error::UnexpectedResponse("refresh token is not a string!".to_owned()));
-                    },
+                        return Err(Error::UnexpectedResponse(
+                            "refresh token is not a string!".to_owned(),
+                        ));
+                    }
                     None => refresh_token = None,
                 }
-            },
-            _ => return Err(Error::UnexpectedResponse("response is not a JSON object".to_owned())),
+            }
+            _ => {
+                return Err(Error::UnexpectedResponse(
+                    "response is not a JSON object".to_owned(),
+                ))
+            }
         }
 
         match refresh_token {
             Some(refresh) => {
-                self.state = AuthorizationState::Refresh { refresh_token: refresh, client_secret };
+                self.state = AuthorizationState::Refresh {
+                    refresh_token: refresh,
+                    client_secret,
+                };
             }
-            None if !matches!(self.state, AuthorizationState::Refresh {..}) => {
+            None if !matches!(self.state, AuthorizationState::Refresh { .. }) => {
                 self.state = AuthorizationState::AccessToken {
                     token: access_token.clone(),
                     client_secret,
@@ -607,9 +648,11 @@ impl TokenCache {
     ///
     /// To avoid double-updating the token in a race, requires the token which is being replaced.
     /// For the case where no token is currently present, use the empty string as the token.
-    pub async fn update_token(&self, client: impl NoauthClient, old_token: Arc<String>)
-        -> Result<Arc<String>, Error>
-    {
+    pub async fn update_token(
+        &self,
+        client: impl NoauthClient,
+        old_token: Arc<String>,
+    ) -> Result<Arc<String>, Error> {
         let mut write = self.auth.write().await;
         // Check if the token changed while we were unlocked; only update it if it
         // didn't.
@@ -651,9 +694,8 @@ pub fn get_auth_from_env_or_prompt() -> Authorization {
         return Authorization::from_long_lived_access_token(long_lived);
     }
 
-    if let (Ok(client_id), Ok(saved))
-        = (env::var("DBX_CLIENT_ID"), env::var("DBX_OAUTH"))
-        // important! see the above warning about using environment variables for this
+    if let (Ok(client_id), Ok(saved)) = (env::var("DBX_CLIENT_ID"), env::var("DBX_OAUTH"))
+    // important! see the above warning about using environment variables for this
     {
         match Authorization::load(client_id, &saved) {
             Some(auth) => return auth,
@@ -679,17 +721,11 @@ pub fn get_auth_from_env_or_prompt() -> Authorization {
     let client_id = prompt("Give me a Dropbox API app key");
 
     let oauth2_flow = Oauth2Type::PKCE(PkceCode::new());
-    let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow)
-        .build();
+    let url = AuthorizeUrlBuilder::new(&client_id, &oauth2_flow).build();
     eprintln!("Open this URL in your browser:");
     eprintln!("{}", url);
     eprintln!();
     let auth_code = prompt("Then paste the code here");
 
-    Authorization::from_auth_code(
-        client_id,
-        oauth2_flow,
-        auth_code.trim().to_owned(),
-        None,
-    )
+    Authorization::from_auth_code(client_id, oauth2_flow, auth_code.trim().to_owned(), None)
 }

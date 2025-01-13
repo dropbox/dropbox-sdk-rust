@@ -1,5 +1,5 @@
-use dropbox_sdk::files;
 use dropbox_sdk::default_client::UserAuthDefaultClient;
+use dropbox_sdk::files;
 use std::collections::HashSet;
 use std::sync::Arc;
 
@@ -23,7 +23,7 @@ fn list_folder_recursive() {
     let (files_b, _) = common::create_files(client.clone(), FOLDER_INNER, NUM_FILES, FILE_SIZE);
 
     let mut files = HashSet::new();
-    for i in 0 .. NUM_FILES {
+    for i in 0..NUM_FILES {
         files.insert(files_a(i));
         files.insert(files_b(i));
     }
@@ -35,7 +35,11 @@ fn list_folder_recursive() {
             match metadata {
                 files::Metadata::File(files::FileMetadata { path_lower, .. }) => {
                     let path_lower = path_lower.expect("missing path_lower in response");
-                    assert!(files.remove(&path_lower), "got unexpected path {}", path_lower);
+                    assert!(
+                        files.remove(&path_lower),
+                        "got unexpected path {}",
+                        path_lower
+                    );
                 }
                 files::Metadata::Folder(files::FolderMetadata { path_lower, .. }) => {
                     let path_lower = path_lower.expect("missing path_lower in response");
@@ -51,9 +55,14 @@ fn list_folder_recursive() {
         client.as_ref(),
         &files::ListFolderArg::new(FOLDER.to_owned())
             .with_recursive(true)
-            .with_limit(10))
-    {
-        Ok(files::ListFolderResult { entries, cursor, has_more, .. }) => {
+            .with_limit(10),
+    ) {
+        Ok(files::ListFolderResult {
+            entries,
+            cursor,
+            has_more,
+            ..
+        }) => {
             println!("{} entries", entries.len());
             process_entries(entries);
             assert!(has_more, "expected has_more from list_folder");
@@ -65,9 +74,15 @@ fn list_folder_recursive() {
     while has_more {
         println!("list_folder_continue");
         let next = match files::list_folder_continue(
-            client.as_ref(), &files::ListFolderContinueArg::new(cursor.clone()))
-        {
-            Ok(files::ListFolderResult { entries, cursor, has_more, .. }) => {
+            client.as_ref(),
+            &files::ListFolderContinueArg::new(cursor.clone()),
+        ) {
+            Ok(files::ListFolderResult {
+                entries,
+                cursor,
+                has_more,
+                ..
+            }) => {
                 println!("{} entries", entries.len());
                 process_entries(entries);
                 (cursor, has_more)

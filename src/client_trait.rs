@@ -2,10 +2,10 @@
 
 //! Everything needed to implement your HTTP client.
 
-use std::io::Read;
-use std::sync::Arc;
 pub use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::Error;
+use std::io::Read;
+use std::sync::Arc;
 
 /// The base HTTP synchronous client trait.
 pub trait HttpClient: Sync {
@@ -13,11 +13,7 @@ pub trait HttpClient: Sync {
     type Request: HttpRequest + Send;
 
     /// Make a HTTP request.
-    fn execute(
-        &self,
-        request: Self::Request,
-        body: &[u8],
-    ) -> Result<HttpRequestResultRaw, Error>;
+    fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error>;
 
     /// Create a new request instance for the given URL. It should be a POST request.
     fn new_request(&self, url: &str) -> Self::Request;
@@ -92,4 +88,3 @@ pub struct HttpRequestResult<T> {
     /// [`Style::Download`](crate::client_trait_common::Style::Download) endpoints.
     pub body: Option<Box<dyn Read>>,
 }
-

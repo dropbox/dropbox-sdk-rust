@@ -1,11 +1,11 @@
 //! Everything needed to implement your async HTTP client.
 
-use std::future::{Future, ready};
-use std::sync::Arc;
-use bytes::Bytes;
-use futures::AsyncRead;
 pub use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::Error;
+use bytes::Bytes;
+use futures::AsyncRead;
+use std::future::{ready, Future};
+use std::sync::Arc;
 
 /// The base HTTP asynchronous client trait.
 pub trait HttpClient: Sync {
@@ -69,7 +69,9 @@ pub trait HttpClient: Sync {
     ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send {
         unimplemented!();
         #[allow(unreachable_code)] // otherwise it complains that `()` is not a future.
-        async move { unimplemented!() }
+        async move {
+            unimplemented!()
+        }
     }
 }
 
@@ -110,32 +112,36 @@ pub struct HttpRequestResult<T> {
 impl<T: crate::client_trait::HttpClient + Sync> HttpClient for T {
     type Request = T::Request;
 
-    async fn execute(&self, request: Self::Request, body: Bytes)
-        -> Result<HttpRequestResultRaw, Error>
-    {
+    async fn execute(
+        &self,
+        request: Self::Request,
+        body: Bytes,
+    ) -> Result<HttpRequestResultRaw, Error> {
         self.execute_borrowed_body(request, &body).await
     }
 
-    async fn execute_borrowed_body(&self, request: Self::Request, body_slice: &[u8])
-        -> Result<HttpRequestResultRaw, Error>
-    {
-        self.execute(request, body_slice).map(|r| {
-            HttpRequestResultRaw {
+    async fn execute_borrowed_body(
+        &self,
+        request: Self::Request,
+        body_slice: &[u8],
+    ) -> Result<HttpRequestResultRaw, Error> {
+        self.execute(request, body_slice)
+            .map(|r| HttpRequestResultRaw {
                 status: r.status,
                 result_header: r.result_header,
                 content_length: r.content_length,
                 body: Box::new(SyncReadAdapter { inner: r.body }),
-            }
-        })
+            })
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
         self.new_request(url)
     }
 
-    fn update_token(&self, old_token: Arc<String>)
-        -> impl Future<Output=Result<bool, Error>> + Send
-    {
+    fn update_token(
+        &self,
+        old_token: Arc<String>,
+    ) -> impl Future<Output = Result<bool, Error>> + Send {
         ready(self.update_token(old_token))
     }
 

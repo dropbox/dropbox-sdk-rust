@@ -29,8 +29,10 @@ pub enum Error<E = NoError> {
     Authentication(#[source] types::auth::AuthError),
 
     /// Your request was rejected due to rate-limiting. You can retry it later.
-    #[error("Dropbox API declined the request due to rate-limiting ({reason}), \
-        retry after {retry_after_seconds}s")]
+    #[error(
+        "Dropbox API declined the request due to rate-limiting ({reason}), \
+        retry after {retry_after_seconds}s"
+    )]
     RateLimited {
         /// The server-given reason for the rate-limiting.
         reason: types::auth::RateLimitReason,
@@ -103,10 +105,18 @@ impl<E: std::error::Error + Send + Sync + 'static> Error<E> {
             Error::UnexpectedResponse(e) => Error::UnexpectedResponse(e),
             Error::BadRequest(e) => Error::BadRequest(e),
             Error::Authentication(e) => Error::Authentication(e),
-            Error::RateLimited { reason, retry_after_seconds } => Error::RateLimited { reason, retry_after_seconds },
+            Error::RateLimited {
+                reason,
+                retry_after_seconds,
+            } => Error::RateLimited {
+                reason,
+                retry_after_seconds,
+            },
             Error::AccessDenied(e) => Error::AccessDenied(e),
             Error::ServerError(e) => Error::ServerError(e),
-            Error::UnexpectedHttpError { code, response } => Error::UnexpectedHttpError { code, response },
+            Error::UnexpectedHttpError { code, response } => {
+                Error::UnexpectedHttpError { code, response }
+            }
         }
     }
 }
@@ -125,14 +135,21 @@ impl Error<NoError> {
             Error::UnexpectedResponse(e) => Error::UnexpectedResponse(e),
             Error::BadRequest(e) => Error::BadRequest(e),
             Error::Authentication(e) => Error::Authentication(e),
-            Error::RateLimited { reason, retry_after_seconds } => Error::RateLimited { reason, retry_after_seconds },
+            Error::RateLimited {
+                reason,
+                retry_after_seconds,
+            } => Error::RateLimited {
+                reason,
+                retry_after_seconds,
+            },
             Error::AccessDenied(e) => Error::AccessDenied(e),
             Error::ServerError(e) => Error::ServerError(e),
-            Error::UnexpectedHttpError { code, response } => Error::UnexpectedHttpError { code, response },
+            Error::UnexpectedHttpError { code, response } => {
+                Error::UnexpectedHttpError { code, response }
+            }
         }
     }
 }
-
 
 /// A special error type for a method that doesn't have any defined error return. You can't
 /// actually encounter a value of this type in real life; it's here to satisfy type requirements.
@@ -174,11 +191,10 @@ impl std::fmt::Display for NoError {
 // This is the reason we can't just use the otherwise-identical `void` crate's Void type: we need
 // to implement this trait.
 impl<'de> serde::de::Deserialize<'de> for NoError {
-    fn deserialize<D: serde::de::Deserializer<'de>>(_: D)
-        -> Result<Self, D::Error>
-    {
+    fn deserialize<D: serde::de::Deserializer<'de>>(_: D) -> Result<Self, D::Error> {
         Err(serde::de::Error::custom(
-            "method has no defined error type, but an error was returned"))
+            "method has no defined error type, but an error was returned",
+        ))
     }
 }
 

@@ -3,9 +3,9 @@
 //! This example illustrates a few basic Dropbox API operations: getting an OAuth2 token, listing
 //! the contents of a folder recursively, and fetching a file given its path.
 
-use tokio_util::compat::FuturesAsyncReadCompatExt;
-use dropbox_sdk::default_async_client::{NoauthDefaultClient, UserAuthDefaultClient};
 use dropbox_sdk::async_routes::files;
+use dropbox_sdk::default_async_client::{NoauthDefaultClient, UserAuthDefaultClient};
+use tokio_util::compat::FuturesAsyncReadCompatExt;
 
 enum Operation {
     Usage,
@@ -68,7 +68,9 @@ async fn main() {
 
     let mut auth = dropbox_sdk::oauth2::get_auth_from_env_or_prompt();
     if auth.save().is_none() {
-        auth.obtain_access_token_async(NoauthDefaultClient::default()).await.unwrap();
+        auth.obtain_access_token_async(NoauthDefaultClient::default())
+            .await
+            .unwrap();
         eprintln!("Next time set these environment variables to reuse this authorization:");
         eprintln!("  DBX_CLIENT_ID={}", auth.client_id());
         eprintln!("  DBX_OAUTH={}", auth.save().unwrap());
@@ -84,10 +86,11 @@ async fn main() {
             match files::download(&client, &files::DownloadArg::new(path), None, None).await {
                 Ok(result) => {
                     match tokio::io::copy(
-                        &mut result.body.expect("there must be a response body")
-                            .compat(),
+                        &mut result.body.expect("there must be a response body").compat(),
                         &mut tokio::io::stdout(),
-                    ).await {
+                    )
+                    .await
+                    {
                         Ok(n) => {
                             eprintln!("Downloaded {n} bytes");
                         }
@@ -112,7 +115,9 @@ async fn main() {
             let mut result = match files::list_folder(
                 &client,
                 &files::ListFolderArg::new(path).with_recursive(true),
-            ).await {
+            )
+            .await
+            {
                 Ok(result) => result,
                 Err(e) => {
                     eprintln!("Error from files/list_folder: {e}");
@@ -145,7 +150,9 @@ async fn main() {
                 result = match files::list_folder_continue(
                     &client,
                     &files::ListFolderContinueArg::new(result.cursor),
-                ).await {
+                )
+                .await
+                {
                     Ok(result) => {
                         num_pages += 1;
                         num_entries += result.entries.len();

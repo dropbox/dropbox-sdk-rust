@@ -1,16 +1,15 @@
 #[test]
 fn test_null_fields_elided() {
     // Struct fields with optional or default values don't need to be serialized.
-    let value = dropbox_sdk::files::Metadata::File(
-        dropbox_sdk::files::FileMetadata::new(
-            "name".to_owned(),
-            "id".to_owned(),
-            "client_modified".to_owned(),
-            "server_modified".to_owned(),
-            "rev".to_owned(),
-            1337)
+    let value = dropbox_sdk::files::Metadata::File(dropbox_sdk::files::FileMetadata::new(
+        "name".to_owned(),
+        "id".to_owned(),
+        "client_modified".to_owned(),
+        "server_modified".to_owned(),
+        "rev".to_owned(),
+        1337,
         // Many other optional fields not populated.
-    );
+    ));
 
     // Serialized value should only contain these fields, and should not have the optional fields
     // included, like `"media_info": null`.

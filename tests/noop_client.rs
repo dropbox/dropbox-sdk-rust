@@ -1,5 +1,5 @@
-use std::fmt::{Debug, Display, Formatter};
 use dropbox_sdk::client_trait::*;
+use std::fmt::{Debug, Display, Formatter};
 
 macro_rules! noop_client {
     ($name:ident) => {
@@ -16,7 +16,9 @@ macro_rules! noop_client {
                     _request: Self::Request,
                     _body: &[u8],
                 ) -> Result<HttpRequestResultRaw, dropbox_sdk::Error> {
-                    Err(dropbox_sdk::Error::HttpClient(Box::new(super::ErrMsg("noop client called".to_owned()))))
+                    Err(dropbox_sdk::Error::HttpClient(Box::new(super::ErrMsg(
+                        "noop client called".to_owned(),
+                    ))))
                 }
 
                 fn new_request(&self, _url: &str) -> Self::Request {
@@ -24,7 +26,7 @@ macro_rules! noop_client {
                 }
             }
         }
-    }
+    };
 }
 
 noop_client!(app);
@@ -54,4 +56,4 @@ impl Display for ErrMsg {
     }
 }
 
-impl std::error::Error for ErrMsg{}
+impl std::error::Error for ErrMsg {}
