@@ -11,16 +11,18 @@
 //!
 //! This code (and its dependencies) are only built if you use the `default_client` Cargo feature.
 
-use crate::Error;
+use crate::client_trait::{
+    AppAuthClient, HttpClient, HttpRequest, HttpRequestResultRaw, NoauthClient, TeamAuthClient,
+    TeamSelect, UserAuthClient,
+};
+use crate::default_client_common::impl_set_path_root;
 use crate::oauth2::{Authorization, TokenCache};
+use crate::Error;
+use futures::FutureExt;
 use std::borrow::Cow;
 use std::fmt::Write;
 use std::str::FromStr;
 use std::sync::Arc;
-use futures::FutureExt;
-use crate::client_trait::{AppAuthClient, HttpClient, HttpRequest, HttpRequestResultRaw,
-    NoauthClient, TeamAuthClient, TeamSelect, UserAuthClient};
-use crate::default_client_common::impl_set_path_root;
 
 macro_rules! impl_update_token {
     ($self:ident) => {
@@ -176,7 +178,8 @@ impl HttpClient for AppAuthDefaultClient {
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
-        self.inner.new_request(url)
+        self.inner
+            .new_request(url)
             .set_header("Authorization", &self.auth)
     }
 }
@@ -256,12 +259,8 @@ impl HttpClient for UreqClient {
         };
 
         let (status, resp) = match resp {
-            Ok(resp) => {
-                (resp.status(), resp)
-            }
-            Err(ureq::Error::Status(status, resp)) => {
-                (status, resp)
-            }
+            Ok(resp) => (resp.status(), resp),
+            Err(ureq::Error::Status(status, resp)) => (status, resp),
             Err(e @ ureq::Error::Transport(_)) => {
                 return Err(RequestError { inner: e }.into());
             }
@@ -269,11 +268,12 @@ impl HttpClient for UreqClient {
 
         let result_header = resp.header("Dropbox-API-Result").map(String::from);
 
-        let content_length = resp.header("Content-Length")
+        let content_length = resp
+            .header("Content-Length")
             .map(|s| {
-                u64::from_str(s)
-                    .map_err(|e| Error::UnexpectedResponse(
-                        format!("invalid Content-Length {s:?}: {e}")))
+                u64::from_str(s).map_err(|e| {
+                    Error::UnexpectedResponse(format!("invalid Content-Length {s:?}: {e}"))
+                })
             })
             .transpose()?;
 
@@ -335,7 +335,7 @@ macro_rules! wrap_error {
                 Self::HttpClient(Box::new(DefaultClientError::from(e)))
             }
         }
-    }
+    };
 }
 
 wrap_error!(std::io::Error);
@@ -403,13 +403,17 @@ mod test {
         assert_eq!(Cow::Borrowed("foobar"), json_escape_header("foobar"));
         assert_eq!(
             Cow::<'_, str>::Owned("tro\\u0161kovi".to_owned()),
-            json_escape_header("troškovi"));
+            json_escape_header("troškovi")
+        );
         assert_eq!(
             Cow::<'_, str>::Owned(
-                r#"{"field": "some_\u00fc\u00f1\u00eec\u00f8d\u00e9_and_\u007f"}"#.to_owned()),
-            json_escape_header("{\"field\": \"some_üñîcødé_and_\x7f\"}"));
+                r#"{"field": "some_\u00fc\u00f1\u00eec\u00f8d\u00e9_and_\u007f"}"#.to_owned()
+            ),
+            json_escape_header("{\"field\": \"some_üñîcødé_and_\x7f\"}")
+        );
         assert_eq!(
             Cow::<'_, str>::Owned("almost,\\u007f but not quite".to_owned()),
-            json_escape_header("almost,\x7f but not quite"));
+            json_escape_header("almost,\x7f but not quite")
+        );
     }
 }
