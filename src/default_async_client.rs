@@ -10,16 +10,18 @@
 //! This code (and its dependencies) are only built if you use the `default_async_client` Cargo
 //! feature.
 
-use std::future::{Future, ready};
-use std::str::FromStr;
-use std::sync::Arc;
+use crate::async_client_trait::{
+    AppAuthClient, HttpClient, HttpRequest, HttpRequestResultRaw, NoauthClient, TeamAuthClient,
+    TeamSelect, UserAuthClient,
+};
+use crate::default_client_common::impl_set_path_root;
+use crate::oauth2::{Authorization, TokenCache};
+use crate::Error;
 use bytes::Bytes;
 use futures::{FutureExt, TryFutureExt, TryStreamExt};
-use crate::async_client_trait::{AppAuthClient, HttpClient, HttpRequest, HttpRequestResultRaw,
-    NoauthClient, TeamAuthClient, TeamSelect, UserAuthClient};
-use crate::default_client_common::impl_set_path_root;
-use crate::Error;
-use crate::oauth2::{Authorization, TokenCache};
+use std::future::{ready, Future};
+use std::str::FromStr;
+use std::sync::Arc;
 
 macro_rules! impl_update_token {
     ($self:ident) => {
@@ -76,7 +78,7 @@ impl HttpClient for UserAuthDefaultClient {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
+    ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
@@ -131,7 +133,7 @@ impl HttpClient for TeamAuthDefaultClient {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
+    ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
@@ -182,12 +184,17 @@ impl AppAuthDefaultClient {
 impl HttpClient for AppAuthDefaultClient {
     type Request = ReqwestRequest;
 
-    fn execute(&self, request: Self::Request, body: Bytes) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
+    fn execute(
+        &self,
+        request: Self::Request,
+        body: Bytes,
+    ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
     fn new_request(&self, url: &str) -> Self::Request {
-        self.inner.new_request(url)
+        self.inner
+            .new_request(url)
             .set_header("Authorization", &self.auth)
     }
 }
@@ -212,7 +219,7 @@ impl HttpClient for NoauthDefaultClient {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
+    ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
@@ -240,7 +247,7 @@ impl HttpClient for TokenUpdateClient<'_> {
         &self,
         request: Self::Request,
         body: Bytes,
-    ) -> impl Future<Output=Result<HttpRequestResultRaw, Error>> + Send {
+    ) -> impl Future<Output = Result<HttpRequestResultRaw, Error>> + Send {
         self.inner.execute(request, body)
     }
 
@@ -263,7 +270,7 @@ impl Default for ReqwestClient {
                 .https_only(true)
                 .http2_prior_knowledge()
                 .build()
-                .unwrap()
+                .unwrap(),
         }
     }
 }
@@ -290,7 +297,8 @@ impl HttpClient for ReqwestClient {
         if !body.is_empty() {
             *req.body_mut() = Some(reqwest::Body::from(body));
         }
-        self.inner.execute(req)
+        self.inner
+            .execute(req)
             .map_ok_or_else(
                 |e| Err(Error::HttpClient(Box::new(e))),
                 |resp| {
@@ -317,7 +325,8 @@ impl HttpClient for ReqwestClient {
                         })
                         .transpose()?;
 
-                    let body = resp.bytes_stream()
+                    let body = resp
+                        .bytes_stream()
                         .map_err(|e| futures::io::Error::new(futures::io::ErrorKind::Other, e))
                         .into_async_read();
 
@@ -327,7 +336,7 @@ impl HttpClient for ReqwestClient {
                         content_length,
                         body: Box::new(body),
                     })
-                }
+                },
             )
             .boxed()
     }
