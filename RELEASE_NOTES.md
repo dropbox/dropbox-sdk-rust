@@ -1,3 +1,6 @@
+# unreleased changes
+* Default non-async HTTP client, ureq, updated from major version 2 to 3.
+
 # v0.19.0
 2025-01-03
 * **BIG CHANGE: async support added**

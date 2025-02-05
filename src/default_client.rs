@@ -19,10 +19,10 @@ use crate::default_client_common::impl_set_path_root;
 use crate::oauth2::{Authorization, TokenCache};
 use crate::Error;
 use futures::FutureExt;
-use std::borrow::Cow;
-use std::fmt::Write;
 use std::str::FromStr;
 use std::sync::Arc;
+use ureq::typestate::WithBody;
+use ureq::Agent;
 
 macro_rules! impl_update_token {
     ($self:ident) => {
@@ -237,13 +237,18 @@ impl crate::async_client_trait::NoauthClient for TokenUpdateClient<'_> {}
 
 #[derive(Debug)]
 struct UreqClient {
-    agent: ureq::Agent,
+    agent: Agent,
 }
 
 impl Default for UreqClient {
     fn default() -> Self {
         Self {
-            agent: ureq::Agent::new(),
+            agent: Agent::new_with_config(
+                Agent::config_builder()
+                    .https_only(true)
+                    .http_status_as_error(false)
+                    .build(),
+            ),
         }
     }
 }
@@ -253,24 +258,33 @@ impl HttpClient for UreqClient {
 
     fn execute(&self, request: Self::Request, body: &[u8]) -> Result<HttpRequestResultRaw, Error> {
         let resp = if body.is_empty() {
-            request.req.call()
+            request.req.send_empty()
         } else {
-            request.req.send_bytes(body)
+            request.req.send(body)
         };
 
         let (status, resp) = match resp {
-            Ok(resp) => (resp.status(), resp),
-            Err(ureq::Error::Status(status, resp)) => (status, resp),
-            Err(e @ ureq::Error::Transport(_)) => {
+            Ok(resp) => (resp.status().as_u16(), resp),
+            Err(ureq::Error::Io(e)) => {
+                return Err(e.into());
+            }
+            Err(e) => {
                 return Err(RequestError { inner: e }.into());
             }
         };
 
-        let result_header = resp.header("Dropbox-API-Result").map(String::from);
+        let result_header = resp
+            .headers()
+            .get("Dropbox-API-Result")
+            .map(|v| String::from_utf8(v.as_bytes().to_vec()))
+            .transpose()
+            .map_err(|e| e.utf8_error())?;
 
         let content_length = resp
-            .header("Content-Length")
-            .map(|s| {
+            .headers()
+            .get("Content-Length")
+            .map(|v| {
+                let s = std::str::from_utf8(v.as_bytes())?;
                 u64::from_str(s).map_err(|e| {
                     Error::UnexpectedResponse(format!("invalid Content-Length {s:?}: {e}"))
                 })
@@ -281,7 +295,7 @@ impl HttpClient for UreqClient {
             status,
             result_header,
             content_length,
-            body: resp.into_reader(),
+            body: Box::new(resp.into_body().into_reader()),
         })
     }
 
@@ -294,18 +308,12 @@ impl HttpClient for UreqClient {
 
 /// This is an implementation detail of the HTTP client.
 pub struct UreqRequest {
-    req: ureq::Request,
+    req: ureq::RequestBuilder<WithBody>,
 }
 
 impl HttpRequest for UreqRequest {
     fn set_header(mut self, name: &str, value: &str) -> Self {
-        if name.eq_ignore_ascii_case("dropbox-api-arg") {
-            // Non-ASCII and 0x7F in a header need to be escaped per the HTTP spec, and ureq doesn't
-            // do this for us. This is only an issue for this particular header.
-            self.req = self.req.set(name, json_escape_header(value).as_ref());
-        } else {
-            self.req = self.req.set(name, value);
-        }
+        self.req = self.req.header(name, value);
         self
     }
 }
@@ -316,7 +324,7 @@ impl HttpRequest for UreqRequest {
 pub enum DefaultClientError {
     /// The HTTP client encountered invalid UTF-8 data.
     #[error("invalid UTF-8 string")]
-    Utf8(#[from] std::string::FromUtf8Error),
+    Utf8(#[from] std::str::Utf8Error),
 
     /// The HTTP client encountered some I/O error.
     #[error("I/O error: {0}")]
@@ -339,7 +347,7 @@ macro_rules! wrap_error {
 }
 
 wrap_error!(std::io::Error);
-wrap_error!(std::string::FromUtf8Error);
+wrap_error!(std::str::Utf8Error);
 wrap_error!(RequestError);
 
 /// Something went wrong making the request, or the server returned a response we didn't expect.
@@ -365,55 +373,5 @@ impl std::fmt::Debug for RequestError {
 impl std::error::Error for RequestError {
     fn cause(&self) -> Option<&dyn std::error::Error> {
         Some(&self.inner)
-    }
-}
-
-/// Replaces any non-ASCII characters (and 0x7f) with JSON-style '\uXXXX' sequence. Otherwise,
-/// returns it unmodified without any additional allocation or copying.
-fn json_escape_header(s: &str) -> Cow<'_, str> {
-    // Unfortunately, the HTTP spec requires escaping ASCII DEL (0x7F), so we can't use the quicker
-    // bit pattern check done in str::is_ascii() to skip this for the common case of all ASCII. :(
-
-    let mut out = Cow::Borrowed(s);
-    for (i, c) in s.char_indices() {
-        if !c.is_ascii() || c == '\x7f' {
-            let mstr = match out {
-                Cow::Borrowed(_) => {
-                    // If we're still borrowed, we must have had ascii up until this point.
-                    // Clone the string up until here, and from now on we'll be pushing chars to it.
-                    out = Cow::Owned(s[0..i].to_owned());
-                    out.to_mut()
-                }
-                Cow::Owned(ref mut m) => m,
-            };
-            write!(mstr, "\\u{:04x}", c as u32).unwrap();
-        } else if let Cow::Owned(ref mut o) = out {
-            o.push(c);
-        }
-    }
-    out
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test]
-    fn test_json_escape() {
-        assert_eq!(Cow::Borrowed("foobar"), json_escape_header("foobar"));
-        assert_eq!(
-            Cow::<'_, str>::Owned("tro\\u0161kovi".to_owned()),
-            json_escape_header("troškovi")
-        );
-        assert_eq!(
-            Cow::<'_, str>::Owned(
-                r#"{"field": "some_\u00fc\u00f1\u00eec\u00f8d\u00e9_and_\u007f"}"#.to_owned()
-            ),
-            json_escape_header("{\"field\": \"some_üñîcødé_and_\x7f\"}")
-        );
-        assert_eq!(
-            Cow::<'_, str>::Owned("almost,\\u007f but not quite".to_owned()),
-            json_escape_header("almost,\x7f but not quite")
-        );
     }
 }
