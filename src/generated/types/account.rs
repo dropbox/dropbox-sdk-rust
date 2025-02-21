@@ -57,8 +57,8 @@ impl ::serde::ser::Serialize for PhotoSourceArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            PhotoSourceArg::Base64Data(ref x) => {
+        match self {
+            PhotoSourceArg::Base64Data(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("PhotoSourceArg", 2)?;
                 s.serialize_field(".tag", "base64_data")?;
@@ -220,7 +220,7 @@ impl ::serde::ser::Serialize for SetProfilePhotoError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SetProfilePhotoError::FileTypeError => {
                 // unit
                 let mut s = serializer.serialize_struct("SetProfilePhotoError", 1)?;

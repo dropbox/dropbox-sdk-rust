@@ -608,10 +608,10 @@ class RustBackend(RustHelperBackend):
         with self._impl_serialize(type_name):
             self.emit('// polymorphic struct serializer')
             self.emit('use serde::ser::SerializeStruct;')
-            with self.block('match *self'):
+            with self.block('match self'):
                 for subtype in struct.get_enumerated_subtypes():
                     variant_name = self.enum_variant_name(subtype)
-                    with self.block(f'{type_name}::{variant_name}(ref x) =>'):
+                    with self.block(f'{type_name}::{variant_name}(x) =>'):
                         self.emit('let mut s = serializer.serialize_struct('
                                   f'"{type_name}", {len(subtype.data_type.all_fields) + 1})?;')
                         self.emit(f's.serialize_field(".tag", "{subtype.name}")?;')
@@ -710,7 +710,7 @@ class RustBackend(RustHelperBackend):
                           'no defined variants"))')
             else:
                 self.emit('use serde::ser::SerializeStruct;')
-                with self.block('match *self'):
+                with self.block('match self'):
                     for field in union.all_fields:
                         if field.catch_all:
                             # Handle the 'Other' variant at the end.
@@ -726,8 +726,8 @@ class RustBackend(RustHelperBackend):
                             ultimate_type = ir.unwrap(field.data_type)[0]
                             needs_x = not (isinstance(field.data_type, ir.Struct)
                                            and not field.data_type.all_fields)
-                            ref_x = 'ref x' if needs_x else '_'
-                            with self.block(f'{type_name}::{variant_name}({ref_x}) =>'):
+                            inner = 'x' if needs_x else '_'
+                            with self.block(f'{type_name}::{variant_name}({inner}) =>'):
                                 if self.is_enum_type(ultimate_type):
                                     # Inner type is a union or polymorphic struct; need to always
                                     # emit another nesting level.
@@ -746,7 +746,7 @@ class RustBackend(RustHelperBackend):
                                     self.emit(f'let n = if x.is_some() {{ {num_fields + 1} }} else {{ 1 }};')
                                     self.emit(f'let mut s = serializer.serialize_struct("{union.name}", n)?;')
                                     self.emit(f's.serialize_field(".tag", "{field.name}")?;')
-                                    with self.block('if let Some(ref x) = x'):
+                                    with self.block('if let Some(x) = x'):
                                         if ir.is_primitive_type(ultimate_type):
                                             self.emit(f's.serialize_field("{field.name}", &x)?;')
                                         else:

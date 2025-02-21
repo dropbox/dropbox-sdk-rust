@@ -68,7 +68,7 @@ impl ::serde::ser::Serialize for AccessInheritance {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             AccessInheritance::Inherit => {
                 // unit
                 let mut s = serializer.serialize_struct("AccessInheritance", 1)?;
@@ -154,7 +154,7 @@ impl ::serde::ser::Serialize for AccessLevel {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             AccessLevel::Owner => {
                 // unit
                 let mut s = serializer.serialize_struct("AccessLevel", 1)?;
@@ -245,7 +245,7 @@ impl ::serde::ser::Serialize for AclUpdatePolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             AclUpdatePolicy::Owner => {
                 // unit
                 let mut s = serializer.serialize_struct("AclUpdatePolicy", 1)?;
@@ -516,15 +516,15 @@ impl ::serde::ser::Serialize for AddFileMemberError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            AddFileMemberError::UserError(ref x) => {
+        match self {
+            AddFileMemberError::UserError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("AddFileMemberError", 2)?;
                 s.serialize_field(".tag", "user_error")?;
                 s.serialize_field("user_error", x)?;
                 s.end()
             }
-            AddFileMemberError::AccessError(ref x) => {
+            AddFileMemberError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("AddFileMemberError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -837,8 +837,8 @@ impl ::serde::ser::Serialize for AddFolderMemberError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            AddFolderMemberError::AccessError(ref x) => {
+        match self {
+            AddFolderMemberError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("AddFolderMemberError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -857,7 +857,7 @@ impl ::serde::ser::Serialize for AddFolderMemberError {
                 s.serialize_field(".tag", "banned_member")?;
                 s.end()
             }
-            AddFolderMemberError::BadMember(ref x) => {
+            AddFolderMemberError::BadMember(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("AddFolderMemberError", 2)?;
                 s.serialize_field(".tag", "bad_member")?;
@@ -870,14 +870,14 @@ impl ::serde::ser::Serialize for AddFolderMemberError {
                 s.serialize_field(".tag", "cant_share_outside_team")?;
                 s.end()
             }
-            AddFolderMemberError::TooManyMembers(ref x) => {
+            AddFolderMemberError::TooManyMembers(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("AddFolderMemberError", 2)?;
                 s.serialize_field(".tag", "too_many_members")?;
                 s.serialize_field("too_many_members", x)?;
                 s.end()
             }
-            AddFolderMemberError::TooManyPendingInvites(ref x) => {
+            AddFolderMemberError::TooManyPendingInvites(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("AddFolderMemberError", 2)?;
                 s.serialize_field(".tag", "too_many_pending_invites")?;
@@ -1151,28 +1151,28 @@ impl ::serde::ser::Serialize for AddMemberSelectorError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             AddMemberSelectorError::AutomaticGroup => {
                 // unit
                 let mut s = serializer.serialize_struct("AddMemberSelectorError", 1)?;
                 s.serialize_field(".tag", "automatic_group")?;
                 s.end()
             }
-            AddMemberSelectorError::InvalidDropboxId(ref x) => {
+            AddMemberSelectorError::InvalidDropboxId(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("AddMemberSelectorError", 2)?;
                 s.serialize_field(".tag", "invalid_dropbox_id")?;
                 s.serialize_field("invalid_dropbox_id", x)?;
                 s.end()
             }
-            AddMemberSelectorError::InvalidEmail(ref x) => {
+            AddMemberSelectorError::InvalidEmail(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("AddMemberSelectorError", 2)?;
                 s.serialize_field(".tag", "invalid_email")?;
                 s.serialize_field("invalid_email", x)?;
                 s.end()
             }
-            AddMemberSelectorError::UnverifiedDropboxId(ref x) => {
+            AddMemberSelectorError::UnverifiedDropboxId(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("AddMemberSelectorError", 2)?;
                 s.serialize_field(".tag", "unverified_dropbox_id")?;
@@ -1284,7 +1284,7 @@ impl ::serde::ser::Serialize for AlphaResolvedVisibility {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             AlphaResolvedVisibility::Public => {
                 // unit
                 let mut s = serializer.serialize_struct("AlphaResolvedVisibility", 1)?;
@@ -1980,8 +1980,8 @@ impl ::serde::ser::Serialize for CreateSharedLinkError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            CreateSharedLinkError::Path(ref x) => {
+        match self {
+            CreateSharedLinkError::Path(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("CreateSharedLinkError", 2)?;
                 s.serialize_field(".tag", "path")?;
@@ -2199,8 +2199,8 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            CreateSharedLinkWithSettingsError::Path(ref x) => {
+        match self {
+            CreateSharedLinkWithSettingsError::Path(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("CreateSharedLinkWithSettingsError", 2)?;
                 s.serialize_field(".tag", "path")?;
@@ -2213,14 +2213,14 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsError {
                 s.serialize_field(".tag", "email_not_verified")?;
                 s.end()
             }
-            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(ref x) => {
+            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("CreateSharedLinkWithSettingsError", 2)?;
                 s.serialize_field(".tag", "shared_link_already_exists")?;
                 s.serialize_field("shared_link_already_exists", x)?;
                 s.end()
             }
-            CreateSharedLinkWithSettingsError::SettingsError(ref x) => {
+            CreateSharedLinkWithSettingsError::SettingsError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("CreateSharedLinkWithSettingsError", 2)?;
                 s.serialize_field(".tag", "settings_error")?;
@@ -2565,7 +2565,7 @@ impl ::serde::ser::Serialize for FileAction {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             FileAction::DisableViewerInfo => {
                 // unit
                 let mut s = serializer.serialize_struct("FileAction", 1)?;
@@ -2712,22 +2712,22 @@ impl ::serde::ser::Serialize for FileErrorResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            FileErrorResult::FileNotFoundError(ref x) => {
+        match self {
+            FileErrorResult::FileNotFoundError(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("FileErrorResult", 2)?;
                 s.serialize_field(".tag", "file_not_found_error")?;
                 s.serialize_field("file_not_found_error", x)?;
                 s.end()
             }
-            FileErrorResult::InvalidFileActionError(ref x) => {
+            FileErrorResult::InvalidFileActionError(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("FileErrorResult", 2)?;
                 s.serialize_field(".tag", "invalid_file_action_error")?;
                 s.serialize_field("invalid_file_action_error", x)?;
                 s.end()
             }
-            FileErrorResult::PermissionDeniedError(ref x) => {
+            FileErrorResult::PermissionDeniedError(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("FileErrorResult", 2)?;
                 s.serialize_field(".tag", "permission_denied_error")?;
@@ -3094,7 +3094,7 @@ impl ::serde::ser::Serialize for FileMemberActionError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             FileMemberActionError::InvalidMember => {
                 // unit
                 let mut s = serializer.serialize_struct("FileMemberActionError", 1)?;
@@ -3107,14 +3107,14 @@ impl ::serde::ser::Serialize for FileMemberActionError {
                 s.serialize_field(".tag", "no_permission")?;
                 s.end()
             }
-            FileMemberActionError::AccessError(ref x) => {
+            FileMemberActionError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("FileMemberActionError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
                 s.serialize_field("access_error", x)?;
                 s.end()
             }
-            FileMemberActionError::NoExplicitAccess(ref x) => {
+            FileMemberActionError::NoExplicitAccess(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("FileMemberActionError", 4)?;
                 s.serialize_field(".tag", "no_explicit_access")?;
@@ -3204,15 +3204,15 @@ impl ::serde::ser::Serialize for FileMemberActionIndividualResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            FileMemberActionIndividualResult::Success(ref x) => {
+        match self {
+            FileMemberActionIndividualResult::Success(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("FileMemberActionIndividualResult", 2)?;
                 s.serialize_field(".tag", "success")?;
                 s.serialize_field("success", x)?;
                 s.end()
             }
-            FileMemberActionIndividualResult::MemberError(ref x) => {
+            FileMemberActionIndividualResult::MemberError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("FileMemberActionIndividualResult", 2)?;
                 s.serialize_field(".tag", "member_error")?;
@@ -3422,15 +3422,15 @@ impl ::serde::ser::Serialize for FileMemberRemoveActionResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            FileMemberRemoveActionResult::Success(ref x) => {
+        match self {
+            FileMemberRemoveActionResult::Success(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("FileMemberRemoveActionResult", 4)?;
                 s.serialize_field(".tag", "success")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            FileMemberRemoveActionResult::MemberError(ref x) => {
+            FileMemberRemoveActionResult::MemberError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("FileMemberRemoveActionResult", 2)?;
                 s.serialize_field(".tag", "member_error")?;
@@ -3663,7 +3663,7 @@ impl ::serde::ser::Serialize for FolderAction {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             FolderAction::ChangeOptions => {
                 // unit
                 let mut s = serializer.serialize_struct("FolderAction", 1)?;
@@ -4668,15 +4668,15 @@ impl ::serde::ser::Serialize for GetFileMetadataError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            GetFileMetadataError::UserError(ref x) => {
+        match self {
+            GetFileMetadataError::UserError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("GetFileMetadataError", 2)?;
                 s.serialize_field(".tag", "user_error")?;
                 s.serialize_field("user_error", x)?;
                 s.end()
             }
-            GetFileMetadataError::AccessError(ref x) => {
+            GetFileMetadataError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("GetFileMetadataError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -4761,15 +4761,15 @@ impl ::serde::ser::Serialize for GetFileMetadataIndividualResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            GetFileMetadataIndividualResult::Metadata(ref x) => {
+        match self {
+            GetFileMetadataIndividualResult::Metadata(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("GetFileMetadataIndividualResult", 15)?;
                 s.serialize_field(".tag", "metadata")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            GetFileMetadataIndividualResult::AccessError(ref x) => {
+            GetFileMetadataIndividualResult::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("GetFileMetadataIndividualResult", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -4949,7 +4949,7 @@ impl ::serde::ser::Serialize for GetSharedLinkFileError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             GetSharedLinkFileError::SharedLinkNotFound => {
                 // unit
                 let mut s = serializer.serialize_struct("GetSharedLinkFileError", 1)?;
@@ -5265,13 +5265,13 @@ impl ::serde::ser::Serialize for GetSharedLinksError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            GetSharedLinksError::Path(ref x) => {
+        match self {
+            GetSharedLinksError::Path(x) => {
                 // nullable (struct or primitive)
                 let n = if x.is_some() { 2 } else { 1 };
                 let mut s = serializer.serialize_struct("GetSharedLinksError", n)?;
                 s.serialize_field(".tag", "path")?;
-                if let Some(ref x) = x {
+                if let Some(x) = x {
                     s.serialize_field("path", &x)?;
                 }
                 s.end()
@@ -6073,8 +6073,8 @@ impl ::serde::ser::Serialize for InviteeInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            InviteeInfo::Email(ref x) => {
+        match self {
+            InviteeInfo::Email(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("InviteeInfo", 2)?;
                 s.serialize_field(".tag", "email")?;
@@ -6358,22 +6358,22 @@ impl ::serde::ser::Serialize for JobError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            JobError::UnshareFolderError(ref x) => {
+        match self {
+            JobError::UnshareFolderError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("JobError", 2)?;
                 s.serialize_field(".tag", "unshare_folder_error")?;
                 s.serialize_field("unshare_folder_error", x)?;
                 s.end()
             }
-            JobError::RemoveFolderMemberError(ref x) => {
+            JobError::RemoveFolderMemberError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("JobError", 2)?;
                 s.serialize_field(".tag", "remove_folder_member_error")?;
                 s.serialize_field("remove_folder_member_error", x)?;
                 s.end()
             }
-            JobError::RelinquishFolderMembershipError(ref x) => {
+            JobError::RelinquishFolderMembershipError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("JobError", 2)?;
                 s.serialize_field(".tag", "relinquish_folder_membership_error")?;
@@ -6459,7 +6459,7 @@ impl ::serde::ser::Serialize for JobStatus {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             JobStatus::InProgress => {
                 // unit
                 let mut s = serializer.serialize_struct("JobStatus", 1)?;
@@ -6472,7 +6472,7 @@ impl ::serde::ser::Serialize for JobStatus {
                 s.serialize_field(".tag", "complete")?;
                 s.end()
             }
-            JobStatus::Failed(ref x) => {
+            JobStatus::Failed(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("JobStatus", 2)?;
                 s.serialize_field(".tag", "failed")?;
@@ -6538,7 +6538,7 @@ impl ::serde::ser::Serialize for LinkAccessLevel {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             LinkAccessLevel::Viewer => {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAccessLevel", 1)?;
@@ -6620,7 +6620,7 @@ impl ::serde::ser::Serialize for LinkAction {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             LinkAction::ChangeAccessLevel => {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAction", 1)?;
@@ -6724,7 +6724,7 @@ impl ::serde::ser::Serialize for LinkAudience {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             LinkAudience::Public => {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAudience", 1)?;
@@ -6825,7 +6825,7 @@ impl ::serde::ser::Serialize for LinkAudienceDisallowedReason {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             LinkAudienceDisallowedReason::DeleteAndRecreate => {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAudienceDisallowedReason", 1)?;
@@ -7059,14 +7059,14 @@ impl ::serde::ser::Serialize for LinkExpiry {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             LinkExpiry::RemoveExpiry => {
                 // unit
                 let mut s = serializer.serialize_struct("LinkExpiry", 1)?;
                 s.serialize_field(".tag", "remove_expiry")?;
                 s.end()
             }
-            LinkExpiry::SetExpiry(ref x) => {
+            LinkExpiry::SetExpiry(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("LinkExpiry", 2)?;
                 s.serialize_field(".tag", "set_expiry")?;
@@ -7125,14 +7125,14 @@ impl ::serde::ser::Serialize for LinkMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // polymorphic struct serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            LinkMetadata::Path(ref x) => {
+        match self {
+            LinkMetadata::Path(x) => {
                 let mut s = serializer.serialize_struct("LinkMetadata", 5)?;
                 s.serialize_field(".tag", "path")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            LinkMetadata::Collection(ref x) => {
+            LinkMetadata::Collection(x) => {
                 let mut s = serializer.serialize_struct("LinkMetadata", 4)?;
                 s.serialize_field(".tag", "collection")?;
                 x.internal_serialize::<S>(&mut s)?;
@@ -7196,14 +7196,14 @@ impl ::serde::ser::Serialize for LinkPassword {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             LinkPassword::RemovePassword => {
                 // unit
                 let mut s = serializer.serialize_struct("LinkPassword", 1)?;
                 s.serialize_field(".tag", "remove_password")?;
                 s.end()
             }
-            LinkPassword::SetPassword(ref x) => {
+            LinkPassword::SetPassword(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("LinkPassword", 2)?;
                 s.serialize_field(".tag", "set_password")?;
@@ -8426,15 +8426,15 @@ impl ::serde::ser::Serialize for ListFileMembersContinueError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            ListFileMembersContinueError::UserError(ref x) => {
+        match self {
+            ListFileMembersContinueError::UserError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListFileMembersContinueError", 2)?;
                 s.serialize_field(".tag", "user_error")?;
                 s.serialize_field("user_error", x)?;
                 s.end()
             }
-            ListFileMembersContinueError::AccessError(ref x) => {
+            ListFileMembersContinueError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListFileMembersContinueError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -8634,15 +8634,15 @@ impl ::serde::ser::Serialize for ListFileMembersError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            ListFileMembersError::UserError(ref x) => {
+        match self {
+            ListFileMembersError::UserError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListFileMembersError", 2)?;
                 s.serialize_field(".tag", "user_error")?;
                 s.serialize_field("user_error", x)?;
                 s.end()
             }
-            ListFileMembersError::AccessError(ref x) => {
+            ListFileMembersError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListFileMembersError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -8727,15 +8727,15 @@ impl ::serde::ser::Serialize for ListFileMembersIndividualResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            ListFileMembersIndividualResult::Result(ref x) => {
+        match self {
+            ListFileMembersIndividualResult::Result(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("ListFileMembersIndividualResult", 3)?;
                 s.serialize_field(".tag", "result")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            ListFileMembersIndividualResult::AccessError(ref x) => {
+            ListFileMembersIndividualResult::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListFileMembersIndividualResult", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -9006,8 +9006,8 @@ impl ::serde::ser::Serialize for ListFilesContinueError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            ListFilesContinueError::UserError(ref x) => {
+        match self {
+            ListFilesContinueError::UserError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListFilesContinueError", 2)?;
                 s.serialize_field(".tag", "user_error")?;
@@ -9443,8 +9443,8 @@ impl ::serde::ser::Serialize for ListFolderMembersContinueError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            ListFolderMembersContinueError::AccessError(ref x) => {
+        match self {
+            ListFolderMembersContinueError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListFolderMembersContinueError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -9837,7 +9837,7 @@ impl ::serde::ser::Serialize for ListFoldersContinueError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ListFoldersContinueError::InvalidCursor => {
                 // unit
                 let mut s = serializer.serialize_struct("ListFoldersContinueError", 1)?;
@@ -10150,8 +10150,8 @@ impl ::serde::ser::Serialize for ListSharedLinksError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            ListSharedLinksError::Path(ref x) => {
+        match self {
+            ListSharedLinksError::Path(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListSharedLinksError", 2)?;
                 s.serialize_field(".tag", "path")?;
@@ -10499,7 +10499,7 @@ impl ::serde::ser::Serialize for MemberAction {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             MemberAction::LeaveACopy => {
                 // unit
                 let mut s = serializer.serialize_struct("MemberAction", 1)?;
@@ -10715,7 +10715,7 @@ impl ::serde::ser::Serialize for MemberPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             MemberPolicy::Team => {
                 // unit
                 let mut s = serializer.serialize_struct("MemberPolicy", 1)?;
@@ -10793,15 +10793,15 @@ impl ::serde::ser::Serialize for MemberSelector {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            MemberSelector::DropboxId(ref x) => {
+        match self {
+            MemberSelector::DropboxId(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("MemberSelector", 2)?;
                 s.serialize_field(".tag", "dropbox_id")?;
                 s.serialize_field("dropbox_id", x)?;
                 s.end()
             }
-            MemberSelector::Email(ref x) => {
+            MemberSelector::Email(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("MemberSelector", 2)?;
                 s.serialize_field(".tag", "email")?;
@@ -11158,7 +11158,7 @@ impl ::serde::ser::Serialize for ModifySharedLinkSettingsError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ModifySharedLinkSettingsError::SharedLinkNotFound => {
                 // unit
                 let mut s = serializer.serialize_struct("ModifySharedLinkSettingsError", 1)?;
@@ -11177,7 +11177,7 @@ impl ::serde::ser::Serialize for ModifySharedLinkSettingsError {
                 s.serialize_field(".tag", "unsupported_link_type")?;
                 s.end()
             }
-            ModifySharedLinkSettingsError::SettingsError(ref x) => {
+            ModifySharedLinkSettingsError::SettingsError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ModifySharedLinkSettingsError", 2)?;
                 s.serialize_field(".tag", "settings_error")?;
@@ -11386,8 +11386,8 @@ impl ::serde::ser::Serialize for MountFolderError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            MountFolderError::AccessError(ref x) => {
+        match self {
+            MountFolderError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("MountFolderError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -11400,7 +11400,7 @@ impl ::serde::ser::Serialize for MountFolderError {
                 s.serialize_field(".tag", "inside_shared_folder")?;
                 s.end()
             }
-            MountFolderError::InsufficientQuota(ref x) => {
+            MountFolderError::InsufficientQuota(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("MountFolderError", 4)?;
                 s.serialize_field(".tag", "insufficient_quota")?;
@@ -11776,7 +11776,7 @@ impl ::serde::ser::Serialize for PendingUploadMode {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PendingUploadMode::File => {
                 // unit
                 let mut s = serializer.serialize_struct("PendingUploadMode", 1)?;
@@ -11892,7 +11892,7 @@ impl ::serde::ser::Serialize for PermissionDeniedReason {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PermissionDeniedReason::UserNotSameTeamAsOwner => {
                 // unit
                 let mut s = serializer.serialize_struct("PermissionDeniedReason", 1)?;
@@ -11977,7 +11977,7 @@ impl ::serde::ser::Serialize for PermissionDeniedReason {
                 s.serialize_field(".tag", "restricted_by_parent_folder")?;
                 s.end()
             }
-            PermissionDeniedReason::InsufficientPlan(ref x) => {
+            PermissionDeniedReason::InsufficientPlan(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("PermissionDeniedReason", 3)?;
                 s.serialize_field(".tag", "insufficient_plan")?;
@@ -12137,8 +12137,8 @@ impl ::serde::ser::Serialize for RelinquishFileMembershipError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            RelinquishFileMembershipError::AccessError(ref x) => {
+        match self {
+            RelinquishFileMembershipError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RelinquishFileMembershipError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -12370,8 +12370,8 @@ impl ::serde::ser::Serialize for RelinquishFolderMembershipError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            RelinquishFolderMembershipError::AccessError(ref x) => {
+        match self {
+            RelinquishFolderMembershipError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RelinquishFolderMembershipError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -12613,22 +12613,22 @@ impl ::serde::ser::Serialize for RemoveFileMemberError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            RemoveFileMemberError::UserError(ref x) => {
+        match self {
+            RemoveFileMemberError::UserError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RemoveFileMemberError", 2)?;
                 s.serialize_field(".tag", "user_error")?;
                 s.serialize_field("user_error", x)?;
                 s.end()
             }
-            RemoveFileMemberError::AccessError(ref x) => {
+            RemoveFileMemberError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RemoveFileMemberError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
                 s.serialize_field("access_error", x)?;
                 s.end()
             }
-            RemoveFileMemberError::NoExplicitAccess(ref x) => {
+            RemoveFileMemberError::NoExplicitAccess(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("RemoveFileMemberError", 4)?;
                 s.serialize_field(".tag", "no_explicit_access")?;
@@ -12863,15 +12863,15 @@ impl ::serde::ser::Serialize for RemoveFolderMemberError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            RemoveFolderMemberError::AccessError(ref x) => {
+        match self {
+            RemoveFolderMemberError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RemoveFolderMemberError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
                 s.serialize_field("access_error", x)?;
                 s.end()
             }
-            RemoveFolderMemberError::MemberError(ref x) => {
+            RemoveFolderMemberError::MemberError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RemoveFolderMemberError", 2)?;
                 s.serialize_field(".tag", "member_error")?;
@@ -12990,21 +12990,21 @@ impl ::serde::ser::Serialize for RemoveMemberJobStatus {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             RemoveMemberJobStatus::InProgress => {
                 // unit
                 let mut s = serializer.serialize_struct("RemoveMemberJobStatus", 1)?;
                 s.serialize_field(".tag", "in_progress")?;
                 s.end()
             }
-            RemoveMemberJobStatus::Complete(ref x) => {
+            RemoveMemberJobStatus::Complete(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("RemoveMemberJobStatus", 4)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            RemoveMemberJobStatus::Failed(ref x) => {
+            RemoveMemberJobStatus::Failed(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RemoveMemberJobStatus", 2)?;
                 s.serialize_field(".tag", "failed")?;
@@ -13079,7 +13079,7 @@ impl ::serde::ser::Serialize for RequestedLinkAccessLevel {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             RequestedLinkAccessLevel::Viewer => {
                 // unit
                 let mut s = serializer.serialize_struct("RequestedLinkAccessLevel", 1)?;
@@ -13159,7 +13159,7 @@ impl ::serde::ser::Serialize for RequestedVisibility {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             RequestedVisibility::Public => {
                 // unit
                 let mut s = serializer.serialize_struct("RequestedVisibility", 1)?;
@@ -13256,7 +13256,7 @@ impl ::serde::ser::Serialize for ResolvedVisibility {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ResolvedVisibility::Public => {
                 // unit
                 let mut s = serializer.serialize_struct("ResolvedVisibility", 1)?;
@@ -13460,7 +13460,7 @@ impl ::serde::ser::Serialize for RevokeSharedLinkError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             RevokeSharedLinkError::SharedLinkNotFound => {
                 // unit
                 let mut s = serializer.serialize_struct("RevokeSharedLinkError", 1)?;
@@ -13679,8 +13679,8 @@ impl ::serde::ser::Serialize for SetAccessInheritanceError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            SetAccessInheritanceError::AccessError(ref x) => {
+        match self {
+            SetAccessInheritanceError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("SetAccessInheritanceError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -14267,14 +14267,14 @@ impl ::serde::ser::Serialize for ShareFolderError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ShareFolderError::EmailUnverified => {
                 // unit
                 let mut s = serializer.serialize_struct("ShareFolderError", 1)?;
                 s.serialize_field(".tag", "email_unverified")?;
                 s.end()
             }
-            ShareFolderError::BadPath(ref x) => {
+            ShareFolderError::BadPath(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ShareFolderError", 2)?;
                 s.serialize_field(".tag", "bad_path")?;
@@ -14399,14 +14399,14 @@ impl ::serde::ser::Serialize for ShareFolderErrorBase {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ShareFolderErrorBase::EmailUnverified => {
                 // unit
                 let mut s = serializer.serialize_struct("ShareFolderErrorBase", 1)?;
                 s.serialize_field(".tag", "email_unverified")?;
                 s.end()
             }
-            ShareFolderErrorBase::BadPath(ref x) => {
+            ShareFolderErrorBase::BadPath(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ShareFolderErrorBase", 2)?;
                 s.serialize_field(".tag", "bad_path")?;
@@ -14481,21 +14481,21 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ShareFolderJobStatus::InProgress => {
                 // unit
                 let mut s = serializer.serialize_struct("ShareFolderJobStatus", 1)?;
                 s.serialize_field(".tag", "in_progress")?;
                 s.end()
             }
-            ShareFolderJobStatus::Complete(ref x) => {
+            ShareFolderJobStatus::Complete(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("ShareFolderJobStatus", 18)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            ShareFolderJobStatus::Failed(ref x) => {
+            ShareFolderJobStatus::Failed(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ShareFolderJobStatus", 2)?;
                 s.serialize_field(".tag", "failed")?;
@@ -14562,15 +14562,15 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            ShareFolderLaunch::AsyncJobId(ref x) => {
+        match self {
+            ShareFolderLaunch::AsyncJobId(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("ShareFolderLaunch", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
                 s.serialize_field("async_job_id", x)?;
                 s.end()
             }
-            ShareFolderLaunch::Complete(ref x) => {
+            ShareFolderLaunch::Complete(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("ShareFolderLaunch", 18)?;
                 s.serialize_field(".tag", "complete")?;
@@ -14692,7 +14692,7 @@ impl ::serde::ser::Serialize for SharePathError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharePathError::IsFile => {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathError", 1)?;
@@ -14747,7 +14747,7 @@ impl ::serde::ser::Serialize for SharePathError {
                 s.serialize_field(".tag", "inside_public_folder")?;
                 s.end()
             }
-            SharePathError::AlreadyShared(ref x) => {
+            SharePathError::AlreadyShared(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("SharePathError", 18)?;
                 s.serialize_field(".tag", "already_shared")?;
@@ -15837,7 +15837,7 @@ impl ::serde::ser::Serialize for SharedFolderAccessError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedFolderAccessError::InvalidId => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedFolderAccessError", 1)?;
@@ -15940,7 +15940,7 @@ impl ::serde::ser::Serialize for SharedFolderMemberError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedFolderMemberError::InvalidDropboxId => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedFolderMemberError", 1)?;
@@ -15953,7 +15953,7 @@ impl ::serde::ser::Serialize for SharedFolderMemberError {
                 s.serialize_field(".tag", "not_a_member")?;
                 s.end()
             }
-            SharedFolderMemberError::NoExplicitAccess(ref x) => {
+            SharedFolderMemberError::NoExplicitAccess(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("SharedFolderMemberError", 4)?;
                 s.serialize_field(".tag", "no_explicit_access")?;
@@ -16831,7 +16831,7 @@ impl ::serde::ser::Serialize for SharedLinkAccessFailureReason {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedLinkAccessFailureReason::LoginRequired => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedLinkAccessFailureReason", 1)?;
@@ -16916,8 +16916,8 @@ impl ::serde::ser::Serialize for SharedLinkAlreadyExistsMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            SharedLinkAlreadyExistsMetadata::Metadata(ref x) => {
+        match self {
+            SharedLinkAlreadyExistsMetadata::Metadata(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("SharedLinkAlreadyExistsMetadata", 2)?;
                 s.serialize_field(".tag", "metadata")?;
@@ -16980,7 +16980,7 @@ impl ::serde::ser::Serialize for SharedLinkError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedLinkError::SharedLinkNotFound => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedLinkError", 1)?;
@@ -17063,14 +17063,14 @@ impl ::serde::ser::Serialize for SharedLinkMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // polymorphic struct serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            SharedLinkMetadata::File(ref x) => {
+        match self {
+            SharedLinkMetadata::File(x) => {
                 let mut s = serializer.serialize_struct("SharedLinkMetadata", 13)?;
                 s.serialize_field(".tag", "file")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            SharedLinkMetadata::Folder(ref x) => {
+            SharedLinkMetadata::Folder(x) => {
                 let mut s = serializer.serialize_struct("SharedLinkMetadata", 9)?;
                 s.serialize_field(".tag", "folder")?;
                 x.internal_serialize::<S>(&mut s)?;
@@ -17133,7 +17133,7 @@ impl ::serde::ser::Serialize for SharedLinkPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedLinkPolicy::Anyone => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedLinkPolicy", 1)?;
@@ -17404,7 +17404,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedLinkSettingsError::InvalidSettings => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedLinkSettingsError", 1)?;
@@ -17490,7 +17490,7 @@ impl ::serde::ser::Serialize for SharingFileAccessError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharingFileAccessError::NoPermission => {
                 // unit
                 let mut s = serializer.serialize_struct("SharingFileAccessError", 1)?;
@@ -17588,7 +17588,7 @@ impl ::serde::ser::Serialize for SharingUserError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharingUserError::EmailUnverified => {
                 // unit
                 let mut s = serializer.serialize_struct("SharingUserError", 1)?;
@@ -17916,8 +17916,8 @@ impl ::serde::ser::Serialize for TransferFolderError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            TransferFolderError::AccessError(ref x) => {
+        match self {
+            TransferFolderError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("TransferFolderError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -18135,8 +18135,8 @@ impl ::serde::ser::Serialize for UnmountFolderError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            UnmountFolderError::AccessError(ref x) => {
+        match self {
+            UnmountFolderError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UnmountFolderError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -18330,15 +18330,15 @@ impl ::serde::ser::Serialize for UnshareFileError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            UnshareFileError::UserError(ref x) => {
+        match self {
+            UnshareFileError::UserError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UnshareFileError", 2)?;
                 s.serialize_field(".tag", "user_error")?;
                 s.serialize_field("user_error", x)?;
                 s.end()
             }
-            UnshareFileError::AccessError(ref x) => {
+            UnshareFileError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UnshareFileError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -18543,8 +18543,8 @@ impl ::serde::ser::Serialize for UnshareFolderError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            UnshareFolderError::AccessError(ref x) => {
+        match self {
+            UnshareFolderError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UnshareFolderError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -18913,22 +18913,22 @@ impl ::serde::ser::Serialize for UpdateFolderMemberError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            UpdateFolderMemberError::AccessError(ref x) => {
+        match self {
+            UpdateFolderMemberError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UpdateFolderMemberError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
                 s.serialize_field("access_error", x)?;
                 s.end()
             }
-            UpdateFolderMemberError::MemberError(ref x) => {
+            UpdateFolderMemberError::MemberError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UpdateFolderMemberError", 2)?;
                 s.serialize_field(".tag", "member_error")?;
                 s.serialize_field("member_error", x)?;
                 s.end()
             }
-            UpdateFolderMemberError::NoExplicitAccess(ref x) => {
+            UpdateFolderMemberError::NoExplicitAccess(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UpdateFolderMemberError", 2)?;
                 s.serialize_field(".tag", "no_explicit_access")?;
@@ -19261,8 +19261,8 @@ impl ::serde::ser::Serialize for UpdateFolderPolicyError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            UpdateFolderPolicyError::AccessError(ref x) => {
+        match self {
+            UpdateFolderPolicyError::AccessError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UpdateFolderPolicyError", 2)?;
                 s.serialize_field(".tag", "access_error")?;
@@ -19927,7 +19927,7 @@ impl ::serde::ser::Serialize for ViewerInfoPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ViewerInfoPolicy::Enabled => {
                 // unit
                 let mut s = serializer.serialize_struct("ViewerInfoPolicy", 1)?;
@@ -20007,7 +20007,7 @@ impl ::serde::ser::Serialize for Visibility {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             Visibility::Public => {
                 // unit
                 let mut s = serializer.serialize_struct("Visibility", 1)?;
@@ -20251,7 +20251,7 @@ impl ::serde::ser::Serialize for VisibilityPolicyDisallowedReason {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             VisibilityPolicyDisallowedReason::DeleteAndRecreate => {
                 // unit
                 let mut s = serializer.serialize_struct("VisibilityPolicyDisallowedReason", 1)?;

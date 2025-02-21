@@ -77,7 +77,7 @@ impl ::serde::ser::Serialize for PlatformType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PlatformType::Web => {
                 // unit
                 let mut s = serializer.serialize_struct("PlatformType", 1)?;

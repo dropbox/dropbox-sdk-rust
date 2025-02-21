@@ -59,7 +59,7 @@ impl ::serde::ser::Serialize for AccountType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             AccountType::Basic => {
                 // unit
                 let mut s = serializer.serialize_struct("AccountType", 1)?;

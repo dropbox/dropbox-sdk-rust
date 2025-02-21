@@ -67,7 +67,7 @@ impl ::serde::ser::Serialize for GroupManagementType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             GroupManagementType::UserManaged => {
                 // unit
                 let mut s = serializer.serialize_struct("GroupManagementType", 1)?;
@@ -300,7 +300,7 @@ impl ::serde::ser::Serialize for GroupType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             GroupType::Team => {
                 // unit
                 let mut s = serializer.serialize_struct("GroupType", 1)?;
@@ -372,7 +372,7 @@ impl ::serde::ser::Serialize for MemberSpaceLimitType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             MemberSpaceLimitType::Off => {
                 // unit
                 let mut s = serializer.serialize_struct("MemberSpaceLimitType", 1)?;

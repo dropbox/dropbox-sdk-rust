@@ -55,7 +55,7 @@ impl ::serde::ser::Serialize for CameraUploadsPolicyState {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             CameraUploadsPolicyState::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("CameraUploadsPolicyState", 1)?;
@@ -124,7 +124,7 @@ impl ::serde::ser::Serialize for ComputerBackupPolicyState {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ComputerBackupPolicyState::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("ComputerBackupPolicyState", 1)?;
@@ -199,7 +199,7 @@ impl ::serde::ser::Serialize for EmmState {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             EmmState::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("EmmState", 1)?;
@@ -274,7 +274,7 @@ impl ::serde::ser::Serialize for ExternalDriveBackupPolicyState {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ExternalDriveBackupPolicyState::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("ExternalDriveBackupPolicyState", 1)?;
@@ -345,7 +345,7 @@ impl ::serde::ser::Serialize for FileLockingPolicyState {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             FileLockingPolicyState::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("FileLockingPolicyState", 1)?;
@@ -414,7 +414,7 @@ impl ::serde::ser::Serialize for FileProviderMigrationPolicyState {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             FileProviderMigrationPolicyState::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("FileProviderMigrationPolicyState", 1)?;
@@ -480,7 +480,7 @@ impl ::serde::ser::Serialize for GroupCreation {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             GroupCreation::AdminsAndMembers => {
                 // unit
                 let mut s = serializer.serialize_struct("GroupCreation", 1)?;
@@ -544,7 +544,7 @@ impl ::serde::ser::Serialize for OfficeAddInPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             OfficeAddInPolicy::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("OfficeAddInPolicy", 1)?;
@@ -609,7 +609,7 @@ impl ::serde::ser::Serialize for PaperDefaultFolderPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperDefaultFolderPolicy::EveryoneInTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperDefaultFolderPolicy", 1)?;
@@ -675,7 +675,7 @@ impl ::serde::ser::Serialize for PaperDeploymentPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperDeploymentPolicy::Full => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperDeploymentPolicy", 1)?;
@@ -740,7 +740,7 @@ impl ::serde::ser::Serialize for PaperDesktopPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperDesktopPolicy::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperDesktopPolicy", 1)?;
@@ -809,7 +809,7 @@ impl ::serde::ser::Serialize for PaperEnabledPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperEnabledPolicy::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperEnabledPolicy", 1)?;
@@ -880,7 +880,7 @@ impl ::serde::ser::Serialize for PasswordControlMode {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PasswordControlMode::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("PasswordControlMode", 1)?;
@@ -949,7 +949,7 @@ impl ::serde::ser::Serialize for PasswordStrengthPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PasswordStrengthPolicy::MinimalRequirements => {
                 // unit
                 let mut s = serializer.serialize_struct("PasswordStrengthPolicy", 1)?;
@@ -1019,7 +1019,7 @@ impl ::serde::ser::Serialize for RolloutMethod {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             RolloutMethod::UnlinkAll => {
                 // unit
                 let mut s = serializer.serialize_struct("RolloutMethod", 1)?;
@@ -1090,7 +1090,7 @@ impl ::serde::ser::Serialize for SharedFolderBlanketLinkRestrictionPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedFolderBlanketLinkRestrictionPolicy::Members => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedFolderBlanketLinkRestrictionPolicy", 1)?;
@@ -1156,7 +1156,7 @@ impl ::serde::ser::Serialize for SharedFolderJoinPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedFolderJoinPolicy::FromTeamOnly => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedFolderJoinPolicy", 1)?;
@@ -1222,7 +1222,7 @@ impl ::serde::ser::Serialize for SharedFolderMemberPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedFolderMemberPolicy::Team => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedFolderMemberPolicy", 1)?;
@@ -1301,7 +1301,7 @@ impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharedLinkCreatePolicy::DefaultPublic => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
@@ -1378,7 +1378,7 @@ impl ::serde::ser::Serialize for ShowcaseDownloadPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ShowcaseDownloadPolicy::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("ShowcaseDownloadPolicy", 1)?;
@@ -1443,7 +1443,7 @@ impl ::serde::ser::Serialize for ShowcaseEnabledPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ShowcaseEnabledPolicy::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("ShowcaseEnabledPolicy", 1)?;
@@ -1508,7 +1508,7 @@ impl ::serde::ser::Serialize for ShowcaseExternalSharingPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ShowcaseExternalSharingPolicy::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("ShowcaseExternalSharingPolicy", 1)?;
@@ -1573,7 +1573,7 @@ impl ::serde::ser::Serialize for SmartSyncPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SmartSyncPolicy::Local => {
                 // unit
                 let mut s = serializer.serialize_struct("SmartSyncPolicy", 1)?;
@@ -1638,7 +1638,7 @@ impl ::serde::ser::Serialize for SmarterSmartSyncPolicyState {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SmarterSmartSyncPolicyState::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("SmarterSmartSyncPolicyState", 1)?;
@@ -1707,7 +1707,7 @@ impl ::serde::ser::Serialize for SsoPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SsoPolicy::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("SsoPolicy", 1)?;
@@ -1778,7 +1778,7 @@ impl ::serde::ser::Serialize for SuggestMembersPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SuggestMembersPolicy::Disabled => {
                 // unit
                 let mut s = serializer.serialize_struct("SuggestMembersPolicy", 1)?;
@@ -2134,7 +2134,7 @@ impl ::serde::ser::Serialize for TwoStepVerificationPolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             TwoStepVerificationPolicy::RequireTfaEnable => {
                 // unit
                 let mut s = serializer.serialize_struct("TwoStepVerificationPolicy", 1)?;
@@ -2203,7 +2203,7 @@ impl ::serde::ser::Serialize for TwoStepVerificationState {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             TwoStepVerificationState::Required => {
                 // unit
                 let mut s = serializer.serialize_struct("TwoStepVerificationState", 1)?;
