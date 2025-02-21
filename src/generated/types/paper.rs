@@ -456,7 +456,7 @@ impl ::serde::ser::Serialize for AddPaperDocUserResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             AddPaperDocUserResult::Success => {
                 // unit
                 let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
@@ -674,7 +674,7 @@ impl ::serde::ser::Serialize for DocLookupError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             DocLookupError::InsufficientPermissions => {
                 // unit
                 let mut s = serializer.serialize_struct("DocLookupError", 1)?;
@@ -764,7 +764,7 @@ impl ::serde::ser::Serialize for DocSubscriptionLevel {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             DocSubscriptionLevel::Default => {
                 // unit
                 let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
@@ -841,7 +841,7 @@ impl ::serde::ser::Serialize for ExportFormat {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ExportFormat::Html => {
                 // unit
                 let mut s = serializer.serialize_struct("ExportFormat", 1)?;
@@ -1008,7 +1008,7 @@ impl ::serde::ser::Serialize for FolderSharingPolicyType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             FolderSharingPolicyType::Team => {
                 // unit
                 let mut s = serializer.serialize_struct("FolderSharingPolicyType", 1)?;
@@ -1076,7 +1076,7 @@ impl ::serde::ser::Serialize for FolderSubscriptionLevel {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             FolderSubscriptionLevel::None => {
                 // unit
                 let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
@@ -1260,7 +1260,7 @@ impl ::serde::ser::Serialize for ImportFormat {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ImportFormat::Html => {
                 // unit
                 let mut s = serializer.serialize_struct("ImportFormat", 1)?;
@@ -1439,8 +1439,8 @@ impl ::serde::ser::Serialize for ListDocsCursorError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            ListDocsCursorError::CursorError(ref x) => {
+        match self {
+            ListDocsCursorError::CursorError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListDocsCursorError", 2)?;
                 s.serialize_field(".tag", "cursor_error")?;
@@ -1759,7 +1759,7 @@ impl ::serde::ser::Serialize for ListPaperDocsFilterBy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ListPaperDocsFilterBy::DocsAccessed => {
                 // unit
                 let mut s = serializer.serialize_struct("ListPaperDocsFilterBy", 1)?;
@@ -1952,7 +1952,7 @@ impl ::serde::ser::Serialize for ListPaperDocsSortBy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ListPaperDocsSortBy::Accessed => {
                 // unit
                 let mut s = serializer.serialize_struct("ListPaperDocsSortBy", 1)?;
@@ -2023,7 +2023,7 @@ impl ::serde::ser::Serialize for ListPaperDocsSortOrder {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ListPaperDocsSortOrder::Ascending => {
                 // unit
                 let mut s = serializer.serialize_struct("ListPaperDocsSortOrder", 1)?;
@@ -2100,7 +2100,7 @@ impl ::serde::ser::Serialize for ListUsersCursorError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ListUsersCursorError::InsufficientPermissions => {
                 // unit
                 let mut s = serializer.serialize_struct("ListUsersCursorError", 1)?;
@@ -2113,7 +2113,7 @@ impl ::serde::ser::Serialize for ListUsersCursorError {
                 s.serialize_field(".tag", "doc_not_found")?;
                 s.end()
             }
-            ListUsersCursorError::CursorError(ref x) => {
+            ListUsersCursorError::CursorError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("ListUsersCursorError", 2)?;
                 s.serialize_field(".tag", "cursor_error")?;
@@ -2984,7 +2984,7 @@ impl ::serde::ser::Serialize for PaperApiBaseError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperApiBaseError::InsufficientPermissions => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperApiBaseError", 1)?;
@@ -3061,7 +3061,7 @@ impl ::serde::ser::Serialize for PaperApiCursorError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperApiCursorError::ExpiredCursor => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
@@ -3281,7 +3281,7 @@ impl ::serde::ser::Serialize for PaperDocCreateError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperDocCreateError::InsufficientPermissions => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperDocCreateError", 1)?;
@@ -3746,7 +3746,7 @@ impl ::serde::ser::Serialize for PaperDocPermissionLevel {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperDocPermissionLevel::Edit => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperDocPermissionLevel", 1)?;
@@ -4095,7 +4095,7 @@ impl ::serde::ser::Serialize for PaperDocUpdateError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperDocUpdateError::InsufficientPermissions => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
@@ -4228,7 +4228,7 @@ impl ::serde::ser::Serialize for PaperDocUpdatePolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperDocUpdatePolicy::Append => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperDocUpdatePolicy", 1)?;
@@ -4442,7 +4442,7 @@ impl ::serde::ser::Serialize for PaperFolderCreateError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperFolderCreateError::InsufficientPermissions => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperFolderCreateError", 1)?;
@@ -4934,7 +4934,7 @@ impl ::serde::ser::Serialize for SharingPublicPolicyType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharingPublicPolicyType::PeopleWithLinkCanEdit => {
                 // unit
                 let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
@@ -5020,7 +5020,7 @@ impl ::serde::ser::Serialize for SharingTeamPolicyType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             SharingTeamPolicyType::PeopleWithLinkCanEdit => {
                 // unit
                 let mut s = serializer.serialize_struct("SharingTeamPolicyType", 1)?;
@@ -5198,7 +5198,7 @@ impl ::serde::ser::Serialize for UserOnPaperDocFilter {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             UserOnPaperDocFilter::Visited => {
                 // unit
                 let mut s = serializer.serialize_struct("UserOnPaperDocFilter", 1)?;

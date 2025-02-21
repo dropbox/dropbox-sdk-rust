@@ -57,7 +57,7 @@ impl ::serde::ser::Serialize for CountFileRequestsError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             CountFileRequestsError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("CountFileRequestsError", 1)?;
@@ -431,7 +431,7 @@ impl ::serde::ser::Serialize for CreateFileRequestError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             CreateFileRequestError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("CreateFileRequestError", 1)?;
@@ -597,7 +597,7 @@ impl ::serde::ser::Serialize for DeleteAllClosedFileRequestsError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             DeleteAllClosedFileRequestsError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
@@ -937,7 +937,7 @@ impl ::serde::ser::Serialize for DeleteFileRequestError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             DeleteFileRequestError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
@@ -1528,7 +1528,7 @@ impl ::serde::ser::Serialize for FileRequestError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             FileRequestError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("FileRequestError", 1)?;
@@ -1646,7 +1646,7 @@ impl ::serde::ser::Serialize for GeneralFileRequestsError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             GeneralFileRequestsError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("GeneralFileRequestsError", 1)?;
@@ -1834,7 +1834,7 @@ impl ::serde::ser::Serialize for GetFileRequestError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             GetFileRequestError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("GetFileRequestError", 1)?;
@@ -1968,7 +1968,7 @@ impl ::serde::ser::Serialize for GracePeriod {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             GracePeriod::OneDay => {
                 // unit
                 let mut s = serializer.serialize_struct("GracePeriod", 1)?;
@@ -2233,7 +2233,7 @@ impl ::serde::ser::Serialize for ListFileRequestsContinueError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ListFileRequestsContinueError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("ListFileRequestsContinueError", 1)?;
@@ -2317,7 +2317,7 @@ impl ::serde::ser::Serialize for ListFileRequestsError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             ListFileRequestsError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("ListFileRequestsError", 1)?;
@@ -2806,19 +2806,19 @@ impl ::serde::ser::Serialize for UpdateFileRequestDeadline {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             UpdateFileRequestDeadline::NoUpdate => {
                 // unit
                 let mut s = serializer.serialize_struct("UpdateFileRequestDeadline", 1)?;
                 s.serialize_field(".tag", "no_update")?;
                 s.end()
             }
-            UpdateFileRequestDeadline::Update(ref x) => {
+            UpdateFileRequestDeadline::Update(x) => {
                 // nullable (struct or primitive)
                 let n = if x.is_some() { 4 } else { 1 };
                 let mut s = serializer.serialize_struct("UpdateFileRequestDeadline", n)?;
                 s.serialize_field(".tag", "update")?;
-                if let Some(ref x) = x {
+                if let Some(x) = x {
                     x.internal_serialize::<S>(&mut s)?;
                 }
                 s.end()
@@ -2900,7 +2900,7 @@ impl ::serde::ser::Serialize for UpdateFileRequestError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             UpdateFileRequestError::DisabledForTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("UpdateFileRequestError", 1)?;

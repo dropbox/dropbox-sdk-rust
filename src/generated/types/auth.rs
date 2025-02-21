@@ -68,15 +68,15 @@ impl ::serde::ser::Serialize for AccessError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            AccessError::InvalidAccountType(ref x) => {
+        match self {
+            AccessError::InvalidAccountType(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("AccessError", 2)?;
                 s.serialize_field(".tag", "invalid_account_type")?;
                 s.serialize_field("invalid_account_type", x)?;
                 s.end()
             }
-            AccessError::PaperAccessDenied(ref x) => {
+            AccessError::PaperAccessDenied(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("AccessError", 2)?;
                 s.serialize_field(".tag", "paper_access_denied")?;
@@ -176,7 +176,7 @@ impl ::serde::ser::Serialize for AuthError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             AuthError::InvalidAccessToken => {
                 // unit
                 let mut s = serializer.serialize_struct("AuthError", 1)?;
@@ -207,7 +207,7 @@ impl ::serde::ser::Serialize for AuthError {
                 s.serialize_field(".tag", "expired_access_token")?;
                 s.end()
             }
-            AuthError::MissingScope(ref x) => {
+            AuthError::MissingScope(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("AuthError", 2)?;
                 s.serialize_field(".tag", "missing_scope")?;
@@ -290,7 +290,7 @@ impl ::serde::ser::Serialize for InvalidAccountTypeError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             InvalidAccountTypeError::Endpoint => {
                 // unit
                 let mut s = serializer.serialize_struct("InvalidAccountTypeError", 1)?;
@@ -368,7 +368,7 @@ impl ::serde::ser::Serialize for PaperAccessError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PaperAccessError::PaperDisabled => {
                 // unit
                 let mut s = serializer.serialize_struct("PaperAccessError", 1)?;
@@ -558,7 +558,7 @@ impl ::serde::ser::Serialize for RateLimitReason {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             RateLimitReason::TooManyRequests => {
                 // unit
                 let mut s = serializer.serialize_struct("RateLimitReason", 1)?;
@@ -737,7 +737,7 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Error {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             TokenFromOAuth1Error::InvalidOauth1TokenInfo => {
                 // unit
                 let mut s = serializer.serialize_struct("TokenFromOAuth1Error", 1)?;

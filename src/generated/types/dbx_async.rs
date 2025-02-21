@@ -61,8 +61,8 @@ impl ::serde::ser::Serialize for LaunchEmptyResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            LaunchEmptyResult::AsyncJobId(ref x) => {
+        match self {
+            LaunchEmptyResult::AsyncJobId(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("LaunchEmptyResult", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
@@ -136,8 +136,8 @@ impl ::serde::ser::Serialize for LaunchResultBase {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            LaunchResultBase::AsyncJobId(ref x) => {
+        match self {
+            LaunchResultBase::AsyncJobId(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("LaunchResultBase", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
@@ -285,7 +285,7 @@ impl ::serde::ser::Serialize for PollEmptyResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PollEmptyResult::InProgress => {
                 // unit
                 let mut s = serializer.serialize_struct("PollEmptyResult", 1)?;
@@ -359,7 +359,7 @@ impl ::serde::ser::Serialize for PollError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PollError::InvalidAsyncJobId => {
                 // unit
                 let mut s = serializer.serialize_struct("PollError", 1)?;
@@ -431,7 +431,7 @@ impl ::serde::ser::Serialize for PollResultBase {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PollResultBase::InProgress => {
                 // unit
                 let mut s = serializer.serialize_struct("PollResultBase", 1)?;

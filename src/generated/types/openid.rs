@@ -51,7 +51,7 @@ impl ::serde::ser::Serialize for OpenIdError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             OpenIdError::IncorrectOpenidScopes => {
                 // unit
                 let mut s = serializer.serialize_struct("OpenIdError", 1)?;
@@ -167,8 +167,8 @@ impl ::serde::ser::Serialize for UserInfoError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            UserInfoError::OpenidError(ref x) => {
+        match self {
+            UserInfoError::OpenidError(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UserInfoError", 2)?;
                 s.serialize_field(".tag", "openid_error")?;

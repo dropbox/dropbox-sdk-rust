@@ -86,21 +86,21 @@ impl ::serde::ser::Serialize for PathRoot {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             PathRoot::Home => {
                 // unit
                 let mut s = serializer.serialize_struct("PathRoot", 1)?;
                 s.serialize_field(".tag", "home")?;
                 s.end()
             }
-            PathRoot::Root(ref x) => {
+            PathRoot::Root(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("PathRoot", 2)?;
                 s.serialize_field(".tag", "root")?;
                 s.serialize_field("root", x)?;
                 s.end()
             }
-            PathRoot::NamespaceId(ref x) => {
+            PathRoot::NamespaceId(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("PathRoot", 2)?;
                 s.serialize_field(".tag", "namespace_id")?;
@@ -166,8 +166,8 @@ impl ::serde::ser::Serialize for PathRootError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            PathRootError::InvalidRoot(ref x) => {
+        match self {
+            PathRootError::InvalidRoot(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("PathRootError", 2)?;
                 s.serialize_field(".tag", "invalid_root")?;
@@ -244,14 +244,14 @@ impl ::serde::ser::Serialize for RootInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // polymorphic struct serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            RootInfo::Team(ref x) => {
+        match self {
+            RootInfo::Team(x) => {
                 let mut s = serializer.serialize_struct("RootInfo", 4)?;
                 s.serialize_field(".tag", "team")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            RootInfo::User(ref x) => {
+            RootInfo::User(x) => {
                 let mut s = serializer.serialize_struct("RootInfo", 3)?;
                 s.serialize_field(".tag", "user")?;
                 x.internal_serialize::<S>(&mut s)?;

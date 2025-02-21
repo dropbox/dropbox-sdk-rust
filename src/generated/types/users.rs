@@ -456,8 +456,8 @@ impl ::serde::ser::Serialize for FileLockingValue {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            FileLockingValue::Enabled(ref x) => {
+        match self {
+            FileLockingValue::Enabled(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("FileLockingValue", 2)?;
                 s.serialize_field(".tag", "enabled")?;
@@ -1163,8 +1163,8 @@ impl ::serde::ser::Serialize for GetAccountBatchError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            GetAccountBatchError::NoAccount(ref x) => {
+        match self {
+            GetAccountBatchError::NoAccount(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("GetAccountBatchError", 2)?;
                 s.serialize_field(".tag", "no_account")?;
@@ -1231,7 +1231,7 @@ impl ::serde::ser::Serialize for GetAccountError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             GetAccountError::NoAccount => {
                 // unit
                 let mut s = serializer.serialize_struct("GetAccountError", 1)?;
@@ -1547,8 +1547,8 @@ impl ::serde::ser::Serialize for PaperAsFilesValue {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            PaperAsFilesValue::Enabled(ref x) => {
+        match self {
+            PaperAsFilesValue::Enabled(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("PaperAsFilesValue", 2)?;
                 s.serialize_field(".tag", "enabled")?;
@@ -1608,15 +1608,15 @@ impl ::serde::ser::Serialize for SpaceAllocation {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            SpaceAllocation::Individual(ref x) => {
+        match self {
+            SpaceAllocation::Individual(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("SpaceAllocation", 2)?;
                 s.serialize_field(".tag", "individual")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            SpaceAllocation::Team(ref x) => {
+            SpaceAllocation::Team(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("SpaceAllocation", 6)?;
                 s.serialize_field(".tag", "team")?;
@@ -2036,7 +2036,7 @@ impl ::serde::ser::Serialize for UserFeature {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             UserFeature::PaperAsFiles => {
                 // unit
                 let mut s = serializer.serialize_struct("UserFeature", 1)?;
@@ -2112,15 +2112,15 @@ impl ::serde::ser::Serialize for UserFeatureValue {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
-            UserFeatureValue::PaperAsFiles(ref x) => {
+        match self {
+            UserFeatureValue::PaperAsFiles(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UserFeatureValue", 2)?;
                 s.serialize_field(".tag", "paper_as_files")?;
                 s.serialize_field("paper_as_files", x)?;
                 s.end()
             }
-            UserFeatureValue::FileLocking(ref x) => {
+            UserFeatureValue::FileLocking(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("UserFeatureValue", 2)?;
                 s.serialize_field(".tag", "file_locking")?;
@@ -2268,7 +2268,7 @@ impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
-        match *self {
+        match self {
             UserFeaturesGetValuesBatchError::EmptyFeaturesList => {
                 // unit
                 let mut s = serializer.serialize_struct("UserFeaturesGetValuesBatchError", 1)?;
