@@ -1,5 +1,7 @@
-# unreleased changes
-* Default non-async HTTP client, ureq, updated from major version 2 to 3.
+# v0.19.1
+2025-03-14
+* ureq (default non-async HTTP client impl) updated from major version 2 to 3.
+* Errors without specific messages now include the error name in their Display impl
 
 # v0.19.0
 2025-01-03
