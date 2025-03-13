@@ -192,7 +192,7 @@ impl ::std::error::Error for UserInfoError {
 impl ::std::fmt::Display for UserInfoError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            UserInfoError::OpenidError(inner) => write!(f, "{}", inner),
+            UserInfoError::OpenidError(inner) => write!(f, "UserInfoError: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
