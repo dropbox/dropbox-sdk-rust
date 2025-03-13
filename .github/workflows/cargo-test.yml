@@ -41,6 +41,12 @@ jobs:
       - name: Install MSRV toolchain
         run: rustup install 1.75.0 --profile minimal
 
+      # remove this once our MSRV is >= 1.84, which has the MSRV-aware resolver
+      - name: fix deps for old rustc
+        run: |
+          rustup run 1.75.0 cargo update litemap --precise 0.7.4
+          rustup run 1.75.0 cargo update zerofrom --precise 0.1.5
+
       - name: Run cargo test
         run: rustup run 1.75.0 cargo test --all-features
 
