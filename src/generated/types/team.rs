@@ -1181,9 +1181,9 @@ impl ::std::error::Error for BaseTeamFolderError {
 impl ::std::fmt::Display for BaseTeamFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            BaseTeamFolderError::AccessError(inner) => write!(f, "{}", inner),
-            BaseTeamFolderError::StatusError(inner) => write!(f, "{}", inner),
-            BaseTeamFolderError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            BaseTeamFolderError::AccessError(inner) => write!(f, "BaseTeamFolderError: {}", inner),
+            BaseTeamFolderError::StatusError(inner) => write!(f, "BaseTeamFolderError: {}", inner),
+            BaseTeamFolderError::TeamSharedDropboxError(inner) => write!(f, "BaseTeamFolderError: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -19924,7 +19924,7 @@ impl ::std::fmt::Display for MembersSetProfilePhotoError {
             MembersSetProfilePhotoError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
             MembersSetProfilePhotoError::UserNotInTeam => f.write_str("The user is not a member of the team."),
             MembersSetProfilePhotoError::SetProfileDisallowed => f.write_str("Modifying deleted users is not allowed."),
-            MembersSetProfilePhotoError::PhotoError(inner) => write!(f, "{}", inner),
+            MembersSetProfilePhotoError::PhotoError(inner) => write!(f, "MembersSetProfilePhotoError: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -24416,9 +24416,9 @@ impl ::std::error::Error for TeamFolderActivateError {
 impl ::std::fmt::Display for TeamFolderActivateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            TeamFolderActivateError::AccessError(inner) => write!(f, "{}", inner),
-            TeamFolderActivateError::StatusError(inner) => write!(f, "{}", inner),
-            TeamFolderActivateError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            TeamFolderActivateError::AccessError(inner) => write!(f, "TeamFolderActivateError: {}", inner),
+            TeamFolderActivateError::StatusError(inner) => write!(f, "TeamFolderActivateError: {}", inner),
+            TeamFolderActivateError::TeamSharedDropboxError(inner) => write!(f, "TeamFolderActivateError: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -24662,9 +24662,9 @@ impl ::std::error::Error for TeamFolderArchiveError {
 impl ::std::fmt::Display for TeamFolderArchiveError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            TeamFolderArchiveError::AccessError(inner) => write!(f, "{}", inner),
-            TeamFolderArchiveError::StatusError(inner) => write!(f, "{}", inner),
-            TeamFolderArchiveError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            TeamFolderArchiveError::AccessError(inner) => write!(f, "TeamFolderArchiveError: {}", inner),
+            TeamFolderArchiveError::StatusError(inner) => write!(f, "TeamFolderArchiveError: {}", inner),
+            TeamFolderArchiveError::TeamSharedDropboxError(inner) => write!(f, "TeamFolderArchiveError: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -26147,9 +26147,9 @@ impl ::std::error::Error for TeamFolderPermanentlyDeleteError {
 impl ::std::fmt::Display for TeamFolderPermanentlyDeleteError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            TeamFolderPermanentlyDeleteError::AccessError(inner) => write!(f, "{}", inner),
-            TeamFolderPermanentlyDeleteError::StatusError(inner) => write!(f, "{}", inner),
-            TeamFolderPermanentlyDeleteError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            TeamFolderPermanentlyDeleteError::AccessError(inner) => write!(f, "TeamFolderPermanentlyDeleteError: {}", inner),
+            TeamFolderPermanentlyDeleteError::StatusError(inner) => write!(f, "TeamFolderPermanentlyDeleteError: {}", inner),
+            TeamFolderPermanentlyDeleteError::TeamSharedDropboxError(inner) => write!(f, "TeamFolderPermanentlyDeleteError: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -26415,9 +26415,9 @@ impl ::std::error::Error for TeamFolderRenameError {
 impl ::std::fmt::Display for TeamFolderRenameError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            TeamFolderRenameError::AccessError(inner) => write!(f, "{}", inner),
-            TeamFolderRenameError::StatusError(inner) => write!(f, "{}", inner),
-            TeamFolderRenameError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            TeamFolderRenameError::AccessError(inner) => write!(f, "TeamFolderRenameError: {}", inner),
+            TeamFolderRenameError::StatusError(inner) => write!(f, "TeamFolderRenameError: {}", inner),
+            TeamFolderRenameError::TeamSharedDropboxError(inner) => write!(f, "TeamFolderRenameError: {}", inner),
             TeamFolderRenameError::InvalidFolderName => f.write_str("The provided folder name cannot be used."),
             TeamFolderRenameError::FolderNameAlreadyUsed => f.write_str("There is already a team folder with the same name."),
             TeamFolderRenameError::FolderNameReserved => f.write_str("The provided name cannot be used because it is reserved."),
@@ -26847,9 +26847,9 @@ impl ::std::error::Error for TeamFolderUpdateSyncSettingsError {
 impl ::std::fmt::Display for TeamFolderUpdateSyncSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            TeamFolderUpdateSyncSettingsError::AccessError(inner) => write!(f, "{}", inner),
-            TeamFolderUpdateSyncSettingsError::StatusError(inner) => write!(f, "{}", inner),
-            TeamFolderUpdateSyncSettingsError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            TeamFolderUpdateSyncSettingsError::AccessError(inner) => write!(f, "TeamFolderUpdateSyncSettingsError: {}", inner),
+            TeamFolderUpdateSyncSettingsError::StatusError(inner) => write!(f, "TeamFolderUpdateSyncSettingsError: {}", inner),
+            TeamFolderUpdateSyncSettingsError::TeamSharedDropboxError(inner) => write!(f, "TeamFolderUpdateSyncSettingsError: {}", inner),
             TeamFolderUpdateSyncSettingsError::SyncSettingsError(inner) => write!(f, "An error occurred setting the sync settings: {}", inner),
             _ => write!(f, "{:?}", *self),
         }

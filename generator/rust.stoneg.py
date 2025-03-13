@@ -1144,6 +1144,9 @@ class RustBackend(RustHelperBackend):
                             msg = msg[:-1]
                         if msg:
                             msg += ': '
+                        else:
+                            # if there's no message for the variant, use the type name
+                            msg = f"{type_name}: "
                         msg += inner_fmt
                         args = 'inner'
 

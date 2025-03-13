@@ -1464,7 +1464,7 @@ impl ::std::error::Error for ListDocsCursorError {
 impl ::std::fmt::Display for ListDocsCursorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            ListDocsCursorError::CursorError(inner) => write!(f, "{}", inner),
+            ListDocsCursorError::CursorError(inner) => write!(f, "ListDocsCursorError: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -2138,7 +2138,7 @@ impl ::std::fmt::Display for ListUsersCursorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             ListUsersCursorError::DocNotFound => f.write_str("The required doc was not found."),
-            ListUsersCursorError::CursorError(inner) => write!(f, "{}", inner),
+            ListUsersCursorError::CursorError(inner) => write!(f, "ListUsersCursorError: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
