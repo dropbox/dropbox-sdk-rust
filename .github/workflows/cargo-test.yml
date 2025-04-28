@@ -23,7 +23,7 @@ jobs:
           find . -path ./src/generated -prune -o -name '*.rs' -print | xargs rustup run nightly rustfmt --edition 2021 --check
 
       - name: Set up Python
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: "3.10"
 
