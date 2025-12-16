@@ -1,3 +1,7 @@
+# unreleased (v0.19.2)
+xxxx-yy-zz
+* MSRV raised to 1.84.0
+
 # v0.19.1
 2025-03-14
 * ureq (default non-async HTTP client impl) updated from major version 2 to 3.
