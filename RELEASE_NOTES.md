@@ -1,6 +1,7 @@
 # unreleased (v0.19.2)
 xxxx-yy-zz
 * MSRV raised to 1.84.0
+* reqwest (default async HTTP client impl) updated from version 0.12 to 0.13
 
 # v0.19.1
 2025-03-14

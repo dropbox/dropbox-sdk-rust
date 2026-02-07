@@ -16,7 +16,7 @@ readme = "README.md"
 msrv = "1.84.0" # Jan 9, 2025
 
 [dependencies]
-async-lock = "3.3.0"
+async-lock = ">=3.3.0, <=3.4.1" # remove conditions once MSRV is 1.85
 base64 = "0.22"
 bytes = "1.6.0"
 log = "0.4"
@@ -32,10 +32,10 @@ default-features = false
 features = ["std"]
 
 [dependencies.reqwest]
-version = "0.12.2"
+version = "0.13"
 optional = true
 default-features = false
-features = ["http2", "rustls-tls", "stream"]
+features = ["http2", "rustls", "stream"]
 
 [dependencies.ureq]
 version = "3.0.4"
