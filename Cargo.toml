@@ -10,10 +10,9 @@ repository = "https://github.com/dropbox/dropbox-sdk-rust"
 license = "Apache-2.0"
 readme = "README.md"
 
-[package.metadata]
 # Keep this at least 1 year old.
 # 1.84 is required for the MSRV-aware dependency resolver
-msrv = "1.84.0" # Jan 9, 2025
+rust-version = "1.84.0" # Jan 9, 2025
 
 [dependencies]
 async-lock = ">=3.3.0, <=3.4.1" # remove conditions once MSRV is 1.85
