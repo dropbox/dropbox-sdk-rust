@@ -1,14 +1,14 @@
 // Copyright (c) 2019-2025 Dropbox, Inc.
 
+use crate::Error;
 use crate::async_client_trait::{HttpClient, HttpRequestResult, HttpRequestResultRaw};
 use crate::client_trait_common::{Endpoint, HttpRequest, ParamsType, Style, TeamSelect};
 use crate::types::auth::{AccessError, AuthError, RateLimitReason};
-use crate::Error;
 use bytes::Bytes;
 use futures::{AsyncRead, AsyncReadExt};
+use serde::Deserialize;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
-use serde::Deserialize;
 use std::error::Error as StdError;
 use std::io::ErrorKind;
 use std::sync::Arc;
@@ -355,9 +355,9 @@ where
 
 #[cfg(feature = "sync_routes")]
 mod sync_helpers {
+    use crate::Error;
     use crate::async_client_trait::{HttpRequestResult, SyncReadAdapter};
     use crate::client_trait as sync;
-    use crate::Error;
     use futures::{AsyncRead, FutureExt};
     use std::future::Future;
 

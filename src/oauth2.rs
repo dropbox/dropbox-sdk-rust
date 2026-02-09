@@ -12,19 +12,19 @@
 //! [Dropbox OAuth Guide]: https://developers.dropbox.com/oauth-guide
 //! [OAuth types summary]: https://developers.dropbox.com/oauth-guide#summary
 
+use crate::Error;
 use crate::async_client_trait::NoauthClient;
 use crate::client_helpers::{parse_response, prepare_request};
 use crate::client_trait_common::{Endpoint, ParamsType, Style};
-use crate::Error;
 use async_lock::RwLock;
-use base64::engine::general_purpose::{URL_SAFE, URL_SAFE_NO_PAD};
 use base64::Engine;
+use base64::engine::general_purpose::{URL_SAFE, URL_SAFE_NO_PAD};
 use ring::rand::{SecureRandom, SystemRandom};
 use std::env;
 use std::io::{self, IsTerminal, Write};
 use std::sync::Arc;
-use url::form_urlencoded::Serializer as UrlEncoder;
 use url::Url;
+use url::form_urlencoded::Serializer as UrlEncoder;
 
 /// Which type of OAuth2 flow to use.
 #[derive(Debug, Clone)]
@@ -581,7 +581,7 @@ impl Authorization {
                     _ => {
                         return Err(Error::UnexpectedResponse(
                             "no access token in response!".to_owned(),
-                        ))
+                        ));
                     }
                 }
                 match map.remove("refresh_token") {
@@ -597,7 +597,7 @@ impl Authorization {
             _ => {
                 return Err(Error::UnexpectedResponse(
                     "response is not a JSON object".to_owned(),
-                ))
+                ));
             }
         }
 

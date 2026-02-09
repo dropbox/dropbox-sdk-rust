@@ -1,10 +1,10 @@
 //! Everything needed to implement your async HTTP client.
 
-pub use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::Error;
+pub use crate::client_trait_common::{HttpRequest, TeamSelect};
 use bytes::Bytes;
 use futures::AsyncRead;
-use std::future::{ready, Future};
+use std::future::{Future, ready};
 use std::sync::Arc;
 
 /// The base HTTP asynchronous client trait.

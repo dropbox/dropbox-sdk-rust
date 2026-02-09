@@ -2,8 +2,8 @@
 
 //! Everything needed to implement your HTTP client.
 
-pub use crate::client_trait_common::{HttpRequest, TeamSelect};
 use crate::Error;
+pub use crate::client_trait_common::{HttpRequest, TeamSelect};
 use std::io::Read;
 use std::sync::Arc;
 

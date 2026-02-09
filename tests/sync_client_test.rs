@@ -1,6 +1,6 @@
+use dropbox_sdk::Error;
 use dropbox_sdk::client_trait::*;
 use dropbox_sdk::sync_routes::check;
-use dropbox_sdk::Error;
 use std::io::Cursor;
 
 struct TestSyncClient;

@@ -4,9 +4,9 @@
 //! files that would not fit in a single HTTP request, including allowing the user to resume
 //! interrupted uploads, and uploading blocks in parallel.
 
+use dropbox_sdk::Error::Api;
 use dropbox_sdk::default_client::UserAuthDefaultClient;
 use dropbox_sdk::files;
-use dropbox_sdk::Error::Api;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Seek, SeekFrom};

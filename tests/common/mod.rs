@@ -1,6 +1,6 @@
+use dropbox_sdk::Error::Api;
 use dropbox_sdk::client_trait::UserAuthClient;
 use dropbox_sdk::files;
-use dropbox_sdk::Error::Api;
 use std::sync::Arc;
 use std::thread;
 use std::time::Duration;

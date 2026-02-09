@@ -10,16 +10,16 @@
 //! This code (and its dependencies) are only built if you use the `default_async_client` Cargo
 //! feature.
 
+use crate::Error;
 use crate::async_client_trait::{
     AppAuthClient, HttpClient, HttpRequest, HttpRequestResultRaw, NoauthClient, TeamAuthClient,
     TeamSelect, UserAuthClient,
 };
 use crate::default_client_common::impl_set_path_root;
 use crate::oauth2::{Authorization, TokenCache};
-use crate::Error;
 use bytes::Bytes;
 use futures::{FutureExt, TryFutureExt, TryStreamExt};
-use std::future::{ready, Future};
+use std::future::{Future, ready};
 use std::str::FromStr;
 use std::sync::Arc;
 

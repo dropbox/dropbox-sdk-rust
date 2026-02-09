@@ -11,18 +11,18 @@
 //!
 //! This code (and its dependencies) are only built if you use the `default_client` Cargo feature.
 
+use crate::Error;
 use crate::client_trait::{
     AppAuthClient, HttpClient, HttpRequest, HttpRequestResultRaw, NoauthClient, TeamAuthClient,
     TeamSelect, UserAuthClient,
 };
 use crate::default_client_common::impl_set_path_root;
 use crate::oauth2::{Authorization, TokenCache};
-use crate::Error;
 use futures::FutureExt;
 use std::str::FromStr;
 use std::sync::Arc;
-use ureq::typestate::WithBody;
 use ureq::Agent;
+use ureq::typestate::WithBody;
 
 macro_rules! impl_update_token {
     ($self:ident) => {

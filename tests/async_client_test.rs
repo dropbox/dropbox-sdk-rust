@@ -1,7 +1,7 @@
 use bytes::Bytes;
+use dropbox_sdk::Error;
 use dropbox_sdk::async_client_trait::*;
 use dropbox_sdk::async_routes::check;
-use dropbox_sdk::Error;
 use futures::io::Cursor;
 
 struct TestAsyncClient;

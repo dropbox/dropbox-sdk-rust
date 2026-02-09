@@ -1,6 +1,7 @@
 # unreleased (v0.19.2)
 xxxx-yy-zz
-* MSRV raised to 1.84.0
+* MSRV raised to 1.85.0
+* Rust edition switched to 2024
 * reqwest (default async HTTP client impl) updated from version 0.12 to 0.13
 
 # v0.19.1

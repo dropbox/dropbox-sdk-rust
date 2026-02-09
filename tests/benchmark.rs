@@ -40,29 +40,31 @@ fn fetch_files() {
             let path = file_path(i);
             let expected_bytes = file_bytes(i);
             let c = client.clone();
-            threadpool.execute(move || loop {
-                let arg = files::DownloadArg::new(path.clone());
-                match files::download(c.as_ref(), &arg, None, None) {
-                    Ok(result) => {
-                        let mut read_bytes = Vec::new();
-                        result
-                            .body
-                            .expect("result should have a body")
-                            .read_to_end(&mut read_bytes)
-                            .expect("read_to_end");
-                        assert_eq!(&read_bytes, &expected_bytes);
+            threadpool.execute(move || {
+                loop {
+                    let arg = files::DownloadArg::new(path.clone());
+                    match files::download(c.as_ref(), &arg, None, None) {
+                        Ok(result) => {
+                            let mut read_bytes = Vec::new();
+                            result
+                                .body
+                                .expect("result should have a body")
+                                .read_to_end(&mut read_bytes)
+                                .expect("read_to_end");
+                            assert_eq!(&read_bytes, &expected_bytes);
+                        }
+                        Err(dropbox_sdk::Error::RateLimited {
+                            retry_after_seconds,
+                            ..
+                        }) => {
+                            eprintln!("WARNING: rate-limited {} seconds", retry_after_seconds);
+                            thread::sleep(Duration::from_secs(retry_after_seconds as u64));
+                            continue;
+                        }
+                        Err(e) => panic!("{}: download failed: {:?}", path, e),
                     }
-                    Err(dropbox_sdk::Error::RateLimited {
-                        retry_after_seconds,
-                        ..
-                    }) => {
-                        eprintln!("WARNING: rate-limited {} seconds", retry_after_seconds);
-                        thread::sleep(Duration::from_secs(retry_after_seconds as u64));
-                        continue;
-                    }
-                    Err(e) => panic!("{}: download failed: {:?}", path, e),
+                    break;
                 }
-                break;
             });
         }
 
