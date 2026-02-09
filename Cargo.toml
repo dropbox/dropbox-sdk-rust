@@ -15,7 +15,7 @@ readme = "README.md"
 rust-version = "1.84.0" # Jan 9, 2025
 
 [dependencies]
-async-lock = ">=3.3.0, <=3.4.1" # remove conditions once MSRV is 1.85
+async-lock = ">=3.3.0, <=3.4.2" # remove conditions once MSRV is 1.85
 base64 = "0.22"
 bytes = "1.6.0"
 log = "0.4"
