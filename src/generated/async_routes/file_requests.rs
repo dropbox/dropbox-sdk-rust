@@ -82,6 +82,20 @@ pub fn get<'a>(
 
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
 /// this will only return file requests with destinations in the app folder.
+pub fn list(
+    client: &impl crate::async_client_trait::UserAuthClient,
+) -> impl std::future::Future<Output=Result<ListFileRequestsResult, crate::Error<ListFileRequestsError>>> + Send + '_ {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "file_requests/list",
+        &(),
+        None)
+}
+
+/// Returns a list of file requests owned by this user. For apps with the app folder permission,
+/// this will only return file requests with destinations in the app folder.
 pub fn list_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a ListFileRequestsArg,
@@ -92,20 +106,6 @@ pub fn list_v2<'a>(
         crate::client_trait_common::Style::Rpc,
         "file_requests/list_v2",
         arg,
-        None)
-}
-
-/// Returns a list of file requests owned by this user. For apps with the app folder permission,
-/// this will only return file requests with destinations in the app folder.
-pub fn list(
-    client: &impl crate::async_client_trait::UserAuthClient,
-) -> impl std::future::Future<Output=Result<ListFileRequestsResult, crate::Error<ListFileRequestsError>>> + Send + '_ {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Api,
-        crate::client_trait_common::Style::Rpc,
-        "file_requests/list",
-        &(),
         None)
 }
 
