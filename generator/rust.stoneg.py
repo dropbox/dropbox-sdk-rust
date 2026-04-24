@@ -111,6 +111,8 @@ class RustBackend(RustHelperBackend):
                 else:
                     raise RuntimeError(f'WARNING: unhandled type "{type(typ).__name__}" of field "{typ.name}"')
 
+        namespace.routes.sort(key=lambda x: (x.name, x.version))
+
         with self.output_to_relative_path(f'sync_routes/{ns}.rs'):
             self._emit_header()
             self.emit('#[allow(unused_imports)]')

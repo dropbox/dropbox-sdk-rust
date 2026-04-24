@@ -591,28 +591,6 @@ pub fn member_space_limits_set_custom_quota<'a>(
 /// management apps are required to set an initial given_name and surname for a user to use in the
 /// team invitation and for 'Perform as team member' actions taken on the user before they become
 /// 'active'.
-pub fn members_add_v2<'a>(
-    client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a MembersAddV2Arg,
-) -> impl std::future::Future<Output=Result<MembersAddLaunchV2Result, crate::Error<crate::NoError>>> + Send + 'a {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Api,
-        crate::client_trait_common::Style::Rpc,
-        "team/members/add_v2",
-        arg,
-        None)
-}
-
-/// Adds members to a team. Permission : Team member management A maximum of 20 members can be
-/// specified in a single call. If no Dropbox account exists with the email address specified, a new
-/// Dropbox account will be created with the given email address, and that account will be invited
-/// to the team. If a personal Dropbox account exists with the email address specified in the call,
-/// this call will create a placeholder Dropbox account for the user on the team and send an email
-/// inviting the user to migrate their existing personal account onto the team. Team member
-/// management apps are required to set an initial given_name and surname for a user to use in the
-/// team invitation and for 'Perform as team member' actions taken on the user before they become
-/// 'active'.
 pub fn members_add<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersAddArg,
@@ -626,17 +604,24 @@ pub fn members_add<'a>(
         None)
 }
 
-/// Once an async_job_id is returned from [`members_add_v2()`](crate::team::members_add_v2) , use
-/// this to poll the status of the asynchronous request. Permission : Team member management.
-pub fn members_add_job_status_get_v2<'a>(
+/// Adds members to a team. Permission : Team member management A maximum of 20 members can be
+/// specified in a single call. If no Dropbox account exists with the email address specified, a new
+/// Dropbox account will be created with the given email address, and that account will be invited
+/// to the team. If a personal Dropbox account exists with the email address specified in the call,
+/// this call will create a placeholder Dropbox account for the user on the team and send an email
+/// inviting the user to migrate their existing personal account onto the team. Team member
+/// management apps are required to set an initial given_name and surname for a user to use in the
+/// team invitation and for 'Perform as team member' actions taken on the user before they become
+/// 'active'.
+pub fn members_add_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=Result<MembersAddJobStatusV2Result, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
+    arg: &'a MembersAddV2Arg,
+) -> impl std::future::Future<Output=Result<MembersAddLaunchV2Result, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "team/members/add/job_status/get_v2",
+        "team/members/add_v2",
         arg,
         None)
 }
@@ -656,16 +641,17 @@ pub fn members_add_job_status_get<'a>(
         None)
 }
 
-/// Deletes a team member's profile photo. Permission : Team member management.
-pub fn members_delete_profile_photo_v2<'a>(
+/// Once an async_job_id is returned from [`members_add_v2()`](crate::team::members_add_v2) , use
+/// this to poll the status of the asynchronous request. Permission : Team member management.
+pub fn members_add_job_status_get_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a MembersDeleteProfilePhotoArg,
-) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersDeleteProfilePhotoError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=Result<MembersAddJobStatusV2Result, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "team/members/delete_profile_photo_v2",
+        "team/members/add/job_status/get_v2",
         arg,
         None)
 }
@@ -680,6 +666,20 @@ pub fn members_delete_profile_photo<'a>(
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
         "team/members/delete_profile_photo",
+        arg,
+        None)
+}
+
+/// Deletes a team member's profile photo. Permission : Team member management.
+pub fn members_delete_profile_photo_v2<'a>(
+    client: &'a impl crate::async_client_trait::TeamAuthClient,
+    arg: &'a MembersDeleteProfilePhotoArg,
+) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersDeleteProfilePhotoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "team/members/delete_profile_photo_v2",
         arg,
         None)
 }
@@ -702,22 +702,6 @@ pub fn members_get_available_team_member_roles(
 /// Returns information about multiple team members. Permission : Team information This endpoint
 /// will return [`MembersGetInfoItem::IdNotFound`], for IDs (or emails) that cannot be matched to a
 /// valid team member.
-pub fn members_get_info_v2<'a>(
-    client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a MembersGetInfoV2Arg,
-) -> impl std::future::Future<Output=Result<MembersGetInfoV2Result, crate::Error<MembersGetInfoError>>> + Send + 'a {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Api,
-        crate::client_trait_common::Style::Rpc,
-        "team/members/get_info_v2",
-        arg,
-        None)
-}
-
-/// Returns information about multiple team members. Permission : Team information This endpoint
-/// will return [`MembersGetInfoItem::IdNotFound`], for IDs (or emails) that cannot be matched to a
-/// valid team member.
 pub fn members_get_info<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersGetInfoArgs,
@@ -731,16 +715,18 @@ pub fn members_get_info<'a>(
         None)
 }
 
-/// Lists members of a team. Permission : Team information.
-pub fn members_list_v2<'a>(
+/// Returns information about multiple team members. Permission : Team information This endpoint
+/// will return [`MembersGetInfoItem::IdNotFound`], for IDs (or emails) that cannot be matched to a
+/// valid team member.
+pub fn members_get_info_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a MembersListArg,
-) -> impl std::future::Future<Output=Result<MembersListV2Result, crate::Error<MembersListError>>> + Send + 'a {
+    arg: &'a MembersGetInfoV2Arg,
+) -> impl std::future::Future<Output=Result<MembersGetInfoV2Result, crate::Error<MembersGetInfoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "team/members/list_v2",
+        "team/members/get_info_v2",
         arg,
         None)
 }
@@ -759,17 +745,16 @@ pub fn members_list<'a>(
         None)
 }
 
-/// Once a cursor has been retrieved from [`members_list_v2()`](crate::team::members_list_v2), use
-/// this to paginate through all team members. Permission : Team information.
-pub fn members_list_continue_v2<'a>(
+/// Lists members of a team. Permission : Team information.
+pub fn members_list_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a MembersListContinueArg,
-) -> impl std::future::Future<Output=Result<MembersListV2Result, crate::Error<MembersListContinueError>>> + Send + 'a {
+    arg: &'a MembersListArg,
+) -> impl std::future::Future<Output=Result<MembersListV2Result, crate::Error<MembersListError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "team/members/list/continue_v2",
+        "team/members/list_v2",
         arg,
         None)
 }
@@ -785,6 +770,21 @@ pub fn members_list_continue<'a>(
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
         "team/members/list/continue",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`members_list_v2()`](crate::team::members_list_v2), use
+/// this to paginate through all team members. Permission : Team information.
+pub fn members_list_continue_v2<'a>(
+    client: &'a impl crate::async_client_trait::TeamAuthClient,
+    arg: &'a MembersListContinueArg,
+) -> impl std::future::Future<Output=Result<MembersListV2Result, crate::Error<MembersListContinueError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "team/members/list/continue_v2",
         arg,
         None)
 }
@@ -937,20 +937,6 @@ pub fn members_send_welcome_email<'a>(
 }
 
 /// Updates a team member's permissions. Permission : Team member management.
-pub fn members_set_admin_permissions_v2<'a>(
-    client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a MembersSetPermissions2Arg,
-) -> impl std::future::Future<Output=Result<MembersSetPermissions2Result, crate::Error<MembersSetPermissions2Error>>> + Send + 'a {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Api,
-        crate::client_trait_common::Style::Rpc,
-        "team/members/set_admin_permissions_v2",
-        arg,
-        None)
-}
-
-/// Updates a team member's permissions. Permission : Team member management.
 pub fn members_set_admin_permissions<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
     arg: &'a MembersSetPermissionsArg,
@@ -964,16 +950,16 @@ pub fn members_set_admin_permissions<'a>(
         None)
 }
 
-/// Updates a team member's profile. Permission : Team member management.
-pub fn members_set_profile_v2<'a>(
+/// Updates a team member's permissions. Permission : Team member management.
+pub fn members_set_admin_permissions_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a MembersSetProfileArg,
-) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersSetProfileError>>> + Send + 'a {
+    arg: &'a MembersSetPermissions2Arg,
+) -> impl std::future::Future<Output=Result<MembersSetPermissions2Result, crate::Error<MembersSetPermissions2Error>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "team/members/set_profile_v2",
+        "team/members/set_admin_permissions_v2",
         arg,
         None)
 }
@@ -992,16 +978,16 @@ pub fn members_set_profile<'a>(
         None)
 }
 
-/// Updates a team member's profile photo. Permission : Team member management.
-pub fn members_set_profile_photo_v2<'a>(
+/// Updates a team member's profile. Permission : Team member management.
+pub fn members_set_profile_v2<'a>(
     client: &'a impl crate::async_client_trait::TeamAuthClient,
-    arg: &'a MembersSetProfilePhotoArg,
-) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersSetProfilePhotoError>>> + Send + 'a {
+    arg: &'a MembersSetProfileArg,
+) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersSetProfileError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "team/members/set_profile_photo_v2",
+        "team/members/set_profile_v2",
         arg,
         None)
 }
@@ -1016,6 +1002,20 @@ pub fn members_set_profile_photo<'a>(
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
         "team/members/set_profile_photo",
+        arg,
+        None)
+}
+
+/// Updates a team member's profile photo. Permission : Team member management.
+pub fn members_set_profile_photo_v2<'a>(
+    client: &'a impl crate::async_client_trait::TeamAuthClient,
+    arg: &'a MembersSetProfilePhotoArg,
+) -> impl std::future::Future<Output=Result<TeamMemberInfoV2Result, crate::Error<MembersSetProfilePhotoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "team/members/set_profile_photo_v2",
         arg,
         None)
 }

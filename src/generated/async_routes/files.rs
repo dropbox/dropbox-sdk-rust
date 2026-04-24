@@ -58,6 +58,22 @@ pub fn alpha_upload<'a>(
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be copied.
+#[deprecated(note = "replaced by copy_v2")]
+pub fn copy<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RelocationArg,
+) -> impl std::future::Future<Output=Result<Metadata, crate::Error<RelocationError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "files/copy",
+        arg,
+        None)
+}
+
+/// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
+/// folder all its contents will be copied.
 pub fn copy_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a RelocationArg,
@@ -71,18 +87,19 @@ pub fn copy_v2<'a>(
         None)
 }
 
-/// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
-/// folder all its contents will be copied.
-#[deprecated(note = "replaced by copy_v2")]
-pub fn copy<'a>(
+/// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
+/// will return job ID immediately and do the async copy job in background. Please use
+/// [`copy_batch_check()`](crate::files::copy_batch_check) to check the job status.
+#[deprecated(note = "replaced by copy_batch_v2")]
+pub fn copy_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a RelocationArg,
-) -> impl std::future::Future<Output=Result<Metadata, crate::Error<RelocationError>>> + Send + 'a {
+    arg: &'a RelocationBatchArg,
+) -> impl std::future::Future<Output=Result<RelocationBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "files/copy",
+        "files/copy_batch",
         arg,
         None)
 }
@@ -106,19 +123,18 @@ pub fn copy_batch_v2<'a>(
         None)
 }
 
-/// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
-/// will return job ID immediately and do the async copy job in background. Please use
-/// [`copy_batch_check()`](crate::files::copy_batch_check) to check the job status.
-#[deprecated(note = "replaced by copy_batch_v2")]
-pub fn copy_batch<'a>(
+/// Returns the status of an asynchronous job for [`copy_batch()`](crate::files::copy_batch). If
+/// success, it returns list of results for each entry.
+#[deprecated(note = "replaced by copy_batch_check_v2")]
+pub fn copy_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a RelocationBatchArg,
-) -> impl std::future::Future<Output=Result<RelocationBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=Result<RelocationBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "files/copy_batch",
+        "files/copy_batch/check",
         arg,
         None)
 }
@@ -134,22 +150,6 @@ pub fn copy_batch_check_v2<'a>(
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
         "files/copy_batch/check_v2",
-        arg,
-        None)
-}
-
-/// Returns the status of an asynchronous job for [`copy_batch()`](crate::files::copy_batch). If
-/// success, it returns list of results for each entry.
-#[deprecated(note = "replaced by copy_batch_check_v2")]
-pub fn copy_batch_check<'a>(
-    client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=Result<RelocationBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Api,
-        crate::client_trait_common::Style::Rpc,
-        "files/copy_batch/check",
         arg,
         None)
 }
@@ -186,20 +186,6 @@ pub fn copy_reference_save<'a>(
 }
 
 /// Create a folder at a given path.
-pub fn create_folder_v2<'a>(
-    client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a CreateFolderArg,
-) -> impl std::future::Future<Output=Result<CreateFolderResult, crate::Error<CreateFolderError>>> + Send + 'a {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Api,
-        crate::client_trait_common::Style::Rpc,
-        "files/create_folder_v2",
-        arg,
-        None)
-}
-
-/// Create a folder at a given path.
 #[deprecated(note = "replaced by create_folder_v2")]
 pub fn create_folder<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
@@ -210,6 +196,20 @@ pub fn create_folder<'a>(
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
         "files/create_folder",
+        arg,
+        None)
+}
+
+/// Create a folder at a given path.
+pub fn create_folder_v2<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a CreateFolderArg,
+) -> impl std::future::Future<Output=Result<CreateFolderResult, crate::Error<CreateFolderError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "files/create_folder_v2",
         arg,
         None)
 }
@@ -253,23 +253,6 @@ pub fn create_folder_batch_check<'a>(
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
 /// metadata will be the corresponding [`FileMetadata`] or [`FolderMetadata`] for the item at time
 /// of deletion, and not a [`DeletedMetadata`] object.
-pub fn delete_v2<'a>(
-    client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a DeleteArg,
-) -> impl std::future::Future<Output=Result<DeleteResult, crate::Error<DeleteError>>> + Send + 'a {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Api,
-        crate::client_trait_common::Style::Rpc,
-        "files/delete_v2",
-        arg,
-        None)
-}
-
-/// Delete the file or folder at a given path. If the path is a folder, all its contents will be
-/// deleted too. A successful response indicates that the file or folder was deleted. The returned
-/// metadata will be the corresponding [`FileMetadata`] or [`FolderMetadata`] for the item at time
-/// of deletion, and not a [`DeletedMetadata`] object.
 #[deprecated(note = "replaced by delete_v2")]
 pub fn delete<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
@@ -280,6 +263,23 @@ pub fn delete<'a>(
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
         "files/delete",
+        arg,
+        None)
+}
+
+/// Delete the file or folder at a given path. If the path is a folder, all its contents will be
+/// deleted too. A successful response indicates that the file or folder was deleted. The returned
+/// metadata will be the corresponding [`FileMetadata`] or [`FolderMetadata`] for the item at time
+/// of deletion, and not a [`DeletedMetadata`] object.
+pub fn delete_v2<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a DeleteArg,
+) -> impl std::future::Future<Output=Result<DeleteResult, crate::Error<DeleteError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "files/delete_v2",
         arg,
         None)
 }
@@ -742,6 +742,22 @@ pub fn lock_file_batch<'a>(
 }
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
+/// folder all its contents will be moved.
+#[deprecated(note = "replaced by move_v2")]
+pub fn do_move<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a RelocationArg,
+) -> impl std::future::Future<Output=Result<Metadata, crate::Error<RelocationError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "files/move",
+        arg,
+        None)
+}
+
+/// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved. Note that we do not currently support case-only renaming.
 pub fn move_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
@@ -756,18 +772,19 @@ pub fn move_v2<'a>(
         None)
 }
 
-/// Move a file or folder to a different location in the user's Dropbox. If the source path is a
-/// folder all its contents will be moved.
-#[deprecated(note = "replaced by move_v2")]
-pub fn do_move<'a>(
+/// Move multiple files or folders to different locations at once in the user's Dropbox. This route
+/// will return job ID immediately and do the async moving job in background. Please use
+/// [`move_batch_check()`](crate::files::move_batch_check) to check the job status.
+#[deprecated(note = "replaced by move_batch_v2")]
+pub fn move_batch<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a RelocationArg,
-) -> impl std::future::Future<Output=Result<Metadata, crate::Error<RelocationError>>> + Send + 'a {
+    arg: &'a RelocationBatchArg,
+) -> impl std::future::Future<Output=Result<RelocationBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "files/move",
+        "files/move_batch",
         arg,
         None)
 }
@@ -792,19 +809,18 @@ pub fn move_batch_v2<'a>(
         None)
 }
 
-/// Move multiple files or folders to different locations at once in the user's Dropbox. This route
-/// will return job ID immediately and do the async moving job in background. Please use
-/// [`move_batch_check()`](crate::files::move_batch_check) to check the job status.
-#[deprecated(note = "replaced by move_batch_v2")]
-pub fn move_batch<'a>(
+/// Returns the status of an asynchronous job for [`move_batch()`](crate::files::move_batch). If
+/// success, it returns list of results for each entry.
+#[deprecated(note = "replaced by move_batch_check_v2")]
+pub fn move_batch_check<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a RelocationBatchArg,
-) -> impl std::future::Future<Output=Result<RelocationBatchLaunch, crate::Error<crate::NoError>>> + Send + 'a {
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=Result<RelocationBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
-        "files/move_batch",
+        "files/move_batch/check",
         arg,
         None)
 }
@@ -820,22 +836,6 @@ pub fn move_batch_check_v2<'a>(
         crate::client_trait_common::Endpoint::Api,
         crate::client_trait_common::Style::Rpc,
         "files/move_batch/check_v2",
-        arg,
-        None)
-}
-
-/// Returns the status of an asynchronous job for [`move_batch()`](crate::files::move_batch). If
-/// success, it returns list of results for each entry.
-#[deprecated(note = "replaced by move_batch_check_v2")]
-pub fn move_batch_check<'a>(
-    client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a crate::types::dbx_async::PollArg,
-) -> impl std::future::Future<Output=Result<RelocationBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Api,
-        crate::client_trait_common::Style::Rpc,
-        "files/move_batch/check",
         arg,
         None)
 }
@@ -1173,26 +1173,6 @@ pub fn upload<'a>(
         Some(crate::client_helpers::Body::from(body)))
 }
 
-/// Append more data to an upload session. When the parameter close is set, this call will close the
-/// session. A single request should not upload more than 150 MB. The maximum size of a file one can
-/// upload to an upload session is 350 GB. Calls to this endpoint will count as data transport calls
-/// for any Dropbox Business teams with a limit on the number of data transport calls allowed per
-/// month. For more information, see the [Data transport limit
-/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
-pub fn upload_session_append_v2<'a>(
-    client: &'a impl crate::async_client_trait::UserAuthClient,
-    arg: &'a UploadSessionAppendArg,
-    body: bytes::Bytes,
-) -> impl std::future::Future<Output=Result<(), crate::Error<UploadSessionAppendError>>> + Send + 'a {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait_common::Endpoint::Content,
-        crate::client_trait_common::Style::Upload,
-        "files/upload_session/append_v2",
-        arg,
-        Some(crate::client_helpers::Body::from(body)))
-}
-
 /// Append more data to an upload session. A single request should not upload more than 150 MB. The
 /// maximum size of a file one can upload to an upload session is 350 GB. Calls to this endpoint
 /// will count as data transport calls for any Dropbox Business teams with a limit on the number of
@@ -1209,6 +1189,26 @@ pub fn upload_session_append<'a>(
         crate::client_trait_common::Endpoint::Content,
         crate::client_trait_common::Style::Upload,
         "files/upload_session/append",
+        arg,
+        Some(crate::client_helpers::Body::from(body)))
+}
+
+/// Append more data to an upload session. When the parameter close is set, this call will close the
+/// session. A single request should not upload more than 150 MB. The maximum size of a file one can
+/// upload to an upload session is 350 GB. Calls to this endpoint will count as data transport calls
+/// for any Dropbox Business teams with a limit on the number of data transport calls allowed per
+/// month. For more information, see the [Data transport limit
+/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
+pub fn upload_session_append_v2<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UploadSessionAppendArg,
+    body: bytes::Bytes,
+) -> impl std::future::Future<Output=Result<(), crate::Error<UploadSessionAppendError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Content,
+        crate::client_trait_common::Style::Upload,
+        "files/upload_session/append_v2",
         arg,
         Some(crate::client_helpers::Body::from(body)))
 }
