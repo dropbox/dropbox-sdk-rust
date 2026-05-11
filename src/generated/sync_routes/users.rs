@@ -43,7 +43,7 @@ pub fn get_account(
     )
 }
 
-/// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
+/// Get information about multiple user accounts. At most 300 accounts may be queried per request.
 pub fn get_account_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetAccountBatchArg,

@@ -12,6 +12,8 @@
 
 if_feature! { "dbx_account", pub mod account; }
 
+if_feature! { "dbx_account_id", pub mod account_id; }
+
 if_feature! { "dbx_async", pub mod dbx_async; }
 
 pub mod auth;
@@ -31,6 +33,8 @@ if_feature! { "dbx_files", pub mod files; }
 if_feature! { "dbx_openid", pub mod openid; }
 
 if_feature! { "dbx_paper", pub mod paper; }
+
+if_feature! { "dbx_riviera", pub mod riviera; }
 
 if_feature! { "dbx_secondary_emails", pub mod secondary_emails; }
 
