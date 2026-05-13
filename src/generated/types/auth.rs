@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 /// Error occurred because the account doesn't have permission to access the resource.
@@ -16,6 +17,10 @@ pub enum AccessError {
     InvalidAccountType(InvalidAccountTypeError),
     /// Current account cannot access Paper.
     PaperAccessDenied(PaperAccessError),
+    /// Team doesn't have permission to access.
+    TeamAccessDenied,
+    /// Caller does not have permission to access the resource.
+    NoPermission(NoPermissionError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -51,6 +56,14 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "team_access_denied" => AccessError::TeamAccessDenied,
+                    "no_permission" => {
+                        match map.next_key()? {
+                            Some("no_permission") => AccessError::NoPermission(map.next_value()?),
+                            None => return Err(de::Error::missing_field("no_permission")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => AccessError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -59,6 +72,8 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
         }
         const VARIANTS: &[&str] = &["invalid_account_type",
                                     "paper_access_denied",
+                                    "team_access_denied",
+                                    "no_permission",
                                     "other"];
         deserializer.deserialize_struct("AccessError", VARIANTS, EnumVisitor)
     }
@@ -83,6 +98,19 @@ impl ::serde::ser::Serialize for AccessError {
                 s.serialize_field("paper_access_denied", x)?;
                 s.end()
             }
+            AccessError::TeamAccessDenied => {
+                // unit
+                let mut s = serializer.serialize_struct("AccessError", 1)?;
+                s.serialize_field(".tag", "team_access_denied")?;
+                s.end()
+            }
+            AccessError::NoPermission(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("AccessError", 2)?;
+                s.serialize_field(".tag", "no_permission")?;
+                s.serialize_field("no_permission", x)?;
+                s.end()
+            }
             AccessError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -93,6 +121,7 @@ impl ::std::error::Error for AccessError {
         match self {
             AccessError::InvalidAccountType(inner) => Some(inner),
             AccessError::PaperAccessDenied(inner) => Some(inner),
+            AccessError::NoPermission(inner) => Some(inner),
             _ => None,
         }
     }
@@ -103,6 +132,8 @@ impl ::std::fmt::Display for AccessError {
         match self {
             AccessError::InvalidAccountType(inner) => write!(f, "Current account type cannot access the resource: {}", inner),
             AccessError::PaperAccessDenied(inner) => write!(f, "Current account cannot access Paper: {}", inner),
+            AccessError::TeamAccessDenied => f.write_str("Team doesn't have permission to access."),
+            AccessError::NoPermission(inner) => write!(f, "Caller does not have permission to access the resource: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -316,6 +347,75 @@ impl ::std::fmt::Display for InvalidAccountTypeError {
         match self {
             InvalidAccountTypeError::Endpoint => f.write_str("Current account type doesn't have permission to access this route endpoint."),
             InvalidAccountTypeError::Feature => f.write_str("Current account type doesn't have permission to access this feature."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum NoPermissionError {
+    /// Current caller does not have permission to access the account information for one or more of
+    /// the specified account IDs.
+    UnauthorizedAccountIdUsage(UnauthorizedAccountIdUsageError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPermissionError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = NoPermissionError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPermissionError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "unauthorized_account_id_usage" => NoPermissionError::UnauthorizedAccountIdUsage(UnauthorizedAccountIdUsageError::internal_deserialize(&mut map)?),
+                    _ => NoPermissionError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["unauthorized_account_id_usage",
+                                    "other"];
+        deserializer.deserialize_struct("NoPermissionError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPermissionError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            NoPermissionError::UnauthorizedAccountIdUsage(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("NoPermissionError", 2)?;
+                s.serialize_field(".tag", "unauthorized_account_id_usage")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            NoPermissionError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for NoPermissionError {
+}
+
+impl ::std::fmt::Display for NoPermissionError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            NoPermissionError::UnauthorizedAccountIdUsage(inner) => write!(f, "Current caller does not have permission to access the account information for one or more of the specified account IDs: {:?}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -945,6 +1045,97 @@ impl ::serde::ser::Serialize for TokenScopeError {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("TokenScopeError", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UnauthorizedAccountIdUsageError {
+    /// The account IDs that the caller does not have permission to use.
+    pub unauthorized_account_ids: Vec<String>,
+}
+
+impl UnauthorizedAccountIdUsageError {
+    pub fn new(unauthorized_account_ids: Vec<String>) -> Self {
+        UnauthorizedAccountIdUsageError {
+            unauthorized_account_ids,
+        }
+    }
+}
+
+const UNAUTHORIZED_ACCOUNT_ID_USAGE_ERROR_FIELDS: &[&str] = &["unauthorized_account_ids"];
+impl UnauthorizedAccountIdUsageError {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UnauthorizedAccountIdUsageError, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UnauthorizedAccountIdUsageError>, V::Error> {
+        let mut field_unauthorized_account_ids = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "unauthorized_account_ids" => {
+                    if field_unauthorized_account_ids.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("unauthorized_account_ids"));
+                    }
+                    field_unauthorized_account_ids = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UnauthorizedAccountIdUsageError {
+            unauthorized_account_ids: field_unauthorized_account_ids.ok_or_else(|| ::serde::de::Error::missing_field("unauthorized_account_ids"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("unauthorized_account_ids", &self.unauthorized_account_ids)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UnauthorizedAccountIdUsageError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UnauthorizedAccountIdUsageError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UnauthorizedAccountIdUsageError struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UnauthorizedAccountIdUsageError::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UnauthorizedAccountIdUsageError", UNAUTHORIZED_ACCOUNT_ID_USAGE_ERROR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UnauthorizedAccountIdUsageError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UnauthorizedAccountIdUsageError", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

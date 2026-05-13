@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 /// Contains the arguments to be sent to the Dropbox servers.
@@ -87,6 +88,74 @@ impl ::serde::ser::Serialize for EchoArg {
         let mut s = serializer.serialize_struct("EchoArg", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+/// EchoError contains the error returned from the Dropbox servers.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum EchoError {
+    /// The request was successful.
+    UserRequested,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for EchoError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = EchoError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a EchoError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "user_requested" => EchoError::UserRequested,
+                    _ => EchoError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["user_requested",
+                                    "other"];
+        deserializer.deserialize_struct("EchoError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for EchoError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            EchoError::UserRequested => {
+                // unit
+                let mut s = serializer.serialize_struct("EchoError", 1)?;
+                s.serialize_field(".tag", "user_requested")?;
+                s.end()
+            }
+            EchoError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for EchoError {
+}
+
+impl ::std::fmt::Display for EchoError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            EchoError::UserRequested => f.write_str("The request was successful."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

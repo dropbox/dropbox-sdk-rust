@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 //! This namespace contains endpoints and data types for user management.
@@ -404,6 +405,70 @@ impl From<BasicAccount> for Account {
         }
     }
 }
+/// The value for [`UserFeature::DistinctMemberHome`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum DistinctMemberHomeValue {
+    /// When this value is True, the user have distinct home and root ns. When the value is False
+    /// the user's home ns and root ns are the same.
+    Enabled(bool),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DistinctMemberHomeValue {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DistinctMemberHomeValue;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DistinctMemberHomeValue structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "enabled" => {
+                        match map.next_key()? {
+                            Some("enabled") => DistinctMemberHomeValue::Enabled(map.next_value()?),
+                            None => return Err(de::Error::missing_field("enabled")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => DistinctMemberHomeValue::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["enabled",
+                                    "other"];
+        deserializer.deserialize_struct("DistinctMemberHomeValue", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DistinctMemberHomeValue {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            DistinctMemberHomeValue::Enabled(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("DistinctMemberHomeValue", 2)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.serialize_field("enabled", x)?;
+                s.end()
+            }
+            DistinctMemberHomeValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// The value for [`UserFeature::FileLocking`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -798,6 +863,9 @@ pub struct FullTeam {
     pub sharing_policies: crate::types::team_policies::TeamSharingPolicies,
     /// Team policy governing the use of the Office Add-In.
     pub office_addin_policy: crate::types::team_policies::OfficeAddInPolicy,
+    /// Team policy governing whether members can edit team folders at the top level of the team
+    /// space.
+    pub top_level_content_policy: crate::types::team_policies::TopLevelContentPolicy,
 }
 
 impl FullTeam {
@@ -806,12 +874,14 @@ impl FullTeam {
         name: String,
         sharing_policies: crate::types::team_policies::TeamSharingPolicies,
         office_addin_policy: crate::types::team_policies::OfficeAddInPolicy,
+        top_level_content_policy: crate::types::team_policies::TopLevelContentPolicy,
     ) -> Self {
         FullTeam {
             id,
             name,
             sharing_policies,
             office_addin_policy,
+            top_level_content_policy,
         }
     }
 }
@@ -819,7 +889,8 @@ impl FullTeam {
 const FULL_TEAM_FIELDS: &[&str] = &["id",
                                     "name",
                                     "sharing_policies",
-                                    "office_addin_policy"];
+                                    "office_addin_policy",
+                                    "top_level_content_policy"];
 impl FullTeam {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -835,6 +906,7 @@ impl FullTeam {
         let mut field_name = None;
         let mut field_sharing_policies = None;
         let mut field_office_addin_policy = None;
+        let mut field_top_level_content_policy = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -863,6 +935,12 @@ impl FullTeam {
                     }
                     field_office_addin_policy = Some(map.next_value()?);
                 }
+                "top_level_content_policy" => {
+                    if field_top_level_content_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("top_level_content_policy"));
+                    }
+                    field_top_level_content_policy = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -877,6 +955,7 @@ impl FullTeam {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             sharing_policies: field_sharing_policies.ok_or_else(|| ::serde::de::Error::missing_field("sharing_policies"))?,
             office_addin_policy: field_office_addin_policy.ok_or_else(|| ::serde::de::Error::missing_field("office_addin_policy"))?,
+            top_level_content_policy: field_top_level_content_policy.ok_or_else(|| ::serde::de::Error::missing_field("top_level_content_policy"))?,
         };
         Ok(Some(result))
     }
@@ -890,6 +969,7 @@ impl FullTeam {
         s.serialize_field("name", &self.name)?;
         s.serialize_field("sharing_policies", &self.sharing_policies)?;
         s.serialize_field("office_addin_policy", &self.office_addin_policy)?;
+        s.serialize_field("top_level_content_policy", &self.top_level_content_policy)?;
         Ok(())
     }
 }
@@ -916,7 +996,7 @@ impl ::serde::ser::Serialize for FullTeam {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FullTeam", 4)?;
+        let mut s = serializer.serialize_struct("FullTeam", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1838,6 +1918,70 @@ impl ::serde::ser::Serialize for Team {
     }
 }
 
+/// The value for [`UserFeature::TeamSharedDropbox`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum TeamSharedDropboxValue {
+    /// When this value is True, the user have a shared team root. When the value is False the user
+    /// have distinct root.
+    Enabled(bool),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamSharedDropboxValue {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TeamSharedDropboxValue;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamSharedDropboxValue structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "enabled" => {
+                        match map.next_key()? {
+                            Some("enabled") => TeamSharedDropboxValue::Enabled(map.next_value()?),
+                            None => return Err(de::Error::missing_field("enabled")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => TeamSharedDropboxValue::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["enabled",
+                                    "other"];
+        deserializer.deserialize_struct("TeamSharedDropboxValue", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamSharedDropboxValue {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            TeamSharedDropboxValue::Enabled(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("TeamSharedDropboxValue", 2)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.serialize_field("enabled", x)?;
+                s.end()
+            }
+            TeamSharedDropboxValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamSpaceAllocation {
@@ -1996,6 +2140,12 @@ pub enum UserFeature {
     PaperAsFiles,
     /// This feature allows users to lock files in order to restrict other users from editing them.
     FileLocking,
+    /// This feature contains information about whether or not the user is part of a team with a
+    /// shared team root.
+    TeamSharedDropbox,
+    /// This feature contains information about whether or not the user's home namespace is distinct
+    /// from their root namespace.
+    DistinctMemberHome,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2019,6 +2169,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeature {
                 let value = match tag {
                     "paper_as_files" => UserFeature::PaperAsFiles,
                     "file_locking" => UserFeature::FileLocking,
+                    "team_shared_dropbox" => UserFeature::TeamSharedDropbox,
+                    "distinct_member_home" => UserFeature::DistinctMemberHome,
                     _ => UserFeature::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -2027,6 +2179,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeature {
         }
         const VARIANTS: &[&str] = &["paper_as_files",
                                     "file_locking",
+                                    "team_shared_dropbox",
+                                    "distinct_member_home",
                                     "other"];
         deserializer.deserialize_struct("UserFeature", VARIANTS, EnumVisitor)
     }
@@ -2049,6 +2203,18 @@ impl ::serde::ser::Serialize for UserFeature {
                 s.serialize_field(".tag", "file_locking")?;
                 s.end()
             }
+            UserFeature::TeamSharedDropbox => {
+                // unit
+                let mut s = serializer.serialize_struct("UserFeature", 1)?;
+                s.serialize_field(".tag", "team_shared_dropbox")?;
+                s.end()
+            }
+            UserFeature::DistinctMemberHome => {
+                // unit
+                let mut s = serializer.serialize_struct("UserFeature", 1)?;
+                s.serialize_field(".tag", "distinct_member_home")?;
+                s.end()
+            }
             UserFeature::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -2060,6 +2226,8 @@ impl ::serde::ser::Serialize for UserFeature {
 pub enum UserFeatureValue {
     PaperAsFiles(PaperAsFilesValue),
     FileLocking(FileLockingValue),
+    TeamSharedDropbox(TeamSharedDropboxValue),
+    DistinctMemberHome(DistinctMemberHomeValue),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2095,6 +2263,20 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeatureValue {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "team_shared_dropbox" => {
+                        match map.next_key()? {
+                            Some("team_shared_dropbox") => UserFeatureValue::TeamSharedDropbox(map.next_value()?),
+                            None => return Err(de::Error::missing_field("team_shared_dropbox")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "distinct_member_home" => {
+                        match map.next_key()? {
+                            Some("distinct_member_home") => UserFeatureValue::DistinctMemberHome(map.next_value()?),
+                            None => return Err(de::Error::missing_field("distinct_member_home")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => UserFeatureValue::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -2103,6 +2285,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeatureValue {
         }
         const VARIANTS: &[&str] = &["paper_as_files",
                                     "file_locking",
+                                    "team_shared_dropbox",
+                                    "distinct_member_home",
                                     "other"];
         deserializer.deserialize_struct("UserFeatureValue", VARIANTS, EnumVisitor)
     }
@@ -2125,6 +2309,20 @@ impl ::serde::ser::Serialize for UserFeatureValue {
                 let mut s = serializer.serialize_struct("UserFeatureValue", 2)?;
                 s.serialize_field(".tag", "file_locking")?;
                 s.serialize_field("file_locking", x)?;
+                s.end()
+            }
+            UserFeatureValue::TeamSharedDropbox(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("UserFeatureValue", 2)?;
+                s.serialize_field(".tag", "team_shared_dropbox")?;
+                s.serialize_field("team_shared_dropbox", x)?;
+                s.end()
+            }
+            UserFeatureValue::DistinctMemberHome(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("UserFeatureValue", 2)?;
+                s.serialize_field(".tag", "distinct_member_home")?;
+                s.serialize_field("distinct_member_home", x)?;
                 s.end()
             }
             UserFeatureValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

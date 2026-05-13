@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 pub type Date = String /*Timestamp*/;
@@ -19,6 +20,108 @@ pub type NamespaceId = String;
 pub type OptionalNamePart = String;
 pub type SessionId = String;
 pub type SharedFolderId = NamespaceId;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct DropboxDuration {
+    pub seconds: i64,
+    pub nanos: i32,
+}
+
+impl DropboxDuration {
+    pub fn new(seconds: i64, nanos: i32) -> Self {
+        DropboxDuration {
+            seconds,
+            nanos,
+        }
+    }
+}
+
+const DROPBOX_DURATION_FIELDS: &[&str] = &["seconds",
+                                           "nanos"];
+impl DropboxDuration {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DropboxDuration, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DropboxDuration>, V::Error> {
+        let mut field_seconds = None;
+        let mut field_nanos = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "seconds" => {
+                    if field_seconds.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("seconds"));
+                    }
+                    field_seconds = Some(map.next_value()?);
+                }
+                "nanos" => {
+                    if field_nanos.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("nanos"));
+                    }
+                    field_nanos = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DropboxDuration {
+            seconds: field_seconds.ok_or_else(|| ::serde::de::Error::missing_field("seconds"))?,
+            nanos: field_nanos.ok_or_else(|| ::serde::de::Error::missing_field("nanos"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("seconds", &self.seconds)?;
+        s.serialize_field("nanos", &self.nanos)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DropboxDuration {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DropboxDuration;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DropboxDuration struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DropboxDuration::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DropboxDuration", DROPBOX_DURATION_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DropboxDuration {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DropboxDuration", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -118,7 +221,7 @@ pub enum PathRootError {
     /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error
     /// is the user's latest root info.
     InvalidRoot(RootInfo),
-    /// You don't have permission to access the namespace id in Dropbox-API-Path-Root  header.
+    /// You don't have permission to access the namespace id in Dropbox-API-Path-Root header.
     NoPermission,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -192,7 +295,7 @@ impl ::std::fmt::Display for PathRootError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             PathRootError::InvalidRoot(inner) => write!(f, "The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is the user's latest root info: {:?}", inner),
-            PathRootError::NoPermission => f.write_str("You don't have permission to access the namespace id in Dropbox-API-Path-Root  header."),
+            PathRootError::NoPermission => f.write_str("You don't have permission to access the namespace id in Dropbox-API-Path-Root header."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -252,7 +355,7 @@ impl ::serde::ser::Serialize for RootInfo {
                 s.end()
             }
             RootInfo::User(x) => {
-                let mut s = serializer.serialize_struct("RootInfo", 3)?;
+                let mut s = serializer.serialize_struct("RootInfo", 4)?;
                 s.serialize_field(".tag", "user")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -267,7 +370,8 @@ impl ::serde::ser::Serialize for RootInfo {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
-    /// root if the user is member of a team with a separate team root. Otherwise it will be same as
+    /// root if the user is member of a team with a separate team root, or the user root if user is
+    /// member of a team with separate distinct roots for users. Otherwise it will be the same as
     /// `home_namespace_id`.
     pub root_namespace_id: NamespaceId,
     /// The namespace ID for user's home namespace.
@@ -398,11 +502,14 @@ impl From<TeamRootInfo> for RootInfo {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
-    /// root if the user is member of a team with a separate team root. Otherwise it will be same as
+    /// root if the user is member of a team with a separate team root, or the user root if user is
+    /// member of a team with separate distinct roots for users. Otherwise it will be the same as
     /// `home_namespace_id`.
     pub root_namespace_id: NamespaceId,
     /// The namespace ID for user's home namespace.
     pub home_namespace_id: NamespaceId,
+    /// The path for user's home directory under the distinct user root.
+    pub home_path: Option<String>,
 }
 
 impl UserRootInfo {
@@ -410,12 +517,19 @@ impl UserRootInfo {
         UserRootInfo {
             root_namespace_id,
             home_namespace_id,
+            home_path: None,
         }
+    }
+
+    pub fn with_home_path(mut self, value: String) -> Self {
+        self.home_path = Some(value);
+        self
     }
 }
 
 const USER_ROOT_INFO_FIELDS: &[&str] = &["root_namespace_id",
-                                         "home_namespace_id"];
+                                         "home_namespace_id",
+                                         "home_path"];
 impl UserRootInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -429,6 +543,7 @@ impl UserRootInfo {
     ) -> Result<Option<UserRootInfo>, V::Error> {
         let mut field_root_namespace_id = None;
         let mut field_home_namespace_id = None;
+        let mut field_home_path = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -445,6 +560,12 @@ impl UserRootInfo {
                     }
                     field_home_namespace_id = Some(map.next_value()?);
                 }
+                "home_path" => {
+                    if field_home_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("home_path"));
+                    }
+                    field_home_path = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -457,6 +578,7 @@ impl UserRootInfo {
         let result = UserRootInfo {
             root_namespace_id: field_root_namespace_id.ok_or_else(|| ::serde::de::Error::missing_field("root_namespace_id"))?,
             home_namespace_id: field_home_namespace_id.ok_or_else(|| ::serde::de::Error::missing_field("home_namespace_id"))?,
+            home_path: field_home_path.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -468,6 +590,9 @@ impl UserRootInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("root_namespace_id", &self.root_namespace_id)?;
         s.serialize_field("home_namespace_id", &self.home_namespace_id)?;
+        if let Some(val) = &self.home_path {
+            s.serialize_field("home_path", val)?;
+        }
         Ok(())
     }
 }
@@ -494,7 +619,7 @@ impl ::serde::ser::Serialize for UserRootInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UserRootInfo", 2)?;
+        let mut s = serializer.serialize_struct("UserRootInfo", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

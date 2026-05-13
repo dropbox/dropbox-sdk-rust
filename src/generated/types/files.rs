@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 //! This namespace contains endpoints and data types for basic file operations.
@@ -241,7 +242,7 @@ pub struct AlphaGetMetadataArg {
     /// If true, [`DeletedMetadata`] will be returned for deleted file or folder, otherwise
     /// [`LookupError::NotFound`] will be returned.
     pub include_deleted: bool,
-    /// If true, the results will include a flag for each file indicating whether or not  that file
+    /// If true, the results will include a flag for each file indicating whether or not that file
     /// has any explicit members.
     pub include_has_explicit_shared_members: bool,
     /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
@@ -4797,11 +4798,11 @@ pub struct FileMetadata {
     /// Additional information if the file has custom properties with the property template
     /// specified.
     pub property_groups: Option<Vec<crate::types::file_properties::PropertyGroup>>,
-    /// This flag will only be present if include_has_explicit_shared_members  is true in
+    /// This flag will only be present if include_has_explicit_shared_members is true in
     /// [`list_folder()`](crate::files::list_folder) or
-    /// [`get_metadata()`](crate::files::get_metadata). If this  flag is present, it will be true if
-    /// this file has any explicit shared  members. This is different from sharing_info in that this
-    /// could be true  in the case where a file has explicit members but is not contained within  a
+    /// [`get_metadata()`](crate::files::get_metadata). If this flag is present, it will be true if
+    /// this file has any explicit shared members. This is different from sharing_info in that this
+    /// could be true in the case where a file has explicit members but is not contained within a
     /// shared folder.
     pub has_explicit_shared_members: Option<bool>,
     /// A hash of the file content. This field can be used to verify data integrity. For more
@@ -5204,6 +5205,7 @@ impl From<FileMetadata> for Metadata {
         Metadata::File(subtype)
     }
 }
+/// Result for File Operations
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileOpsResult {
@@ -6201,7 +6203,7 @@ pub struct GetMetadataArg {
     /// If true, [`DeletedMetadata`] will be returned for deleted file or folder, otherwise
     /// [`LookupError::NotFound`] will be returned.
     pub include_deleted: bool,
-    /// If true, the results will include a flag for each file indicating whether or not  that file
+    /// If true, the results will include a flag for each file indicating whether or not that file
     /// has any explicit members.
     pub include_has_explicit_shared_members: bool,
     /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
@@ -6935,8 +6937,8 @@ pub struct GetTemporaryUploadLinkArg {
     /// Contains the path and other optional modifiers for the future upload commit. Equivalent to
     /// the parameters provided to [`upload()`](crate::files::upload).
     pub commit_info: CommitInfo,
-    /// How long before this link expires, in seconds.  Attempting to start an upload with this link
-    /// longer than this period  of time after link creation will result in an error.
+    /// How long before this link expires, in seconds. Attempting to start an upload with this link
+    /// longer than this period of time after link creation will result in an error.
     pub duration: f64,
 }
 
@@ -7849,7 +7851,11 @@ pub struct ListFolderArg {
     /// A unique identifier for the file.
     pub path: PathROrId,
     /// If true, the list folder operation will be applied recursively to all subfolders and the
-    /// response will contain contents of all subfolders.
+    /// response will contain contents of all subfolders. In some cases, setting
+    /// [`ListFolderArg::recursive`](ListFolderArg) to `true` may lead to performance issues or
+    /// errors, especially when traversing folder structures with a large number of items. A
+    /// workaround for such cases is to set [`ListFolderArg::recursive`](ListFolderArg) to `false`
+    /// and traverse subfolders one at a time.
     pub recursive: bool,
     /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. This
     /// parameter will no longer have an effect starting December 2, 2019.
@@ -7857,7 +7863,7 @@ pub struct ListFolderArg {
     /// If true, the results will include entries for files and folders that used to exist but were
     /// deleted.
     pub include_deleted: bool,
-    /// If true, the results will include a flag for each file indicating whether or not  that file
+    /// If true, the results will include a flag for each file indicating whether or not that file
     /// has any explicit members.
     pub include_has_explicit_shared_members: bool,
     /// If true, the results will include entries under mounted folders which includes app folder,
@@ -8918,6 +8924,10 @@ pub struct ListRevisionsArg {
     pub mode: ListRevisionsMode,
     /// The maximum number of revision entries returned.
     pub limit: u64,
+    /// If set, ListRevisions will only return revisions prior to before_rev. Can be set using the
+    /// last revision from a previous call to list_revisions to fetch the next page of revisions.
+    /// Only supported in path mode.
+    pub before_rev: Option<Rev>,
 }
 
 impl ListRevisionsArg {
@@ -8926,6 +8936,7 @@ impl ListRevisionsArg {
             path,
             mode: ListRevisionsMode::Path,
             limit: 10,
+            before_rev: None,
         }
     }
 
@@ -8938,11 +8949,17 @@ impl ListRevisionsArg {
         self.limit = value;
         self
     }
+
+    pub fn with_before_rev(mut self, value: Rev) -> Self {
+        self.before_rev = Some(value);
+        self
+    }
 }
 
 const LIST_REVISIONS_ARG_FIELDS: &[&str] = &["path",
                                              "mode",
-                                             "limit"];
+                                             "limit",
+                                             "before_rev"];
 impl ListRevisionsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -8957,6 +8974,7 @@ impl ListRevisionsArg {
         let mut field_path = None;
         let mut field_mode = None;
         let mut field_limit = None;
+        let mut field_before_rev = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -8979,6 +8997,12 @@ impl ListRevisionsArg {
                     }
                     field_limit = Some(map.next_value()?);
                 }
+                "before_rev" => {
+                    if field_before_rev.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("before_rev"));
+                    }
+                    field_before_rev = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -8992,6 +9016,7 @@ impl ListRevisionsArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             mode: field_mode.unwrap_or(ListRevisionsMode::Path),
             limit: field_limit.unwrap_or(10),
+            before_rev: field_before_rev.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -9007,6 +9032,9 @@ impl ListRevisionsArg {
         }
         if self.limit != 10 {
             s.serialize_field("limit", &self.limit)?;
+        }
+        if let Some(val) = &self.before_rev {
+            s.serialize_field("before_rev", val)?;
         }
         Ok(())
     }
@@ -9034,7 +9062,7 @@ impl ::serde::ser::Serialize for ListRevisionsArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListRevisionsArg", 3)?;
+        let mut s = serializer.serialize_struct("ListRevisionsArg", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -9044,6 +9072,10 @@ impl ::serde::ser::Serialize for ListRevisionsArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum ListRevisionsError {
     Path(LookupError),
+    /// The revision in before_rev is invalid.
+    InvalidBeforeRev,
+    /// The before_rev argument is only supported in path mode.
+    BeforeRevNotSupported,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -9072,6 +9104,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "invalid_before_rev" => ListRevisionsError::InvalidBeforeRev,
+                    "before_rev_not_supported" => ListRevisionsError::BeforeRevNotSupported,
                     _ => ListRevisionsError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -9079,6 +9113,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsError {
             }
         }
         const VARIANTS: &[&str] = &["path",
+                                    "invalid_before_rev",
+                                    "before_rev_not_supported",
                                     "other"];
         deserializer.deserialize_struct("ListRevisionsError", VARIANTS, EnumVisitor)
     }
@@ -9094,6 +9130,18 @@ impl ::serde::ser::Serialize for ListRevisionsError {
                 let mut s = serializer.serialize_struct("ListRevisionsError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
+                s.end()
+            }
+            ListRevisionsError::InvalidBeforeRev => {
+                // unit
+                let mut s = serializer.serialize_struct("ListRevisionsError", 1)?;
+                s.serialize_field(".tag", "invalid_before_rev")?;
+                s.end()
+            }
+            ListRevisionsError::BeforeRevNotSupported => {
+                // unit
+                let mut s = serializer.serialize_struct("ListRevisionsError", 1)?;
+                s.serialize_field(".tag", "before_rev_not_supported")?;
                 s.end()
             }
             ListRevisionsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -9114,6 +9162,8 @@ impl ::std::fmt::Display for ListRevisionsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             ListRevisionsError::Path(inner) => write!(f, "ListRevisionsError: {}", inner),
+            ListRevisionsError::InvalidBeforeRev => f.write_str("The revision in before_rev is invalid."),
+            ListRevisionsError::BeforeRevNotSupported => f.write_str("The before_rev argument is only supported in path mode."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -9189,19 +9239,24 @@ impl ::serde::ser::Serialize for ListRevisionsMode {
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListRevisionsResult {
-    /// If the file identified by the latest revision in the response is either deleted or moved.
+    /// If the file identified by the latest revision in the response is either deleted or moved. If
+    /// before_rev is set, this refers to the latest revision of the file older than before_rev.
     pub is_deleted: bool,
     /// The revisions for the file. Only revisions that are not deleted will show up here.
     pub entries: Vec<FileMetadata>,
+    /// If true, then there are more entries available. Call list_revisions again with before_rev
+    /// equal to the revision of the last returned entry to retrieve the rest.
+    pub has_more: bool,
     /// The time of deletion if the file was deleted.
     pub server_deleted: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl ListRevisionsResult {
-    pub fn new(is_deleted: bool, entries: Vec<FileMetadata>) -> Self {
+    pub fn new(is_deleted: bool, entries: Vec<FileMetadata>, has_more: bool) -> Self {
         ListRevisionsResult {
             is_deleted,
             entries,
+            has_more,
             server_deleted: None,
         }
     }
@@ -9214,6 +9269,7 @@ impl ListRevisionsResult {
 
 const LIST_REVISIONS_RESULT_FIELDS: &[&str] = &["is_deleted",
                                                 "entries",
+                                                "has_more",
                                                 "server_deleted"];
 impl ListRevisionsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -9228,6 +9284,7 @@ impl ListRevisionsResult {
     ) -> Result<Option<ListRevisionsResult>, V::Error> {
         let mut field_is_deleted = None;
         let mut field_entries = None;
+        let mut field_has_more = None;
         let mut field_server_deleted = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -9244,6 +9301,12 @@ impl ListRevisionsResult {
                         return Err(::serde::de::Error::duplicate_field("entries"));
                     }
                     field_entries = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
                 }
                 "server_deleted" => {
                     if field_server_deleted.is_some() {
@@ -9263,6 +9326,7 @@ impl ListRevisionsResult {
         let result = ListRevisionsResult {
             is_deleted: field_is_deleted.ok_or_else(|| ::serde::de::Error::missing_field("is_deleted"))?,
             entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+            has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
             server_deleted: field_server_deleted.and_then(Option::flatten),
         };
         Ok(Some(result))
@@ -9275,6 +9339,7 @@ impl ListRevisionsResult {
         use serde::ser::SerializeStruct;
         s.serialize_field("is_deleted", &self.is_deleted)?;
         s.serialize_field("entries", &self.entries)?;
+        s.serialize_field("has_more", &self.has_more)?;
         if let Some(val) = &self.server_deleted {
             s.serialize_field("server_deleted", val)?;
         }
@@ -9304,7 +9369,7 @@ impl ::serde::ser::Serialize for ListRevisionsResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListRevisionsResult", 3)?;
+        let mut s = serializer.serialize_struct("ListRevisionsResult", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -10160,7 +10225,8 @@ impl ::std::fmt::Display for LookupError {
 pub enum MediaInfo {
     /// Indicate the photo/video is still under processing and metadata is not available yet.
     Pending,
-    /// The metadata for the photo/video.
+    /// The metadata for the photo/video. Uses MediaMetadataAbstract to preserve photo/video
+    /// subtypes (e.g. VideoMetadata.duration).
     Metadata(MediaMetadata),
 }
 
@@ -12225,7 +12291,7 @@ impl ::serde::ser::Serialize for PreviewArg {
 pub enum PreviewError {
     /// An error occurs when downloading metadata for the file.
     Path(LookupError),
-    /// This preview generation is still in progress and the file is not ready  for preview yet.
+    /// This preview generation is still in progress and the file is not ready for preview yet.
     InProgress,
     /// The file extension is not supported preview generation.
     UnsupportedExtension,
@@ -12320,7 +12386,7 @@ impl ::std::fmt::Display for PreviewError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             PreviewError::Path(inner) => write!(f, "An error occurs when downloading metadata for the file: {}", inner),
-            PreviewError::InProgress => f.write_str("This preview generation is still in progress and the file is not ready  for preview yet."),
+            PreviewError::InProgress => f.write_str("This preview generation is still in progress and the file is not ready for preview yet."),
             PreviewError::UnsupportedExtension => f.write_str("The file extension is not supported preview generation."),
             PreviewError::UnsupportedContent => f.write_str("The file content is not supported for preview generation."),
         }
@@ -15238,8 +15304,8 @@ impl ::serde::ser::Serialize for SaveUrlArg {
 #[non_exhaustive] // variants may be added in the future
 pub enum SaveUrlError {
     Path(WriteError),
-    /// Failed downloading the given URL. The URL may be  password-protected and the password
-    /// provided was incorrect,  or the link may be disabled.
+    /// Failed downloading the given URL. The URL may be password-protected and the password
+    /// provided was incorrect, or the link may be disabled.
     DownloadFailed,
     /// The given URL is invalid.
     InvalidUrl,
@@ -15339,7 +15405,7 @@ impl ::std::fmt::Display for SaveUrlError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             SaveUrlError::Path(inner) => write!(f, "SaveUrlError: {}", inner),
-            SaveUrlError::DownloadFailed => f.write_str("Failed downloading the given URL. The URL may be  password-protected and the password provided was incorrect,  or the link may be disabled."),
+            SaveUrlError::DownloadFailed => f.write_str("Failed downloading the given URL. The URL may be password-protected and the password provided was incorrect, or the link may be disabled."),
             SaveUrlError::InvalidUrl => f.write_str("The given URL is invalid."),
             SaveUrlError::NotFound => f.write_str("The file where the URL is saved to no longer exists."),
             _ => write!(f, "{:?}", *self),
@@ -16052,6 +16118,8 @@ pub enum SearchMatchTypeV2 {
     FilenameAndContent,
     /// This item was matched on image content.
     ImageContent,
+    /// This item was matched based on its metadata.
+    Metadata,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -16077,6 +16145,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMatchTypeV2 {
                     "file_content" => SearchMatchTypeV2::FileContent,
                     "filename_and_content" => SearchMatchTypeV2::FilenameAndContent,
                     "image_content" => SearchMatchTypeV2::ImageContent,
+                    "metadata" => SearchMatchTypeV2::Metadata,
                     _ => SearchMatchTypeV2::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -16087,6 +16156,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMatchTypeV2 {
                                     "file_content",
                                     "filename_and_content",
                                     "image_content",
+                                    "metadata",
                                     "other"];
         deserializer.deserialize_struct("SearchMatchTypeV2", VARIANTS, EnumVisitor)
     }
@@ -16119,6 +16189,12 @@ impl ::serde::ser::Serialize for SearchMatchTypeV2 {
                 // unit
                 let mut s = serializer.serialize_struct("SearchMatchTypeV2", 1)?;
                 s.serialize_field(".tag", "image_content")?;
+                s.end()
+            }
+            SearchMatchTypeV2::Metadata => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMatchTypeV2", 1)?;
+                s.serialize_field(".tag", "metadata")?;
                 s.end()
             }
             SearchMatchTypeV2::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -17231,7 +17307,7 @@ pub struct SharedLinkFileInfo {
     /// The path corresponding to a file in a shared link to a folder. Required for shared links to
     /// folders.
     pub path: Option<String>,
-    /// Password for the shared link. Required for password-protected shared links to files  unless
+    /// Password for the shared link. Required for password-protected shared links to files unless
     /// it can be read from a cookie.
     pub password: Option<String>,
 }
@@ -17974,13 +18050,20 @@ impl ::serde::ser::Serialize for Tag {
 pub struct ThumbnailArg {
     /// The path to the image file you want to thumbnail.
     pub path: ReadPath,
-    /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// The format for the thumbnail image, jpeg (default), png, or webp. For images that are
+    /// photos, jpeg should be preferred, while png is better for screenshots and digital arts, and
+    /// web for compression.
     pub format: ThumbnailFormat,
     /// The size for the thumbnail image.
     pub size: ThumbnailSize,
     /// How to resize and crop the image to achieve the desired size.
     pub mode: ThumbnailMode,
+    /// Quality of the thumbnail image.
+    pub quality: ThumbnailQuality,
+    /// Normally, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. When this
+    /// flag is true, [`FileMetadata::media_info`](FileMetadata) is not populated. This improves
+    /// latency for use cases where `media_info` is not needed.
+    pub exclude_media_info: Option<bool>,
 }
 
 impl ThumbnailArg {
@@ -17990,6 +18073,8 @@ impl ThumbnailArg {
             format: ThumbnailFormat::Jpeg,
             size: ThumbnailSize::W64h64,
             mode: ThumbnailMode::Strict,
+            quality: ThumbnailQuality::Quality80,
+            exclude_media_info: None,
         }
     }
 
@@ -18007,12 +18092,24 @@ impl ThumbnailArg {
         self.mode = value;
         self
     }
+
+    pub fn with_quality(mut self, value: ThumbnailQuality) -> Self {
+        self.quality = value;
+        self
+    }
+
+    pub fn with_exclude_media_info(mut self, value: bool) -> Self {
+        self.exclude_media_info = Some(value);
+        self
+    }
 }
 
 const THUMBNAIL_ARG_FIELDS: &[&str] = &["path",
                                         "format",
                                         "size",
-                                        "mode"];
+                                        "mode",
+                                        "quality",
+                                        "exclude_media_info"];
 impl ThumbnailArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -18028,6 +18125,8 @@ impl ThumbnailArg {
         let mut field_format = None;
         let mut field_size = None;
         let mut field_mode = None;
+        let mut field_quality = None;
+        let mut field_exclude_media_info = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -18056,6 +18155,18 @@ impl ThumbnailArg {
                     }
                     field_mode = Some(map.next_value()?);
                 }
+                "quality" => {
+                    if field_quality.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("quality"));
+                    }
+                    field_quality = Some(map.next_value()?);
+                }
+                "exclude_media_info" => {
+                    if field_exclude_media_info.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("exclude_media_info"));
+                    }
+                    field_exclude_media_info = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -18070,6 +18181,8 @@ impl ThumbnailArg {
             format: field_format.unwrap_or(ThumbnailFormat::Jpeg),
             size: field_size.unwrap_or(ThumbnailSize::W64h64),
             mode: field_mode.unwrap_or(ThumbnailMode::Strict),
+            quality: field_quality.unwrap_or(ThumbnailQuality::Quality80),
+            exclude_media_info: field_exclude_media_info.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -18088,6 +18201,12 @@ impl ThumbnailArg {
         }
         if self.mode != ThumbnailMode::Strict {
             s.serialize_field("mode", &self.mode)?;
+        }
+        if self.quality != ThumbnailQuality::Quality80 {
+            s.serialize_field("quality", &self.quality)?;
+        }
+        if let Some(val) = &self.exclude_media_info {
+            s.serialize_field("exclude_media_info", val)?;
         }
         Ok(())
     }
@@ -18115,7 +18234,7 @@ impl ::serde::ser::Serialize for ThumbnailArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ThumbnailArg", 4)?;
+        let mut s = serializer.serialize_struct("ThumbnailArg", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -18129,6 +18248,8 @@ pub enum ThumbnailError {
     UnsupportedExtension,
     /// The image cannot be converted to a thumbnail.
     UnsupportedImage,
+    /// Encrypted content cannot be converted to a thumbnail.
+    EncryptedContent,
     /// An error occurs during thumbnail conversion.
     ConversionError,
 }
@@ -18158,6 +18279,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailError {
                     }
                     "unsupported_extension" => ThumbnailError::UnsupportedExtension,
                     "unsupported_image" => ThumbnailError::UnsupportedImage,
+                    "encrypted_content" => ThumbnailError::EncryptedContent,
                     "conversion_error" => ThumbnailError::ConversionError,
                     _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
                 };
@@ -18168,6 +18290,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailError {
         const VARIANTS: &[&str] = &["path",
                                     "unsupported_extension",
                                     "unsupported_image",
+                                    "encrypted_content",
                                     "conversion_error"];
         deserializer.deserialize_struct("ThumbnailError", VARIANTS, EnumVisitor)
     }
@@ -18197,6 +18320,12 @@ impl ::serde::ser::Serialize for ThumbnailError {
                 s.serialize_field(".tag", "unsupported_image")?;
                 s.end()
             }
+            ThumbnailError::EncryptedContent => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailError", 1)?;
+                s.serialize_field(".tag", "encrypted_content")?;
+                s.end()
+            }
             ThumbnailError::ConversionError => {
                 // unit
                 let mut s = serializer.serialize_struct("ThumbnailError", 1)?;
@@ -18222,6 +18351,7 @@ impl ::std::fmt::Display for ThumbnailError {
             ThumbnailError::Path(inner) => write!(f, "An error occurs when downloading metadata for the image: {}", inner),
             ThumbnailError::UnsupportedExtension => f.write_str("The file extension doesn't allow conversion to a thumbnail."),
             ThumbnailError::UnsupportedImage => f.write_str("The image cannot be converted to a thumbnail."),
+            ThumbnailError::EncryptedContent => f.write_str("Encrypted content cannot be converted to a thumbnail."),
             ThumbnailError::ConversionError => f.write_str("An error occurs during thumbnail conversion."),
         }
     }
@@ -18231,6 +18361,7 @@ impl ::std::fmt::Display for ThumbnailError {
 pub enum ThumbnailFormat {
     Jpeg,
     Png,
+    Webp,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
@@ -18251,6 +18382,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
                 let value = match tag {
                     "jpeg" => ThumbnailFormat::Jpeg,
                     "png" => ThumbnailFormat::Png,
+                    "webp" => ThumbnailFormat::Webp,
                     _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -18258,7 +18390,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
             }
         }
         const VARIANTS: &[&str] = &["jpeg",
-                                    "png"];
+                                    "png",
+                                    "webp"];
         deserializer.deserialize_struct("ThumbnailFormat", VARIANTS, EnumVisitor)
     }
 }
@@ -18280,6 +18413,12 @@ impl ::serde::ser::Serialize for ThumbnailFormat {
                 s.serialize_field(".tag", "png")?;
                 s.end()
             }
+            ThumbnailFormat::Webp => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailFormat", 1)?;
+                s.serialize_field(".tag", "webp")?;
+                s.end()
+            }
         }
     }
 }
@@ -18292,6 +18431,8 @@ pub enum ThumbnailMode {
     Bestfit,
     /// Scale down the image to completely cover the given size or its transpose.
     FitoneBestfit,
+    /// Don't resize the image at all.
+    Original,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ThumbnailMode {
@@ -18313,6 +18454,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailMode {
                     "strict" => ThumbnailMode::Strict,
                     "bestfit" => ThumbnailMode::Bestfit,
                     "fitone_bestfit" => ThumbnailMode::FitoneBestfit,
+                    "original" => ThumbnailMode::Original,
                     _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -18321,7 +18463,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailMode {
         }
         const VARIANTS: &[&str] = &["strict",
                                     "bestfit",
-                                    "fitone_bestfit"];
+                                    "fitone_bestfit",
+                                    "original"];
         deserializer.deserialize_struct("ThumbnailMode", VARIANTS, EnumVisitor)
     }
 }
@@ -18349,6 +18492,71 @@ impl ::serde::ser::Serialize for ThumbnailMode {
                 s.serialize_field(".tag", "fitone_bestfit")?;
                 s.end()
             }
+            ThumbnailMode::Original => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailMode", 1)?;
+                s.serialize_field(".tag", "original")?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ThumbnailQuality {
+    /// default thumbnail quality.
+    Quality80,
+    /// high thumbnail quality.
+    Quality90,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailQuality {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ThumbnailQuality;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailQuality structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "quality_80" => ThumbnailQuality::Quality80,
+                    "quality_90" => ThumbnailQuality::Quality90,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["quality_80",
+                                    "quality_90"];
+        deserializer.deserialize_struct("ThumbnailQuality", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailQuality {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ThumbnailQuality::Quality80 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailQuality", 1)?;
+                s.serialize_field(".tag", "quality_80")?;
+                s.end()
+            }
+            ThumbnailQuality::Quality90 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailQuality", 1)?;
+                s.serialize_field(".tag", "quality_90")?;
+                s.end()
+            }
         }
     }
 }
@@ -18373,6 +18581,8 @@ pub enum ThumbnailSize {
     W1024h768,
     /// 2048 by 1536 px.
     W2048h1536,
+    /// 3200 by 2400 px.
+    W3200h2400,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
@@ -18400,6 +18610,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                     "w960h640" => ThumbnailSize::W960h640,
                     "w1024h768" => ThumbnailSize::W1024h768,
                     "w2048h1536" => ThumbnailSize::W2048h1536,
+                    "w3200h2400" => ThumbnailSize::W3200h2400,
                     _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -18414,7 +18625,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                                     "w640h480",
                                     "w960h640",
                                     "w1024h768",
-                                    "w2048h1536"];
+                                    "w2048h1536",
+                                    "w3200h2400"];
         deserializer.deserialize_struct("ThumbnailSize", VARIANTS, EnumVisitor)
     }
 }
@@ -18478,6 +18690,12 @@ impl ::serde::ser::Serialize for ThumbnailSize {
                 s.serialize_field(".tag", "w2048h1536")?;
                 s.end()
             }
+            ThumbnailSize::W3200h2400 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w3200h2400")?;
+                s.end()
+            }
         }
     }
 }
@@ -18488,13 +18706,20 @@ pub struct ThumbnailV2Arg {
     /// Information specifying which file to preview. This could be a path to a file, a shared link
     /// pointing to a file, or a shared link pointing to a folder, with a relative path.
     pub resource: PathOrLink,
-    /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// The format for the thumbnail image, jpeg (default), png, or webp. For images that are
+    /// photos, jpeg should be preferred, while png is better for screenshots and digital arts, and
+    /// web for compression.
     pub format: ThumbnailFormat,
     /// The size for the thumbnail image.
     pub size: ThumbnailSize,
     /// How to resize and crop the image to achieve the desired size.
     pub mode: ThumbnailMode,
+    /// Quality of the thumbnail image.
+    pub quality: ThumbnailQuality,
+    /// Normally, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. When this
+    /// flag is true, [`FileMetadata::media_info`](FileMetadata) is not populated. This improves
+    /// latency for use cases where `media_info` is not needed.
+    pub exclude_media_info: Option<bool>,
 }
 
 impl ThumbnailV2Arg {
@@ -18504,6 +18729,8 @@ impl ThumbnailV2Arg {
             format: ThumbnailFormat::Jpeg,
             size: ThumbnailSize::W64h64,
             mode: ThumbnailMode::Strict,
+            quality: ThumbnailQuality::Quality80,
+            exclude_media_info: None,
         }
     }
 
@@ -18521,12 +18748,24 @@ impl ThumbnailV2Arg {
         self.mode = value;
         self
     }
+
+    pub fn with_quality(mut self, value: ThumbnailQuality) -> Self {
+        self.quality = value;
+        self
+    }
+
+    pub fn with_exclude_media_info(mut self, value: bool) -> Self {
+        self.exclude_media_info = Some(value);
+        self
+    }
 }
 
 const THUMBNAIL_V2_ARG_FIELDS: &[&str] = &["resource",
                                            "format",
                                            "size",
-                                           "mode"];
+                                           "mode",
+                                           "quality",
+                                           "exclude_media_info"];
 impl ThumbnailV2Arg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -18542,6 +18781,8 @@ impl ThumbnailV2Arg {
         let mut field_format = None;
         let mut field_size = None;
         let mut field_mode = None;
+        let mut field_quality = None;
+        let mut field_exclude_media_info = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -18570,6 +18811,18 @@ impl ThumbnailV2Arg {
                     }
                     field_mode = Some(map.next_value()?);
                 }
+                "quality" => {
+                    if field_quality.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("quality"));
+                    }
+                    field_quality = Some(map.next_value()?);
+                }
+                "exclude_media_info" => {
+                    if field_exclude_media_info.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("exclude_media_info"));
+                    }
+                    field_exclude_media_info = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -18584,6 +18837,8 @@ impl ThumbnailV2Arg {
             format: field_format.unwrap_or(ThumbnailFormat::Jpeg),
             size: field_size.unwrap_or(ThumbnailSize::W64h64),
             mode: field_mode.unwrap_or(ThumbnailMode::Strict),
+            quality: field_quality.unwrap_or(ThumbnailQuality::Quality80),
+            exclude_media_info: field_exclude_media_info.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -18602,6 +18857,12 @@ impl ThumbnailV2Arg {
         }
         if self.mode != ThumbnailMode::Strict {
             s.serialize_field("mode", &self.mode)?;
+        }
+        if self.quality != ThumbnailQuality::Quality80 {
+            s.serialize_field("quality", &self.quality)?;
+        }
+        if let Some(val) = &self.exclude_media_info {
+            s.serialize_field("exclude_media_info", val)?;
         }
         Ok(())
     }
@@ -18629,7 +18890,7 @@ impl ::serde::ser::Serialize for ThumbnailV2Arg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ThumbnailV2Arg", 4)?;
+        let mut s = serializer.serialize_struct("ThumbnailV2Arg", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -18644,6 +18905,8 @@ pub enum ThumbnailV2Error {
     UnsupportedExtension,
     /// The image cannot be converted to a thumbnail.
     UnsupportedImage,
+    /// Encrypted content cannot be converted to a thumbnail.
+    EncryptedContent,
     /// An error occurred during thumbnail conversion.
     ConversionError,
     /// Access to this shared link is forbidden.
@@ -18680,6 +18943,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailV2Error {
                     }
                     "unsupported_extension" => ThumbnailV2Error::UnsupportedExtension,
                     "unsupported_image" => ThumbnailV2Error::UnsupportedImage,
+                    "encrypted_content" => ThumbnailV2Error::EncryptedContent,
                     "conversion_error" => ThumbnailV2Error::ConversionError,
                     "access_denied" => ThumbnailV2Error::AccessDenied,
                     "not_found" => ThumbnailV2Error::NotFound,
@@ -18692,6 +18956,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailV2Error {
         const VARIANTS: &[&str] = &["path",
                                     "unsupported_extension",
                                     "unsupported_image",
+                                    "encrypted_content",
                                     "conversion_error",
                                     "access_denied",
                                     "not_found",
@@ -18722,6 +18987,12 @@ impl ::serde::ser::Serialize for ThumbnailV2Error {
                 // unit
                 let mut s = serializer.serialize_struct("ThumbnailV2Error", 1)?;
                 s.serialize_field(".tag", "unsupported_image")?;
+                s.end()
+            }
+            ThumbnailV2Error::EncryptedContent => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailV2Error", 1)?;
+                s.serialize_field(".tag", "encrypted_content")?;
                 s.end()
             }
             ThumbnailV2Error::ConversionError => {
@@ -18762,6 +19033,7 @@ impl ::std::fmt::Display for ThumbnailV2Error {
             ThumbnailV2Error::Path(inner) => write!(f, "An error occurred when downloading metadata for the image: {}", inner),
             ThumbnailV2Error::UnsupportedExtension => f.write_str("The file extension doesn't allow conversion to a thumbnail."),
             ThumbnailV2Error::UnsupportedImage => f.write_str("The image cannot be converted to a thumbnail."),
+            ThumbnailV2Error::EncryptedContent => f.write_str("Encrypted content cannot be converted to a thumbnail."),
             ThumbnailV2Error::ConversionError => f.write_str("An error occurred during thumbnail conversion."),
             ThumbnailV2Error::AccessDenied => f.write_str("Access to this shared link is forbidden."),
             ThumbnailV2Error::NotFound => f.write_str("The shared link does not exist."),
@@ -19219,11 +19491,13 @@ pub enum UploadError {
     Path(UploadWriteFailed),
     /// The supplied property group is invalid. The file has uploaded without property groups.
     PropertiesError(crate::types::file_properties::InvalidPropertyGroupError),
-    /// The request payload must be at most 150 MB.
+    /// The request payload must be at most 150 MiB.
     PayloadTooLarge,
     /// The content received by the Dropbox server in this call does not match the provided content
     /// hash.
     ContentHashMismatch,
+    /// The file is required to be encrypted, which is not supported in our public API.
+    EncryptionNotSupported,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -19255,6 +19529,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
                     }
                     "payload_too_large" => UploadError::PayloadTooLarge,
                     "content_hash_mismatch" => UploadError::ContentHashMismatch,
+                    "encryption_not_supported" => UploadError::EncryptionNotSupported,
                     _ => UploadError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -19265,6 +19540,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
                                     "properties_error",
                                     "payload_too_large",
                                     "content_hash_mismatch",
+                                    "encryption_not_supported",
                                     "other"];
         deserializer.deserialize_struct("UploadError", VARIANTS, EnumVisitor)
     }
@@ -19301,6 +19577,12 @@ impl ::serde::ser::Serialize for UploadError {
                 s.serialize_field(".tag", "content_hash_mismatch")?;
                 s.end()
             }
+            UploadError::EncryptionNotSupported => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadError", 1)?;
+                s.serialize_field(".tag", "encryption_not_supported")?;
+                s.end()
+            }
             UploadError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -19320,8 +19602,9 @@ impl ::std::fmt::Display for UploadError {
         match self {
             UploadError::Path(inner) => write!(f, "Unable to save the uploaded contents to a file: {:?}", inner),
             UploadError::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
-            UploadError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MiB."),
             UploadError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
+            UploadError::EncryptionNotSupported => f.write_str("The file is required to be encrypted, which is not supported in our public API."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -19463,6 +19746,623 @@ impl ::serde::ser::Serialize for UploadSessionAppendArg {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UploadSessionAppendBatchArg {
+    /// Append information for each file in the batch.
+    pub entries: Vec<UploadSessionAppendBatchArgEntry>,
+    /// A hash of the entire request body which is all the concatenated pieces of file content that
+    /// were uploaded in this call. If provided and the uploaded content does not match this hash,
+    /// an error will be returned. For more information see our [Content
+    /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
+    pub content_hash: Option<Sha256HexHash>,
+}
+
+impl UploadSessionAppendBatchArg {
+    pub fn new(entries: Vec<UploadSessionAppendBatchArgEntry>) -> Self {
+        UploadSessionAppendBatchArg {
+            entries,
+            content_hash: None,
+        }
+    }
+
+    pub fn with_content_hash(mut self, value: Sha256HexHash) -> Self {
+        self.content_hash = Some(value);
+        self
+    }
+}
+
+const UPLOAD_SESSION_APPEND_BATCH_ARG_FIELDS: &[&str] = &["entries",
+                                                          "content_hash"];
+impl UploadSessionAppendBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UploadSessionAppendBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UploadSessionAppendBatchArg>, V::Error> {
+        let mut field_entries = None;
+        let mut field_content_hash = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                "content_hash" => {
+                    if field_content_hash.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("content_hash"));
+                    }
+                    field_content_hash = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UploadSessionAppendBatchArg {
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+            content_hash: field_content_hash.and_then(Option::flatten),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)?;
+        if let Some(val) = &self.content_hash {
+            s.serialize_field("content_hash", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionAppendBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionAppendBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionAppendBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionAppendBatchArg", UPLOAD_SESSION_APPEND_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionAppendBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionAppendBatchArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UploadSessionAppendBatchArgEntry {
+    /// Contains the upload session ID and the offset.
+    pub cursor: UploadSessionCursor,
+    /// Length in bytes of the data that should be appended for this session. Used to split the
+    /// batched upload data for multiple upload sessions.
+    pub length: u64,
+    /// If true, the current session will be closed, at which point you won't be able to call
+    /// [`upload_session_append_batch()`](crate::files::upload_session_append_batch) anymore with
+    /// the current session.
+    pub close: bool,
+}
+
+impl UploadSessionAppendBatchArgEntry {
+    pub fn new(cursor: UploadSessionCursor, length: u64) -> Self {
+        UploadSessionAppendBatchArgEntry {
+            cursor,
+            length,
+            close: false,
+        }
+    }
+
+    pub fn with_close(mut self, value: bool) -> Self {
+        self.close = value;
+        self
+    }
+}
+
+const UPLOAD_SESSION_APPEND_BATCH_ARG_ENTRY_FIELDS: &[&str] = &["cursor",
+                                                                "length",
+                                                                "close"];
+impl UploadSessionAppendBatchArgEntry {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UploadSessionAppendBatchArgEntry, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UploadSessionAppendBatchArgEntry>, V::Error> {
+        let mut field_cursor = None;
+        let mut field_length = None;
+        let mut field_close = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "length" => {
+                    if field_length.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("length"));
+                    }
+                    field_length = Some(map.next_value()?);
+                }
+                "close" => {
+                    if field_close.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("close"));
+                    }
+                    field_close = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UploadSessionAppendBatchArgEntry {
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+            length: field_length.ok_or_else(|| ::serde::de::Error::missing_field("length"))?,
+            close: field_close.unwrap_or(false),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("length", &self.length)?;
+        if self.close {
+            s.serialize_field("close", &self.close)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendBatchArgEntry {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionAppendBatchArgEntry;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionAppendBatchArgEntry struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionAppendBatchArgEntry::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionAppendBatchArgEntry", UPLOAD_SESSION_APPEND_BATCH_ARG_ENTRY_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionAppendBatchArgEntry {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionAppendBatchArgEntry", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum UploadSessionAppendBatchEntryError {
+    /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
+    NotFound,
+    /// The specified offset was incorrect. See the value for the correct offset. This error may
+    /// occur when a previous request was received and processed successfully but the client did not
+    /// receive the response, e.g. due to a network error.
+    IncorrectOffset(UploadSessionOffsetError),
+    /// You are attempting to append data to an upload session that has already been closed (i.e.
+    /// committed).
+    Closed,
+    /// You can not append to the upload session because the size of a file should not exceed the
+    /// max file size limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
+    TooLarge,
+    /// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
+    ConcurrentSessionInvalidOffset,
+    /// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can
+    /// be uploaded.
+    ConcurrentSessionInvalidDataSize,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendBatchEntryError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UploadSessionAppendBatchEntryError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionAppendBatchEntryError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "not_found" => UploadSessionAppendBatchEntryError::NotFound,
+                    "incorrect_offset" => UploadSessionAppendBatchEntryError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(&mut map)?),
+                    "closed" => UploadSessionAppendBatchEntryError::Closed,
+                    "too_large" => UploadSessionAppendBatchEntryError::TooLarge,
+                    "concurrent_session_invalid_offset" => UploadSessionAppendBatchEntryError::ConcurrentSessionInvalidOffset,
+                    "concurrent_session_invalid_data_size" => UploadSessionAppendBatchEntryError::ConcurrentSessionInvalidDataSize,
+                    _ => UploadSessionAppendBatchEntryError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["not_found",
+                                    "incorrect_offset",
+                                    "closed",
+                                    "too_large",
+                                    "concurrent_session_invalid_offset",
+                                    "concurrent_session_invalid_data_size",
+                                    "other"];
+        deserializer.deserialize_struct("UploadSessionAppendBatchEntryError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionAppendBatchEntryError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            UploadSessionAppendBatchEntryError::NotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchEntryError", 1)?;
+                s.serialize_field(".tag", "not_found")?;
+                s.end()
+            }
+            UploadSessionAppendBatchEntryError::IncorrectOffset(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchEntryError", 2)?;
+                s.serialize_field(".tag", "incorrect_offset")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            UploadSessionAppendBatchEntryError::Closed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchEntryError", 1)?;
+                s.serialize_field(".tag", "closed")?;
+                s.end()
+            }
+            UploadSessionAppendBatchEntryError::TooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchEntryError", 1)?;
+                s.serialize_field(".tag", "too_large")?;
+                s.end()
+            }
+            UploadSessionAppendBatchEntryError::ConcurrentSessionInvalidOffset => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchEntryError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_invalid_offset")?;
+                s.end()
+            }
+            UploadSessionAppendBatchEntryError::ConcurrentSessionInvalidDataSize => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchEntryError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_invalid_data_size")?;
+                s.end()
+            }
+            UploadSessionAppendBatchEntryError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UploadSessionAppendBatchEntryError {
+}
+
+impl ::std::fmt::Display for UploadSessionAppendBatchEntryError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            UploadSessionAppendBatchEntryError::NotFound => f.write_str("The upload session ID was not found or has expired. Upload sessions are valid for 7 days."),
+            UploadSessionAppendBatchEntryError::IncorrectOffset(inner) => write!(f, "The specified offset was incorrect. See the value for the correct offset. This error may occur when a previous request was received and processed successfully but the client did not receive the response, e.g. due to a network error: {:?}", inner),
+            UploadSessionAppendBatchEntryError::Closed => f.write_str("You are attempting to append data to an upload session that has already been closed (i.e. committed)."),
+            UploadSessionAppendBatchEntryError::TooLarge => f.write_str("You can not append to the upload session because the size of a file should not exceed the max file size limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes)."),
+            UploadSessionAppendBatchEntryError::ConcurrentSessionInvalidOffset => f.write_str("For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes."),
+            UploadSessionAppendBatchEntryError::ConcurrentSessionInvalidDataSize => f.write_str("For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum UploadSessionAppendBatchError {
+    /// The request payload must be at most 150 MiB.
+    PayloadTooLarge,
+    /// The content received by the Dropbox server in this call does not match the provided content
+    /// hash.
+    ContentHashMismatch,
+    /// The total length of the content received by the Dropbox server in this call does not match
+    /// the total of the provided lengths in the batch arguments.
+    LengthMismatch,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendBatchError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UploadSessionAppendBatchError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionAppendBatchError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "payload_too_large" => UploadSessionAppendBatchError::PayloadTooLarge,
+                    "content_hash_mismatch" => UploadSessionAppendBatchError::ContentHashMismatch,
+                    "length_mismatch" => UploadSessionAppendBatchError::LengthMismatch,
+                    _ => UploadSessionAppendBatchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["payload_too_large",
+                                    "content_hash_mismatch",
+                                    "length_mismatch",
+                                    "other"];
+        deserializer.deserialize_struct("UploadSessionAppendBatchError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionAppendBatchError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            UploadSessionAppendBatchError::PayloadTooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchError", 1)?;
+                s.serialize_field(".tag", "payload_too_large")?;
+                s.end()
+            }
+            UploadSessionAppendBatchError::ContentHashMismatch => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchError", 1)?;
+                s.serialize_field(".tag", "content_hash_mismatch")?;
+                s.end()
+            }
+            UploadSessionAppendBatchError::LengthMismatch => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchError", 1)?;
+                s.serialize_field(".tag", "length_mismatch")?;
+                s.end()
+            }
+            UploadSessionAppendBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UploadSessionAppendBatchError {
+}
+
+impl ::std::fmt::Display for UploadSessionAppendBatchError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            UploadSessionAppendBatchError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MiB."),
+            UploadSessionAppendBatchError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
+            UploadSessionAppendBatchError::LengthMismatch => f.write_str("The total length of the content received by the Dropbox server in this call does not match the total of the provided lengths in the batch arguments."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UploadSessionAppendBatchResult {
+    /// Each entry in [`UploadSessionAppendBatchArg::entries`](UploadSessionAppendBatchArg) will
+    /// appear at the same position inside
+    /// [`UploadSessionAppendBatchResult::entries`](UploadSessionAppendBatchResult).
+    pub entries: Vec<UploadSessionAppendBatchResultEntry>,
+}
+
+impl UploadSessionAppendBatchResult {
+    pub fn new(entries: Vec<UploadSessionAppendBatchResultEntry>) -> Self {
+        UploadSessionAppendBatchResult {
+            entries,
+        }
+    }
+}
+
+const UPLOAD_SESSION_APPEND_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
+impl UploadSessionAppendBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UploadSessionAppendBatchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UploadSessionAppendBatchResult>, V::Error> {
+        let mut field_entries = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UploadSessionAppendBatchResult {
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendBatchResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionAppendBatchResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionAppendBatchResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionAppendBatchResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionAppendBatchResult", UPLOAD_SESSION_APPEND_BATCH_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionAppendBatchResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionAppendBatchResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum UploadSessionAppendBatchResultEntry {
+    Success,
+    Failure(UploadSessionAppendBatchEntryError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendBatchResultEntry {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UploadSessionAppendBatchResultEntry;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionAppendBatchResultEntry structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "success" => UploadSessionAppendBatchResultEntry::Success,
+                    "failure" => {
+                        match map.next_key()? {
+                            Some("failure") => UploadSessionAppendBatchResultEntry::Failure(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failure")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["success",
+                                    "failure"];
+        deserializer.deserialize_struct("UploadSessionAppendBatchResultEntry", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionAppendBatchResultEntry {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            UploadSessionAppendBatchResultEntry::Success => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchResultEntry", 1)?;
+                s.serialize_field(".tag", "success")?;
+                s.end()
+            }
+            UploadSessionAppendBatchResultEntry::Failure(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("UploadSessionAppendBatchResultEntry", 2)?;
+                s.serialize_field(".tag", "failure")?;
+                s.serialize_field("failure", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionAppendError {
     /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
@@ -19474,17 +20374,15 @@ pub enum UploadSessionAppendError {
     /// You are attempting to append data to an upload session that has already been closed (i.e.
     /// committed).
     Closed,
-    /// The session must be closed before calling upload_session/finish_batch.
-    NotClosed,
-    /// You can not append to the upload session because the size of a file should not reach the max
-    /// file size limit (i.e. 350GB).
+    /// You can not append to the upload session because the size of a file should not exceed the
+    /// max file size limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
     TooLarge,
-    /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+    /// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
     ConcurrentSessionInvalidOffset,
-    /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be
-    /// uploaded.
+    /// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can
+    /// be uploaded.
     ConcurrentSessionInvalidDataSize,
-    /// The request payload must be at most 150 MB.
+    /// The request payload must be at most 150 MiB.
     PayloadTooLarge,
     /// The content received by the Dropbox server in this call does not match the provided content
     /// hash.
@@ -19513,7 +20411,6 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendError {
                     "not_found" => UploadSessionAppendError::NotFound,
                     "incorrect_offset" => UploadSessionAppendError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(&mut map)?),
                     "closed" => UploadSessionAppendError::Closed,
-                    "not_closed" => UploadSessionAppendError::NotClosed,
                     "too_large" => UploadSessionAppendError::TooLarge,
                     "concurrent_session_invalid_offset" => UploadSessionAppendError::ConcurrentSessionInvalidOffset,
                     "concurrent_session_invalid_data_size" => UploadSessionAppendError::ConcurrentSessionInvalidDataSize,
@@ -19528,13 +20425,12 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendError {
         const VARIANTS: &[&str] = &["not_found",
                                     "incorrect_offset",
                                     "closed",
-                                    "not_closed",
                                     "too_large",
                                     "concurrent_session_invalid_offset",
                                     "concurrent_session_invalid_data_size",
                                     "payload_too_large",
-                                    "other",
-                                    "content_hash_mismatch"];
+                                    "content_hash_mismatch",
+                                    "other"];
         deserializer.deserialize_struct("UploadSessionAppendError", VARIANTS, EnumVisitor)
     }
 }
@@ -19561,12 +20457,6 @@ impl ::serde::ser::Serialize for UploadSessionAppendError {
                 // unit
                 let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
                 s.serialize_field(".tag", "closed")?;
-                s.end()
-            }
-            UploadSessionAppendError::NotClosed => {
-                // unit
-                let mut s = serializer.serialize_struct("UploadSessionAppendError", 1)?;
-                s.serialize_field(".tag", "not_closed")?;
                 s.end()
             }
             UploadSessionAppendError::TooLarge => {
@@ -19613,33 +20503,16 @@ impl ::std::fmt::Display for UploadSessionAppendError {
             UploadSessionAppendError::NotFound => f.write_str("The upload session ID was not found or has expired. Upload sessions are valid for 7 days."),
             UploadSessionAppendError::IncorrectOffset(inner) => write!(f, "The specified offset was incorrect. See the value for the correct offset. This error may occur when a previous request was received and processed successfully but the client did not receive the response, e.g. due to a network error: {:?}", inner),
             UploadSessionAppendError::Closed => f.write_str("You are attempting to append data to an upload session that has already been closed (i.e. committed)."),
-            UploadSessionAppendError::NotClosed => f.write_str("The session must be closed before calling upload_session/finish_batch."),
-            UploadSessionAppendError::TooLarge => f.write_str("You can not append to the upload session because the size of a file should not reach the max file size limit (i.e. 350GB)."),
-            UploadSessionAppendError::ConcurrentSessionInvalidOffset => f.write_str("For concurrent upload sessions, offset needs to be multiple of 4194304 bytes."),
-            UploadSessionAppendError::ConcurrentSessionInvalidDataSize => f.write_str("For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded."),
-            UploadSessionAppendError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadSessionAppendError::TooLarge => f.write_str("You can not append to the upload session because the size of a file should not exceed the max file size limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes)."),
+            UploadSessionAppendError::ConcurrentSessionInvalidOffset => f.write_str("For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes."),
+            UploadSessionAppendError::ConcurrentSessionInvalidDataSize => f.write_str("For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded."),
+            UploadSessionAppendError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MiB."),
             UploadSessionAppendError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
             _ => write!(f, "{:?}", *self),
         }
     }
 }
 
-// union extends UploadSessionLookupError
-impl From<UploadSessionLookupError> for UploadSessionAppendError {
-    fn from(parent: UploadSessionLookupError) -> Self {
-        match parent {
-            UploadSessionLookupError::NotFound => UploadSessionAppendError::NotFound,
-            UploadSessionLookupError::IncorrectOffset(x) => UploadSessionAppendError::IncorrectOffset(x),
-            UploadSessionLookupError::Closed => UploadSessionAppendError::Closed,
-            UploadSessionLookupError::NotClosed => UploadSessionAppendError::NotClosed,
-            UploadSessionLookupError::TooLarge => UploadSessionAppendError::TooLarge,
-            UploadSessionLookupError::ConcurrentSessionInvalidOffset => UploadSessionAppendError::ConcurrentSessionInvalidOffset,
-            UploadSessionLookupError::ConcurrentSessionInvalidDataSize => UploadSessionAppendError::ConcurrentSessionInvalidDataSize,
-            UploadSessionLookupError::PayloadTooLarge => UploadSessionAppendError::PayloadTooLarge,
-            UploadSessionLookupError::Other => UploadSessionAppendError::Other,
-        }
-    }
-}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionCursor {
@@ -20295,11 +21168,13 @@ pub enum UploadSessionFinishError {
     ConcurrentSessionNotClosed,
     /// Not all pieces of data were uploaded before trying to finish the session.
     ConcurrentSessionMissingData,
-    /// The request payload must be at most 150 MB.
+    /// The request payload must be at most 150 MiB.
     PayloadTooLarge,
     /// The content received by the Dropbox server in this call does not match the provided content
     /// hash.
     ContentHashMismatch,
+    /// The file is required to be encrypted, which is not supported in our public API.
+    EncryptionNotSupported,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -20349,6 +21224,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                     "concurrent_session_missing_data" => UploadSessionFinishError::ConcurrentSessionMissingData,
                     "payload_too_large" => UploadSessionFinishError::PayloadTooLarge,
                     "content_hash_mismatch" => UploadSessionFinishError::ContentHashMismatch,
+                    "encryption_not_supported" => UploadSessionFinishError::EncryptionNotSupported,
                     _ => UploadSessionFinishError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -20365,6 +21241,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                                     "concurrent_session_missing_data",
                                     "payload_too_large",
                                     "content_hash_mismatch",
+                                    "encryption_not_supported",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionFinishError", VARIANTS, EnumVisitor)
     }
@@ -20438,6 +21315,12 @@ impl ::serde::ser::Serialize for UploadSessionFinishError {
                 s.serialize_field(".tag", "content_hash_mismatch")?;
                 s.end()
             }
+            UploadSessionFinishError::EncryptionNotSupported => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
+                s.serialize_field(".tag", "encryption_not_supported")?;
+                s.end()
+            }
             UploadSessionFinishError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -20465,8 +21348,9 @@ impl ::std::fmt::Display for UploadSessionFinishError {
             UploadSessionFinishError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when finishing concurrent upload session."),
             UploadSessionFinishError::ConcurrentSessionNotClosed => f.write_str("Concurrent upload sessions need to be closed before finishing."),
             UploadSessionFinishError::ConcurrentSessionMissingData => f.write_str("Not all pieces of data were uploaded before trying to finish the session."),
-            UploadSessionFinishError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadSessionFinishError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MiB."),
             UploadSessionFinishError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
+            UploadSessionFinishError::EncryptionNotSupported => f.write_str("The file is required to be encrypted, which is not supported in our public API."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -20486,15 +21370,15 @@ pub enum UploadSessionLookupError {
     Closed,
     /// The session must be closed before calling upload_session/finish_batch.
     NotClosed,
-    /// You can not append to the upload session because the size of a file should not reach the max
-    /// file size limit (i.e. 350GB).
+    /// You can not append to the upload session because the size of a file should not exceed the
+    /// max file size limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
     TooLarge,
-    /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+    /// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
     ConcurrentSessionInvalidOffset,
-    /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be
-    /// uploaded.
+    /// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can
+    /// be uploaded.
     ConcurrentSessionInvalidDataSize,
-    /// The request payload must be at most 150 MB.
+    /// The request payload must be at most 150 MiB.
     PayloadTooLarge,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -20613,10 +21497,10 @@ impl ::std::fmt::Display for UploadSessionLookupError {
             UploadSessionLookupError::IncorrectOffset(inner) => write!(f, "The specified offset was incorrect. See the value for the correct offset. This error may occur when a previous request was received and processed successfully but the client did not receive the response, e.g. due to a network error: {:?}", inner),
             UploadSessionLookupError::Closed => f.write_str("You are attempting to append data to an upload session that has already been closed (i.e. committed)."),
             UploadSessionLookupError::NotClosed => f.write_str("The session must be closed before calling upload_session/finish_batch."),
-            UploadSessionLookupError::TooLarge => f.write_str("You can not append to the upload session because the size of a file should not reach the max file size limit (i.e. 350GB)."),
-            UploadSessionLookupError::ConcurrentSessionInvalidOffset => f.write_str("For concurrent upload sessions, offset needs to be multiple of 4194304 bytes."),
-            UploadSessionLookupError::ConcurrentSessionInvalidDataSize => f.write_str("For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded."),
-            UploadSessionLookupError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadSessionLookupError::TooLarge => f.write_str("You can not append to the upload session because the size of a file should not exceed the max file size limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes)."),
+            UploadSessionLookupError::ConcurrentSessionInvalidOffset => f.write_str("For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes."),
+            UploadSessionLookupError::ConcurrentSessionInvalidDataSize => f.write_str("For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded."),
+            UploadSessionLookupError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MiB."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -21049,7 +21933,7 @@ pub enum UploadSessionStartError {
     ConcurrentSessionDataNotAllowed,
     /// Can not start a closed concurrent upload session.
     ConcurrentSessionCloseNotAllowed,
-    /// The request payload must be at most 150 MB.
+    /// The request payload must be at most 150 MiB.
     PayloadTooLarge,
     /// The content received by the Dropbox server in this call does not match the provided content
     /// hash.
@@ -21136,7 +22020,7 @@ impl ::std::fmt::Display for UploadSessionStartError {
         match self {
             UploadSessionStartError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when starting concurrent upload session."),
             UploadSessionStartError::ConcurrentSessionCloseNotAllowed => f.write_str("Can not start a closed concurrent upload session."),
-            UploadSessionStartError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MB."),
+            UploadSessionStartError::PayloadTooLarge => f.write_str("The request payload must be at most 150 MiB."),
             UploadSessionStartError::ContentHashMismatch => f.write_str("The content received by the Dropbox server in this call does not match the provided content hash."),
             _ => write!(f, "{:?}", *self),
         }
@@ -21752,6 +22636,9 @@ pub enum WriteError {
     OperationSuppressed,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
+    /// The user doesn't have permission to perform the action due to restrictions set by a team
+    /// administrator
+    AccessRestricted,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -21793,6 +22680,7 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                     "team_folder" => WriteError::TeamFolder,
                     "operation_suppressed" => WriteError::OperationSuppressed,
                     "too_many_write_operations" => WriteError::TooManyWriteOperations,
+                    "access_restricted" => WriteError::AccessRestricted,
                     _ => WriteError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -21807,6 +22695,7 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                                     "team_folder",
                                     "operation_suppressed",
                                     "too_many_write_operations",
+                                    "access_restricted",
                                     "other"];
         deserializer.deserialize_struct("WriteError", VARIANTS, EnumVisitor)
     }
@@ -21870,6 +22759,12 @@ impl ::serde::ser::Serialize for WriteError {
                 s.serialize_field(".tag", "too_many_write_operations")?;
                 s.end()
             }
+            WriteError::AccessRestricted => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "access_restricted")?;
+                s.end()
+            }
             WriteError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -21895,6 +22790,7 @@ impl ::std::fmt::Display for WriteError {
             WriteError::TeamFolder => f.write_str("This endpoint cannot move or delete team folders."),
             WriteError::OperationSuppressed => f.write_str("This file operation is not allowed at this path."),
             WriteError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
+            WriteError::AccessRestricted => f.write_str("The user doesn't have permission to perform the action due to restrictions set by a team administrator"),
             _ => write!(f, "{:?}", *self),
         }
     }

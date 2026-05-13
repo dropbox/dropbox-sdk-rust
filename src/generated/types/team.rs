@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 pub type GroupsGetInfoResult = Vec<GroupsGetInfoItem>;
@@ -19,7 +20,6 @@ pub type ListHeldRevisionCursor = String;
 pub type MembersGetInfoResult = Vec<MembersGetInfoItem>;
 pub type NumberPerDay = Vec<Option<u64>>;
 pub type Path = String;
-pub type SecondaryEmail = crate::types::secondary_emails::SecondaryEmail;
 pub type TeamMemberRoleId = String;
 pub type UserQuota = u32;
 
@@ -273,7 +273,7 @@ impl From<ActiveWebSession> for DeviceSession {
 #[non_exhaustive] // variants may be added in the future
 pub enum AddSecondaryEmailResult {
     /// Describes a secondary email that was successfully added to a user.
-    Success(SecondaryEmail),
+    Success(crate::types::secondary_emails::SecondaryEmail),
     /// Secondary email is not available to be claimed by the user.
     Unavailable(crate::types::common::EmailAddress),
     /// Secondary email is already a pending email for the user.
@@ -311,7 +311,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddSecondaryEmailResult {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 let value = match tag {
-                    "success" => AddSecondaryEmailResult::Success(SecondaryEmail::internal_deserialize(&mut map)?),
+                    "success" => AddSecondaryEmailResult::Success(crate::types::secondary_emails::SecondaryEmail::internal_deserialize(&mut map)?),
                     "unavailable" => {
                         match map.next_key()? {
                             Some("unavailable") => AddSecondaryEmailResult::Unavailable(map.next_value()?),
@@ -2478,7 +2478,7 @@ pub struct DevicesActive {
     pub ios: NumberPerDay,
     /// Array of number of linked android devices with activity.
     pub android: NumberPerDay,
-    /// Array of number of other linked devices (blackberry, windows phone, etc)  with activity.
+    /// Array of number of other linked devices (blackberry, windows phone, etc) with activity.
     pub other: NumberPerDay,
     /// Array of total number of linked clients with activity.
     pub total: NumberPerDay,
@@ -3411,6 +3411,8 @@ pub enum Feature {
     HasTeamFileEvents,
     /// Does this team have team selective sync enabled.
     HasTeamSelectiveSync,
+    /// Does this team have team member folder.
+    HasDistinctMemberHomes,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -3436,6 +3438,7 @@ impl<'de> ::serde::de::Deserialize<'de> for Feature {
                     "has_team_shared_dropbox" => Feature::HasTeamSharedDropbox,
                     "has_team_file_events" => Feature::HasTeamFileEvents,
                     "has_team_selective_sync" => Feature::HasTeamSelectiveSync,
+                    "has_distinct_member_homes" => Feature::HasDistinctMemberHomes,
                     _ => Feature::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -3446,6 +3449,7 @@ impl<'de> ::serde::de::Deserialize<'de> for Feature {
                                     "has_team_shared_dropbox",
                                     "has_team_file_events",
                                     "has_team_selective_sync",
+                                    "has_distinct_member_homes",
                                     "other"];
         deserializer.deserialize_struct("Feature", VARIANTS, EnumVisitor)
     }
@@ -3480,6 +3484,12 @@ impl ::serde::ser::Serialize for Feature {
                 s.serialize_field(".tag", "has_team_selective_sync")?;
                 s.end()
             }
+            Feature::HasDistinctMemberHomes => {
+                // unit
+                let mut s = serializer.serialize_struct("Feature", 1)?;
+                s.serialize_field(".tag", "has_distinct_member_homes")?;
+                s.end()
+            }
             Feature::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -3494,6 +3504,7 @@ pub enum FeatureValue {
     HasTeamSharedDropbox(HasTeamSharedDropboxValue),
     HasTeamFileEvents(HasTeamFileEventsValue),
     HasTeamSelectiveSync(HasTeamSelectiveSyncValue),
+    HasDistinctMemberHomes(HasDistinctMemberHomesValue),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -3543,6 +3554,13 @@ impl<'de> ::serde::de::Deserialize<'de> for FeatureValue {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "has_distinct_member_homes" => {
+                        match map.next_key()? {
+                            Some("has_distinct_member_homes") => FeatureValue::HasDistinctMemberHomes(map.next_value()?),
+                            None => return Err(de::Error::missing_field("has_distinct_member_homes")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => FeatureValue::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -3553,6 +3571,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FeatureValue {
                                     "has_team_shared_dropbox",
                                     "has_team_file_events",
                                     "has_team_selective_sync",
+                                    "has_distinct_member_homes",
                                     "other"];
         deserializer.deserialize_struct("FeatureValue", VARIANTS, EnumVisitor)
     }
@@ -3589,6 +3608,13 @@ impl ::serde::ser::Serialize for FeatureValue {
                 let mut s = serializer.serialize_struct("FeatureValue", 2)?;
                 s.serialize_field(".tag", "has_team_selective_sync")?;
                 s.serialize_field("has_team_selective_sync", x)?;
+                s.end()
+            }
+            FeatureValue::HasDistinctMemberHomes(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("FeatureValue", 2)?;
+                s.serialize_field(".tag", "has_distinct_member_homes")?;
+                s.serialize_field("has_distinct_member_homes", x)?;
                 s.end()
             }
             FeatureValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -5693,8 +5719,8 @@ pub struct GroupMembersAddArg {
     pub group: GroupSelector,
     /// List of users to be added to the group.
     pub members: Vec<MemberAccess>,
-    /// Whether to return the list of members in the group.  Note that the default value will cause
-    /// all the group members  to be returned in the response. This may take a long time for large
+    /// Whether to return the list of members in the group. Note that the default value will cause
+    /// all the group members to be returned in the response. This may take a long time for large
     /// groups.
     pub return_members: bool,
 }
@@ -6116,8 +6142,8 @@ pub struct GroupMembersRemoveArg {
     pub group: GroupSelector,
     /// List of users to be removed from the group.
     pub users: Vec<UserSelectorArg>,
-    /// Whether to return the list of members in the group.  Note that the default value will cause
-    /// all the group members  to be returned in the response. This may take a long time for large
+    /// Whether to return the list of members in the group. Note that the default value will cause
+    /// all the group members to be returned in the response. This may take a long time for large
     /// groups.
     pub return_members: bool,
 }
@@ -6606,8 +6632,8 @@ pub struct GroupMembersSetAccessTypeArg {
     pub user: UserSelectorArg,
     /// New group access type the user will have.
     pub access_type: GroupAccessType,
-    /// Whether to return the list of members in the group.  Note that the default value will cause
-    /// all the group members  to be returned in the response. This may take a long time for large
+    /// Whether to return the list of members in the group. Note that the default value will cause
+    /// all the group members to be returned in the response. This may take a long time for large
     /// groups.
     pub return_members: bool,
 }
@@ -6981,8 +7007,8 @@ impl From<GroupSelectorError> for GroupSelectorWithTeamGroupError {
 pub struct GroupUpdateArgs {
     /// Specify a group.
     pub group: GroupSelector,
-    /// Whether to return the list of members in the group.  Note that the default value will cause
-    /// all the group members  to be returned in the response. This may take a long time for large
+    /// Whether to return the list of members in the group. Note that the default value will cause
+    /// all the group members to be returned in the response. This may take a long time for large
     /// groups.
     pub return_members: bool,
     /// Optional argument. Set group name to this if provided.
@@ -8353,6 +8379,69 @@ impl ::serde::ser::Serialize for GroupsSelector {
     }
 }
 
+/// The value for [`Feature::HasDistinctMemberHomes`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum HasDistinctMemberHomesValue {
+    /// Does this team have distinct team member homes.
+    HasDistinctMemberHomes(bool),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for HasDistinctMemberHomesValue {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = HasDistinctMemberHomesValue;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a HasDistinctMemberHomesValue structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "has_distinct_member_homes" => {
+                        match map.next_key()? {
+                            Some("has_distinct_member_homes") => HasDistinctMemberHomesValue::HasDistinctMemberHomes(map.next_value()?),
+                            None => return Err(de::Error::missing_field("has_distinct_member_homes")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => HasDistinctMemberHomesValue::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["has_distinct_member_homes",
+                                    "other"];
+        deserializer.deserialize_struct("HasDistinctMemberHomesValue", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for HasDistinctMemberHomesValue {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            HasDistinctMemberHomesValue::HasDistinctMemberHomes(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("HasDistinctMemberHomesValue", 2)?;
+                s.serialize_field(".tag", "has_distinct_member_homes")?;
+                s.serialize_field("has_distinct_member_homes", x)?;
+                s.end()
+            }
+            HasDistinctMemberHomesValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// The value for [`Feature::HasTeamFileEvents`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -8545,8 +8634,8 @@ impl ::serde::ser::Serialize for HasTeamSharedDropboxValue {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct IncludeMembersArg {
-    /// Whether to return the list of members in the group.  Note that the default value will cause
-    /// all the group members  to be returned in the response. This may take a long time for large
+    /// Whether to return the list of members in the group. Note that the default value will cause
+    /// all the group members to be returned in the response. This may take a long time for large
     /// groups.
     pub return_members: bool,
 }
@@ -16313,6 +16402,142 @@ impl From<UserSelectorError> for MembersDeactivateError {
     }
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MembersDeleteFormerMemberFilesError {
+    /// No matching user found. The provided team_member_id, email, or external_id does not exist on
+    /// this team.
+    UserNotFound,
+    /// The user is not a member of the team.
+    UserNotInTeam,
+    /// Cannot permanently delete files while it's being transferred.
+    TransferInProgress,
+    /// Cannot permanently delete files that have already been transferred.
+    AlreadyTransferred,
+    /// Cannot permanently delete files that have already been transferred or deleted.
+    AlreadyTransferredOrDeleted,
+    /// User has not been removed from the team.
+    UserNotRemoved,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersDeleteFormerMemberFilesError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersDeleteFormerMemberFilesError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersDeleteFormerMemberFilesError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "user_not_found" => MembersDeleteFormerMemberFilesError::UserNotFound,
+                    "user_not_in_team" => MembersDeleteFormerMemberFilesError::UserNotInTeam,
+                    "transfer_in_progress" => MembersDeleteFormerMemberFilesError::TransferInProgress,
+                    "already_transferred" => MembersDeleteFormerMemberFilesError::AlreadyTransferred,
+                    "already_transferred_or_deleted" => MembersDeleteFormerMemberFilesError::AlreadyTransferredOrDeleted,
+                    "user_not_removed" => MembersDeleteFormerMemberFilesError::UserNotRemoved,
+                    _ => MembersDeleteFormerMemberFilesError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other",
+                                    "transfer_in_progress",
+                                    "already_transferred",
+                                    "already_transferred_or_deleted",
+                                    "user_not_removed"];
+        deserializer.deserialize_struct("MembersDeleteFormerMemberFilesError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersDeleteFormerMemberFilesError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            MembersDeleteFormerMemberFilesError::UserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersDeleteFormerMemberFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_found")?;
+                s.end()
+            }
+            MembersDeleteFormerMemberFilesError::UserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersDeleteFormerMemberFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            MembersDeleteFormerMemberFilesError::TransferInProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersDeleteFormerMemberFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_in_progress")?;
+                s.end()
+            }
+            MembersDeleteFormerMemberFilesError::AlreadyTransferred => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersDeleteFormerMemberFilesError", 1)?;
+                s.serialize_field(".tag", "already_transferred")?;
+                s.end()
+            }
+            MembersDeleteFormerMemberFilesError::AlreadyTransferredOrDeleted => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersDeleteFormerMemberFilesError", 1)?;
+                s.serialize_field(".tag", "already_transferred_or_deleted")?;
+                s.end()
+            }
+            MembersDeleteFormerMemberFilesError::UserNotRemoved => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersDeleteFormerMemberFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_removed")?;
+                s.end()
+            }
+            MembersDeleteFormerMemberFilesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MembersDeleteFormerMemberFilesError {
+}
+
+impl ::std::fmt::Display for MembersDeleteFormerMemberFilesError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            MembersDeleteFormerMemberFilesError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersDeleteFormerMemberFilesError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersDeleteFormerMemberFilesError::TransferInProgress => f.write_str("Cannot permanently delete files while it's being transferred."),
+            MembersDeleteFormerMemberFilesError::AlreadyTransferred => f.write_str("Cannot permanently delete files that have already been transferred."),
+            MembersDeleteFormerMemberFilesError::AlreadyTransferredOrDeleted => f.write_str("Cannot permanently delete files that have already been transferred or deleted."),
+            MembersDeleteFormerMemberFilesError::UserNotRemoved => f.write_str("User has not been removed from the team."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+// union extends MembersPermanentlyDeleteFilesError
+impl From<MembersPermanentlyDeleteFilesError> for MembersDeleteFormerMemberFilesError {
+    fn from(parent: MembersPermanentlyDeleteFilesError) -> Self {
+        match parent {
+            MembersPermanentlyDeleteFilesError::UserNotFound => MembersDeleteFormerMemberFilesError::UserNotFound,
+            MembersPermanentlyDeleteFilesError::UserNotInTeam => MembersDeleteFormerMemberFilesError::UserNotInTeam,
+            MembersPermanentlyDeleteFilesError::Other => MembersDeleteFormerMemberFilesError::Other,
+            MembersPermanentlyDeleteFilesError::TransferInProgress => MembersDeleteFormerMemberFilesError::TransferInProgress,
+            MembersPermanentlyDeleteFilesError::AlreadyTransferred => MembersDeleteFormerMemberFilesError::AlreadyTransferred,
+            MembersPermanentlyDeleteFilesError::AlreadyTransferredOrDeleted => MembersDeleteFormerMemberFilesError::AlreadyTransferredOrDeleted,
+        }
+    }
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDeleteProfilePhotoArg {
     /// Identity of the user whose profile photo will be deleted.
@@ -16502,6 +16727,99 @@ impl From<MemberSelectorError> for MembersDeleteProfilePhotoError {
         }
     }
 }
+/// Exactly one of team_member_id, email, or external_id must be provided to identify a former team
+/// member.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersFormerMemberArg {
+    /// Identity of user whose files will be permanently deleted.
+    pub user: UserSelectorArg,
+}
+
+impl MembersFormerMemberArg {
+    pub fn new(user: UserSelectorArg) -> Self {
+        MembersFormerMemberArg {
+            user,
+        }
+    }
+}
+
+const MEMBERS_FORMER_MEMBER_ARG_FIELDS: &[&str] = &["user"];
+impl MembersFormerMemberArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersFormerMemberArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersFormerMemberArg>, V::Error> {
+        let mut field_user = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "user" => {
+                    if field_user.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("user"));
+                    }
+                    field_user = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersFormerMemberArg {
+            user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("user", &self.user)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersFormerMemberArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersFormerMemberArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersFormerMemberArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersFormerMemberArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersFormerMemberArg", MEMBERS_FORMER_MEMBER_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersFormerMemberArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersFormerMemberArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Available TeamMemberRole for the connected team. To be used with
 /// [`members_set_admin_permissions_v2()`](crate::team::members_set_admin_permissions_v2).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -17813,6 +18131,128 @@ impl ::serde::ser::Serialize for MembersListV2Result {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MembersPermanentlyDeleteFilesError {
+    /// No matching user found. The provided team_member_id, email, or external_id does not exist on
+    /// this team.
+    UserNotFound,
+    /// The user is not a member of the team.
+    UserNotInTeam,
+    /// Cannot permanently delete files while it's being transferred.
+    TransferInProgress,
+    /// Cannot permanently delete files that have already been transferred.
+    AlreadyTransferred,
+    /// Cannot permanently delete files that have already been transferred or deleted.
+    AlreadyTransferredOrDeleted,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersPermanentlyDeleteFilesError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersPermanentlyDeleteFilesError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersPermanentlyDeleteFilesError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "user_not_found" => MembersPermanentlyDeleteFilesError::UserNotFound,
+                    "user_not_in_team" => MembersPermanentlyDeleteFilesError::UserNotInTeam,
+                    "transfer_in_progress" => MembersPermanentlyDeleteFilesError::TransferInProgress,
+                    "already_transferred" => MembersPermanentlyDeleteFilesError::AlreadyTransferred,
+                    "already_transferred_or_deleted" => MembersPermanentlyDeleteFilesError::AlreadyTransferredOrDeleted,
+                    _ => MembersPermanentlyDeleteFilesError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other",
+                                    "transfer_in_progress",
+                                    "already_transferred",
+                                    "already_transferred_or_deleted"];
+        deserializer.deserialize_struct("MembersPermanentlyDeleteFilesError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersPermanentlyDeleteFilesError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            MembersPermanentlyDeleteFilesError::UserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersPermanentlyDeleteFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_found")?;
+                s.end()
+            }
+            MembersPermanentlyDeleteFilesError::UserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersPermanentlyDeleteFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            MembersPermanentlyDeleteFilesError::TransferInProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersPermanentlyDeleteFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_in_progress")?;
+                s.end()
+            }
+            MembersPermanentlyDeleteFilesError::AlreadyTransferred => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersPermanentlyDeleteFilesError", 1)?;
+                s.serialize_field(".tag", "already_transferred")?;
+                s.end()
+            }
+            MembersPermanentlyDeleteFilesError::AlreadyTransferredOrDeleted => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersPermanentlyDeleteFilesError", 1)?;
+                s.serialize_field(".tag", "already_transferred_or_deleted")?;
+                s.end()
+            }
+            MembersPermanentlyDeleteFilesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MembersPermanentlyDeleteFilesError {
+}
+
+impl ::std::fmt::Display for MembersPermanentlyDeleteFilesError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            MembersPermanentlyDeleteFilesError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersPermanentlyDeleteFilesError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersPermanentlyDeleteFilesError::TransferInProgress => f.write_str("Cannot permanently delete files while it's being transferred."),
+            MembersPermanentlyDeleteFilesError::AlreadyTransferred => f.write_str("Cannot permanently delete files that have already been transferred."),
+            MembersPermanentlyDeleteFilesError::AlreadyTransferredOrDeleted => f.write_str("Cannot permanently delete files that have already been transferred or deleted."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+// union extends MembersDeactivateError
+impl From<MembersDeactivateError> for MembersPermanentlyDeleteFilesError {
+    fn from(parent: MembersDeactivateError) -> Self {
+        match parent {
+            MembersDeactivateError::UserNotFound => MembersPermanentlyDeleteFilesError::UserNotFound,
+            MembersDeactivateError::UserNotInTeam => MembersPermanentlyDeleteFilesError::UserNotInTeam,
+            MembersDeactivateError::Other => MembersPermanentlyDeleteFilesError::Other,
+        }
+    }
+}
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -18028,8 +18468,8 @@ pub struct MembersRemoveArg {
     /// transfer_dest_id argument was provided, then this argument must be provided as well.
     pub transfer_admin_id: Option<UserSelectorArg>,
     /// Downgrade the member to a Basic account. The user will retain the email address associated
-    /// with their Dropbox  account and data in their account that is not restricted to team
-    /// members. In order to keep the account the argument `wipe_data` should be set to `false`.
+    /// with their Dropbox account and data in their account that is not restricted to team members.
+    /// In order to keep the account the argument `wipe_data` should be set to `false`.
     pub keep_account: bool,
     /// If provided, allows removed users to keep access to Dropbox folders (not Dropbox Paper
     /// folders) already explicitly shared with them (not via a group) when they are downgraded to a
@@ -18037,6 +18477,9 @@ pub struct MembersRemoveArg {
     /// In order to keep the sharing relationships, the arguments `wipe_data` should be set to
     /// `false` and `keep_account` should be set to `true`.
     pub retain_team_shares: bool,
+    /// Permanently delete the data in the deleted member's account. After permanent deletion, the
+    /// data is no longer available to be transferred to a different user.
+    pub permanently_delete_files: bool,
 }
 
 impl MembersRemoveArg {
@@ -18048,6 +18491,7 @@ impl MembersRemoveArg {
             transfer_admin_id: None,
             keep_account: false,
             retain_team_shares: false,
+            permanently_delete_files: false,
         }
     }
 
@@ -18075,6 +18519,11 @@ impl MembersRemoveArg {
         self.retain_team_shares = value;
         self
     }
+
+    pub fn with_permanently_delete_files(mut self, value: bool) -> Self {
+        self.permanently_delete_files = value;
+        self
+    }
 }
 
 const MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["user",
@@ -18082,7 +18531,8 @@ const MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["user",
                                              "transfer_dest_id",
                                              "transfer_admin_id",
                                              "keep_account",
-                                             "retain_team_shares"];
+                                             "retain_team_shares",
+                                             "permanently_delete_files"];
 impl MembersRemoveArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -18100,6 +18550,7 @@ impl MembersRemoveArg {
         let mut field_transfer_admin_id = None;
         let mut field_keep_account = None;
         let mut field_retain_team_shares = None;
+        let mut field_permanently_delete_files = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -18140,6 +18591,12 @@ impl MembersRemoveArg {
                     }
                     field_retain_team_shares = Some(map.next_value()?);
                 }
+                "permanently_delete_files" => {
+                    if field_permanently_delete_files.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("permanently_delete_files"));
+                    }
+                    field_permanently_delete_files = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -18156,6 +18613,7 @@ impl MembersRemoveArg {
             transfer_admin_id: field_transfer_admin_id.and_then(Option::flatten),
             keep_account: field_keep_account.unwrap_or(false),
             retain_team_shares: field_retain_team_shares.unwrap_or(false),
+            permanently_delete_files: field_permanently_delete_files.unwrap_or(false),
         };
         Ok(Some(result))
     }
@@ -18180,6 +18638,9 @@ impl MembersRemoveArg {
         }
         if self.retain_team_shares {
             s.serialize_field("retain_team_shares", &self.retain_team_shares)?;
+        }
+        if self.permanently_delete_files {
+            s.serialize_field("permanently_delete_files", &self.permanently_delete_files)?;
         }
         Ok(())
     }
@@ -18207,7 +18668,7 @@ impl ::serde::ser::Serialize for MembersRemoveArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MembersRemoveArg", 6)?;
+        let mut s = serializer.serialize_struct("MembersRemoveArg", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -18230,6 +18691,12 @@ pub enum MembersRemoveError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
+    /// Cannot permanently delete files while it's being transferred.
+    TransferInProgress,
+    /// Cannot permanently delete files that have already been transferred.
+    AlreadyTransferred,
+    /// Cannot permanently delete files that have already been transferred or deleted.
+    AlreadyTransferredOrDeleted,
     /// Expected removed user and transfer_dest user to be different.
     RemovedAndTransferDestShouldDiffer,
     /// Expected removed user and transfer_admin user to be different.
@@ -18255,6 +18722,9 @@ pub enum MembersRemoveError {
     /// Cannot keep account and delete the data at the same time. To keep the account the argument
     /// wipe_data should be set to `false`.
     CannotKeepAccountAndDeleteData,
+    /// Cannot keep account and permanently delete the data at the same time. To keep the account
+    /// the argument permanently_delete_files should be set to `false`.
+    CannotKeepAccountAndPermanentlyDelete,
     /// The email address of the user is too long to be disabled.
     EmailAddressTooLongToBeDisabled,
     /// Cannot keep account of an invited user.
@@ -18276,6 +18746,11 @@ pub enum MembersRemoveError {
     /// To convert this member to a Basic account, they'll first need to sign in to Dropbox and
     /// agree to the terms of service.
     CannotKeepAccountRequiredToSignTos,
+    /// Cannot permanently delete files and transfer the data to another user at the same time.
+    CannotPermanentlyDeleteAndTransfer,
+    /// This user is the active destination of an in-progress file transfer. Wait for the transfer
+    /// to complete before removing this member.
+    MemberIsTransferDestination,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -18299,6 +18774,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                 let value = match tag {
                     "user_not_found" => MembersRemoveError::UserNotFound,
                     "user_not_in_team" => MembersRemoveError::UserNotInTeam,
+                    "transfer_in_progress" => MembersRemoveError::TransferInProgress,
+                    "already_transferred" => MembersRemoveError::AlreadyTransferred,
+                    "already_transferred_or_deleted" => MembersRemoveError::AlreadyTransferredOrDeleted,
                     "removed_and_transfer_dest_should_differ" => MembersRemoveError::RemovedAndTransferDestShouldDiffer,
                     "removed_and_transfer_admin_should_differ" => MembersRemoveError::RemovedAndTransferAdminShouldDiffer,
                     "transfer_dest_user_not_found" => MembersRemoveError::TransferDestUserNotFound,
@@ -18311,6 +18789,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                     "remove_last_admin" => MembersRemoveError::RemoveLastAdmin,
                     "cannot_keep_account_and_transfer" => MembersRemoveError::CannotKeepAccountAndTransfer,
                     "cannot_keep_account_and_delete_data" => MembersRemoveError::CannotKeepAccountAndDeleteData,
+                    "cannot_keep_account_and_permanently_delete" => MembersRemoveError::CannotKeepAccountAndPermanentlyDelete,
                     "email_address_too_long_to_be_disabled" => MembersRemoveError::EmailAddressTooLongToBeDisabled,
                     "cannot_keep_invited_user_account" => MembersRemoveError::CannotKeepInvitedUserAccount,
                     "cannot_retain_shares_when_data_wiped" => MembersRemoveError::CannotRetainSharesWhenDataWiped,
@@ -18319,6 +18798,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                     "cannot_keep_account" => MembersRemoveError::CannotKeepAccount,
                     "cannot_keep_account_under_legal_hold" => MembersRemoveError::CannotKeepAccountUnderLegalHold,
                     "cannot_keep_account_required_to_sign_tos" => MembersRemoveError::CannotKeepAccountRequiredToSignTos,
+                    "cannot_permanently_delete_and_transfer" => MembersRemoveError::CannotPermanentlyDeleteAndTransfer,
+                    "member_is_transfer_destination" => MembersRemoveError::MemberIsTransferDestination,
                     _ => MembersRemoveError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -18328,6 +18809,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
         const VARIANTS: &[&str] = &["user_not_found",
                                     "user_not_in_team",
                                     "other",
+                                    "transfer_in_progress",
+                                    "already_transferred",
+                                    "already_transferred_or_deleted",
                                     "removed_and_transfer_dest_should_differ",
                                     "removed_and_transfer_admin_should_differ",
                                     "transfer_dest_user_not_found",
@@ -18340,6 +18824,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                                     "remove_last_admin",
                                     "cannot_keep_account_and_transfer",
                                     "cannot_keep_account_and_delete_data",
+                                    "cannot_keep_account_and_permanently_delete",
                                     "email_address_too_long_to_be_disabled",
                                     "cannot_keep_invited_user_account",
                                     "cannot_retain_shares_when_data_wiped",
@@ -18347,7 +18832,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                                     "cannot_retain_shares_when_team_external_sharing_off",
                                     "cannot_keep_account",
                                     "cannot_keep_account_under_legal_hold",
-                                    "cannot_keep_account_required_to_sign_tos"];
+                                    "cannot_keep_account_required_to_sign_tos",
+                                    "cannot_permanently_delete_and_transfer",
+                                    "member_is_transfer_destination"];
         deserializer.deserialize_struct("MembersRemoveError", VARIANTS, EnumVisitor)
     }
 }
@@ -18367,6 +18854,24 @@ impl ::serde::ser::Serialize for MembersRemoveError {
                 // unit
                 let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
                 s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            MembersRemoveError::TransferInProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "transfer_in_progress")?;
+                s.end()
+            }
+            MembersRemoveError::AlreadyTransferred => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "already_transferred")?;
+                s.end()
+            }
+            MembersRemoveError::AlreadyTransferredOrDeleted => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "already_transferred_or_deleted")?;
                 s.end()
             }
             MembersRemoveError::RemovedAndTransferDestShouldDiffer => {
@@ -18441,6 +18946,12 @@ impl ::serde::ser::Serialize for MembersRemoveError {
                 s.serialize_field(".tag", "cannot_keep_account_and_delete_data")?;
                 s.end()
             }
+            MembersRemoveError::CannotKeepAccountAndPermanentlyDelete => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "cannot_keep_account_and_permanently_delete")?;
+                s.end()
+            }
             MembersRemoveError::EmailAddressTooLongToBeDisabled => {
                 // unit
                 let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
@@ -18489,6 +19000,18 @@ impl ::serde::ser::Serialize for MembersRemoveError {
                 s.serialize_field(".tag", "cannot_keep_account_required_to_sign_tos")?;
                 s.end()
             }
+            MembersRemoveError::CannotPermanentlyDeleteAndTransfer => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "cannot_permanently_delete_and_transfer")?;
+                s.end()
+            }
+            MembersRemoveError::MemberIsTransferDestination => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "member_is_transfer_destination")?;
+                s.end()
+            }
             MembersRemoveError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -18502,6 +19025,9 @@ impl ::std::fmt::Display for MembersRemoveError {
         match self {
             MembersRemoveError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
             MembersRemoveError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersRemoveError::TransferInProgress => f.write_str("Cannot permanently delete files while it's being transferred."),
+            MembersRemoveError::AlreadyTransferred => f.write_str("Cannot permanently delete files that have already been transferred."),
+            MembersRemoveError::AlreadyTransferredOrDeleted => f.write_str("Cannot permanently delete files that have already been transferred or deleted."),
             MembersRemoveError::RemovedAndTransferDestShouldDiffer => f.write_str("Expected removed user and transfer_dest user to be different."),
             MembersRemoveError::RemovedAndTransferAdminShouldDiffer => f.write_str("Expected removed user and transfer_admin user to be different."),
             MembersRemoveError::TransferDestUserNotFound => f.write_str("No matching user found for the argument transfer_dest_id."),
@@ -18519,6 +19045,8 @@ impl ::std::fmt::Display for MembersRemoveError {
             MembersRemoveError::CannotKeepAccount => f.write_str("Only a team admin, can convert this account to a Basic account."),
             MembersRemoveError::CannotKeepAccountUnderLegalHold => f.write_str("This user content is currently being held. To convert this member's account to a Basic account, you'll first need to remove them from the hold."),
             MembersRemoveError::CannotKeepAccountRequiredToSignTos => f.write_str("To convert this member to a Basic account, they'll first need to sign in to Dropbox and agree to the terms of service."),
+            MembersRemoveError::CannotPermanentlyDeleteAndTransfer => f.write_str("Cannot permanently delete files and transfer the data to another user at the same time."),
+            MembersRemoveError::MemberIsTransferDestination => f.write_str("This user is the active destination of an in-progress file transfer. Wait for the transfer to complete before removing this member."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -18531,6 +19059,9 @@ impl From<MembersTransferFilesError> for MembersRemoveError {
             MembersTransferFilesError::UserNotFound => MembersRemoveError::UserNotFound,
             MembersTransferFilesError::UserNotInTeam => MembersRemoveError::UserNotInTeam,
             MembersTransferFilesError::Other => MembersRemoveError::Other,
+            MembersTransferFilesError::TransferInProgress => MembersRemoveError::TransferInProgress,
+            MembersTransferFilesError::AlreadyTransferred => MembersRemoveError::AlreadyTransferred,
+            MembersTransferFilesError::AlreadyTransferredOrDeleted => MembersRemoveError::AlreadyTransferredOrDeleted,
             MembersTransferFilesError::RemovedAndTransferDestShouldDiffer => MembersRemoveError::RemovedAndTransferDestShouldDiffer,
             MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer => MembersRemoveError::RemovedAndTransferAdminShouldDiffer,
             MembersTransferFilesError::TransferDestUserNotFound => MembersRemoveError::TransferDestUserNotFound,
@@ -20069,6 +20600,12 @@ pub enum MembersTransferFilesError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
+    /// Cannot permanently delete files while it's being transferred.
+    TransferInProgress,
+    /// Cannot permanently delete files that have already been transferred.
+    AlreadyTransferred,
+    /// Cannot permanently delete files that have already been transferred or deleted.
+    AlreadyTransferredOrDeleted,
     /// Expected removed user and transfer_dest user to be different.
     RemovedAndTransferDestShouldDiffer,
     /// Expected removed user and transfer_admin user to be different.
@@ -20110,6 +20647,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFilesError {
                 let value = match tag {
                     "user_not_found" => MembersTransferFilesError::UserNotFound,
                     "user_not_in_team" => MembersTransferFilesError::UserNotInTeam,
+                    "transfer_in_progress" => MembersTransferFilesError::TransferInProgress,
+                    "already_transferred" => MembersTransferFilesError::AlreadyTransferred,
+                    "already_transferred_or_deleted" => MembersTransferFilesError::AlreadyTransferredOrDeleted,
                     "removed_and_transfer_dest_should_differ" => MembersTransferFilesError::RemovedAndTransferDestShouldDiffer,
                     "removed_and_transfer_admin_should_differ" => MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer,
                     "transfer_dest_user_not_found" => MembersTransferFilesError::TransferDestUserNotFound,
@@ -20128,6 +20668,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFilesError {
         const VARIANTS: &[&str] = &["user_not_found",
                                     "user_not_in_team",
                                     "other",
+                                    "transfer_in_progress",
+                                    "already_transferred",
+                                    "already_transferred_or_deleted",
                                     "removed_and_transfer_dest_should_differ",
                                     "removed_and_transfer_admin_should_differ",
                                     "transfer_dest_user_not_found",
@@ -20156,6 +20699,24 @@ impl ::serde::ser::Serialize for MembersTransferFilesError {
                 // unit
                 let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
                 s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            MembersTransferFilesError::TransferInProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_in_progress")?;
+                s.end()
+            }
+            MembersTransferFilesError::AlreadyTransferred => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "already_transferred")?;
+                s.end()
+            }
+            MembersTransferFilesError::AlreadyTransferredOrDeleted => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "already_transferred_or_deleted")?;
                 s.end()
             }
             MembersTransferFilesError::RemovedAndTransferDestShouldDiffer => {
@@ -20225,6 +20786,9 @@ impl ::std::fmt::Display for MembersTransferFilesError {
         match self {
             MembersTransferFilesError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
             MembersTransferFilesError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersTransferFilesError::TransferInProgress => f.write_str("Cannot permanently delete files while it's being transferred."),
+            MembersTransferFilesError::AlreadyTransferred => f.write_str("Cannot permanently delete files that have already been transferred."),
+            MembersTransferFilesError::AlreadyTransferredOrDeleted => f.write_str("Cannot permanently delete files that have already been transferred or deleted."),
             MembersTransferFilesError::RemovedAndTransferDestShouldDiffer => f.write_str("Expected removed user and transfer_dest user to be different."),
             MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer => f.write_str("Expected removed user and transfer_admin user to be different."),
             MembersTransferFilesError::TransferDestUserNotFound => f.write_str("No matching user found for the argument transfer_dest_id."),
@@ -20239,13 +20803,16 @@ impl ::std::fmt::Display for MembersTransferFilesError {
     }
 }
 
-// union extends MembersDeactivateError
-impl From<MembersDeactivateError> for MembersTransferFilesError {
-    fn from(parent: MembersDeactivateError) -> Self {
+// union extends MembersPermanentlyDeleteFilesError
+impl From<MembersPermanentlyDeleteFilesError> for MembersTransferFilesError {
+    fn from(parent: MembersPermanentlyDeleteFilesError) -> Self {
         match parent {
-            MembersDeactivateError::UserNotFound => MembersTransferFilesError::UserNotFound,
-            MembersDeactivateError::UserNotInTeam => MembersTransferFilesError::UserNotInTeam,
-            MembersDeactivateError::Other => MembersTransferFilesError::Other,
+            MembersPermanentlyDeleteFilesError::UserNotFound => MembersTransferFilesError::UserNotFound,
+            MembersPermanentlyDeleteFilesError::UserNotInTeam => MembersTransferFilesError::UserNotInTeam,
+            MembersPermanentlyDeleteFilesError::Other => MembersTransferFilesError::Other,
+            MembersPermanentlyDeleteFilesError::TransferInProgress => MembersTransferFilesError::TransferInProgress,
+            MembersPermanentlyDeleteFilesError::AlreadyTransferred => MembersTransferFilesError::AlreadyTransferred,
+            MembersPermanentlyDeleteFilesError::AlreadyTransferredOrDeleted => MembersTransferFilesError::AlreadyTransferredOrDeleted,
         }
     }
 }
@@ -20257,6 +20824,12 @@ pub enum MembersTransferFormerMembersFilesError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
+    /// Cannot permanently delete files while it's being transferred.
+    TransferInProgress,
+    /// Cannot permanently delete files that have already been transferred.
+    AlreadyTransferred,
+    /// Cannot permanently delete files that have already been transferred or deleted.
+    AlreadyTransferredOrDeleted,
     /// Expected removed user and transfer_dest user to be different.
     RemovedAndTransferDestShouldDiffer,
     /// Expected removed user and transfer_admin user to be different.
@@ -20306,6 +20879,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFormerMembersFilesErr
                 let value = match tag {
                     "user_not_found" => MembersTransferFormerMembersFilesError::UserNotFound,
                     "user_not_in_team" => MembersTransferFormerMembersFilesError::UserNotInTeam,
+                    "transfer_in_progress" => MembersTransferFormerMembersFilesError::TransferInProgress,
+                    "already_transferred" => MembersTransferFormerMembersFilesError::AlreadyTransferred,
+                    "already_transferred_or_deleted" => MembersTransferFormerMembersFilesError::AlreadyTransferredOrDeleted,
                     "removed_and_transfer_dest_should_differ" => MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer,
                     "removed_and_transfer_admin_should_differ" => MembersTransferFormerMembersFilesError::RemovedAndTransferAdminShouldDiffer,
                     "transfer_dest_user_not_found" => MembersTransferFormerMembersFilesError::TransferDestUserNotFound,
@@ -20328,6 +20904,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFormerMembersFilesErr
         const VARIANTS: &[&str] = &["user_not_found",
                                     "user_not_in_team",
                                     "other",
+                                    "transfer_in_progress",
+                                    "already_transferred",
+                                    "already_transferred_or_deleted",
                                     "removed_and_transfer_dest_should_differ",
                                     "removed_and_transfer_admin_should_differ",
                                     "transfer_dest_user_not_found",
@@ -20360,6 +20939,24 @@ impl ::serde::ser::Serialize for MembersTransferFormerMembersFilesError {
                 // unit
                 let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
                 s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::TransferInProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_in_progress")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::AlreadyTransferred => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "already_transferred")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::AlreadyTransferredOrDeleted => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "already_transferred_or_deleted")?;
                 s.end()
             }
             MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer => {
@@ -20453,6 +21050,9 @@ impl ::std::fmt::Display for MembersTransferFormerMembersFilesError {
         match self {
             MembersTransferFormerMembersFilesError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
             MembersTransferFormerMembersFilesError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersTransferFormerMembersFilesError::TransferInProgress => f.write_str("Cannot permanently delete files while it's being transferred."),
+            MembersTransferFormerMembersFilesError::AlreadyTransferred => f.write_str("Cannot permanently delete files that have already been transferred."),
+            MembersTransferFormerMembersFilesError::AlreadyTransferredOrDeleted => f.write_str("Cannot permanently delete files that have already been transferred or deleted."),
             MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer => f.write_str("Expected removed user and transfer_dest user to be different."),
             MembersTransferFormerMembersFilesError::RemovedAndTransferAdminShouldDiffer => f.write_str("Expected removed user and transfer_admin user to be different."),
             MembersTransferFormerMembersFilesError::TransferDestUserNotFound => f.write_str("No matching user found for the argument transfer_dest_id."),
@@ -20478,6 +21078,9 @@ impl From<MembersTransferFilesError> for MembersTransferFormerMembersFilesError 
             MembersTransferFilesError::UserNotFound => MembersTransferFormerMembersFilesError::UserNotFound,
             MembersTransferFilesError::UserNotInTeam => MembersTransferFormerMembersFilesError::UserNotInTeam,
             MembersTransferFilesError::Other => MembersTransferFormerMembersFilesError::Other,
+            MembersTransferFilesError::TransferInProgress => MembersTransferFormerMembersFilesError::TransferInProgress,
+            MembersTransferFilesError::AlreadyTransferred => MembersTransferFormerMembersFilesError::AlreadyTransferred,
+            MembersTransferFilesError::AlreadyTransferredOrDeleted => MembersTransferFormerMembersFilesError::AlreadyTransferredOrDeleted,
             MembersTransferFilesError::RemovedAndTransferDestShouldDiffer => MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer,
             MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer => MembersTransferFormerMembersFilesError::RemovedAndTransferAdminShouldDiffer,
             MembersTransferFilesError::TransferDestUserNotFound => MembersTransferFormerMembersFilesError::TransferDestUserNotFound,
@@ -21217,6 +21820,8 @@ pub enum NamespaceType {
     TeamFolder,
     /// Team member's home folder.
     TeamMemberFolder,
+    /// Team member's root folder.
+    TeamMemberRoot,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -21242,6 +21847,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NamespaceType {
                     "shared_folder" => NamespaceType::SharedFolder,
                     "team_folder" => NamespaceType::TeamFolder,
                     "team_member_folder" => NamespaceType::TeamMemberFolder,
+                    "team_member_root" => NamespaceType::TeamMemberRoot,
                     _ => NamespaceType::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -21252,6 +21858,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NamespaceType {
                                     "shared_folder",
                                     "team_folder",
                                     "team_member_folder",
+                                    "team_member_root",
                                     "other"];
         deserializer.deserialize_struct("NamespaceType", VARIANTS, EnumVisitor)
     }
@@ -21284,6 +21891,12 @@ impl ::serde::ser::Serialize for NamespaceType {
                 // unit
                 let mut s = serializer.serialize_struct("NamespaceType", 1)?;
                 s.serialize_field(".tag", "team_member_folder")?;
+                s.end()
+            }
+            NamespaceType::TeamMemberRoot => {
+                // unit
+                let mut s = serializer.serialize_struct("NamespaceType", 1)?;
+                s.serialize_field(".tag", "team_member_root")?;
                 s.end()
             }
             NamespaceType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -22391,7 +23004,7 @@ pub struct RevokeLinkedApiAppArg {
     /// The unique id of the member owning the device.
     pub team_member_id: String,
     /// This flag is not longer supported, the application dedicated folder (in case the application
-    /// uses  one) will be kept.
+    /// uses one) will be kept.
     pub keep_app_folder: bool,
 }
 
@@ -24743,7 +25356,7 @@ impl ::serde::ser::Serialize for TeamFolderArchiveJobStatus {
             }
             TeamFolderArchiveJobStatus::Complete(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("TeamFolderArchiveJobStatus", 7)?;
+                let mut s = serializer.serialize_struct("TeamFolderArchiveJobStatus", 8)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -24825,7 +25438,7 @@ impl ::serde::ser::Serialize for TeamFolderArchiveLaunch {
             }
             TeamFolderArchiveLaunch::Complete(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("TeamFolderArchiveLaunch", 7)?;
+                let mut s = serializer.serialize_struct("TeamFolderArchiveLaunch", 8)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -25127,7 +25740,7 @@ impl ::serde::ser::Serialize for TeamFolderGetInfoItem {
             }
             TeamFolderGetInfoItem::TeamFolderMetadata(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("TeamFolderGetInfoItem", 7)?;
+                let mut s = serializer.serialize_struct("TeamFolderGetInfoItem", 8)?;
                 s.serialize_field(".tag", "team_folder_metadata")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -25891,6 +26504,8 @@ pub struct TeamFolderMetadata {
     pub sync_setting: crate::types::files::SyncSetting,
     /// Sync settings applied to contents of this team folder.
     pub content_sync_settings: Vec<crate::types::files::ContentSyncSetting>,
+    /// The quota limit in bytes for this team folder namespace tree.
+    pub quota_limit: i64,
 }
 
 impl TeamFolderMetadata {
@@ -25909,7 +26524,13 @@ impl TeamFolderMetadata {
             is_team_shared_dropbox,
             sync_setting,
             content_sync_settings,
+            quota_limit: 0,
         }
+    }
+
+    pub fn with_quota_limit(mut self, value: i64) -> Self {
+        self.quota_limit = value;
+        self
     }
 }
 
@@ -25918,7 +26539,8 @@ const TEAM_FOLDER_METADATA_FIELDS: &[&str] = &["team_folder_id",
                                                "status",
                                                "is_team_shared_dropbox",
                                                "sync_setting",
-                                               "content_sync_settings"];
+                                               "content_sync_settings",
+                                               "quota_limit"];
 impl TeamFolderMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -25936,6 +26558,7 @@ impl TeamFolderMetadata {
         let mut field_is_team_shared_dropbox = None;
         let mut field_sync_setting = None;
         let mut field_content_sync_settings = None;
+        let mut field_quota_limit = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -25976,6 +26599,12 @@ impl TeamFolderMetadata {
                     }
                     field_content_sync_settings = Some(map.next_value()?);
                 }
+                "quota_limit" => {
+                    if field_quota_limit.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("quota_limit"));
+                    }
+                    field_quota_limit = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -25992,6 +26621,7 @@ impl TeamFolderMetadata {
             is_team_shared_dropbox: field_is_team_shared_dropbox.ok_or_else(|| ::serde::de::Error::missing_field("is_team_shared_dropbox"))?,
             sync_setting: field_sync_setting.ok_or_else(|| ::serde::de::Error::missing_field("sync_setting"))?,
             content_sync_settings: field_content_sync_settings.ok_or_else(|| ::serde::de::Error::missing_field("content_sync_settings"))?,
+            quota_limit: field_quota_limit.unwrap_or(0),
         };
         Ok(Some(result))
     }
@@ -26007,6 +26637,9 @@ impl TeamFolderMetadata {
         s.serialize_field("is_team_shared_dropbox", &self.is_team_shared_dropbox)?;
         s.serialize_field("sync_setting", &self.sync_setting)?;
         s.serialize_field("content_sync_settings", &self.content_sync_settings)?;
+        if self.quota_limit != 0 {
+            s.serialize_field("quota_limit", &self.quota_limit)?;
+        }
         Ok(())
     }
 }
@@ -26033,7 +26666,7 @@ impl ::serde::ser::Serialize for TeamFolderMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamFolderMetadata", 6)?;
+        let mut s = serializer.serialize_struct("TeamFolderMetadata", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -26437,15 +27070,145 @@ impl From<BaseTeamFolderError> for TeamFolderRenameError {
         }
     }
 }
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum TeamFolderRestoreError {
+    AccessError(TeamFolderAccessError),
+    StatusError(TeamFolderInvalidStatusError),
+    TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRestoreError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TeamFolderRestoreError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamFolderRestoreError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "access_error" => {
+                        match map.next_key()? {
+                            Some("access_error") => TeamFolderRestoreError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "status_error" => {
+                        match map.next_key()? {
+                            Some("status_error") => TeamFolderRestoreError::StatusError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("status_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "team_shared_dropbox_error" => {
+                        match map.next_key()? {
+                            Some("team_shared_dropbox_error") => TeamFolderRestoreError::TeamSharedDropboxError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("team_shared_dropbox_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => TeamFolderRestoreError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["access_error",
+                                    "status_error",
+                                    "team_shared_dropbox_error",
+                                    "other"];
+        deserializer.deserialize_struct("TeamFolderRestoreError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamFolderRestoreError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            TeamFolderRestoreError::AccessError(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("TeamFolderRestoreError", 2)?;
+                s.serialize_field(".tag", "access_error")?;
+                s.serialize_field("access_error", x)?;
+                s.end()
+            }
+            TeamFolderRestoreError::StatusError(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("TeamFolderRestoreError", 2)?;
+                s.serialize_field(".tag", "status_error")?;
+                s.serialize_field("status_error", x)?;
+                s.end()
+            }
+            TeamFolderRestoreError::TeamSharedDropboxError(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("TeamFolderRestoreError", 2)?;
+                s.serialize_field(".tag", "team_shared_dropbox_error")?;
+                s.serialize_field("team_shared_dropbox_error", x)?;
+                s.end()
+            }
+            TeamFolderRestoreError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for TeamFolderRestoreError {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderRestoreError::AccessError(inner) => Some(inner),
+            TeamFolderRestoreError::StatusError(inner) => Some(inner),
+            TeamFolderRestoreError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
+    }
+}
+
+impl ::std::fmt::Display for TeamFolderRestoreError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            TeamFolderRestoreError::AccessError(inner) => write!(f, "TeamFolderRestoreError: {}", inner),
+            TeamFolderRestoreError::StatusError(inner) => write!(f, "TeamFolderRestoreError: {}", inner),
+            TeamFolderRestoreError::TeamSharedDropboxError(inner) => write!(f, "TeamFolderRestoreError: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+// union extends BaseTeamFolderError
+impl From<BaseTeamFolderError> for TeamFolderRestoreError {
+    fn from(parent: BaseTeamFolderError) -> Self {
+        match parent {
+            BaseTeamFolderError::AccessError(x) => TeamFolderRestoreError::AccessError(x),
+            BaseTeamFolderError::StatusError(x) => TeamFolderRestoreError::StatusError(x),
+            BaseTeamFolderError::TeamSharedDropboxError(x) => TeamFolderRestoreError::TeamSharedDropboxError(x),
+            BaseTeamFolderError::Other => TeamFolderRestoreError::Other,
+        }
+    }
+}
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderStatus {
     /// The team folder and sub-folders are available to all members.
     Active,
-    /// The team folder is not accessible outside of the team folder manager.
+    /// The team folder is archived and is not accessible outside of the team folder manager.
     Archived,
-    /// The team folder is not accessible outside of the team folder manager.
+    /// The team folder is in the process of being archived and is not accessible outside of the
+    /// team folder manager.
     ArchiveInProgress,
+    /// The team folder is unmounted and can be restored.
+    Inactive,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -26470,6 +27233,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderStatus {
                     "active" => TeamFolderStatus::Active,
                     "archived" => TeamFolderStatus::Archived,
                     "archive_in_progress" => TeamFolderStatus::ArchiveInProgress,
+                    "inactive" => TeamFolderStatus::Inactive,
                     _ => TeamFolderStatus::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -26479,6 +27243,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderStatus {
         const VARIANTS: &[&str] = &["active",
                                     "archived",
                                     "archive_in_progress",
+                                    "inactive",
                                     "other"];
         deserializer.deserialize_struct("TeamFolderStatus", VARIANTS, EnumVisitor)
     }
@@ -26505,6 +27270,12 @@ impl ::serde::ser::Serialize for TeamFolderStatus {
                 // unit
                 let mut s = serializer.serialize_struct("TeamFolderStatus", 1)?;
                 s.serialize_field(".tag", "archive_in_progress")?;
+                s.end()
+            }
+            TeamFolderStatus::Inactive => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamFolderStatus", 1)?;
+                s.serialize_field(".tag", "inactive")?;
                 s.end()
             }
             TeamFolderStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -27364,8 +28135,10 @@ pub struct TeamMemberProfile {
     pub membership_type: TeamMembershipType,
     /// List of group IDs of groups that the user belongs to.
     pub groups: Vec<crate::types::team_common::GroupId>,
-    /// The namespace id of the user's root folder.
+    /// The namespace id of the user's member folder.
     pub member_folder_id: crate::types::common::NamespaceId,
+    /// The namespace id of the user's root folder.
+    pub root_folder_id: crate::types::common::NamespaceId,
     /// External ID that a team can attach to the user. An application using the API may find it
     /// easier to use their own IDs instead of Dropbox IDs like account_id or team_member_id.
     pub external_id: Option<String>,
@@ -27400,6 +28173,7 @@ impl TeamMemberProfile {
         membership_type: TeamMembershipType,
         groups: Vec<crate::types::team_common::GroupId>,
         member_folder_id: crate::types::common::NamespaceId,
+        root_folder_id: crate::types::common::NamespaceId,
     ) -> Self {
         TeamMemberProfile {
             team_member_id,
@@ -27410,6 +28184,7 @@ impl TeamMemberProfile {
             membership_type,
             groups,
             member_folder_id,
+            root_folder_id,
             external_id: None,
             account_id: None,
             secondary_emails: None,
@@ -27479,6 +28254,7 @@ const TEAM_MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
                                               "membership_type",
                                               "groups",
                                               "member_folder_id",
+                                              "root_folder_id",
                                               "external_id",
                                               "account_id",
                                               "secondary_emails",
@@ -27507,6 +28283,7 @@ impl TeamMemberProfile {
         let mut field_membership_type = None;
         let mut field_groups = None;
         let mut field_member_folder_id = None;
+        let mut field_root_folder_id = None;
         let mut field_external_id = None;
         let mut field_account_id = None;
         let mut field_secondary_emails = None;
@@ -27567,6 +28344,12 @@ impl TeamMemberProfile {
                         return Err(::serde::de::Error::duplicate_field("member_folder_id"));
                     }
                     field_member_folder_id = Some(map.next_value()?);
+                }
+                "root_folder_id" => {
+                    if field_root_folder_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("root_folder_id"));
+                    }
+                    field_root_folder_id = Some(map.next_value()?);
                 }
                 "external_id" => {
                     if field_external_id.is_some() {
@@ -27640,6 +28423,7 @@ impl TeamMemberProfile {
             membership_type: field_membership_type.ok_or_else(|| ::serde::de::Error::missing_field("membership_type"))?,
             groups: field_groups.ok_or_else(|| ::serde::de::Error::missing_field("groups"))?,
             member_folder_id: field_member_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("member_folder_id"))?,
+            root_folder_id: field_root_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("root_folder_id"))?,
             external_id: field_external_id.and_then(Option::flatten),
             account_id: field_account_id.and_then(Option::flatten),
             secondary_emails: field_secondary_emails.and_then(Option::flatten),
@@ -27666,6 +28450,7 @@ impl TeamMemberProfile {
         s.serialize_field("membership_type", &self.membership_type)?;
         s.serialize_field("groups", &self.groups)?;
         s.serialize_field("member_folder_id", &self.member_folder_id)?;
+        s.serialize_field("root_folder_id", &self.root_folder_id)?;
         if let Some(val) = &self.external_id {
             s.serialize_field("external_id", val)?;
         }
@@ -27719,7 +28504,7 @@ impl ::serde::ser::Serialize for TeamMemberProfile {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamMemberProfile", 17)?;
+        let mut s = serializer.serialize_struct("TeamMemberProfile", 18)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -29002,7 +29787,7 @@ impl ::serde::ser::Serialize for UserCustomQuotaArg {
     }
 }
 
-/// User and their custom quota in GB (1 TB = 1024 GB).  No quota returns if the user has no custom
+/// User and their custom quota in GB (1 TB = 1024 GB). No quota returns if the user has no custom
 /// quota set.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.

@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 //! This namespace contains endpoints and data types for creating and managing shared links and
@@ -278,9 +279,11 @@ pub struct AddFileMemberArgs {
     /// invitation.
     pub quiet: bool,
     /// AccessLevel union object, describing what access level we want to give new members.
-    pub access_level: AccessLevel,
-    /// If the custom message should be added as a comment on the file.
+    pub access_level: Option<AccessLevel>,
+    /// If the custom message should be added as a comment on the file. Only meant for Paper files.
     pub add_message_as_comment: bool,
+    /// The FingerprintJS Sealed Client Result value
+    pub fp_sealed_result: Option<String>,
 }
 
 impl AddFileMemberArgs {
@@ -290,8 +293,9 @@ impl AddFileMemberArgs {
             members,
             custom_message: None,
             quiet: false,
-            access_level: AccessLevel::Viewer,
+            access_level: None,
             add_message_as_comment: false,
+            fp_sealed_result: None,
         }
     }
 
@@ -306,12 +310,17 @@ impl AddFileMemberArgs {
     }
 
     pub fn with_access_level(mut self, value: AccessLevel) -> Self {
-        self.access_level = value;
+        self.access_level = Some(value);
         self
     }
 
     pub fn with_add_message_as_comment(mut self, value: bool) -> Self {
         self.add_message_as_comment = value;
+        self
+    }
+
+    pub fn with_fp_sealed_result(mut self, value: String) -> Self {
+        self.fp_sealed_result = Some(value);
         self
     }
 }
@@ -321,7 +330,8 @@ const ADD_FILE_MEMBER_ARGS_FIELDS: &[&str] = &["file",
                                                "custom_message",
                                                "quiet",
                                                "access_level",
-                                               "add_message_as_comment"];
+                                               "add_message_as_comment",
+                                               "fp_sealed_result"];
 impl AddFileMemberArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -339,6 +349,7 @@ impl AddFileMemberArgs {
         let mut field_quiet = None;
         let mut field_access_level = None;
         let mut field_add_message_as_comment = None;
+        let mut field_fp_sealed_result = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -379,6 +390,12 @@ impl AddFileMemberArgs {
                     }
                     field_add_message_as_comment = Some(map.next_value()?);
                 }
+                "fp_sealed_result" => {
+                    if field_fp_sealed_result.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("fp_sealed_result"));
+                    }
+                    field_fp_sealed_result = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -393,8 +410,9 @@ impl AddFileMemberArgs {
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             custom_message: field_custom_message.and_then(Option::flatten),
             quiet: field_quiet.unwrap_or(false),
-            access_level: field_access_level.unwrap_or(AccessLevel::Viewer),
+            access_level: field_access_level.and_then(Option::flatten),
             add_message_as_comment: field_add_message_as_comment.unwrap_or(false),
+            fp_sealed_result: field_fp_sealed_result.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -412,11 +430,14 @@ impl AddFileMemberArgs {
         if self.quiet {
             s.serialize_field("quiet", &self.quiet)?;
         }
-        if self.access_level != AccessLevel::Viewer {
-            s.serialize_field("access_level", &self.access_level)?;
+        if let Some(val) = &self.access_level {
+            s.serialize_field("access_level", val)?;
         }
         if self.add_message_as_comment {
             s.serialize_field("add_message_as_comment", &self.add_message_as_comment)?;
+        }
+        if let Some(val) = &self.fp_sealed_result {
+            s.serialize_field("fp_sealed_result", val)?;
         }
         Ok(())
     }
@@ -444,7 +465,7 @@ impl ::serde::ser::Serialize for AddFileMemberArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddFileMemberArgs", 6)?;
+        let mut s = serializer.serialize_struct("AddFileMemberArgs", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -460,6 +481,8 @@ pub enum AddFileMemberError {
     RateLimit,
     /// The custom message did not pass comment permissions checks.
     InvalidComment,
+    /// The current user has been banned for abuse reasons.
+    BannedMember,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -497,6 +520,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFileMemberError {
                     }
                     "rate_limit" => AddFileMemberError::RateLimit,
                     "invalid_comment" => AddFileMemberError::InvalidComment,
+                    "banned_member" => AddFileMemberError::BannedMember,
                     _ => AddFileMemberError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -507,6 +531,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFileMemberError {
                                     "access_error",
                                     "rate_limit",
                                     "invalid_comment",
+                                    "banned_member",
                                     "other"];
         deserializer.deserialize_struct("AddFileMemberError", VARIANTS, EnumVisitor)
     }
@@ -543,6 +568,12 @@ impl ::serde::ser::Serialize for AddFileMemberError {
                 s.serialize_field(".tag", "invalid_comment")?;
                 s.end()
             }
+            AddFileMemberError::BannedMember => {
+                // unit
+                let mut s = serializer.serialize_struct("AddFileMemberError", 1)?;
+                s.serialize_field(".tag", "banned_member")?;
+                s.end()
+            }
             AddFileMemberError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -565,6 +596,7 @@ impl ::std::fmt::Display for AddFileMemberError {
             AddFileMemberError::AccessError(inner) => write!(f, "AddFileMemberError: {}", inner),
             AddFileMemberError::RateLimit => f.write_str("The user has reached the rate limit for invitations."),
             AddFileMemberError::InvalidComment => f.write_str("The custom message did not pass comment permissions checks."),
+            AddFileMemberError::BannedMember => f.write_str("The current user has been banned for abuse reasons."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -582,6 +614,8 @@ pub struct AddFolderMemberArg {
     pub quiet: bool,
     /// Optional message to display to added members in their invitation.
     pub custom_message: Option<String>,
+    /// The FingerprintJS Sealed Client Result value
+    pub fp_sealed_result: Option<String>,
 }
 
 impl AddFolderMemberArg {
@@ -594,6 +628,7 @@ impl AddFolderMemberArg {
             members,
             quiet: false,
             custom_message: None,
+            fp_sealed_result: None,
         }
     }
 
@@ -606,12 +641,18 @@ impl AddFolderMemberArg {
         self.custom_message = Some(value);
         self
     }
+
+    pub fn with_fp_sealed_result(mut self, value: String) -> Self {
+        self.fp_sealed_result = Some(value);
+        self
+    }
 }
 
 const ADD_FOLDER_MEMBER_ARG_FIELDS: &[&str] = &["shared_folder_id",
                                                 "members",
                                                 "quiet",
-                                                "custom_message"];
+                                                "custom_message",
+                                                "fp_sealed_result"];
 impl AddFolderMemberArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -627,6 +668,7 @@ impl AddFolderMemberArg {
         let mut field_members = None;
         let mut field_quiet = None;
         let mut field_custom_message = None;
+        let mut field_fp_sealed_result = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -655,6 +697,12 @@ impl AddFolderMemberArg {
                     }
                     field_custom_message = Some(map.next_value()?);
                 }
+                "fp_sealed_result" => {
+                    if field_fp_sealed_result.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("fp_sealed_result"));
+                    }
+                    field_fp_sealed_result = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -669,6 +717,7 @@ impl AddFolderMemberArg {
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             quiet: field_quiet.unwrap_or(false),
             custom_message: field_custom_message.and_then(Option::flatten),
+            fp_sealed_result: field_fp_sealed_result.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -685,6 +734,9 @@ impl AddFolderMemberArg {
         }
         if let Some(val) = &self.custom_message {
             s.serialize_field("custom_message", val)?;
+        }
+        if let Some(val) = &self.fp_sealed_result {
+            s.serialize_field("fp_sealed_result", val)?;
         }
         Ok(())
     }
@@ -712,7 +764,7 @@ impl ::serde::ser::Serialize for AddFolderMemberArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddFolderMemberArg", 4)?;
+        let mut s = serializer.serialize_struct("AddFolderMemberArg", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -963,19 +1015,19 @@ pub struct AddMember {
     pub member: MemberSelector,
     /// The access level to grant `member` to the shared folder.  [`AccessLevel::Owner`] is
     /// disallowed.
-    pub access_level: AccessLevel,
+    pub access_level: Option<AccessLevel>,
 }
 
 impl AddMember {
     pub fn new(member: MemberSelector) -> Self {
         AddMember {
             member,
-            access_level: AccessLevel::Viewer,
+            access_level: None,
         }
     }
 
     pub fn with_access_level(mut self, value: AccessLevel) -> Self {
-        self.access_level = value;
+        self.access_level = Some(value);
         self
     }
 }
@@ -1022,7 +1074,7 @@ impl AddMember {
         }
         let result = AddMember {
             member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
-            access_level: field_access_level.unwrap_or(AccessLevel::Viewer),
+            access_level: field_access_level.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -1033,8 +1085,8 @@ impl AddMember {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
-        if self.access_level != AccessLevel::Viewer {
-            s.serialize_field("access_level", &self.access_level)?;
+        if let Some(val) = &self.access_level {
+            s.serialize_field("access_level", val)?;
         }
         Ok(())
     }
@@ -1077,6 +1129,8 @@ pub enum AddMemberSelectorError {
     InvalidDropboxId(DropboxId),
     /// The value is the e-email address that is malformed.
     InvalidEmail(crate::types::common::EmailAddress),
+    /// Provided group is invalid.
+    InvalidGroup,
     /// The value is the ID of the Dropbox user with an unverified email address. Invite unverified
     /// users by email address instead of by their Dropbox ID.
     UnverifiedDropboxId(DropboxId),
@@ -1121,6 +1175,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddMemberSelectorError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "invalid_group" => AddMemberSelectorError::InvalidGroup,
                     "unverified_dropbox_id" => {
                         match map.next_key()? {
                             Some("unverified_dropbox_id") => AddMemberSelectorError::UnverifiedDropboxId(map.next_value()?),
@@ -1139,6 +1194,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddMemberSelectorError {
         const VARIANTS: &[&str] = &["automatic_group",
                                     "invalid_dropbox_id",
                                     "invalid_email",
+                                    "invalid_group",
                                     "unverified_dropbox_id",
                                     "group_deleted",
                                     "group_not_on_team",
@@ -1170,6 +1226,12 @@ impl ::serde::ser::Serialize for AddMemberSelectorError {
                 let mut s = serializer.serialize_struct("AddMemberSelectorError", 2)?;
                 s.serialize_field(".tag", "invalid_email")?;
                 s.serialize_field("invalid_email", x)?;
+                s.end()
+            }
+            AddMemberSelectorError::InvalidGroup => {
+                // unit
+                let mut s = serializer.serialize_struct("AddMemberSelectorError", 1)?;
+                s.serialize_field(".tag", "invalid_group")?;
                 s.end()
             }
             AddMemberSelectorError::UnverifiedDropboxId(x) => {
@@ -1205,6 +1267,7 @@ impl ::std::fmt::Display for AddMemberSelectorError {
             AddMemberSelectorError::AutomaticGroup => f.write_str("Automatically created groups can only be added to team folders."),
             AddMemberSelectorError::InvalidDropboxId(inner) => write!(f, "The value is the ID that could not be identified: {:?}", inner),
             AddMemberSelectorError::InvalidEmail(inner) => write!(f, "The value is the e-email address that is malformed: {:?}", inner),
+            AddMemberSelectorError::InvalidGroup => f.write_str("Provided group is invalid."),
             AddMemberSelectorError::UnverifiedDropboxId(inner) => write!(f, "The value is the ID of the Dropbox user with an unverified email address. Invite unverified users by email address instead of by their Dropbox ID: {:?}", inner),
             AddMemberSelectorError::GroupNotOnTeam => f.write_str("Sharing to a group that is not on the current user's team."),
             _ => write!(f, "{:?}", *self),
@@ -1669,6 +1732,70 @@ impl ::serde::ser::Serialize for AudienceRestrictingSharedFolder {
     }
 }
 
+/// Enumerates acceptable values for team's ChangeLinkExpirationPolicy setting.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ChangeLinkExpirationPolicy {
+    Allowed,
+    NotAllowed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ChangeLinkExpirationPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ChangeLinkExpirationPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ChangeLinkExpirationPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "allowed" => ChangeLinkExpirationPolicy::Allowed,
+                    "not_allowed" => ChangeLinkExpirationPolicy::NotAllowed,
+                    _ => ChangeLinkExpirationPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["allowed",
+                                    "not_allowed",
+                                    "other"];
+        deserializer.deserialize_struct("ChangeLinkExpirationPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ChangeLinkExpirationPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ChangeLinkExpirationPolicy::Allowed => {
+                // unit
+                let mut s = serializer.serialize_struct("ChangeLinkExpirationPolicy", 1)?;
+                s.serialize_field(".tag", "allowed")?;
+                s.end()
+            }
+            ChangeLinkExpirationPolicy::NotAllowed => {
+                // unit
+                let mut s = serializer.serialize_struct("ChangeLinkExpirationPolicy", 1)?;
+                s.serialize_field(".tag", "not_allowed")?;
+                s.end()
+            }
+            ChangeLinkExpirationPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Metadata for a collection-based shared link.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -2130,15 +2257,23 @@ pub enum CreateSharedLinkWithSettingsError {
     /// [here](https://www.dropbox.com/help/317).
     EmailNotVerified,
     /// The shared link already exists. You can call
-    /// [`list_shared_links()`](crate::sharing::list_shared_links) to get the  existing link, or use
-    /// the provided metadata if it is returned.
+    /// [`list_shared_links()`](crate::sharing::list_shared_links) to get the existing link, or use
+    /// the provided metadata if it is returned. Existing link metadata will not be returned if
+    /// custom settings were specified in the request that could make the existing link incompatible
+    /// with the requested settings.
     SharedLinkAlreadyExists(Option<SharedLinkAlreadyExistsMetadata>),
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
-    /// The user is not allowed to create a shared link to the specified file. For  example, this
-    /// can occur if the file is restricted or if the user's links are
+    /// The user is not allowed to create a shared link to the specified file. For example, this can
+    /// occur if the file is restricted or if the user's links are
     /// [banned](https://help.dropbox.com/files-folders/share/banned-links).
     AccessDenied,
+    /// The current user has been
+    /// [banned](https://help.dropbox.com/files-folders/share/banned-links) for abuse reasons.
+    BannedMember,
+    /// Your Dropbox folder will have too many shared folders after the operation.
+    /// https://help.dropbox.com/share/shared-folder-faq#Is-there-a-limit-to-the-number-of-shared-folders-I-can-create
+    TooManySharedFolders,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
@@ -2180,6 +2315,8 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                         }
                     }
                     "access_denied" => CreateSharedLinkWithSettingsError::AccessDenied,
+                    "banned_member" => CreateSharedLinkWithSettingsError::BannedMember,
+                    "too_many_shared_folders" => CreateSharedLinkWithSettingsError::TooManySharedFolders,
                     _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -2190,7 +2327,9 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                                     "email_not_verified",
                                     "shared_link_already_exists",
                                     "settings_error",
-                                    "access_denied"];
+                                    "access_denied",
+                                    "banned_member",
+                                    "too_many_shared_folders"];
         deserializer.deserialize_struct("CreateSharedLinkWithSettingsError", VARIANTS, EnumVisitor)
     }
 }
@@ -2233,6 +2372,18 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsError {
                 s.serialize_field(".tag", "access_denied")?;
                 s.end()
             }
+            CreateSharedLinkWithSettingsError::BannedMember => {
+                // unit
+                let mut s = serializer.serialize_struct("CreateSharedLinkWithSettingsError", 1)?;
+                s.serialize_field(".tag", "banned_member")?;
+                s.end()
+            }
+            CreateSharedLinkWithSettingsError::TooManySharedFolders => {
+                // unit
+                let mut s = serializer.serialize_struct("CreateSharedLinkWithSettingsError", 1)?;
+                s.serialize_field(".tag", "too_many_shared_folders")?;
+                s.end()
+            }
         }
     }
 }
@@ -2254,6 +2405,7 @@ impl ::std::fmt::Display for CreateSharedLinkWithSettingsError {
             CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(None) => f.write_str("shared_link_already_exists"),
             CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(Some(inner)) => write!(f, "shared_link_already_exists: {:?}", inner),
             CreateSharedLinkWithSettingsError::SettingsError(inner) => write!(f, "There is an error with the given settings: {}", inner),
+            CreateSharedLinkWithSettingsError::TooManySharedFolders => f.write_str("Your Dropbox folder will have too many shared folders after the operation. https://help.dropbox.com/share/shared-folder-faq#Is-there-a-limit-to-the-number-of-shared-folders-I-can-create"),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -2279,7 +2431,7 @@ pub struct ExpectedSharedContentLinkMetadata {
     pub access_level: Option<AccessLevel>,
     /// The shared folder that prevents the link audience for this link from being more restrictive.
     pub audience_restricting_shared_folder: Option<AudienceRestrictingSharedFolder>,
-    /// Whether the link has an expiry set on it. A link with an expiry will have its  audience
+    /// Whether the link has an expiry set on it. A link with an expiry will have its audience
     /// changed to members when the expiry is reached.
     pub expiry: Option<crate::types::common::DropboxTimestamp>,
 }
@@ -2766,10 +2918,11 @@ pub struct FileLinkMetadata {
     /// Expiration time, if set. By default the link won't expire.
     pub expires: Option<crate::types::common::DropboxTimestamp>,
     /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field
-    /// will only be present only if the linked file is in the authenticated user's  dropbox.
+    /// will only be present only if the linked file is in the authenticated user's dropbox and the
+    /// user is the owner of the link.
     pub path_lower: Option<String>,
-    /// The team membership information of the link's owner.  This field will only be present  if
-    /// the link's owner is a team member.
+    /// The team membership information of the link's owner.  This field will only be present if the
+    /// link's owner is a team member.
     pub team_member_info: Option<TeamMemberInfo>,
     /// The team information of the content's owner. This field will only be present if the
     /// content's owner is a team member and the content's owner team is different from the link's
@@ -3593,10 +3746,14 @@ pub enum FolderAction {
     Unshare,
     /// Keep a copy of the contents upon leaving or being kicked from the folder.
     LeaveACopy,
-    /// Use create_link instead.
+    /// Use create_view_link and create_edit_link instead.
     ShareLink,
-    /// Create a shared link for folder.
+    /// Use create_view_link and create_edit_link instead.
     CreateLink,
+    /// Create a shared link that only allows users to view the content.
+    CreateViewLink,
+    /// Create a shared link that allows users to edit the content.
+    CreateEditLink,
     /// Set whether the folder inherits permissions from its parent.
     SetAccessInheritance,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -3633,6 +3790,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                     "leave_a_copy" => FolderAction::LeaveACopy,
                     "share_link" => FolderAction::ShareLink,
                     "create_link" => FolderAction::CreateLink,
+                    "create_view_link" => FolderAction::CreateViewLink,
+                    "create_edit_link" => FolderAction::CreateEditLink,
                     "set_access_inheritance" => FolderAction::SetAccessInheritance,
                     _ => FolderAction::Other,
                 };
@@ -3653,6 +3812,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                                     "leave_a_copy",
                                     "share_link",
                                     "create_link",
+                                    "create_view_link",
+                                    "create_edit_link",
                                     "set_access_inheritance",
                                     "other"];
         deserializer.deserialize_struct("FolderAction", VARIANTS, EnumVisitor)
@@ -3742,6 +3903,18 @@ impl ::serde::ser::Serialize for FolderAction {
                 s.serialize_field(".tag", "create_link")?;
                 s.end()
             }
+            FolderAction::CreateViewLink => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderAction", 1)?;
+                s.serialize_field(".tag", "create_view_link")?;
+                s.end()
+            }
+            FolderAction::CreateEditLink => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderAction", 1)?;
+                s.serialize_field(".tag", "create_edit_link")?;
+                s.end()
+            }
             FolderAction::SetAccessInheritance => {
                 // unit
                 let mut s = serializer.serialize_struct("FolderAction", 1)?;
@@ -3768,10 +3941,11 @@ pub struct FolderLinkMetadata {
     /// Expiration time, if set. By default the link won't expire.
     pub expires: Option<crate::types::common::DropboxTimestamp>,
     /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field
-    /// will only be present only if the linked file is in the authenticated user's  dropbox.
+    /// will only be present only if the linked file is in the authenticated user's dropbox and the
+    /// user is the owner of the link.
     pub path_lower: Option<String>,
-    /// The team membership information of the link's owner.  This field will only be present  if
-    /// the link's owner is a team member.
+    /// The team membership information of the link's owner.  This field will only be present if the
+    /// link's owner is a team member.
     pub team_member_info: Option<TeamMemberInfo>,
     /// The team information of the content's owner. This field will only be present if the
     /// content's owner is a team member and the content's owner team is different from the link's
@@ -4284,7 +4458,7 @@ pub struct GetFileMetadataArg {
     pub file: PathOrId,
     /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
     /// response's [`SharedFileMetadata::permissions`](SharedFileMetadata) field describing the
-    /// actions the  authenticated user can perform on the file.
+    /// actions the authenticated user can perform on the file.
     pub actions: Option<Vec<FileAction>>,
 }
 
@@ -4398,7 +4572,7 @@ pub struct GetFileMetadataBatchArg {
     pub files: Vec<PathOrId>,
     /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
     /// response's [`SharedFileMetadata::permissions`](SharedFileMetadata) field describing the
-    /// actions the  authenticated user can perform on the file.
+    /// actions the authenticated user can perform on the file.
     pub actions: Option<Vec<FileAction>>,
 }
 
@@ -4788,7 +4962,7 @@ pub struct GetMetadataArgs {
     pub shared_folder_id: crate::types::common::SharedFolderId,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
     /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
-    /// actions the  authenticated user can perform on the folder.
+    /// actions the authenticated user can perform on the folder.
     pub actions: Option<Vec<FolderAction>>,
 }
 
@@ -4903,6 +5077,8 @@ pub enum GetSharedLinkFileError {
     SharedLinkAccessDenied,
     /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
     UnsupportedLinkType,
+    /// Private shared links do not support `path` or `link_password` parameter fields.
+    UnsupportedParameterField,
     /// Directories cannot be retrieved by this endpoint.
     SharedLinkIsDirectory,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -4929,6 +5105,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinkFileError {
                     "shared_link_not_found" => GetSharedLinkFileError::SharedLinkNotFound,
                     "shared_link_access_denied" => GetSharedLinkFileError::SharedLinkAccessDenied,
                     "unsupported_link_type" => GetSharedLinkFileError::UnsupportedLinkType,
+                    "unsupported_parameter_field" => GetSharedLinkFileError::UnsupportedParameterField,
                     "shared_link_is_directory" => GetSharedLinkFileError::SharedLinkIsDirectory,
                     _ => GetSharedLinkFileError::Other,
                 };
@@ -4939,6 +5116,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinkFileError {
         const VARIANTS: &[&str] = &["shared_link_not_found",
                                     "shared_link_access_denied",
                                     "unsupported_link_type",
+                                    "unsupported_parameter_field",
                                     "other",
                                     "shared_link_is_directory"];
         deserializer.deserialize_struct("GetSharedLinkFileError", VARIANTS, EnumVisitor)
@@ -4968,6 +5146,12 @@ impl ::serde::ser::Serialize for GetSharedLinkFileError {
                 s.serialize_field(".tag", "unsupported_link_type")?;
                 s.end()
             }
+            GetSharedLinkFileError::UnsupportedParameterField => {
+                // unit
+                let mut s = serializer.serialize_struct("GetSharedLinkFileError", 1)?;
+                s.serialize_field(".tag", "unsupported_parameter_field")?;
+                s.end()
+            }
             GetSharedLinkFileError::SharedLinkIsDirectory => {
                 // unit
                 let mut s = serializer.serialize_struct("GetSharedLinkFileError", 1)?;
@@ -4987,6 +5171,7 @@ impl ::std::fmt::Display for GetSharedLinkFileError {
         match self {
             GetSharedLinkFileError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
             GetSharedLinkFileError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            GetSharedLinkFileError::UnsupportedParameterField => f.write_str("Private shared links do not support `path` or `link_password` parameter fields."),
             GetSharedLinkFileError::SharedLinkIsDirectory => f.write_str("Directories cannot be retrieved by this endpoint."),
             _ => write!(f, "{:?}", *self),
         }
@@ -5000,6 +5185,7 @@ impl From<SharedLinkError> for GetSharedLinkFileError {
             SharedLinkError::SharedLinkNotFound => GetSharedLinkFileError::SharedLinkNotFound,
             SharedLinkError::SharedLinkAccessDenied => GetSharedLinkFileError::SharedLinkAccessDenied,
             SharedLinkError::UnsupportedLinkType => GetSharedLinkFileError::UnsupportedLinkType,
+            SharedLinkError::UnsupportedParameterField => GetSharedLinkFileError::UnsupportedParameterField,
             SharedLinkError::Other => GetSharedLinkFileError::Other,
         }
     }
@@ -5384,7 +5570,7 @@ impl ::serde::ser::Serialize for GetSharedLinksResult {
     }
 }
 
-/// The information about a group. Groups is a way to manage a list of users  who need same access
+/// The information about a group. Groups is a way to manage a list of users who need same access
 /// permission to the shared folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -5630,7 +5816,7 @@ pub struct GroupMembershipInfo {
     pub permissions: Option<Vec<MemberPermission>>,
     /// Never set.
     pub initials: Option<String>,
-    /// True if the member has access from a parent folder.
+    /// True if the member has access on a parent folder.
     pub is_inherited: bool,
 }
 
@@ -6100,7 +6286,7 @@ pub struct InviteeMembershipInfo {
     pub permissions: Option<Vec<MemberPermission>>,
     /// Never set.
     pub initials: Option<String>,
-    /// True if the member has access from a parent folder.
+    /// True if the member has access on a parent folder.
     pub is_inherited: bool,
     /// The user this invitation is tied to, if available.
     pub user: Option<UserInfo>,
@@ -7396,6 +7582,22 @@ pub struct LinkPermissions {
     pub require_password: Option<bool>,
     /// Whether the user can use extended sharing controls, based on their account type.
     pub can_use_extended_sharing_controls: Option<bool>,
+    /// Whether a user can save the content to their Dropbox account.
+    pub can_sync: Option<bool>,
+    /// Whether the user can request access to the content.
+    pub can_request_access: Option<bool>,
+    /// Whether the updated externally available shared link must have password set. Not provided if
+    /// the link is not team owned.
+    pub enforce_shared_link_password_policy: Option<crate::types::team_policies::EnforceLinkPasswordPolicy>,
+    /// Existing owning team's policy for default number of days from today to link's expiration.
+    /// Not provided if the link is not team owned.
+    pub days_to_expire_policy: Option<crate::types::team_policies::DefaultLinkExpirationDaysPolicy>,
+    /// When owning team's policy `change_shared_link_expiration_policy` is
+    /// [`ChangeLinkExpirationPolicy::NotAllowed`], the updated externally available shared link
+    /// expiration value cannot be less strict than `days_to_expire_policy`. In this case
+    /// `days_to_expire_policy` is expected to be different from `none`. Not provided if the link is
+    /// not team owned.
+    pub change_shared_link_expiration_policy: Option<ChangeLinkExpirationPolicy>,
 }
 
 impl LinkPermissions {
@@ -7430,6 +7632,11 @@ impl LinkPermissions {
             can_remove_password: None,
             require_password: None,
             can_use_extended_sharing_controls: None,
+            can_sync: None,
+            can_request_access: None,
+            enforce_shared_link_password_policy: None,
+            days_to_expire_policy: None,
+            change_shared_link_expiration_policy: None,
         }
     }
 
@@ -7482,6 +7689,40 @@ impl LinkPermissions {
         self.can_use_extended_sharing_controls = Some(value);
         self
     }
+
+    pub fn with_can_sync(mut self, value: bool) -> Self {
+        self.can_sync = Some(value);
+        self
+    }
+
+    pub fn with_can_request_access(mut self, value: bool) -> Self {
+        self.can_request_access = Some(value);
+        self
+    }
+
+    pub fn with_enforce_shared_link_password_policy(
+        mut self,
+        value: crate::types::team_policies::EnforceLinkPasswordPolicy,
+    ) -> Self {
+        self.enforce_shared_link_password_policy = Some(value);
+        self
+    }
+
+    pub fn with_days_to_expire_policy(
+        mut self,
+        value: crate::types::team_policies::DefaultLinkExpirationDaysPolicy,
+    ) -> Self {
+        self.days_to_expire_policy = Some(value);
+        self
+    }
+
+    pub fn with_change_shared_link_expiration_policy(
+        mut self,
+        value: ChangeLinkExpirationPolicy,
+    ) -> Self {
+        self.change_shared_link_expiration_policy = Some(value);
+        self
+    }
 }
 
 const LINK_PERMISSIONS_FIELDS: &[&str] = &["can_revoke",
@@ -7502,7 +7743,12 @@ const LINK_PERMISSIONS_FIELDS: &[&str] = &["can_revoke",
                                            "can_set_password",
                                            "can_remove_password",
                                            "require_password",
-                                           "can_use_extended_sharing_controls"];
+                                           "can_use_extended_sharing_controls",
+                                           "can_sync",
+                                           "can_request_access",
+                                           "enforce_shared_link_password_policy",
+                                           "days_to_expire_policy",
+                                           "change_shared_link_expiration_policy"];
 impl LinkPermissions {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -7533,6 +7779,11 @@ impl LinkPermissions {
         let mut field_can_remove_password = None;
         let mut field_require_password = None;
         let mut field_can_use_extended_sharing_controls = None;
+        let mut field_can_sync = None;
+        let mut field_can_request_access = None;
+        let mut field_enforce_shared_link_password_policy = None;
+        let mut field_days_to_expire_policy = None;
+        let mut field_change_shared_link_expiration_policy = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -7651,6 +7902,36 @@ impl LinkPermissions {
                     }
                     field_can_use_extended_sharing_controls = Some(map.next_value()?);
                 }
+                "can_sync" => {
+                    if field_can_sync.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_sync"));
+                    }
+                    field_can_sync = Some(map.next_value()?);
+                }
+                "can_request_access" => {
+                    if field_can_request_access.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("can_request_access"));
+                    }
+                    field_can_request_access = Some(map.next_value()?);
+                }
+                "enforce_shared_link_password_policy" => {
+                    if field_enforce_shared_link_password_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("enforce_shared_link_password_policy"));
+                    }
+                    field_enforce_shared_link_password_policy = Some(map.next_value()?);
+                }
+                "days_to_expire_policy" => {
+                    if field_days_to_expire_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("days_to_expire_policy"));
+                    }
+                    field_days_to_expire_policy = Some(map.next_value()?);
+                }
+                "change_shared_link_expiration_policy" => {
+                    if field_change_shared_link_expiration_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("change_shared_link_expiration_policy"));
+                    }
+                    field_change_shared_link_expiration_policy = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -7680,6 +7961,11 @@ impl LinkPermissions {
             can_remove_password: field_can_remove_password.and_then(Option::flatten),
             require_password: field_require_password.and_then(Option::flatten),
             can_use_extended_sharing_controls: field_can_use_extended_sharing_controls.and_then(Option::flatten),
+            can_sync: field_can_sync.and_then(Option::flatten),
+            can_request_access: field_can_request_access.and_then(Option::flatten),
+            enforce_shared_link_password_policy: field_enforce_shared_link_password_policy.and_then(Option::flatten),
+            days_to_expire_policy: field_days_to_expire_policy.and_then(Option::flatten),
+            change_shared_link_expiration_policy: field_change_shared_link_expiration_policy.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -7728,6 +8014,21 @@ impl LinkPermissions {
         if let Some(val) = &self.can_use_extended_sharing_controls {
             s.serialize_field("can_use_extended_sharing_controls", val)?;
         }
+        if let Some(val) = &self.can_sync {
+            s.serialize_field("can_sync", val)?;
+        }
+        if let Some(val) = &self.can_request_access {
+            s.serialize_field("can_request_access", val)?;
+        }
+        if let Some(val) = &self.enforce_shared_link_password_policy {
+            s.serialize_field("enforce_shared_link_password_policy", val)?;
+        }
+        if let Some(val) = &self.days_to_expire_policy {
+            s.serialize_field("days_to_expire_policy", val)?;
+        }
+        if let Some(val) = &self.change_shared_link_expiration_policy {
+            s.serialize_field("change_shared_link_expiration_policy", val)?;
+        }
         Ok(())
     }
 }
@@ -7754,7 +8055,7 @@ impl ::serde::ser::Serialize for LinkPermissions {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("LinkPermissions", 19)?;
+        let mut s = serializer.serialize_struct("LinkPermissions", 24)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -8058,7 +8359,7 @@ impl ::serde::ser::Serialize for ListFileMembersArg {
 pub struct ListFileMembersBatchArg {
     /// Files for which to return members.
     pub files: Vec<PathOrId>,
-    /// Number of members to return max per query. Defaults to 10 if no limit is specified.
+    /// Number of members to return max per query. Defaults to 1000 if no limit is specified.
     pub limit: u32,
 }
 
@@ -8066,7 +8367,7 @@ impl ListFileMembersBatchArg {
     pub fn new(files: Vec<PathOrId>) -> Self {
         ListFileMembersBatchArg {
             files,
-            limit: 10,
+            limit: 1000,
         }
     }
 
@@ -8118,7 +8419,7 @@ impl ListFileMembersBatchArg {
         }
         let result = ListFileMembersBatchArg {
             files: field_files.ok_or_else(|| ::serde::de::Error::missing_field("files"))?,
-            limit: field_limit.unwrap_or(10),
+            limit: field_limit.unwrap_or(1000),
         };
         Ok(Some(result))
     }
@@ -8129,7 +8430,7 @@ impl ListFileMembersBatchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("files", &self.files)?;
-        if self.limit != 10 {
+        if self.limit != 1000 {
             s.serialize_field("limit", &self.limit)?;
         }
         Ok(())
@@ -8755,7 +9056,7 @@ pub struct ListFilesArg {
     pub limit: u32,
     /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
     /// response's [`SharedFileMetadata::permissions`](SharedFileMetadata) field describing the
-    /// actions the  authenticated user can perform on the file.
+    /// actions the authenticated user can perform on the file.
     pub actions: Option<Vec<FileAction>>,
 }
 
@@ -9158,7 +9459,8 @@ impl ::serde::ser::Serialize for ListFilesResult {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersArgs {
-    /// The ID for the shared folder.
+    /// The ID for the shared folder. When path is provided, the folder ID will be extracted from
+    /// the path instead.
     pub shared_folder_id: crate::types::common::SharedFolderId,
     /// This is a list indicating whether each returned member will include a boolean value
     /// [`MemberPermission::allow`](MemberPermission) that describes whether the current user can
@@ -9167,6 +9469,10 @@ pub struct ListFolderMembersArgs {
     /// The maximum number of results that include members, groups and invitees to return per
     /// request.
     pub limit: u32,
+    /// Optional path to get inherited members. When omitted, uses shared_folder_id to return direct
+    /// members. When provided, extracts folder ID from this path and returns users who have access
+    /// through parent shared folder.
+    pub path: Option<String>,
 }
 
 impl ListFolderMembersArgs {
@@ -9175,6 +9481,7 @@ impl ListFolderMembersArgs {
             shared_folder_id,
             actions: None,
             limit: 1000,
+            path: None,
         }
     }
 
@@ -9187,11 +9494,17 @@ impl ListFolderMembersArgs {
         self.limit = value;
         self
     }
+
+    pub fn with_path(mut self, value: String) -> Self {
+        self.path = Some(value);
+        self
+    }
 }
 
 const LIST_FOLDER_MEMBERS_ARGS_FIELDS: &[&str] = &["shared_folder_id",
                                                    "actions",
-                                                   "limit"];
+                                                   "limit",
+                                                   "path"];
 impl ListFolderMembersArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -9206,6 +9519,7 @@ impl ListFolderMembersArgs {
         let mut field_shared_folder_id = None;
         let mut field_actions = None;
         let mut field_limit = None;
+        let mut field_path = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -9228,6 +9542,12 @@ impl ListFolderMembersArgs {
                     }
                     field_limit = Some(map.next_value()?);
                 }
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -9241,6 +9561,7 @@ impl ListFolderMembersArgs {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             actions: field_actions.and_then(Option::flatten),
             limit: field_limit.unwrap_or(1000),
+            path: field_path.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -9256,6 +9577,9 @@ impl ListFolderMembersArgs {
         }
         if self.limit != 1000 {
             s.serialize_field("limit", &self.limit)?;
+        }
+        if let Some(val) = &self.path {
+            s.serialize_field("path", val)?;
         }
         Ok(())
     }
@@ -9283,7 +9607,7 @@ impl ::serde::ser::Serialize for ListFolderMembersArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderMembersArgs", 3)?;
+        let mut s = serializer.serialize_struct("ListFolderMembersArgs", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -9599,7 +9923,7 @@ pub struct ListFoldersArgs {
     pub limit: u32,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
     /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
-    /// actions the  authenticated user can perform on the folder.
+    /// actions the authenticated user can perform on the folder.
     pub actions: Option<Vec<FolderAction>>,
 }
 
@@ -10675,6 +10999,8 @@ pub enum MemberPolicy {
     Team,
     /// Anyone can become a member.
     Anyone,
+    /// Only a teammate and approved people can become a member.
+    TeamAndApproved,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -10698,6 +11024,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberPolicy {
                 let value = match tag {
                     "team" => MemberPolicy::Team,
                     "anyone" => MemberPolicy::Anyone,
+                    "team_and_approved" => MemberPolicy::TeamAndApproved,
                     _ => MemberPolicy::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -10706,6 +11033,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberPolicy {
         }
         const VARIANTS: &[&str] = &["team",
                                     "anyone",
+                                    "team_and_approved",
                                     "other"];
         deserializer.deserialize_struct("MemberPolicy", VARIANTS, EnumVisitor)
     }
@@ -10726,6 +11054,12 @@ impl ::serde::ser::Serialize for MemberPolicy {
                 // unit
                 let mut s = serializer.serialize_struct("MemberPolicy", 1)?;
                 s.serialize_field(".tag", "anyone")?;
+                s.end()
+            }
+            MemberPolicy::TeamAndApproved => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberPolicy", 1)?;
+                s.serialize_field(".tag", "team_and_approved")?;
                 s.end()
             }
             MemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -10825,7 +11159,7 @@ pub struct MembershipInfo {
     pub permissions: Option<Vec<MemberPermission>>,
     /// Never set.
     pub initials: Option<String>,
-    /// True if the member has access from a parent folder.
+    /// True if the member has access on a parent folder.
     pub is_inherited: bool,
 }
 
@@ -11100,6 +11434,8 @@ pub enum ModifySharedLinkSettingsError {
     SharedLinkAccessDenied,
     /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
     UnsupportedLinkType,
+    /// Private shared links do not support `path` or `link_password` parameter fields.
+    UnsupportedParameterField,
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
     /// This user's email address is not verified. This functionality is only available on accounts
@@ -11130,6 +11466,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
                     "shared_link_not_found" => ModifySharedLinkSettingsError::SharedLinkNotFound,
                     "shared_link_access_denied" => ModifySharedLinkSettingsError::SharedLinkAccessDenied,
                     "unsupported_link_type" => ModifySharedLinkSettingsError::UnsupportedLinkType,
+                    "unsupported_parameter_field" => ModifySharedLinkSettingsError::UnsupportedParameterField,
                     "settings_error" => {
                         match map.next_key()? {
                             Some("settings_error") => ModifySharedLinkSettingsError::SettingsError(map.next_value()?),
@@ -11147,6 +11484,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
         const VARIANTS: &[&str] = &["shared_link_not_found",
                                     "shared_link_access_denied",
                                     "unsupported_link_type",
+                                    "unsupported_parameter_field",
                                     "other",
                                     "settings_error",
                                     "email_not_verified"];
@@ -11175,6 +11513,12 @@ impl ::serde::ser::Serialize for ModifySharedLinkSettingsError {
                 // unit
                 let mut s = serializer.serialize_struct("ModifySharedLinkSettingsError", 1)?;
                 s.serialize_field(".tag", "unsupported_link_type")?;
+                s.end()
+            }
+            ModifySharedLinkSettingsError::UnsupportedParameterField => {
+                // unit
+                let mut s = serializer.serialize_struct("ModifySharedLinkSettingsError", 1)?;
+                s.serialize_field(".tag", "unsupported_parameter_field")?;
                 s.end()
             }
             ModifySharedLinkSettingsError::SettingsError(x) => {
@@ -11209,6 +11553,7 @@ impl ::std::fmt::Display for ModifySharedLinkSettingsError {
         match self {
             ModifySharedLinkSettingsError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
             ModifySharedLinkSettingsError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            ModifySharedLinkSettingsError::UnsupportedParameterField => f.write_str("Private shared links do not support `path` or `link_password` parameter fields."),
             ModifySharedLinkSettingsError::SettingsError(inner) => write!(f, "There is an error with the given settings: {}", inner),
             _ => write!(f, "{:?}", *self),
         }
@@ -11222,6 +11567,7 @@ impl From<SharedLinkError> for ModifySharedLinkSettingsError {
             SharedLinkError::SharedLinkNotFound => ModifySharedLinkSettingsError::SharedLinkNotFound,
             SharedLinkError::SharedLinkAccessDenied => ModifySharedLinkSettingsError::SharedLinkAccessDenied,
             SharedLinkError::UnsupportedLinkType => ModifySharedLinkSettingsError::UnsupportedLinkType,
+            SharedLinkError::UnsupportedParameterField => ModifySharedLinkSettingsError::UnsupportedParameterField,
             SharedLinkError::Other => ModifySharedLinkSettingsError::Other,
         }
     }
@@ -11332,6 +11678,9 @@ pub enum MountFolderError {
     /// The shared folder is not mountable. One example where this can occur is when the shared
     /// folder belongs within a team folder in the user's Dropbox.
     NotMountable,
+    /// The shared folder is not mountable by directly call APIs, instead the automounter is
+    /// responsible for mounting it.
+    MustAutomount,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -11365,6 +11714,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MountFolderError {
                     "already_mounted" => MountFolderError::AlreadyMounted,
                     "no_permission" => MountFolderError::NoPermission,
                     "not_mountable" => MountFolderError::NotMountable,
+                    "must_automount" => MountFolderError::MustAutomount,
                     _ => MountFolderError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -11377,6 +11727,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MountFolderError {
                                     "already_mounted",
                                     "no_permission",
                                     "not_mountable",
+                                    "must_automount",
                                     "other"];
         deserializer.deserialize_struct("MountFolderError", VARIANTS, EnumVisitor)
     }
@@ -11425,6 +11776,12 @@ impl ::serde::ser::Serialize for MountFolderError {
                 s.serialize_field(".tag", "not_mountable")?;
                 s.end()
             }
+            MountFolderError::MustAutomount => {
+                // unit
+                let mut s = serializer.serialize_struct("MountFolderError", 1)?;
+                s.serialize_field(".tag", "must_automount")?;
+                s.end()
+            }
             MountFolderError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -11448,6 +11805,7 @@ impl ::std::fmt::Display for MountFolderError {
             MountFolderError::AlreadyMounted => f.write_str("The shared folder is already mounted."),
             MountFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
             MountFolderError::NotMountable => f.write_str("The shared folder is not mountable. One example where this can occur is when the shared folder belongs within a team folder in the user's Dropbox."),
+            MountFolderError::MustAutomount => f.write_str("The shared folder is not mountable by directly call APIs, instead the automounter is responsible for mounting it."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -11986,6 +12344,278 @@ impl ::serde::ser::Serialize for PermissionDeniedReason {
             }
             PermissionDeniedReason::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+/// Removes all self-removable access from a file or folder. For folders: always relinquishes
+/// without keeping a local copy (leave_a_copy=false behavior). If you need control over keeping
+/// folder contents, use the relinquish_folder_membership endpoint instead.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct RelinquishAccessArg {
+    /// The id for the file or folder.
+    pub file_id: String,
+}
+
+impl RelinquishAccessArg {
+    pub fn new(file_id: String) -> Self {
+        RelinquishAccessArg {
+            file_id,
+        }
+    }
+}
+
+const RELINQUISH_ACCESS_ARG_FIELDS: &[&str] = &["file_id"];
+impl RelinquishAccessArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<RelinquishAccessArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RelinquishAccessArg>, V::Error> {
+        let mut field_file_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "file_id" => {
+                    if field_file_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_id"));
+                    }
+                    field_file_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RelinquishAccessArg {
+            file_id: field_file_id.ok_or_else(|| ::serde::de::Error::missing_field("file_id"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("file_id", &self.file_id)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelinquishAccessArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelinquishAccessArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RelinquishAccessArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelinquishAccessArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelinquishAccessArg", RELINQUISH_ACCESS_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelinquishAccessArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelinquishAccessArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Error result for the relinquish_access endpoint.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum RelinquishAccessError {
+    /// File or folder not found or has been deleted.
+    InvalidFileId,
+    /// Caller's email address is not verified.
+    EmailUnverified,
+    /// User is the owner of the file/folder.
+    Owner,
+    /// User only has inherited access from a parent folder.
+    NoExplicitAccess,
+    /// User has access only via group membership.
+    GroupAccess,
+    /// Team folder restrictions apply.
+    TeamFolder,
+    /// Caller does not have permission to perform this action. Generic fallback.
+    NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelinquishAccessError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelinquishAccessError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RelinquishAccessError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "invalid_file_id" => RelinquishAccessError::InvalidFileId,
+                    "email_unverified" => RelinquishAccessError::EmailUnverified,
+                    "owner" => RelinquishAccessError::Owner,
+                    "no_explicit_access" => RelinquishAccessError::NoExplicitAccess,
+                    "group_access" => RelinquishAccessError::GroupAccess,
+                    "team_folder" => RelinquishAccessError::TeamFolder,
+                    "no_permission" => RelinquishAccessError::NoPermission,
+                    _ => RelinquishAccessError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["invalid_file_id",
+                                    "email_unverified",
+                                    "owner",
+                                    "no_explicit_access",
+                                    "group_access",
+                                    "team_folder",
+                                    "no_permission",
+                                    "other"];
+        deserializer.deserialize_struct("RelinquishAccessError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelinquishAccessError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            RelinquishAccessError::InvalidFileId => {
+                // unit
+                let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
+                s.serialize_field(".tag", "invalid_file_id")?;
+                s.end()
+            }
+            RelinquishAccessError::EmailUnverified => {
+                // unit
+                let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
+                s.serialize_field(".tag", "email_unverified")?;
+                s.end()
+            }
+            RelinquishAccessError::Owner => {
+                // unit
+                let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
+                s.serialize_field(".tag", "owner")?;
+                s.end()
+            }
+            RelinquishAccessError::NoExplicitAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
+                s.serialize_field(".tag", "no_explicit_access")?;
+                s.end()
+            }
+            RelinquishAccessError::GroupAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
+                s.serialize_field(".tag", "group_access")?;
+                s.end()
+            }
+            RelinquishAccessError::TeamFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
+                s.serialize_field(".tag", "team_folder")?;
+                s.end()
+            }
+            RelinquishAccessError::NoPermission => {
+                // unit
+                let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
+                s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            RelinquishAccessError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for RelinquishAccessError {
+}
+
+impl ::std::fmt::Display for RelinquishAccessError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            RelinquishAccessError::InvalidFileId => f.write_str("File or folder not found or has been deleted."),
+            RelinquishAccessError::EmailUnverified => f.write_str("Caller's email address is not verified."),
+            RelinquishAccessError::Owner => f.write_str("User is the owner of the file/folder."),
+            RelinquishAccessError::NoExplicitAccess => f.write_str("User only has inherited access from a parent folder."),
+            RelinquishAccessError::GroupAccess => f.write_str("User has access only via group membership."),
+            RelinquishAccessError::TeamFolder => f.write_str("Team folder restrictions apply."),
+            RelinquishAccessError::NoPermission => f.write_str("Caller does not have permission to perform this action. Generic fallback."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// Returns an empty response for the relinquish_access endpoint.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct RelinquishAccessResult {
+}
+
+const RELINQUISH_ACCESS_RESULT_FIELDS: &[&str] = &[];
+impl RelinquishAccessResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelinquishAccessResult, V::Error> {
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(RelinquishAccessResult {})
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelinquishAccessResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelinquishAccessResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RelinquishAccessResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelinquishAccessResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelinquishAccessResult", RELINQUISH_ACCESS_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelinquishAccessResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("RelinquishAccessResult", 0)?.end()
     }
 }
 
@@ -13414,6 +14044,8 @@ pub enum RevokeSharedLinkError {
     SharedLinkAccessDenied,
     /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
     UnsupportedLinkType,
+    /// Private shared links do not support `path` or `link_password` parameter fields.
+    UnsupportedParameterField,
     /// Shared link is malformed.
     SharedLinkMalformed,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -13440,6 +14072,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeSharedLinkError {
                     "shared_link_not_found" => RevokeSharedLinkError::SharedLinkNotFound,
                     "shared_link_access_denied" => RevokeSharedLinkError::SharedLinkAccessDenied,
                     "unsupported_link_type" => RevokeSharedLinkError::UnsupportedLinkType,
+                    "unsupported_parameter_field" => RevokeSharedLinkError::UnsupportedParameterField,
                     "shared_link_malformed" => RevokeSharedLinkError::SharedLinkMalformed,
                     _ => RevokeSharedLinkError::Other,
                 };
@@ -13450,6 +14083,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeSharedLinkError {
         const VARIANTS: &[&str] = &["shared_link_not_found",
                                     "shared_link_access_denied",
                                     "unsupported_link_type",
+                                    "unsupported_parameter_field",
                                     "other",
                                     "shared_link_malformed"];
         deserializer.deserialize_struct("RevokeSharedLinkError", VARIANTS, EnumVisitor)
@@ -13479,6 +14113,12 @@ impl ::serde::ser::Serialize for RevokeSharedLinkError {
                 s.serialize_field(".tag", "unsupported_link_type")?;
                 s.end()
             }
+            RevokeSharedLinkError::UnsupportedParameterField => {
+                // unit
+                let mut s = serializer.serialize_struct("RevokeSharedLinkError", 1)?;
+                s.serialize_field(".tag", "unsupported_parameter_field")?;
+                s.end()
+            }
             RevokeSharedLinkError::SharedLinkMalformed => {
                 // unit
                 let mut s = serializer.serialize_struct("RevokeSharedLinkError", 1)?;
@@ -13498,6 +14138,7 @@ impl ::std::fmt::Display for RevokeSharedLinkError {
         match self {
             RevokeSharedLinkError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
             RevokeSharedLinkError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            RevokeSharedLinkError::UnsupportedParameterField => f.write_str("Private shared links do not support `path` or `link_password` parameter fields."),
             RevokeSharedLinkError::SharedLinkMalformed => f.write_str("Shared link is malformed."),
             _ => write!(f, "{:?}", *self),
         }
@@ -13511,6 +14152,7 @@ impl From<SharedLinkError> for RevokeSharedLinkError {
             SharedLinkError::SharedLinkNotFound => RevokeSharedLinkError::SharedLinkNotFound,
             SharedLinkError::SharedLinkAccessDenied => RevokeSharedLinkError::SharedLinkAccessDenied,
             SharedLinkError::UnsupportedLinkType => RevokeSharedLinkError::UnsupportedLinkType,
+            SharedLinkError::UnsupportedParameterField => RevokeSharedLinkError::UnsupportedParameterField,
             SharedLinkError::Other => RevokeSharedLinkError::Other,
         }
     }
@@ -13738,7 +14380,7 @@ pub struct ShareFolderArg {
     pub access_inheritance: AccessInheritance,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
     /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
-    /// actions the  authenticated user can perform on the folder.
+    /// actions the authenticated user can perform on the folder.
     pub actions: Option<Vec<FolderAction>>,
     /// Settings on the link for this folder.
     pub link_settings: Option<LinkSettings>,
@@ -14208,7 +14850,8 @@ pub enum ShareFolderError {
     EmailUnverified,
     /// [`ShareFolderArg::path`](ShareFolderArg) is invalid.
     BadPath(SharePathError),
-    /// Team policy is more restrictive than [`ShareFolderArg::member_policy`](ShareFolderArg).
+    /// Team policy or group sharing settings are more restrictive than
+    /// [`ShareFolderArg::member_policy`](ShareFolderArg).
     TeamPolicyDisallowsMemberPolicy,
     /// The current user's account is not allowed to select the specified
     /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
@@ -14344,7 +14987,8 @@ pub enum ShareFolderErrorBase {
     EmailUnverified,
     /// [`ShareFolderArg::path`](ShareFolderArg) is invalid.
     BadPath(SharePathError),
-    /// Team policy is more restrictive than [`ShareFolderArg::member_policy`](ShareFolderArg).
+    /// Team policy or group sharing settings are more restrictive than
+    /// [`ShareFolderArg::member_policy`](ShareFolderArg).
     TeamPolicyDisallowsMemberPolicy,
     /// The current user's account is not allowed to select the specified
     /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
@@ -14431,6 +15075,185 @@ impl ::serde::ser::Serialize for ShareFolderErrorBase {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ShareFolderErrorBaseV2 {
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
+    EmailUnverified,
+    /// Team policy or group sharing settings are more restrictive than
+    /// [`ShareFolderArg::member_policy`](ShareFolderArg).
+    TeamPolicyDisallowsMemberPolicy,
+    /// The current user's account is not allowed to select the specified
+    /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
+    DisallowedSharedLinkPolicy,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShareFolderErrorBaseV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ShareFolderErrorBaseV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ShareFolderErrorBaseV2 structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "email_unverified" => ShareFolderErrorBaseV2::EmailUnverified,
+                    "team_policy_disallows_member_policy" => ShareFolderErrorBaseV2::TeamPolicyDisallowsMemberPolicy,
+                    "disallowed_shared_link_policy" => ShareFolderErrorBaseV2::DisallowedSharedLinkPolicy,
+                    _ => ShareFolderErrorBaseV2::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["email_unverified",
+                                    "team_policy_disallows_member_policy",
+                                    "disallowed_shared_link_policy",
+                                    "other"];
+        deserializer.deserialize_struct("ShareFolderErrorBaseV2", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShareFolderErrorBaseV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ShareFolderErrorBaseV2::EmailUnverified => {
+                // unit
+                let mut s = serializer.serialize_struct("ShareFolderErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "email_unverified")?;
+                s.end()
+            }
+            ShareFolderErrorBaseV2::TeamPolicyDisallowsMemberPolicy => {
+                // unit
+                let mut s = serializer.serialize_struct("ShareFolderErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "team_policy_disallows_member_policy")?;
+                s.end()
+            }
+            ShareFolderErrorBaseV2::DisallowedSharedLinkPolicy => {
+                // unit
+                let mut s = serializer.serialize_struct("ShareFolderErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "disallowed_shared_link_policy")?;
+                s.end()
+            }
+            ShareFolderErrorBaseV2::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ShareFolderErrorV2 {
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
+    EmailUnverified,
+    /// Team policy or group sharing settings are more restrictive than
+    /// [`ShareFolderArg::member_policy`](ShareFolderArg).
+    TeamPolicyDisallowsMemberPolicy,
+    /// The current user's account is not allowed to select the specified
+    /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
+    DisallowedSharedLinkPolicy,
+    /// The current user does not have permission to perform this action.
+    NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShareFolderErrorV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ShareFolderErrorV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ShareFolderErrorV2 structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "email_unverified" => ShareFolderErrorV2::EmailUnverified,
+                    "team_policy_disallows_member_policy" => ShareFolderErrorV2::TeamPolicyDisallowsMemberPolicy,
+                    "disallowed_shared_link_policy" => ShareFolderErrorV2::DisallowedSharedLinkPolicy,
+                    "no_permission" => ShareFolderErrorV2::NoPermission,
+                    _ => ShareFolderErrorV2::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["email_unverified",
+                                    "team_policy_disallows_member_policy",
+                                    "disallowed_shared_link_policy",
+                                    "other",
+                                    "no_permission"];
+        deserializer.deserialize_struct("ShareFolderErrorV2", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShareFolderErrorV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ShareFolderErrorV2::EmailUnverified => {
+                // unit
+                let mut s = serializer.serialize_struct("ShareFolderErrorV2", 1)?;
+                s.serialize_field(".tag", "email_unverified")?;
+                s.end()
+            }
+            ShareFolderErrorV2::TeamPolicyDisallowsMemberPolicy => {
+                // unit
+                let mut s = serializer.serialize_struct("ShareFolderErrorV2", 1)?;
+                s.serialize_field(".tag", "team_policy_disallows_member_policy")?;
+                s.end()
+            }
+            ShareFolderErrorV2::DisallowedSharedLinkPolicy => {
+                // unit
+                let mut s = serializer.serialize_struct("ShareFolderErrorV2", 1)?;
+                s.serialize_field(".tag", "disallowed_shared_link_policy")?;
+                s.end()
+            }
+            ShareFolderErrorV2::NoPermission => {
+                // unit
+                let mut s = serializer.serialize_struct("ShareFolderErrorV2", 1)?;
+                s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            ShareFolderErrorV2::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+// union extends ShareFolderErrorBaseV2
+impl From<ShareFolderErrorBaseV2> for ShareFolderErrorV2 {
+    fn from(parent: ShareFolderErrorBaseV2) -> Self {
+        match parent {
+            ShareFolderErrorBaseV2::EmailUnverified => ShareFolderErrorV2::EmailUnverified,
+            ShareFolderErrorBaseV2::TeamPolicyDisallowsMemberPolicy => ShareFolderErrorV2::TeamPolicyDisallowsMemberPolicy,
+            ShareFolderErrorBaseV2::DisallowedSharedLinkPolicy => ShareFolderErrorV2::DisallowedSharedLinkPolicy,
+            ShareFolderErrorBaseV2::Other => ShareFolderErrorV2::Other,
+        }
+    }
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ShareFolderJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
@@ -14490,7 +15313,7 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
             }
             ShareFolderJobStatus::Complete(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ShareFolderJobStatus", 18)?;
+                let mut s = serializer.serialize_struct("ShareFolderJobStatus", 19)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -14572,7 +15395,7 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
             }
             ShareFolderLaunch::Complete(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ShareFolderLaunch", 18)?;
+                let mut s = serializer.serialize_struct("ShareFolderLaunch", 19)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -14749,7 +15572,7 @@ impl ::serde::ser::Serialize for SharePathError {
             }
             SharePathError::AlreadyShared(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SharePathError", 18)?;
+                let mut s = serializer.serialize_struct("SharePathError", 19)?;
                 s.serialize_field(".tag", "already_shared")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -14822,6 +15645,420 @@ impl ::std::fmt::Display for SharePathError {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum SharePathErrorBaseV2 {
+    /// A file is at the specified path.
+    IsFile,
+    /// We do not support sharing a folder inside a shared folder.
+    InsideSharedFolder,
+    /// We do not support shared folders that contain shared folders.
+    ContainsSharedFolder,
+    /// We do not support shared folders that contain team folders.
+    ContainsTeamFolder,
+    /// We do not support sharing an app folder.
+    IsAppFolder,
+    /// We do not support sharing a folder inside an app folder.
+    InsideAppFolder,
+    /// A public folder can't be shared this way. Use a public link instead.
+    IsPublicFolder,
+    /// A folder inside a public folder can't be shared this way. Use a public link instead.
+    InsidePublicFolder,
+    /// Folder is already shared. Contains metadata about the existing shared folder.
+    AlreadyShared(SharedFolderMetadata),
+    /// Path is not valid.
+    InvalidPath,
+    /// We do not support sharing a Mac OS X package.
+    IsOsxPackage,
+    /// We do not support sharing a folder inside a Mac OS X package.
+    InsideOsxPackage,
+    /// We do not support sharing the Vault folder.
+    IsVault,
+    /// We do not support sharing a folder inside a locked Vault.
+    IsVaultLocked,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharePathErrorBaseV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharePathErrorBaseV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharePathErrorBaseV2 structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "is_file" => SharePathErrorBaseV2::IsFile,
+                    "inside_shared_folder" => SharePathErrorBaseV2::InsideSharedFolder,
+                    "contains_shared_folder" => SharePathErrorBaseV2::ContainsSharedFolder,
+                    "contains_team_folder" => SharePathErrorBaseV2::ContainsTeamFolder,
+                    "is_app_folder" => SharePathErrorBaseV2::IsAppFolder,
+                    "inside_app_folder" => SharePathErrorBaseV2::InsideAppFolder,
+                    "is_public_folder" => SharePathErrorBaseV2::IsPublicFolder,
+                    "inside_public_folder" => SharePathErrorBaseV2::InsidePublicFolder,
+                    "already_shared" => SharePathErrorBaseV2::AlreadyShared(SharedFolderMetadata::internal_deserialize(&mut map)?),
+                    "invalid_path" => SharePathErrorBaseV2::InvalidPath,
+                    "is_osx_package" => SharePathErrorBaseV2::IsOsxPackage,
+                    "inside_osx_package" => SharePathErrorBaseV2::InsideOsxPackage,
+                    "is_vault" => SharePathErrorBaseV2::IsVault,
+                    "is_vault_locked" => SharePathErrorBaseV2::IsVaultLocked,
+                    _ => SharePathErrorBaseV2::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["is_file",
+                                    "inside_shared_folder",
+                                    "contains_shared_folder",
+                                    "contains_team_folder",
+                                    "is_app_folder",
+                                    "inside_app_folder",
+                                    "is_public_folder",
+                                    "inside_public_folder",
+                                    "already_shared",
+                                    "invalid_path",
+                                    "is_osx_package",
+                                    "inside_osx_package",
+                                    "is_vault",
+                                    "is_vault_locked",
+                                    "other"];
+        deserializer.deserialize_struct("SharePathErrorBaseV2", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharePathErrorBaseV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            SharePathErrorBaseV2::IsFile => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "is_file")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::InsideSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "inside_shared_folder")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::ContainsSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "contains_shared_folder")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::ContainsTeamFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "contains_team_folder")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::IsAppFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "is_app_folder")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::InsideAppFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "inside_app_folder")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::IsPublicFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "is_public_folder")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::InsidePublicFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "inside_public_folder")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::AlreadyShared(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 19)?;
+                s.serialize_field(".tag", "already_shared")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            SharePathErrorBaseV2::InvalidPath => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "invalid_path")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::IsOsxPackage => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "is_osx_package")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::InsideOsxPackage => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "inside_osx_package")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::IsVault => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "is_vault")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::IsVaultLocked => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
+                s.serialize_field(".tag", "is_vault_locked")?;
+                s.end()
+            }
+            SharePathErrorBaseV2::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum SharePathErrorV2 {
+    /// A file is at the specified path.
+    IsFile,
+    /// We do not support sharing a folder inside a shared folder.
+    InsideSharedFolder,
+    /// We do not support shared folders that contain shared folders.
+    ContainsSharedFolder,
+    /// We do not support shared folders that contain team folders.
+    ContainsTeamFolder,
+    /// We do not support sharing an app folder.
+    IsAppFolder,
+    /// We do not support sharing a folder inside an app folder.
+    InsideAppFolder,
+    /// A public folder can't be shared this way. Use a public link instead.
+    IsPublicFolder,
+    /// A folder inside a public folder can't be shared this way. Use a public link instead.
+    InsidePublicFolder,
+    /// Folder is already shared. Contains metadata about the existing shared folder.
+    AlreadyShared(SharedFolderMetadata),
+    /// Path is not valid.
+    InvalidPath,
+    /// We do not support sharing a Mac OS X package.
+    IsOsxPackage,
+    /// We do not support sharing a folder inside a Mac OS X package.
+    InsideOsxPackage,
+    /// We do not support sharing the Vault folder.
+    IsVault,
+    /// We do not support sharing a folder inside a locked Vault.
+    IsVaultLocked,
+    /// We do not support sharing the Family folder.
+    IsFamily,
+    /// We do not support shared folders that contain app folders.
+    ContainsAppFolder,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharePathErrorV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharePathErrorV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharePathErrorV2 structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "is_file" => SharePathErrorV2::IsFile,
+                    "inside_shared_folder" => SharePathErrorV2::InsideSharedFolder,
+                    "contains_shared_folder" => SharePathErrorV2::ContainsSharedFolder,
+                    "contains_team_folder" => SharePathErrorV2::ContainsTeamFolder,
+                    "is_app_folder" => SharePathErrorV2::IsAppFolder,
+                    "inside_app_folder" => SharePathErrorV2::InsideAppFolder,
+                    "is_public_folder" => SharePathErrorV2::IsPublicFolder,
+                    "inside_public_folder" => SharePathErrorV2::InsidePublicFolder,
+                    "already_shared" => SharePathErrorV2::AlreadyShared(SharedFolderMetadata::internal_deserialize(&mut map)?),
+                    "invalid_path" => SharePathErrorV2::InvalidPath,
+                    "is_osx_package" => SharePathErrorV2::IsOsxPackage,
+                    "inside_osx_package" => SharePathErrorV2::InsideOsxPackage,
+                    "is_vault" => SharePathErrorV2::IsVault,
+                    "is_vault_locked" => SharePathErrorV2::IsVaultLocked,
+                    "is_family" => SharePathErrorV2::IsFamily,
+                    "contains_app_folder" => SharePathErrorV2::ContainsAppFolder,
+                    _ => SharePathErrorV2::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["is_file",
+                                    "inside_shared_folder",
+                                    "contains_shared_folder",
+                                    "contains_team_folder",
+                                    "is_app_folder",
+                                    "inside_app_folder",
+                                    "is_public_folder",
+                                    "inside_public_folder",
+                                    "already_shared",
+                                    "invalid_path",
+                                    "is_osx_package",
+                                    "inside_osx_package",
+                                    "is_vault",
+                                    "is_vault_locked",
+                                    "other",
+                                    "is_family",
+                                    "contains_app_folder"];
+        deserializer.deserialize_struct("SharePathErrorV2", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharePathErrorV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            SharePathErrorV2::IsFile => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "is_file")?;
+                s.end()
+            }
+            SharePathErrorV2::InsideSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "inside_shared_folder")?;
+                s.end()
+            }
+            SharePathErrorV2::ContainsSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "contains_shared_folder")?;
+                s.end()
+            }
+            SharePathErrorV2::ContainsTeamFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "contains_team_folder")?;
+                s.end()
+            }
+            SharePathErrorV2::IsAppFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "is_app_folder")?;
+                s.end()
+            }
+            SharePathErrorV2::InsideAppFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "inside_app_folder")?;
+                s.end()
+            }
+            SharePathErrorV2::IsPublicFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "is_public_folder")?;
+                s.end()
+            }
+            SharePathErrorV2::InsidePublicFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "inside_public_folder")?;
+                s.end()
+            }
+            SharePathErrorV2::AlreadyShared(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 19)?;
+                s.serialize_field(".tag", "already_shared")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            SharePathErrorV2::InvalidPath => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "invalid_path")?;
+                s.end()
+            }
+            SharePathErrorV2::IsOsxPackage => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "is_osx_package")?;
+                s.end()
+            }
+            SharePathErrorV2::InsideOsxPackage => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "inside_osx_package")?;
+                s.end()
+            }
+            SharePathErrorV2::IsVault => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "is_vault")?;
+                s.end()
+            }
+            SharePathErrorV2::IsVaultLocked => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "is_vault_locked")?;
+                s.end()
+            }
+            SharePathErrorV2::IsFamily => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "is_family")?;
+                s.end()
+            }
+            SharePathErrorV2::ContainsAppFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
+                s.serialize_field(".tag", "contains_app_folder")?;
+                s.end()
+            }
+            SharePathErrorV2::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+// union extends SharePathErrorBaseV2
+impl From<SharePathErrorBaseV2> for SharePathErrorV2 {
+    fn from(parent: SharePathErrorBaseV2) -> Self {
+        match parent {
+            SharePathErrorBaseV2::IsFile => SharePathErrorV2::IsFile,
+            SharePathErrorBaseV2::InsideSharedFolder => SharePathErrorV2::InsideSharedFolder,
+            SharePathErrorBaseV2::ContainsSharedFolder => SharePathErrorV2::ContainsSharedFolder,
+            SharePathErrorBaseV2::ContainsTeamFolder => SharePathErrorV2::ContainsTeamFolder,
+            SharePathErrorBaseV2::IsAppFolder => SharePathErrorV2::IsAppFolder,
+            SharePathErrorBaseV2::InsideAppFolder => SharePathErrorV2::InsideAppFolder,
+            SharePathErrorBaseV2::IsPublicFolder => SharePathErrorV2::IsPublicFolder,
+            SharePathErrorBaseV2::InsidePublicFolder => SharePathErrorV2::InsidePublicFolder,
+            SharePathErrorBaseV2::AlreadyShared(x) => SharePathErrorV2::AlreadyShared(x),
+            SharePathErrorBaseV2::InvalidPath => SharePathErrorV2::InvalidPath,
+            SharePathErrorBaseV2::IsOsxPackage => SharePathErrorV2::IsOsxPackage,
+            SharePathErrorBaseV2::InsideOsxPackage => SharePathErrorV2::InsideOsxPackage,
+            SharePathErrorBaseV2::IsVault => SharePathErrorV2::IsVault,
+            SharePathErrorBaseV2::IsVaultLocked => SharePathErrorV2::IsVaultLocked,
+            SharePathErrorBaseV2::Other => SharePathErrorV2::Other,
+        }
+    }
+}
 /// Metadata of a shared link for a file or folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -14843,7 +16080,7 @@ pub struct SharedContentLinkMetadata {
     pub access_level: Option<AccessLevel>,
     /// The shared folder that prevents the link audience for this link from being more restrictive.
     pub audience_restricting_shared_folder: Option<AudienceRestrictingSharedFolder>,
-    /// Whether the link has an expiry set on it. A link with an expiry will have its  audience
+    /// Whether the link has an expiry set on it. A link with an expiry will have its audience
     /// changed to members when the expiry is reached.
     pub expiry: Option<crate::types::common::DropboxTimestamp>,
     /// The content inside this folder with link audience different than this folder's. This is only
@@ -15093,7 +16330,7 @@ pub struct SharedContentLinkMetadataBase {
     pub access_level: Option<AccessLevel>,
     /// The shared folder that prevents the link audience for this link from being more restrictive.
     pub audience_restricting_shared_folder: Option<AudienceRestrictingSharedFolder>,
-    /// Whether the link has an expiry set on it. A link with an expiry will have its  audience
+    /// Whether the link has an expiry set on it. A link with an expiry will have its audience
     /// changed to members when the expiry is reached.
     pub expiry: Option<crate::types::common::DropboxTimestamp>,
 }
@@ -16168,6 +17405,8 @@ pub struct SharedFolderMetadata {
     pub permissions: Option<Vec<FolderPermission>>,
     /// Whether the folder inherits its members from its parent.
     pub access_inheritance: AccessInheritance,
+    /// The ID of the content.
+    pub folder_id: Option<crate::types::files::FileId>,
 }
 
 impl SharedFolderMetadata {
@@ -16199,6 +17438,7 @@ impl SharedFolderMetadata {
             link_metadata: None,
             permissions: None,
             access_inheritance: AccessInheritance::Inherit,
+            folder_id: None,
         }
     }
 
@@ -16249,6 +17489,11 @@ impl SharedFolderMetadata {
         self.access_inheritance = value;
         self
     }
+
+    pub fn with_folder_id(mut self, value: crate::types::files::FileId) -> Self {
+        self.folder_id = Some(value);
+        self
+    }
 }
 
 const SHARED_FOLDER_METADATA_FIELDS: &[&str] = &["access_type",
@@ -16267,7 +17512,8 @@ const SHARED_FOLDER_METADATA_FIELDS: &[&str] = &["access_type",
                                                  "parent_folder_name",
                                                  "link_metadata",
                                                  "permissions",
-                                                 "access_inheritance"];
+                                                 "access_inheritance",
+                                                 "folder_id"];
 impl SharedFolderMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -16296,6 +17542,7 @@ impl SharedFolderMetadata {
         let mut field_link_metadata = None;
         let mut field_permissions = None;
         let mut field_access_inheritance = None;
+        let mut field_folder_id = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -16402,6 +17649,12 @@ impl SharedFolderMetadata {
                     }
                     field_access_inheritance = Some(map.next_value()?);
                 }
+                "folder_id" => {
+                    if field_folder_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("folder_id"));
+                    }
+                    field_folder_id = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -16429,6 +17682,7 @@ impl SharedFolderMetadata {
             link_metadata: field_link_metadata.and_then(Option::flatten),
             permissions: field_permissions.and_then(Option::flatten),
             access_inheritance: field_access_inheritance.unwrap_or(AccessInheritance::Inherit),
+            folder_id: field_folder_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -16473,6 +17727,9 @@ impl SharedFolderMetadata {
         if self.access_inheritance != AccessInheritance::Inherit {
             s.serialize_field("access_inheritance", &self.access_inheritance)?;
         }
+        if let Some(val) = &self.folder_id {
+            s.serialize_field("folder_id", val)?;
+        }
         Ok(())
     }
 }
@@ -16499,7 +17756,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderMetadata", 17)?;
+        let mut s = serializer.serialize_struct("SharedFolderMetadata", 18)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -16938,6 +18195,8 @@ pub enum SharedLinkError {
     SharedLinkAccessDenied,
     /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
     UnsupportedLinkType,
+    /// Private shared links do not support `path` or `link_password` parameter fields.
+    UnsupportedParameterField,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -16962,6 +18221,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkError {
                     "shared_link_not_found" => SharedLinkError::SharedLinkNotFound,
                     "shared_link_access_denied" => SharedLinkError::SharedLinkAccessDenied,
                     "unsupported_link_type" => SharedLinkError::UnsupportedLinkType,
+                    "unsupported_parameter_field" => SharedLinkError::UnsupportedParameterField,
                     _ => SharedLinkError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -16971,6 +18231,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkError {
         const VARIANTS: &[&str] = &["shared_link_not_found",
                                     "shared_link_access_denied",
                                     "unsupported_link_type",
+                                    "unsupported_parameter_field",
                                     "other"];
         deserializer.deserialize_struct("SharedLinkError", VARIANTS, EnumVisitor)
     }
@@ -16999,6 +18260,12 @@ impl ::serde::ser::Serialize for SharedLinkError {
                 s.serialize_field(".tag", "unsupported_link_type")?;
                 s.end()
             }
+            SharedLinkError::UnsupportedParameterField => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkError", 1)?;
+                s.serialize_field(".tag", "unsupported_parameter_field")?;
+                s.end()
+            }
             SharedLinkError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -17012,6 +18279,7 @@ impl ::std::fmt::Display for SharedLinkError {
         match self {
             SharedLinkError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
             SharedLinkError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            SharedLinkError::UnsupportedParameterField => f.write_str("Private shared links do not support `path` or `link_password` parameter fields."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -17081,6 +18349,118 @@ impl ::serde::ser::Serialize for SharedLinkMetadata {
     }
 }
 
+/// The potential errors for a call to get_shared_link_metadata.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum SharedLinkMetadataError {
+    /// The shared link wasn't found.
+    SharedLinkNotFound,
+    /// The caller is not allowed to access this shared link.
+    SharedLinkAccessDenied,
+    /// This type of link is not supported; use [`files::export()`](crate::files::export) instead.
+    UnsupportedLinkType,
+    /// Private shared links do not support `path` or `link_password` parameter fields.
+    UnsupportedParameterField,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedLinkMetadataError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharedLinkMetadataError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharedLinkMetadataError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "shared_link_not_found" => SharedLinkMetadataError::SharedLinkNotFound,
+                    "shared_link_access_denied" => SharedLinkMetadataError::SharedLinkAccessDenied,
+                    "unsupported_link_type" => SharedLinkMetadataError::UnsupportedLinkType,
+                    "unsupported_parameter_field" => SharedLinkMetadataError::UnsupportedParameterField,
+                    _ => SharedLinkMetadataError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["shared_link_not_found",
+                                    "shared_link_access_denied",
+                                    "unsupported_link_type",
+                                    "unsupported_parameter_field",
+                                    "other"];
+        deserializer.deserialize_struct("SharedLinkMetadataError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedLinkMetadataError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            SharedLinkMetadataError::SharedLinkNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkMetadataError", 1)?;
+                s.serialize_field(".tag", "shared_link_not_found")?;
+                s.end()
+            }
+            SharedLinkMetadataError::SharedLinkAccessDenied => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkMetadataError", 1)?;
+                s.serialize_field(".tag", "shared_link_access_denied")?;
+                s.end()
+            }
+            SharedLinkMetadataError::UnsupportedLinkType => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkMetadataError", 1)?;
+                s.serialize_field(".tag", "unsupported_link_type")?;
+                s.end()
+            }
+            SharedLinkMetadataError::UnsupportedParameterField => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkMetadataError", 1)?;
+                s.serialize_field(".tag", "unsupported_parameter_field")?;
+                s.end()
+            }
+            SharedLinkMetadataError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SharedLinkMetadataError {
+}
+
+impl ::std::fmt::Display for SharedLinkMetadataError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            SharedLinkMetadataError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
+            SharedLinkMetadataError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            SharedLinkMetadataError::UnsupportedParameterField => f.write_str("Private shared links do not support `path` or `link_password` parameter fields."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+// union extends SharedLinkError
+impl From<SharedLinkError> for SharedLinkMetadataError {
+    fn from(parent: SharedLinkError) -> Self {
+        match parent {
+            SharedLinkError::SharedLinkNotFound => SharedLinkMetadataError::SharedLinkNotFound,
+            SharedLinkError::SharedLinkAccessDenied => SharedLinkMetadataError::SharedLinkAccessDenied,
+            SharedLinkError::UnsupportedLinkType => SharedLinkMetadataError::UnsupportedLinkType,
+            SharedLinkError::UnsupportedParameterField => SharedLinkMetadataError::UnsupportedParameterField,
+            SharedLinkError::Other => SharedLinkMetadataError::Other,
+        }
+    }
+}
 /// Who can view shared links in this folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -18995,7 +20375,7 @@ pub struct UpdateFolderPolicyArg {
     pub link_settings: Option<LinkSettings>,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
     /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
-    /// actions the  authenticated user can perform on the folder.
+    /// actions the authenticated user can perform on the folder.
     pub actions: Option<Vec<FolderAction>>,
 }
 
@@ -19198,7 +20578,8 @@ pub enum UpdateFolderPolicyError {
     /// [`UpdateFolderPolicyArg::member_policy`](UpdateFolderPolicyArg) was set even though user is
     /// not on a team.
     NotOnTeam,
-    /// Team policy is more restrictive than [`ShareFolderArg::member_policy`](ShareFolderArg).
+    /// Team policy or group sharing settings are more restrictive than
+    /// [`ShareFolderArg::member_policy`](ShareFolderArg).
     TeamPolicyDisallowsMemberPolicy,
     /// The current account is not allowed to select the specified
     /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
@@ -19338,7 +20719,7 @@ pub struct UserFileMembershipInfo {
     pub permissions: Option<Vec<MemberPermission>>,
     /// Never set.
     pub initials: Option<String>,
-    /// True if the member has access from a parent folder.
+    /// True if the member has access on a parent folder.
     pub is_inherited: bool,
     /// The UTC timestamp of when the user has last seen the content. Only populated if the user has
     /// seen the content and the caller has a plan that includes viewer history.
@@ -19716,7 +21097,7 @@ pub struct UserMembershipInfo {
     pub permissions: Option<Vec<MemberPermission>>,
     /// Never set.
     pub initials: Option<String>,
-    /// True if the member has access from a parent folder.
+    /// True if the member has access on a parent folder.
     pub is_inherited: bool,
 }
 

@@ -1,22 +1,24 @@
 digraph deps {
-    account -> { common };
-    async;
+    account -> { account_id common };
+    account_id;
+    async -> { common };
     auth -> { common };
     check -> { common };
     common;
     contacts -> { common };
-    file_properties;
+    file_properties -> { common };
     file_requests -> { common files };
-    files -> { async auth common file_properties users_common };
-    openid -> { common };
-    paper -> { common sharing };
+    files -> { async common file_properties users_common };
+    openid -> { account_id common };
+    paper -> { common files sharing };
+    riviera -> { async common };
     secondary_emails -> { common };
     seen_state;
-    sharing -> { async common files seen_state team_common users users_common };
+    sharing -> { account_id async common files seen_state team_common team_policies users users_common };
     team -> { account async common file_properties files secondary_emails team_common team_policies users users_common };
     team_common -> { common };
-    team_log -> { async common file_requests files sharing team team_common team_policies users_common };
+    team_log -> { common file_requests files sharing team team_common team_policies users_common };
     team_policies;
     users -> { common team_common team_policies users_common };
-    users_common -> { common };
+    users_common -> { account_id common };
 }

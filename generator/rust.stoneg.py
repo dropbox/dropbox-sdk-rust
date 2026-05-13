@@ -140,6 +140,7 @@ class RustBackend(RustHelperBackend):
         self.emit('    clippy::large_enum_variant,')
         self.emit('    clippy::result_large_err,')
         self.emit('    clippy::doc_markdown,')
+        self.emit('    clippy::doc_lazy_continuation,')
         self.emit(')]')
         self.emit()
 

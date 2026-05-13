@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[allow(unused_imports)]
@@ -43,7 +44,7 @@ pub fn get_account(
     )
 }
 
-/// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
+/// Get information about multiple user accounts. At most 300 accounts may be queried per request.
 pub fn get_account_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetAccountBatchArg,
