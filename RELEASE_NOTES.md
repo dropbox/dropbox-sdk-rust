@@ -1,5 +1,5 @@
-# unreleased (v0.20.0)
-xxxx-yy-zz
+# v0.20.0
+2026-05-12
 * API spec update 2026-05-11
     * many changes; see commit log at https://github.com/dropbox/dropbox-api-spec/commit/6c68656caafdff65a30943fe186a1800b9f35bbc
 * MSRV raised to 1.85.0
