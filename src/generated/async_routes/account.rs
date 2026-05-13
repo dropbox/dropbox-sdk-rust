@@ -6,10 +6,29 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[allow(unused_imports)]
 pub use crate::generated::types::account::*;
+
+/// This lovely endpoint gets the account photo of a given user.
+pub fn get_photo<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a AccountPhotoGetArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> impl std::future::Future<Output=Result<crate::async_client_trait::HttpRequestResult<AccountPhotoGetResult>, crate::Error<AccountPhotoGetError>>> + Send + 'a {
+    crate::client_helpers::request_with_body(
+        client,
+        crate::client_trait_common::Endpoint::Content,
+        crate::client_trait_common::Style::Download,
+        "account/get_photo",
+        arg,
+        None,
+        range_start,
+        range_end)
+}
 
 /// Sets a user's profile photo.
 pub fn set_profile_photo<'a>(

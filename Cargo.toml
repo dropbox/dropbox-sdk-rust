@@ -70,28 +70,30 @@ name = "demo-async"
 required-features = ["dbx_files", "default_async_client"]
 
 [features]
-# dbx_* features each correspond to one Stone spec file.
+# dbx_* features each correspond to one Stone spec namespace.
 # The lists of dependencies must be kept in sync with the 'import' statements in them.
-dbx_account = ["dbx_common"]
-dbx_async = []
+dbx_account = ["dbx_account_id", "dbx_common"]
+dbx_account_id = []
+dbx_async = ["dbx_common"]
 dbx_auth = ["dbx_common"]
 dbx_check = ["dbx_common"]
 dbx_common = []
 dbx_contacts = ["dbx_common"]
-dbx_file_properties = []
+dbx_file_properties = ["dbx_common"]
 dbx_file_requests = ["dbx_common", "dbx_files"]
-dbx_files = ["dbx_async", "dbx_auth", "dbx_common", "dbx_file_properties", "dbx_users_common"]
-dbx_openid = ["dbx_common"]
-dbx_paper = ["dbx_common", "dbx_sharing"]
+dbx_files = ["dbx_async", "dbx_common", "dbx_file_properties", "dbx_users_common"]
+dbx_openid = ["dbx_account_id", "dbx_common"]
+dbx_paper = ["dbx_common", "dbx_files", "dbx_sharing"]
+dbx_riviera = ["dbx_async", "dbx_common"]
 dbx_secondary_emails = ["dbx_common"]
 dbx_seen_state = []
-dbx_sharing = ["dbx_async", "dbx_common", "dbx_files", "dbx_seen_state", "dbx_team_common", "dbx_users", "dbx_users_common"]
+dbx_sharing = ["dbx_account_id", "dbx_async", "dbx_common", "dbx_files", "dbx_seen_state", "dbx_team_common", "dbx_team_policies", "dbx_users", "dbx_users_common"]
 dbx_team = ["dbx_account", "dbx_async", "dbx_common", "dbx_file_properties", "dbx_files", "dbx_secondary_emails", "dbx_team_common", "dbx_team_policies", "dbx_users", "dbx_users_common"]
 dbx_team_common = ["dbx_common"]
-dbx_team_log = ["dbx_async", "dbx_common", "dbx_file_requests", "dbx_files", "dbx_sharing", "dbx_team", "dbx_team_common", "dbx_team_policies", "dbx_users_common"]
+dbx_team_log = ["dbx_common", "dbx_file_requests", "dbx_files", "dbx_sharing", "dbx_team", "dbx_team_common", "dbx_team_policies", "dbx_users_common"]
 dbx_team_policies = []
 dbx_users = ["dbx_common", "dbx_team_common", "dbx_team_policies", "dbx_users_common"]
-dbx_users_common = ["dbx_common"]
+dbx_users_common = ["dbx_account_id", "dbx_common"]
 
 default_async_client = ["async_routes", "dep:reqwest"]
 default_client = ["sync_routes", "sync_routes_in_root", "dep:ureq"]
@@ -113,6 +115,7 @@ sync_routes_in_root = ["sync_routes"]
 # Enable sync default client, sync routes, and make the sync routes default, to match pre-v0.19.
 default = [
     "dbx_account",
+    "dbx_account_id",
     "dbx_async",
     "dbx_auth",
     "dbx_check",
@@ -123,6 +126,7 @@ default = [
     "dbx_files",
     "dbx_openid",
     "dbx_paper",
+    "dbx_riviera",
     "dbx_secondary_emails",
     "dbx_seen_state",
     "dbx_sharing",

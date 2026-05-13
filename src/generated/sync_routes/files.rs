@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[allow(unused_imports)]
@@ -18,7 +19,7 @@ pub use crate::generated::types::files::*;
 /// *PREVIEW*: This function may change or disappear without notice.
 #[cfg(feature = "unstable")]
 #[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
-#[deprecated(note = "replaced by get_metadata")]
+#[deprecated]
 pub fn alpha_get_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AlphaGetMetadataArg,
@@ -36,14 +37,14 @@ pub fn alpha_get_metadata(
 
 /// Create a new file with the contents provided in the request. Note that the behavior of this
 /// alpha endpoint is unstable and subject to change. Do not use this to upload a file larger than
-/// 150 MB. Instead, create an upload session with
+/// 150 MiB. Instead, create an upload session with
 /// [`upload_session_start()`](crate::files::upload_session_start).
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
 #[cfg(feature = "unstable")]
 #[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
-#[deprecated(note = "replaced by upload")]
+#[deprecated]
 pub fn alpha_upload(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadArg,
@@ -62,7 +63,7 @@ pub fn alpha_upload(
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be copied.
-#[deprecated(note = "replaced by copy_v2")]
+#[deprecated]
 pub fn copy(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationArg,
@@ -98,7 +99,7 @@ pub fn copy_v2(
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
 /// will return job ID immediately and do the async copy job in background. Please use
 /// [`copy_batch_check()`](crate::files::copy_batch_check) to check the job status.
-#[deprecated(note = "replaced by copy_batch_v2")]
+#[deprecated]
 pub fn copy_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationBatchArg,
@@ -137,7 +138,7 @@ pub fn copy_batch_v2(
 
 /// Returns the status of an asynchronous job for [`copy_batch()`](crate::files::copy_batch). If
 /// success, it returns list of results for each entry.
-#[deprecated(note = "replaced by copy_batch_check_v2")]
+#[deprecated]
 pub fn copy_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::types::dbx_async::PollArg,
@@ -206,7 +207,7 @@ pub fn copy_reference_save(
 }
 
 /// Create a folder at a given path.
-#[deprecated(note = "replaced by create_folder_v2")]
+#[deprecated]
 pub fn create_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFolderArg,
@@ -241,7 +242,7 @@ pub fn create_folder_v2(
 /// Create multiple folders at once. This route is asynchronous for large batches, which returns a
 /// job ID immediately and runs the create folder batch asynchronously. Otherwise, creates the
 /// folders and returns the result synchronously for smaller inputs. You can force asynchronous
-/// behaviour by using the [`CreateFolderBatchArg::force_async`](CreateFolderBatchArg) flag.  Use
+/// behaviour by using the CreateFolderBatchArg.force_async flag.  Use
 /// [`create_folder_batch_check()`](crate::files::create_folder_batch_check) to check the job
 /// status.
 pub fn create_folder_batch(
@@ -279,9 +280,9 @@ pub fn create_folder_batch_check(
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
-/// metadata will be the corresponding [`FileMetadata`] or [`FolderMetadata`] for the item at time
-/// of deletion, and not a [`DeletedMetadata`] object.
-#[deprecated(note = "replaced by delete_v2")]
+/// metadata will be the corresponding FileMetadata or FolderMetadata for the item at time of
+/// deletion, and not a DeletedMetadata object.
+#[deprecated]
 pub fn delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteArg,
@@ -299,8 +300,8 @@ pub fn delete(
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
-/// metadata will be the corresponding [`FileMetadata`] or [`FolderMetadata`] for the item at time
-/// of deletion, and not a [`DeletedMetadata`] object.
+/// metadata will be the corresponding FileMetadata or FolderMetadata for the item at time of
+/// deletion, and not a DeletedMetadata object.
 pub fn delete_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteArg,
@@ -397,8 +398,7 @@ pub fn download_zip(
 }
 
 /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be
-/// downloaded directly  and whose [`ExportResult::file_metadata`](ExportResult) has
-/// [`ExportInfo::export_as`](ExportInfo) populated.
+/// downloaded directly and whose ExportResult.file_metadata has ExportInfo.export_as populated.
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -458,9 +458,8 @@ pub fn get_metadata(
 
 /// Get a preview for a file. Currently, PDF previews are generated for files with the following
 /// extensions: .ai, .doc, .docm, .docx, .eps, .gdoc, .gslides, .odp, .odt, .pps, .ppsm, .ppsx,
-/// .ppt, .pptm, .pptx, .rtf. HTML previews are generated for files with the following extensions:
-/// .csv, .ods, .xls, .xlsm, .gsheet, .xlsx. Other formats will return an unsupported extension
-/// error.
+/// .ppt, .pptm, .pptx, .rtf. HTML previews are generated for .csv, .ods, .xls, .xlsm, .gsheet,
+/// .xlsx. Other formats will return an unsupported extension error.
 pub fn get_preview(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PreviewArg,
@@ -499,42 +498,28 @@ pub fn get_temporary_link(
     )
 }
 
-/// Get a one-time use temporary upload link to upload a file to a Dropbox location.
-///
-/// This endpoint acts as a delayed [`upload()`](crate::files::upload). The returned temporary
-/// upload link may be used to make a POST request with the data to be uploaded. The upload will
-/// then be perfomed with the [`CommitInfo`] previously provided to
-/// [`get_temporary_upload_link()`](crate::files::get_temporary_upload_link) but evaluated only upon
-/// consumption. Hence, errors stemming from invalid [`CommitInfo`] with respect to the state of the
-/// user's Dropbox will only be communicated at consumption time. Additionally, these errors are
-/// surfaced as generic HTTP 409 Conflict responses, potentially hiding issue details. The maximum
-/// temporary upload link duration is 4 hours. Upon consumption or expiration, a new link will have
-/// to be generated. Multiple links may exist for a specific upload path at any given time.
-///
-/// The POST request on the temporary upload link must have its Content-Type set to
-/// "application/octet-stream".
-///
-/// Example temporary upload link consumption request:
-///
-/// curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND --header "Content-Type:
-/// application/octet-stream" --data-binary @local_file.txt
-///
-/// A successful temporary upload link consumption request returns the content hash of the uploaded
-/// data in JSON format.
-///
-/// Example successful temporary upload link consumption response: {"content-hash":
-/// "599d71033d700ac892a0e48fa61b125d2f5994"}
-///
-/// An unsuccessful temporary upload link consumption request returns any of the following status
-/// codes:
-///
-/// HTTP 400 Bad Request: Content-Type is not one of application/octet-stream and text/plain or
-/// request is invalid. HTTP 409 Conflict: The temporary upload link does not exist or is currently
-/// unavailable, the upload failed, or another error happened. HTTP 410 Gone: The temporary upload
-/// link is expired or consumed.
-///
-/// Example unsuccessful temporary upload link consumption response: Temporary upload link has been
-/// recently consumed.
+/// Get a one-time use temporary upload link to upload a file to a Dropbox location.  This endpoint
+/// acts as a delayed upload(). The returned temporary upload link may be used to make a POST
+/// request with the data to be uploaded. The upload will then be perfomed with the CommitInfo
+/// previously provided to getTemporaryUploadLink() but evaluated only upon consumption. Hence,
+/// errors stemming from invalid CommitInfo with respect to the state of the user's Dropbox will
+/// only be communicated at consumption time. Additionally, these errors are surfaced as generic
+/// HTTP 409 Conflict responses, potentially hiding issue details. The maximum temporary upload link
+/// duration is 4 hours. Upon consumption or expiration, a new link will have to be generated.
+/// Multiple links may exist for a specific upload path at any given time.  The POST request on the
+/// temporary upload link must have its Content-Type set to "application/octet-stream".  Example
+/// temporary upload link consumption request:  curl -X POST
+/// https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND --header "Content-Type:
+/// application/octet-stream" --data-binary @local_file.txt  A successful temporary upload link
+/// consumption request returns the content hash of the uploaded data in JSON format. Example
+/// successful temporary upload link consumption response: {"content-hash":
+/// "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful temporary upload link consumption
+/// request returns any of the following status codes:  HTTP 400 Bad Request: Content-Type is not
+/// one of application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict: The
+/// temporary upload link does not exist or is currently unavailable, the upload failed, or another
+/// error happened. HTTP 410 Gone: The temporary upload link is expired or consumed. Example
+/// unsuccessful temporary upload link consumption response: Temporary upload link has been recently
+/// consumed.
 pub fn get_temporary_upload_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetTemporaryUploadLinkArg,
@@ -638,22 +623,20 @@ pub fn get_thumbnail_batch(
 }
 
 /// Starts returning the contents of a folder. If the result's
-/// [`ListFolderResult::has_more`](ListFolderResult) field is `true`, call
+/// [`ListFolderResult::has_more`](ListFolderResult) field is true, call
 /// [`list_folder_continue()`](crate::files::list_folder_continue) with the returned
-/// [`ListFolderResult::cursor`](ListFolderResult) to retrieve more entries. If you're using
-/// [`ListFolderArg::recursive`](ListFolderArg) set to `true` to keep a local cache of the contents
-/// of a Dropbox account, iterate through each entry in order and process them as follows to keep
-/// your local state in sync: For each [`FileMetadata`], store the new entry at the given path in
-/// your local state. If the required parent folders don't exist yet, create them. If there's
-/// already something else at the given path, replace it and remove all its children. For each
-/// [`FolderMetadata`], store the new entry at the given path in your local state. If the required
-/// parent folders don't exist yet, create them. If there's already something else at the given
-/// path, replace it but leave the children as they are. Check the new entry's
-/// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
-/// statuses to match. For each [`DeletedMetadata`], if your local state has something at the given
-/// path, remove it and all its children. If there's nothing at the given path, ignore this entry.
-/// Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may be returned if multiple
-/// [`list_folder()`](crate::files::list_folder) or
+/// ListFolderResult.cursor to retrieve more entries. If you're using ListFolderArg.recursive set to
+/// true to keep a local cache of the contents of a Dropbox account, iterate through each entry in
+/// order and process them as follows to keep your local state in sync: For each FileMetadata, store
+/// the new entry at the given path in your local state. If the required parent folders don't exist
+/// yet, create them. If there's already something else at the given path, replace it and remove all
+/// its children. For each FolderMetadata, store the new entry at the given path in your local
+/// state. If the required parent folders don't exist yet, create them. If there's already something
+/// else at the given path, replace it but leave the children as they are. Check the new entry's
+/// FolderSharingInfo.read_only and set all its children's read-only statuses to match. For each
+/// DeletedMetadata, if your local state has something at the given path, remove it and all its
+/// children. If there's nothing at the given path, ignore this entry. Note: auth.RateLimitError may
+/// be returned if multiple [`list_folder()`](crate::files::list_folder) or
 /// [`list_folder_continue()`](crate::files::list_folder_continue) calls with same parameters are
 /// made simultaneously by same API app for same user. If your app implements retry logic, please
 /// hold off the retry until the previous request finishes.
@@ -673,22 +656,20 @@ pub fn list_folder(
 }
 
 /// Starts returning the contents of a folder. If the result's
-/// [`ListFolderResult::has_more`](ListFolderResult) field is `true`, call
+/// [`ListFolderResult::has_more`](ListFolderResult) field is true, call
 /// [`list_folder_continue()`](crate::files::list_folder_continue) with the returned
-/// [`ListFolderResult::cursor`](ListFolderResult) to retrieve more entries. If you're using
-/// [`ListFolderArg::recursive`](ListFolderArg) set to `true` to keep a local cache of the contents
-/// of a Dropbox account, iterate through each entry in order and process them as follows to keep
-/// your local state in sync: For each [`FileMetadata`], store the new entry at the given path in
-/// your local state. If the required parent folders don't exist yet, create them. If there's
-/// already something else at the given path, replace it and remove all its children. For each
-/// [`FolderMetadata`], store the new entry at the given path in your local state. If the required
-/// parent folders don't exist yet, create them. If there's already something else at the given
-/// path, replace it but leave the children as they are. Check the new entry's
-/// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
-/// statuses to match. For each [`DeletedMetadata`], if your local state has something at the given
-/// path, remove it and all its children. If there's nothing at the given path, ignore this entry.
-/// Note: [`auth::RateLimitError`](crate::types::auth::RateLimitError) may be returned if multiple
-/// [`list_folder()`](crate::files::list_folder) or
+/// ListFolderResult.cursor to retrieve more entries. If you're using ListFolderArg.recursive set to
+/// true to keep a local cache of the contents of a Dropbox account, iterate through each entry in
+/// order and process them as follows to keep your local state in sync: For each FileMetadata, store
+/// the new entry at the given path in your local state. If the required parent folders don't exist
+/// yet, create them. If there's already something else at the given path, replace it and remove all
+/// its children. For each FolderMetadata, store the new entry at the given path in your local
+/// state. If the required parent folders don't exist yet, create them. If there's already something
+/// else at the given path, replace it but leave the children as they are. Check the new entry's
+/// FolderSharingInfo.read_only and set all its children's read-only statuses to match. For each
+/// DeletedMetadata, if your local state has something at the given path, remove it and all its
+/// children. If there's nothing at the given path, ignore this entry. Note: auth.RateLimitError may
+/// be returned if multiple [`list_folder()`](crate::files::list_folder) or
 /// [`list_folder_continue()`](crate::files::list_folder_continue) calls with same parameters are
 /// made simultaneously by same API app for same user. If your app implements retry logic, please
 /// hold off the retry until the previous request finishes.
@@ -767,8 +748,6 @@ pub fn list_folder_get_latest_cursor(
 /// [`list_folder_continue()`](crate::files::list_folder_continue), this call gives you a
 /// low-latency way to monitor an account for file changes. The connection will block until there
 /// are changes available or a timeout occurs. This endpoint is useful mostly for client-side apps.
-/// If you're looking for server-side notifications, check out our [webhooks
-/// documentation](https://www.dropbox.com/developers/reference/webhooks).
 pub fn list_folder_longpoll(
     client: &impl crate::client_trait::NoauthClient,
     arg: &ListFolderLongpollArg,
@@ -787,10 +766,10 @@ pub fn list_folder_longpoll(
 /// Returns revisions for files based on a file path or a file id. The file path or file id is
 /// identified from the latest file entry at the given file path or id. This end point allows your
 /// app to query either by file path or file id by setting the mode parameter appropriately. In the
-/// [`ListRevisionsMode::Path`] (default) mode, all revisions at the same file path as the latest
-/// file entry are returned. If revisions with the same file id are desired, then mode must be set
-/// to [`ListRevisionsMode::Id`]. The [`ListRevisionsMode::Id`] mode is useful to retrieve revisions
-/// for a given file across moves or renames.
+/// ListRevisionsMode.path (default) mode, all revisions at the same file path as the latest file
+/// entry are returned. If revisions with the same file id are desired, then mode must be set to
+/// ListRevisionsMode.id. The ListRevisionsMode.id mode is useful to retrieve revisions for a given
+/// file across moves or renames.
 pub fn list_revisions(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListRevisionsArg,
@@ -826,7 +805,7 @@ pub fn lock_file_batch(
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved.
-#[deprecated(note = "replaced by move_v2")]
+#[deprecated]
 pub fn do_move(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationArg,
@@ -862,7 +841,7 @@ pub fn move_v2(
 /// Move multiple files or folders to different locations at once in the user's Dropbox. This route
 /// will return job ID immediately and do the async moving job in background. Please use
 /// [`move_batch_check()`](crate::files::move_batch_check) to check the job status.
-#[deprecated(note = "replaced by move_batch_v2")]
+#[deprecated]
 pub fn move_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationBatchArg,
@@ -902,7 +881,7 @@ pub fn move_batch_v2(
 
 /// Returns the status of an asynchronous job for [`move_batch()`](crate::files::move_batch). If
 /// success, it returns list of results for each entry.
-#[deprecated(note = "replaced by move_batch_check_v2")]
+#[deprecated]
 pub fn move_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &crate::types::dbx_async::PollArg,
@@ -998,6 +977,8 @@ pub fn permanently_delete(
     )
 }
 
+/// Add property groups to a Dropbox file. See templates/add_for_user or templates/add_for_team to
+/// create new templates.
 #[deprecated]
 pub fn properties_add(
     client: &impl crate::client_trait::UserAuthClient,
@@ -1014,6 +995,8 @@ pub fn properties_add(
     )
 }
 
+/// Overwrite property groups associated with a file. This endpoint should be used instead of
+/// properties/update when property groups are being overwritten rather than updated via a "delta".
 #[deprecated]
 pub fn properties_overwrite(
     client: &impl crate::client_trait::UserAuthClient,
@@ -1030,53 +1013,9 @@ pub fn properties_overwrite(
     )
 }
 
-#[deprecated]
-pub fn properties_remove(
-    client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::types::file_properties::RemovePropertiesArg,
-) -> Result<(), crate::Error<crate::types::file_properties::RemovePropertiesError>> {
-    crate::client_helpers::unwrap_async(
-        crate::client_helpers::request(
-            client,
-            crate::client_trait_common::Endpoint::Api,
-            crate::client_trait_common::Style::Rpc,
-            "files/properties/remove",
-            arg,
-            None)
-    )
-}
-
-#[deprecated]
-pub fn properties_template_get(
-    client: &impl crate::client_trait::UserAuthClient,
-    arg: &crate::types::file_properties::GetTemplateArg,
-) -> Result<crate::types::file_properties::GetTemplateResult, crate::Error<crate::types::file_properties::TemplateError>> {
-    crate::client_helpers::unwrap_async(
-        crate::client_helpers::request(
-            client,
-            crate::client_trait_common::Endpoint::Api,
-            crate::client_trait_common::Style::Rpc,
-            "files/properties/template/get",
-            arg,
-            None)
-    )
-}
-
-#[deprecated]
-pub fn properties_template_list(
-    client: &impl crate::client_trait::UserAuthClient,
-) -> Result<crate::types::file_properties::ListTemplateResult, crate::Error<crate::types::file_properties::TemplateError>> {
-    crate::client_helpers::unwrap_async(
-        crate::client_helpers::request(
-            client,
-            crate::client_trait_common::Endpoint::Api,
-            crate::client_trait_common::Style::Rpc,
-            "files/properties/template/list",
-            &(),
-            None)
-    )
-}
-
+/// Add, update or remove properties associated with the supplied file and templates. This endpoint
+/// should be used instead of properties/overwrite when property groups are being updated via a
+/// "delta" instead of overwriting all properties of a file.
 #[deprecated]
 pub fn properties_update(
     client: &impl crate::client_trait::UserAuthClient,
@@ -1111,8 +1050,6 @@ pub fn restore(
 
 /// Save the data from a specified URL into a file in user's Dropbox. Note that the transfer from
 /// the URL must complete within 15 minutes, or the operation will time out and the job will fail.
-/// If the given path already exists, the file will be renamed to avoid the conflict (e.g. myfile
-/// (1).txt).
 pub fn save_url(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SaveUrlArg,
@@ -1287,11 +1224,11 @@ pub fn unlock_file_batch(
 }
 
 /// Create a new file with the contents provided in the request. Do not use this to upload a file
-/// larger than 150 MB. Instead, create an upload session with
+/// larger than 150 MiB. Instead, create an upload session with
 /// [`upload_session_start()`](crate::files::upload_session_start). Calls to this endpoint will
 /// count as data transport calls for any Dropbox Business teams with a limit on the number of data
-/// transport calls allowed per month. For more information, see the [Data transport limit
-/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
+/// transport calls allowed per month. For more information, see the Data transport limit page
+/// https://www.dropbox.com/developers/reference/data-transport-limit.
 pub fn upload(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadArg,
@@ -1308,12 +1245,12 @@ pub fn upload(
     )
 }
 
-/// Append more data to an upload session. A single request should not upload more than 150 MB. The
-/// maximum size of a file one can upload to an upload session is 350 GB. Calls to this endpoint
-/// will count as data transport calls for any Dropbox Business teams with a limit on the number of
-/// data transport calls allowed per month. For more information, see the [Data transport limit
-/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
-#[deprecated(note = "replaced by upload_session_append_v2")]
+/// Append more data to an upload session. A single request should not upload more than 150 MiB. The
+/// maximum size of a file one can upload to an upload session is 2^41 - 2^22 (2,199,019,061,248)
+/// bytes. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
+/// with a limit on the number of data transport calls allowed per month. For more information, see
+/// the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+#[deprecated]
 pub fn upload_session_append(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionCursor,
@@ -1331,11 +1268,11 @@ pub fn upload_session_append(
 }
 
 /// Append more data to an upload session. When the parameter close is set, this call will close the
-/// session. A single request should not upload more than 150 MB. The maximum size of a file one can
-/// upload to an upload session is 350 GB. Calls to this endpoint will count as data transport calls
-/// for any Dropbox Business teams with a limit on the number of data transport calls allowed per
-/// month. For more information, see the [Data transport limit
-/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
+/// session. A single request should not upload more than 150 MiB. The maximum size of a file one
+/// can upload to an upload session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint
+/// will count as data transport calls for any Dropbox Business teams with a limit on the number of
+/// data transport calls allowed per month. For more information, see the Data transport limit page
+/// https://www.dropbox.com/developers/reference/data-transport-limit.
 pub fn upload_session_append_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionAppendArg,
@@ -1352,12 +1289,38 @@ pub fn upload_session_append_v2(
     )
 }
 
+/// Append more data to multiple upload sessions. Each piece of file content to append to each
+/// upload session should be concatenated in the request body, in the order delineated by
+/// [`UploadSessionAppendBatchArg::entries`](UploadSessionAppendBatchArg) and their individual
+/// lengths indicated by
+/// [`UploadSessionAppendBatchArgEntry::length`](UploadSessionAppendBatchArgEntry). A single request
+/// should not upload more than 150 MiB. The maximum size of a file one can upload to an upload
+/// session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint will count as data
+/// transport calls for any Dropbox Business teams with a limit on the number of data transport
+/// calls allowed per month. For more information, see the Data transport limit page
+/// https://www.dropbox.com/developers/reference/data-transport-limit.
+pub fn upload_session_append_batch(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &UploadSessionAppendBatchArg,
+    body: &[u8],
+) -> Result<UploadSessionAppendBatchResult, crate::Error<UploadSessionAppendBatchError>> {
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Upload,
+            "files/upload_session/append_batch",
+            arg,
+            Some(crate::client_helpers::Body::from(body)))
+    )
+}
+
 /// Finish an upload session and save the uploaded data to the given file path. A single request
-/// should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-/// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox
-/// Business teams with a limit on the number of data transport calls allowed per month. For more
-/// information, see the [Data transport limit
-/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
+/// should not upload more than 150 MiB. The maximum size of a file one can upload to an upload
+/// session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint will count as data
+/// transport calls for any Dropbox Business teams with a limit on the number of data transport
+/// calls allowed per month. For more information, see the Data transport limit page
+/// https://www.dropbox.com/developers/reference/data-transport-limit.
 pub fn upload_session_finish(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionFinishArg,
@@ -1385,16 +1348,16 @@ pub fn upload_session_finish(
 /// [`UploadSessionAppendArg::close`](UploadSessionAppendArg) needs to be true for the last
 /// [`upload_session_start()`](crate::files::upload_session_start) or
 /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) call. The maximum size of
-/// a file one can upload to an upload session is 350 GB. This route will return a job_id
-/// immediately and do the async commit job in background. Use
+/// a file one can upload to an upload session is 2^41 - 2^22 (2,199,019,061,248) bytes. This route
+/// will return a job_id immediately and do the async commit job in background. Use
 /// [`upload_session_finish_batch_check()`](crate::files::upload_session_finish_batch_check) to
 /// check the job status. For the same account, this route should be executed serially. That means
 /// you should not start the next job before current job finishes. We allow up to 1000 entries in a
 /// single request. Calls to this endpoint will count as data transport calls for any Dropbox
 /// Business teams with a limit on the number of data transport calls allowed per month. For more
-/// information, see the [Data transport limit
-/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
-#[deprecated(note = "replaced by upload_session_finish_batch_v2")]
+/// information, see the Data transport limit page
+/// https://www.dropbox.com/developers/reference/data-transport-limit.
+#[deprecated]
 pub fn upload_session_finish_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionFinishBatchArg,
@@ -1421,11 +1384,11 @@ pub fn upload_session_finish_batch(
 /// [`UploadSessionAppendArg::close`](UploadSessionAppendArg) needs to be true for the last
 /// [`upload_session_start()`](crate::files::upload_session_start) or
 /// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) call of each upload
-/// session. The maximum size of a file one can upload to an upload session is 350 GB. We allow up
-/// to 1000 entries in a single request. Calls to this endpoint will count as data transport calls
-/// for any Dropbox Business teams with a limit on the number of data transport calls allowed per
-/// month. For more information, see the [Data transport limit
-/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
+/// session. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+/// (2,199,019,061,248) bytes. We allow up to 1000 entries in a single request. Calls to this
+/// endpoint will count as data transport calls for any Dropbox Business teams with a limit on the
+/// number of data transport calls allowed per month. For more information, see the Data transport
+/// limit page https://www.dropbox.com/developers/reference/data-transport-limit.
 pub fn upload_session_finish_batch_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionFinishBatchArg,
@@ -1460,37 +1423,42 @@ pub fn upload_session_finish_batch_check(
 }
 
 /// Upload sessions allow you to upload a single file in one or more requests, for example where the
-/// size of the file is greater than 150 MB.  This call starts a new upload session with the given
-/// data. You can then use [`upload_session_append_v2()`](crate::files::upload_session_append_v2) to
-/// add more data and [`upload_session_finish()`](crate::files::upload_session_finish) to save all
-/// the data to a file in Dropbox. A single request should not upload more than 150 MB. The maximum
-/// size of a file one can upload to an upload session is 350 GB. An upload session can be used for
-/// a maximum of 7 days. Attempting to use an
+/// size of the file is greater than 150 MiB. This call starts a new upload session with the given
+/// data. You can then use [`upload_session_append_v2()`](crate::files::upload_session_append_v2) or
+/// [`upload_session_append_batch()`](crate::files::upload_session_append_batch) to add more data,
+/// then [`upload_session_finish()`](crate::files::upload_session_finish) or
+/// [`upload_session_finish_batch_v2()`](crate::files::upload_session_finish_batch_v2) to save all
+/// the data to a file in Dropbox. A single request should not upload more than 150 MiB. The maximum
+/// size of a file one can upload to an upload session is 2^41 - 2^22 (2,199,019,061,248) bytes. An
+/// upload session can be used for a maximum of 7 days. Attempting to use a
 /// [`UploadSessionStartResult::session_id`](UploadSessionStartResult) with
-/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) or
-/// [`upload_session_finish()`](crate::files::upload_session_finish) more than 7 days after its
-/// creation will return a [`UploadSessionLookupError::NotFound`]. Calls to this endpoint will count
-/// as data transport calls for any Dropbox Business teams with a limit on the number of data
-/// transport calls allowed per month. For more information, see the [Data transport limit
-/// page](https://www.dropbox.com/developers/reference/data-transport-limit). By default, upload
-/// sessions require you to send content of the file in sequential order via consecutive
-/// [`upload_session_start()`](crate::files::upload_session_start),
-/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2),
-/// [`upload_session_finish()`](crate::files::upload_session_finish) calls. For better performance,
-/// you can instead optionally use a [`UploadSessionType::Concurrent`] upload session. To start a
-/// new concurrent session, set [`UploadSessionStartArg::session_type`](UploadSessionStartArg) to
-/// [`UploadSessionType::Concurrent`]. After that, you can send file data in concurrent
-/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) requests. Finally finish
-/// the session with [`upload_session_finish()`](crate::files::upload_session_finish). There are
-/// couple of constraints with concurrent sessions to make them work. You can not send data with
-/// [`upload_session_start()`](crate::files::upload_session_start) or
+/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) or other upload session
+/// routes more than 7 days after its creation will return [`UploadSessionLookupError::NotFound`].
+/// Calls to this endpoint will count as data transport calls for any Dropbox Business teams with a
+/// limit on the number of data transport calls allowed per month. For more information, see the
+/// Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit. By
+/// default, upload sessions require you to send content of the file in sequential order via
+/// consecutive [`upload_session_start()`](crate::files::upload_session_start),
+/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2), and
+/// [`upload_session_finish()`](crate::files::upload_session_finish) calls (or their batch
+/// variants). For better performance, you can optionally set
+/// [`UploadSessionStartArg::session_type`](UploadSessionStartArg) to
+/// [`UploadSessionType::Concurrent`] to start a concurrent upload session. Concurrent upload
+/// sessions may upload file data in concurrent
+/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) requests, with a few
+/// caveats. After all of the requests are complete, finish the session with
+/// [`upload_session_finish()`](crate::files::upload_session_finish) as normal. You can not send
+/// data in a [`upload_session_start()`](crate::files::upload_session_start) or
 /// [`upload_session_finish()`](crate::files::upload_session_finish) call, only with
-/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) call. Also data uploaded
-/// in [`upload_session_append_v2()`](crate::files::upload_session_append_v2) call must be multiple
-/// of 4194304 bytes (except for last
-/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) with
-/// [`UploadSessionStartArg::close`](UploadSessionStartArg) to `true`, that may contain any
-/// remaining data).
+/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) or
+/// [`upload_session_append_batch()`](crate::files::upload_session_append_batch). Also, the length
+/// of the uploaded data in a call to
+/// [`upload_session_append_v2()`](crate::files::upload_session_append_v2) or
+/// [`upload_session_append_batch()`](crate::files::upload_session_append_batch) must be a multiple
+/// of 2^22 (4,194,304) bytes, except for the final append request with
+/// [`UploadSessionAppendArg::close`](UploadSessionAppendArg) or
+/// [`UploadSessionAppendBatchArgEntry::close`](UploadSessionAppendBatchArgEntry) set to true that
+/// may contain any remaining data.
 pub fn upload_session_start(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionStartArg,
@@ -1507,10 +1475,11 @@ pub fn upload_session_start(
     )
 }
 
-/// This route starts batch of upload_sessions. Please refer to `upload_session/start` usage. Calls
-/// to this endpoint will count as data transport calls for any Dropbox Business teams with a limit
-/// on the number of data transport calls allowed per month. For more information, see the [Data
-/// transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit).
+/// Start a batch of upload sessions. See
+/// [`upload_session_start()`](crate::files::upload_session_start). Calls to this endpoint will
+/// count as data transport calls for any Dropbox Business teams with a limit on the number of data
+/// transport calls allowed per month. For more information, see the Data transport limit page
+/// https://www.dropbox.com/developers/reference/data-transport-limit.
 pub fn upload_session_start_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionStartBatchArg,

@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[allow(unused_imports)]
@@ -24,7 +25,7 @@ pub use crate::generated::types::check::*;
 pub fn app(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &EchoArg,
-) -> Result<EchoResult, crate::Error<crate::NoError>> {
+) -> Result<EchoResult, crate::Error<EchoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -48,7 +49,7 @@ pub fn app(
 pub fn user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &EchoArg,
-) -> Result<EchoResult, crate::Error<crate::NoError>> {
+) -> Result<EchoResult, crate::Error<EchoError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,

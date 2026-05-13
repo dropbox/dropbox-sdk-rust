@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 //! This namespace contains endpoints and data types for managing docs and folders in Dropbox Paper.
@@ -801,6 +802,8 @@ pub enum ExportFormat {
     Html,
     /// The markdown export format.
     Markdown,
+    /// Doc metadata JSON export format.
+    Json,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -824,6 +827,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
                 let value = match tag {
                     "html" => ExportFormat::Html,
                     "markdown" => ExportFormat::Markdown,
+                    "json" => ExportFormat::Json,
                     _ => ExportFormat::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -832,6 +836,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
         }
         const VARIANTS: &[&str] = &["html",
                                     "markdown",
+                                    "json",
                                     "other"];
         deserializer.deserialize_struct("ExportFormat", VARIANTS, EnumVisitor)
     }
@@ -852,6 +857,12 @@ impl ::serde::ser::Serialize for ExportFormat {
                 // unit
                 let mut s = serializer.serialize_struct("ExportFormat", 1)?;
                 s.serialize_field(".tag", "markdown")?;
+                s.end()
+            }
+            ExportFormat::Json => {
+                // unit
+                let mut s = serializer.serialize_struct("ExportFormat", 1)?;
+                s.serialize_field(".tag", "json")?;
                 s.end()
             }
             ExportFormat::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -1206,6 +1217,108 @@ impl ::serde::ser::Serialize for FoldersContainingPaperDoc {
     }
 }
 
+/// Argument for retrieving Paper doc metadata. Accepts either a legacy Paper doc ID or a Cloud Doc
+/// file ID.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetDocMetadataArg {
+    /// Legacy Paper doc identifier.
+    pub doc_id: Option<PaperDocId>,
+    /// Dropbox file ID for Cloud Docs (post-PiFS migration).
+    pub file_id: Option<crate::types::files::FileId>,
+}
+
+impl GetDocMetadataArg {
+    pub fn with_doc_id(mut self, value: PaperDocId) -> Self {
+        self.doc_id = Some(value);
+        self
+    }
+
+    pub fn with_file_id(mut self, value: crate::types::files::FileId) -> Self {
+        self.file_id = Some(value);
+        self
+    }
+}
+
+const GET_DOC_METADATA_ARG_FIELDS: &[&str] = &["doc_id",
+                                               "file_id"];
+impl GetDocMetadataArg {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetDocMetadataArg, V::Error> {
+        let mut field_doc_id = None;
+        let mut field_file_id = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
+                    }
+                    field_doc_id = Some(map.next_value()?);
+                }
+                "file_id" => {
+                    if field_file_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_id"));
+                    }
+                    field_file_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetDocMetadataArg {
+            doc_id: field_doc_id.and_then(Option::flatten),
+            file_id: field_file_id.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.doc_id {
+            s.serialize_field("doc_id", val)?;
+        }
+        if let Some(val) = &self.file_id {
+            s.serialize_field("file_id", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetDocMetadataArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetDocMetadataArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetDocMetadataArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetDocMetadataArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetDocMetadataArg", GET_DOC_METADATA_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetDocMetadataArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetDocMetadataArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// The import format of the incoming data.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -1482,6 +1595,8 @@ pub struct ListPaperDocsArgs {
     /// Size limit per batch. The maximum number of docs that can be retrieved per batch is 1000.
     /// Higher value results in invalid arguments error.
     pub limit: i32,
+    /// Do not return results beyond this date. Behavior depends on sort order.
+    pub stop_at_date: Option<crate::types::common::DropboxTimestamp>,
 }
 
 impl Default for ListPaperDocsArgs {
@@ -1491,6 +1606,7 @@ impl Default for ListPaperDocsArgs {
             sort_by: ListPaperDocsSortBy::Accessed,
             sort_order: ListPaperDocsSortOrder::Ascending,
             limit: 1000,
+            stop_at_date: None,
         }
     }
 }
@@ -1515,12 +1631,18 @@ impl ListPaperDocsArgs {
         self.limit = value;
         self
     }
+
+    pub fn with_stop_at_date(mut self, value: crate::types::common::DropboxTimestamp) -> Self {
+        self.stop_at_date = Some(value);
+        self
+    }
 }
 
 const LIST_PAPER_DOCS_ARGS_FIELDS: &[&str] = &["filter_by",
                                                "sort_by",
                                                "sort_order",
-                                               "limit"];
+                                               "limit",
+                                               "stop_at_date"];
 impl ListPaperDocsArgs {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -1530,6 +1652,7 @@ impl ListPaperDocsArgs {
         let mut field_sort_by = None;
         let mut field_sort_order = None;
         let mut field_limit = None;
+        let mut field_stop_at_date = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "filter_by" => {
@@ -1556,6 +1679,12 @@ impl ListPaperDocsArgs {
                     }
                     field_limit = Some(map.next_value()?);
                 }
+                "stop_at_date" => {
+                    if field_stop_at_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("stop_at_date"));
+                    }
+                    field_stop_at_date = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -1567,6 +1696,7 @@ impl ListPaperDocsArgs {
             sort_by: field_sort_by.unwrap_or(ListPaperDocsSortBy::Accessed),
             sort_order: field_sort_order.unwrap_or(ListPaperDocsSortOrder::Ascending),
             limit: field_limit.unwrap_or(1000),
+            stop_at_date: field_stop_at_date.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -1587,6 +1717,9 @@ impl ListPaperDocsArgs {
         }
         if self.limit != 1000 {
             s.serialize_field("limit", &self.limit)?;
+        }
+        if let Some(val) = &self.stop_at_date {
+            s.serialize_field("stop_at_date", val)?;
         }
         Ok(())
     }
@@ -1614,7 +1747,7 @@ impl ::serde::ser::Serialize for ListPaperDocsArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListPaperDocsArgs", 4)?;
+        let mut s = serializer.serialize_struct("ListPaperDocsArgs", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -3464,6 +3597,10 @@ pub struct PaperDocExport {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
     pub export_format: ExportFormat,
+    /// When true, export includes comment threads (e.g. markdown footnotes). When false or omitted,
+    /// body only. Other formats may adopt this later; currently only markdown uses it. Plain bool
+    /// (not optional): protoc-gen-godbx does not support proto3 optional yet.
+    pub include_comments: bool,
 }
 
 impl PaperDocExport {
@@ -3471,12 +3608,19 @@ impl PaperDocExport {
         PaperDocExport {
             doc_id,
             export_format,
+            include_comments: false,
         }
+    }
+
+    pub fn with_include_comments(mut self, value: bool) -> Self {
+        self.include_comments = value;
+        self
     }
 }
 
 const PAPER_DOC_EXPORT_FIELDS: &[&str] = &["doc_id",
-                                           "export_format"];
+                                           "export_format",
+                                           "include_comments"];
 impl PaperDocExport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -3490,6 +3634,7 @@ impl PaperDocExport {
     ) -> Result<Option<PaperDocExport>, V::Error> {
         let mut field_doc_id = None;
         let mut field_export_format = None;
+        let mut field_include_comments = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -3506,6 +3651,12 @@ impl PaperDocExport {
                     }
                     field_export_format = Some(map.next_value()?);
                 }
+                "include_comments" => {
+                    if field_include_comments.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("include_comments"));
+                    }
+                    field_include_comments = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -3518,6 +3669,7 @@ impl PaperDocExport {
         let result = PaperDocExport {
             doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
             export_format: field_export_format.ok_or_else(|| ::serde::de::Error::missing_field("export_format"))?,
+            include_comments: field_include_comments.unwrap_or(false),
         };
         Ok(Some(result))
     }
@@ -3529,6 +3681,9 @@ impl PaperDocExport {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("export_format", &self.export_format)?;
+        if self.include_comments {
+            s.serialize_field("include_comments", &self.include_comments)?;
+        }
         Ok(())
     }
 }
@@ -3555,7 +3710,7 @@ impl ::serde::ser::Serialize for PaperDocExport {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PaperDocExport", 2)?;
+        let mut s = serializer.serialize_struct("PaperDocExport", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -3694,6 +3849,198 @@ impl ::serde::ser::Serialize for PaperDocExportResult {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("PaperDocExportResult", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Metadata returned by docs/get_metadata.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct PaperDocGetMetadataResult {
+    /// The Paper doc ID.
+    pub doc_id: PaperDocId,
+    /// The Paper doc owner's email address.
+    pub owner: String,
+    /// The Paper doc title.
+    pub title: String,
+    /// The Paper doc creation date.
+    pub created_date: crate::types::common::DropboxTimestamp,
+    /// The Paper doc status.
+    pub status: PaperDocStatus,
+    /// The Paper doc revision. Simply an ever increasing number.
+    pub revision: i64,
+    /// The date when the Paper doc was last edited.
+    pub last_updated_date: crate::types::common::DropboxTimestamp,
+    /// The email address of the last editor of the Paper doc.
+    pub last_editor: String,
+}
+
+impl PaperDocGetMetadataResult {
+    pub fn new(
+        doc_id: PaperDocId,
+        owner: String,
+        title: String,
+        created_date: crate::types::common::DropboxTimestamp,
+        status: PaperDocStatus,
+        revision: i64,
+        last_updated_date: crate::types::common::DropboxTimestamp,
+        last_editor: String,
+    ) -> Self {
+        PaperDocGetMetadataResult {
+            doc_id,
+            owner,
+            title,
+            created_date,
+            status,
+            revision,
+            last_updated_date,
+            last_editor,
+        }
+    }
+}
+
+const PAPER_DOC_GET_METADATA_RESULT_FIELDS: &[&str] = &["doc_id",
+                                                        "owner",
+                                                        "title",
+                                                        "created_date",
+                                                        "status",
+                                                        "revision",
+                                                        "last_updated_date",
+                                                        "last_editor"];
+impl PaperDocGetMetadataResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<PaperDocGetMetadataResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperDocGetMetadataResult>, V::Error> {
+        let mut field_doc_id = None;
+        let mut field_owner = None;
+        let mut field_title = None;
+        let mut field_created_date = None;
+        let mut field_status = None;
+        let mut field_revision = None;
+        let mut field_last_updated_date = None;
+        let mut field_last_editor = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
+                    }
+                    field_doc_id = Some(map.next_value()?);
+                }
+                "owner" => {
+                    if field_owner.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("owner"));
+                    }
+                    field_owner = Some(map.next_value()?);
+                }
+                "title" => {
+                    if field_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("title"));
+                    }
+                    field_title = Some(map.next_value()?);
+                }
+                "created_date" => {
+                    if field_created_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("created_date"));
+                    }
+                    field_created_date = Some(map.next_value()?);
+                }
+                "status" => {
+                    if field_status.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("status"));
+                    }
+                    field_status = Some(map.next_value()?);
+                }
+                "revision" => {
+                    if field_revision.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("revision"));
+                    }
+                    field_revision = Some(map.next_value()?);
+                }
+                "last_updated_date" => {
+                    if field_last_updated_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("last_updated_date"));
+                    }
+                    field_last_updated_date = Some(map.next_value()?);
+                }
+                "last_editor" => {
+                    if field_last_editor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("last_editor"));
+                    }
+                    field_last_editor = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperDocGetMetadataResult {
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            owner: field_owner.ok_or_else(|| ::serde::de::Error::missing_field("owner"))?,
+            title: field_title.ok_or_else(|| ::serde::de::Error::missing_field("title"))?,
+            created_date: field_created_date.ok_or_else(|| ::serde::de::Error::missing_field("created_date"))?,
+            status: field_status.ok_or_else(|| ::serde::de::Error::missing_field("status"))?,
+            revision: field_revision.ok_or_else(|| ::serde::de::Error::missing_field("revision"))?,
+            last_updated_date: field_last_updated_date.ok_or_else(|| ::serde::de::Error::missing_field("last_updated_date"))?,
+            last_editor: field_last_editor.ok_or_else(|| ::serde::de::Error::missing_field("last_editor"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("doc_id", &self.doc_id)?;
+        s.serialize_field("owner", &self.owner)?;
+        s.serialize_field("title", &self.title)?;
+        s.serialize_field("created_date", &self.created_date)?;
+        s.serialize_field("status", &self.status)?;
+        s.serialize_field("revision", &self.revision)?;
+        s.serialize_field("last_updated_date", &self.last_updated_date)?;
+        s.serialize_field("last_editor", &self.last_editor)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocGetMetadataResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperDocGetMetadataResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperDocGetMetadataResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperDocGetMetadataResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperDocGetMetadataResult", PAPER_DOC_GET_METADATA_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocGetMetadataResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperDocGetMetadataResult", 8)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -3876,6 +4223,72 @@ impl From<PaperDocSharingPolicy> for RefPaperDoc {
         }
     }
 }
+/// The status of a Paper doc.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum PaperDocStatus {
+    /// The Paper doc is active.
+    Active,
+    /// The Paper doc is deleted.
+    Deleted,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperDocStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperDocStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "active" => PaperDocStatus::Active,
+                    "deleted" => PaperDocStatus::Deleted,
+                    _ => PaperDocStatus::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["active",
+                                    "deleted",
+                                    "other"];
+        deserializer.deserialize_struct("PaperDocStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            PaperDocStatus::Active => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocStatus", 1)?;
+                s.serialize_field(".tag", "active")?;
+                s.end()
+            }
+            PaperDocStatus::Deleted => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocStatus", 1)?;
+                s.serialize_field(".tag", "deleted")?;
+                s.end()
+            }
+            PaperDocStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocUpdateArgs {

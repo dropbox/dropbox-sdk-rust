@@ -1,5 +1,7 @@
-# unreleased (v0.19.2)
+# unreleased (v0.20.0)
 xxxx-yy-zz
+* API spec update 2026-05-11
+    * many changes; see commit log at https://github.com/dropbox/dropbox-api-spec/commit/6c68656caafdff65a30943fe186a1800b9f35bbc
 * MSRV raised to 1.85.0
 * Rust edition switched to 2024
 * reqwest (default async HTTP client impl) updated from version 0.12 to 0.13

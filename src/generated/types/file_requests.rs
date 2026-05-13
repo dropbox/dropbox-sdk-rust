@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 //! This namespace contains endpoints and data types for file request operations.
@@ -199,6 +200,8 @@ pub struct CreateFileRequestArgs {
     pub open: bool,
     /// A description of the file request.
     pub description: Option<String>,
+    /// If this request was created from video project, its id.
+    pub video_project_id: Option<String>,
 }
 
 impl CreateFileRequestArgs {
@@ -209,6 +212,7 @@ impl CreateFileRequestArgs {
             deadline: None,
             open: true,
             description: None,
+            video_project_id: None,
         }
     }
 
@@ -226,13 +230,19 @@ impl CreateFileRequestArgs {
         self.description = Some(value);
         self
     }
+
+    pub fn with_video_project_id(mut self, value: String) -> Self {
+        self.video_project_id = Some(value);
+        self
+    }
 }
 
 const CREATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["title",
                                                    "destination",
                                                    "deadline",
                                                    "open",
-                                                   "description"];
+                                                   "description",
+                                                   "video_project_id"];
 impl CreateFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -249,6 +259,7 @@ impl CreateFileRequestArgs {
         let mut field_deadline = None;
         let mut field_open = None;
         let mut field_description = None;
+        let mut field_video_project_id = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -283,6 +294,12 @@ impl CreateFileRequestArgs {
                     }
                     field_description = Some(map.next_value()?);
                 }
+                "video_project_id" => {
+                    if field_video_project_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("video_project_id"));
+                    }
+                    field_video_project_id = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -298,6 +315,7 @@ impl CreateFileRequestArgs {
             deadline: field_deadline.and_then(Option::flatten),
             open: field_open.unwrap_or(true),
             description: field_description.and_then(Option::flatten),
+            video_project_id: field_video_project_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -317,6 +335,9 @@ impl CreateFileRequestArgs {
         }
         if let Some(val) = &self.description {
             s.serialize_field("description", val)?;
+        }
+        if let Some(val) = &self.video_project_id {
+            s.serialize_field("video_project_id", val)?;
         }
         Ok(())
     }
@@ -344,7 +365,7 @@ impl ::serde::ser::Serialize for CreateFileRequestArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CreateFileRequestArgs", 5)?;
+        let mut s = serializer.serialize_struct("CreateFileRequestArgs", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -372,6 +393,8 @@ pub enum CreateFileRequestError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// This user doesn't have permission to edit files in a destination folder
+    NoWritePermission,
     /// File requests are not available on the specified folder.
     InvalidLocation,
     /// The user has reached the rate limit for creating file requests. The limit is currently 4000
@@ -405,6 +428,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFileRequestError {
                     "no_permission" => CreateFileRequestError::NoPermission,
                     "email_unverified" => CreateFileRequestError::EmailUnverified,
                     "validation_error" => CreateFileRequestError::ValidationError,
+                    "no_write_permission" => CreateFileRequestError::NoWritePermission,
                     "invalid_location" => CreateFileRequestError::InvalidLocation,
                     "rate_limit" => CreateFileRequestError::RateLimit,
                     _ => CreateFileRequestError::Other,
@@ -421,6 +445,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFileRequestError {
                                     "no_permission",
                                     "email_unverified",
                                     "validation_error",
+                                    "no_write_permission",
                                     "invalid_location",
                                     "rate_limit"];
         deserializer.deserialize_struct("CreateFileRequestError", VARIANTS, EnumVisitor)
@@ -474,6 +499,12 @@ impl ::serde::ser::Serialize for CreateFileRequestError {
                 s.serialize_field(".tag", "validation_error")?;
                 s.end()
             }
+            CreateFileRequestError::NoWritePermission => {
+                // unit
+                let mut s = serializer.serialize_struct("CreateFileRequestError", 1)?;
+                s.serialize_field(".tag", "no_write_permission")?;
+                s.end()
+            }
             CreateFileRequestError::InvalidLocation => {
                 // unit
                 let mut s = serializer.serialize_struct("CreateFileRequestError", 1)?;
@@ -503,6 +534,7 @@ impl ::std::fmt::Display for CreateFileRequestError {
             CreateFileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
             CreateFileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
             CreateFileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            CreateFileRequestError::NoWritePermission => f.write_str("This user doesn't have permission to edit files in a destination folder"),
             CreateFileRequestError::InvalidLocation => f.write_str("File requests are not available on the specified folder."),
             CreateFileRequestError::RateLimit => f.write_str("The user has reached the rate limit for creating file requests. The limit is currently 4000 file requests total."),
             _ => write!(f, "{:?}", *self),
@@ -522,6 +554,7 @@ impl From<FileRequestError> for CreateFileRequestError {
             FileRequestError::NoPermission => CreateFileRequestError::NoPermission,
             FileRequestError::EmailUnverified => CreateFileRequestError::EmailUnverified,
             FileRequestError::ValidationError => CreateFileRequestError::ValidationError,
+            FileRequestError::NoWritePermission => CreateFileRequestError::NoWritePermission,
         }
     }
 }
@@ -547,6 +580,8 @@ pub enum DeleteAllClosedFileRequestsError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// This user doesn't have permission to edit files in a destination folder
+    NoWritePermission,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -575,6 +610,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteAllClosedFileRequestsError {
                     "no_permission" => DeleteAllClosedFileRequestsError::NoPermission,
                     "email_unverified" => DeleteAllClosedFileRequestsError::EmailUnverified,
                     "validation_error" => DeleteAllClosedFileRequestsError::ValidationError,
+                    "no_write_permission" => DeleteAllClosedFileRequestsError::NoWritePermission,
                     _ => DeleteAllClosedFileRequestsError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -588,7 +624,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteAllClosedFileRequestsError {
                                     "app_lacks_access",
                                     "no_permission",
                                     "email_unverified",
-                                    "validation_error"];
+                                    "validation_error",
+                                    "no_write_permission"];
         deserializer.deserialize_struct("DeleteAllClosedFileRequestsError", VARIANTS, EnumVisitor)
     }
 }
@@ -640,6 +677,12 @@ impl ::serde::ser::Serialize for DeleteAllClosedFileRequestsError {
                 s.serialize_field(".tag", "validation_error")?;
                 s.end()
             }
+            DeleteAllClosedFileRequestsError::NoWritePermission => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
+                s.serialize_field(".tag", "no_write_permission")?;
+                s.end()
+            }
             DeleteAllClosedFileRequestsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -657,6 +700,7 @@ impl ::std::fmt::Display for DeleteAllClosedFileRequestsError {
             DeleteAllClosedFileRequestsError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
             DeleteAllClosedFileRequestsError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
             DeleteAllClosedFileRequestsError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            DeleteAllClosedFileRequestsError::NoWritePermission => f.write_str("This user doesn't have permission to edit files in a destination folder"),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -674,6 +718,7 @@ impl From<FileRequestError> for DeleteAllClosedFileRequestsError {
             FileRequestError::NoPermission => DeleteAllClosedFileRequestsError::NoPermission,
             FileRequestError::EmailUnverified => DeleteAllClosedFileRequestsError::EmailUnverified,
             FileRequestError::ValidationError => DeleteAllClosedFileRequestsError::ValidationError,
+            FileRequestError::NoWritePermission => DeleteAllClosedFileRequestsError::NoWritePermission,
         }
     }
 }
@@ -883,6 +928,8 @@ pub enum DeleteFileRequestError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// This user doesn't have permission to edit files in a destination folder
+    NoWritePermission,
     /// One or more file requests currently open.
     FileRequestOpen,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -913,6 +960,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteFileRequestError {
                     "no_permission" => DeleteFileRequestError::NoPermission,
                     "email_unverified" => DeleteFileRequestError::EmailUnverified,
                     "validation_error" => DeleteFileRequestError::ValidationError,
+                    "no_write_permission" => DeleteFileRequestError::NoWritePermission,
                     "file_request_open" => DeleteFileRequestError::FileRequestOpen,
                     _ => DeleteFileRequestError::Other,
                 };
@@ -928,6 +976,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteFileRequestError {
                                     "no_permission",
                                     "email_unverified",
                                     "validation_error",
+                                    "no_write_permission",
                                     "file_request_open"];
         deserializer.deserialize_struct("DeleteFileRequestError", VARIANTS, EnumVisitor)
     }
@@ -980,6 +1029,12 @@ impl ::serde::ser::Serialize for DeleteFileRequestError {
                 s.serialize_field(".tag", "validation_error")?;
                 s.end()
             }
+            DeleteFileRequestError::NoWritePermission => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "no_write_permission")?;
+                s.end()
+            }
             DeleteFileRequestError::FileRequestOpen => {
                 // unit
                 let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
@@ -1003,6 +1058,7 @@ impl ::std::fmt::Display for DeleteFileRequestError {
             DeleteFileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
             DeleteFileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
             DeleteFileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            DeleteFileRequestError::NoWritePermission => f.write_str("This user doesn't have permission to edit files in a destination folder"),
             DeleteFileRequestError::FileRequestOpen => f.write_str("One or more file requests currently open."),
             _ => write!(f, "{:?}", *self),
         }
@@ -1021,6 +1077,7 @@ impl From<FileRequestError> for DeleteFileRequestError {
             FileRequestError::NoPermission => DeleteFileRequestError::NoPermission,
             FileRequestError::EmailUnverified => DeleteFileRequestError::EmailUnverified,
             FileRequestError::ValidationError => DeleteFileRequestError::ValidationError,
+            FileRequestError::NoWritePermission => DeleteFileRequestError::NoWritePermission,
         }
     }
 }
@@ -1142,6 +1199,8 @@ pub struct FileRequest {
     pub deadline: Option<FileRequestDeadline>,
     /// A description of the file request.
     pub description: Option<String>,
+    /// If this request was created from video project, its id.
+    pub video_project_id: Option<String>,
 }
 
 impl FileRequest {
@@ -1163,6 +1222,7 @@ impl FileRequest {
             destination: None,
             deadline: None,
             description: None,
+            video_project_id: None,
         }
     }
 
@@ -1180,6 +1240,11 @@ impl FileRequest {
         self.description = Some(value);
         self
     }
+
+    pub fn with_video_project_id(mut self, value: String) -> Self {
+        self.video_project_id = Some(value);
+        self
+    }
 }
 
 const FILE_REQUEST_FIELDS: &[&str] = &["id",
@@ -1190,7 +1255,8 @@ const FILE_REQUEST_FIELDS: &[&str] = &["id",
                                        "file_count",
                                        "destination",
                                        "deadline",
-                                       "description"];
+                                       "description",
+                                       "video_project_id"];
 impl FileRequest {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1211,6 +1277,7 @@ impl FileRequest {
         let mut field_destination = None;
         let mut field_deadline = None;
         let mut field_description = None;
+        let mut field_video_project_id = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -1269,6 +1336,12 @@ impl FileRequest {
                     }
                     field_description = Some(map.next_value()?);
                 }
+                "video_project_id" => {
+                    if field_video_project_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("video_project_id"));
+                    }
+                    field_video_project_id = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -1288,6 +1361,7 @@ impl FileRequest {
             destination: field_destination.and_then(Option::flatten),
             deadline: field_deadline.and_then(Option::flatten),
             description: field_description.and_then(Option::flatten),
+            video_project_id: field_video_project_id.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -1311,6 +1385,9 @@ impl FileRequest {
         }
         if let Some(val) = &self.description {
             s.serialize_field("description", val)?;
+        }
+        if let Some(val) = &self.video_project_id {
+            s.serialize_field("video_project_id", val)?;
         }
         Ok(())
     }
@@ -1338,7 +1415,7 @@ impl ::serde::ser::Serialize for FileRequest {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequest", 9)?;
+        let mut s = serializer.serialize_struct("FileRequest", 10)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1349,8 +1426,7 @@ impl ::serde::ser::Serialize for FileRequest {
 pub struct FileRequestDeadline {
     /// The deadline for this file request.
     pub deadline: crate::types::common::DropboxTimestamp,
-    /// If set, allow uploads after the deadline has passed. These     uploads will be marked
-    /// overdue.
+    /// If set, allow uploads after the deadline has passed. These uploads will be marked overdue.
     pub allow_late_uploads: Option<GracePeriod>,
 }
 
@@ -1478,6 +1554,8 @@ pub enum FileRequestError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// This user doesn't have permission to edit files in a destination folder
+    NoWritePermission,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1506,6 +1584,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestError {
                     "no_permission" => FileRequestError::NoPermission,
                     "email_unverified" => FileRequestError::EmailUnverified,
                     "validation_error" => FileRequestError::ValidationError,
+                    "no_write_permission" => FileRequestError::NoWritePermission,
                     _ => FileRequestError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -1519,7 +1598,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestError {
                                     "app_lacks_access",
                                     "no_permission",
                                     "email_unverified",
-                                    "validation_error"];
+                                    "validation_error",
+                                    "no_write_permission"];
         deserializer.deserialize_struct("FileRequestError", VARIANTS, EnumVisitor)
     }
 }
@@ -1571,6 +1651,12 @@ impl ::serde::ser::Serialize for FileRequestError {
                 s.serialize_field(".tag", "validation_error")?;
                 s.end()
             }
+            FileRequestError::NoWritePermission => {
+                // unit
+                let mut s = serializer.serialize_struct("FileRequestError", 1)?;
+                s.serialize_field(".tag", "no_write_permission")?;
+                s.end()
+            }
             FileRequestError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -1588,6 +1674,7 @@ impl ::std::fmt::Display for FileRequestError {
             FileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
             FileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
             FileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            FileRequestError::NoWritePermission => f.write_str("This user doesn't have permission to edit files in a destination folder"),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -1784,6 +1871,8 @@ pub enum GetFileRequestError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// This user doesn't have permission to edit files in a destination folder
+    NoWritePermission,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1812,6 +1901,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileRequestError {
                     "no_permission" => GetFileRequestError::NoPermission,
                     "email_unverified" => GetFileRequestError::EmailUnverified,
                     "validation_error" => GetFileRequestError::ValidationError,
+                    "no_write_permission" => GetFileRequestError::NoWritePermission,
                     _ => GetFileRequestError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -1825,7 +1915,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileRequestError {
                                     "app_lacks_access",
                                     "no_permission",
                                     "email_unverified",
-                                    "validation_error"];
+                                    "validation_error",
+                                    "no_write_permission"];
         deserializer.deserialize_struct("GetFileRequestError", VARIANTS, EnumVisitor)
     }
 }
@@ -1877,6 +1968,12 @@ impl ::serde::ser::Serialize for GetFileRequestError {
                 s.serialize_field(".tag", "validation_error")?;
                 s.end()
             }
+            GetFileRequestError::NoWritePermission => {
+                // unit
+                let mut s = serializer.serialize_struct("GetFileRequestError", 1)?;
+                s.serialize_field(".tag", "no_write_permission")?;
+                s.end()
+            }
             GetFileRequestError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -1894,6 +1991,7 @@ impl ::std::fmt::Display for GetFileRequestError {
             GetFileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
             GetFileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
             GetFileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            GetFileRequestError::NoWritePermission => f.write_str("This user doesn't have permission to edit files in a destination folder"),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -1911,6 +2009,7 @@ impl From<FileRequestError> for GetFileRequestError {
             FileRequestError::NoPermission => GetFileRequestError::NoPermission,
             FileRequestError::EmailUnverified => GetFileRequestError::EmailUnverified,
             FileRequestError::ValidationError => GetFileRequestError::ValidationError,
+            FileRequestError::NoWritePermission => GetFileRequestError::NoWritePermission,
         }
     }
 }
@@ -2850,6 +2949,8 @@ pub enum UpdateFileRequestError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// This user doesn't have permission to edit files in a destination folder
+    NoWritePermission,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2878,6 +2979,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestError {
                     "no_permission" => UpdateFileRequestError::NoPermission,
                     "email_unverified" => UpdateFileRequestError::EmailUnverified,
                     "validation_error" => UpdateFileRequestError::ValidationError,
+                    "no_write_permission" => UpdateFileRequestError::NoWritePermission,
                     _ => UpdateFileRequestError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -2891,7 +2993,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestError {
                                     "app_lacks_access",
                                     "no_permission",
                                     "email_unverified",
-                                    "validation_error"];
+                                    "validation_error",
+                                    "no_write_permission"];
         deserializer.deserialize_struct("UpdateFileRequestError", VARIANTS, EnumVisitor)
     }
 }
@@ -2943,6 +3046,12 @@ impl ::serde::ser::Serialize for UpdateFileRequestError {
                 s.serialize_field(".tag", "validation_error")?;
                 s.end()
             }
+            UpdateFileRequestError::NoWritePermission => {
+                // unit
+                let mut s = serializer.serialize_struct("UpdateFileRequestError", 1)?;
+                s.serialize_field(".tag", "no_write_permission")?;
+                s.end()
+            }
             UpdateFileRequestError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -2960,6 +3069,7 @@ impl ::std::fmt::Display for UpdateFileRequestError {
             UpdateFileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
             UpdateFileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
             UpdateFileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            UpdateFileRequestError::NoWritePermission => f.write_str("This user doesn't have permission to edit files in a destination folder"),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -2977,6 +3087,7 @@ impl From<FileRequestError> for UpdateFileRequestError {
             FileRequestError::NoPermission => UpdateFileRequestError::NoPermission,
             FileRequestError::EmailUnverified => UpdateFileRequestError::EmailUnverified,
             FileRequestError::ValidationError => UpdateFileRequestError::ValidationError,
+            FileRequestError::NoWritePermission => UpdateFileRequestError::NoWritePermission,
         }
     }
 }

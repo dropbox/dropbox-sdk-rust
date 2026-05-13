@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[allow(unused_imports)]
@@ -97,8 +98,8 @@ pub fn check_share_job_status(
 /// Previously, it was technically possible to break a shared link by moving or renaming the
 /// corresponding file or folder. In the future, this will no longer be the case, so your app
 /// shouldn't rely on this behavior. Instead, if your app needs to revoke a shared link, use
-/// [`revoke_shared_link()`](crate::sharing::revoke_shared_link).
-#[deprecated(note = "replaced by create_shared_link_with_settings")]
+/// revoke_shared_link. DEPRECATED: Use create_shared_link_with_settings instead.
+#[deprecated]
 pub fn create_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateSharedLinkArg,
@@ -115,8 +116,8 @@ pub fn create_shared_link(
 }
 
 /// Create a shared link with custom settings. If no settings are given then the default visibility
-/// is [`RequestedVisibility::Public`] (The resolved visibility, though, may depend on other aspects
-/// such as team and shared folder settings).
+/// is RequestedVisibility.public (The resolved visibility, though, may depend on other aspects such
+/// as team and shared folder settings).
 pub fn create_shared_link_with_settings(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateSharedLinkWithSettingsArg,
@@ -180,9 +181,32 @@ pub fn get_folder_metadata(
     )
 }
 
-/// Download the shared link's file from a user's Dropbox.
+/// Download the shared link's file from a user's Dropbox. This is a download-style endpoint that
+/// returns the file content.
 pub fn get_shared_link_file(
     client: &impl crate::client_trait::UserAuthClient,
+    arg: &GetSharedLinkFileArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> Result<crate::client_trait::HttpRequestResult<SharedLinkMetadata>, crate::Error<GetSharedLinkFileError>> {
+    crate::client_helpers::unwrap_async_body(
+        crate::client_helpers::request_with_body(
+            client,
+            crate::client_trait_common::Endpoint::Content,
+            crate::client_trait_common::Style::Download,
+            "sharing/get_shared_link_file",
+            arg,
+            None,
+            range_start,
+            range_end),
+        client,
+    )
+}
+
+/// Download the shared link's file from a user's Dropbox. This is a download-style endpoint that
+/// returns the file content.
+pub fn get_shared_link_file_app_auth(
+    client: &impl crate::client_trait::AppAuthClient,
     arg: &GetSharedLinkFileArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
@@ -205,7 +229,7 @@ pub fn get_shared_link_file(
 pub fn get_shared_link_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetSharedLinkMetadataArg,
-) -> Result<SharedLinkMetadata, crate::Error<SharedLinkError>> {
+) -> Result<SharedLinkMetadata, crate::Error<SharedLinkMetadataError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -221,7 +245,7 @@ pub fn get_shared_link_metadata(
 pub fn get_shared_link_metadata_app_auth(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &GetSharedLinkMetadataArg,
-) -> Result<SharedLinkMetadata, crate::Error<SharedLinkError>> {
+) -> Result<SharedLinkMetadata, crate::Error<SharedLinkMetadataError>> {
     crate::client_helpers::unwrap_async(
         crate::client_helpers::request(
             client,
@@ -236,8 +260,9 @@ pub fn get_shared_link_metadata_app_auth(
 /// Returns a list of [`LinkMetadata`] objects for this user, including collection links. If no path
 /// is given, returns a list of all shared links for the current user, including collection links,
 /// up to a maximum of 1000 links. If a non-empty path is given, returns a list of all shared links
-/// that allow access to the given path.  Collection links are never returned in this case.
-#[deprecated(note = "replaced by list_shared_links")]
+/// that allow access to the given path. Collection links are never returned in this case.
+/// DEPRECATED: Use list_shared_links instead.
+#[deprecated]
 pub fn get_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetSharedLinksArg,
@@ -412,8 +437,7 @@ pub fn list_mountable_folders_continue(
     )
 }
 
-/// Returns a list of all files shared with current user.  Does not include files the user has
-/// received via shared folders, and does  not include unclaimed invitations.
+/// Returns a list of all files shared with current user.
 pub fn list_received_files(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFilesArg,
@@ -449,11 +473,9 @@ pub fn list_received_files_continue(
 /// List shared links of this user. If no path is given, returns a list of all shared links for the
 /// current user. For members of business teams using team space and member folders, returns all
 /// shared links in the team member's home folder unless the team space ID is specified in the
-/// request header. For more information, refer to the [Namespace
-/// Guide](https://www.dropbox.com/developers/reference/namespace-guide). If a non-empty path is
-/// given, returns a list of all shared links that allow access to the given path - direct links to
-/// the given path and links to parent folders of the given path. Links to parent folders can be
-/// suppressed by setting direct_only to true.
+/// request header. If a non-empty path is given, returns a list of all shared links that allow
+/// access to the given path - direct links to the given path and links to parent folders of the
+/// given path. Links to parent folders can be suppressed by setting direct_only to true.
 pub fn list_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListSharedLinksArg,
@@ -471,10 +493,9 @@ pub fn list_shared_links(
 
 /// Modify the shared link's settings. If the requested visibility conflict with the shared links
 /// policy of the team or the shared folder (in case the linked file is part of a shared folder)
-/// then the [`LinkPermissions::resolved_visibility`](LinkPermissions) of the returned
-/// [`SharedLinkMetadata`] will reflect the actual visibility of the shared link and the
-/// [`LinkPermissions::requested_visibility`](LinkPermissions) will reflect the requested
-/// visibility.
+/// then the LinkPermissions.resolved_visibility of the returned SharedLinkMetadata will reflect the
+/// actual visibility of the shared link and the LinkPermissions.requested_visibility will reflect
+/// the requested visibility.
 pub fn modify_shared_link_settings(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ModifySharedLinkSettingsArgs,
@@ -507,8 +528,24 @@ pub fn mount_folder(
     )
 }
 
-/// The current user relinquishes their membership in the designated file. Note that the current
-/// user may still have inherited access to this file through the parent folder.
+/// Removes all self-removable access from a file or folder for the current user. Best-effort and
+/// idempotent: attempts to drop link-visitor associations and explicit ACL membership.
+pub fn relinquish_access(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &RelinquishAccessArg,
+) -> Result<RelinquishAccessResult, crate::Error<RelinquishAccessError>> {
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/relinquish_access",
+            arg,
+            None)
+    )
+}
+
+/// The current user relinquishes their membership in the designated file.
 pub fn relinquish_file_membership(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelinquishFileMembershipArg,
@@ -544,7 +581,7 @@ pub fn relinquish_folder_membership(
 }
 
 /// Identical to remove_file_member_2 but with less information returned.
-#[deprecated(note = "replaced by remove_file_member_2")]
+#[deprecated]
 pub fn remove_file_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFileMemberArg,
@@ -595,9 +632,8 @@ pub fn remove_folder_member(
 
 /// Revoke a shared link. Note that even after revoking a shared link to a file, the file may be
 /// accessible if there are shared links leading to any of the file parent folders. To list all
-/// shared links that enable access to a specific file, you can use the
-/// [`list_shared_links()`](crate::sharing::list_shared_links) with the file as the
-/// [`ListSharedLinksArg::path`](ListSharedLinksArg) argument.
+/// shared links that enable access to a specific file, you can use the list_shared_links with the
+/// file as the ListSharedLinksArg.path argument.
 pub fn revoke_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RevokeSharedLinkArg,
@@ -702,9 +738,10 @@ pub fn unshare_file(
     )
 }
 
-/// Allows a shared folder owner to unshare the folder. You'll need to call
-/// [`check_job_status()`](crate::sharing::check_job_status) to determine if the action has
-/// completed successfully.
+/// Allows a shared folder owner to unshare the folder. Unshare will not work in following cases:
+/// The shared folder contains shared folders OR the shared folder is inside another shared folder.
+/// You'll need to call [`check_job_status()`](crate::sharing::check_job_status) to determine if the
+/// action has completed successfully.
 pub fn unshare_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UnshareFolderArg,

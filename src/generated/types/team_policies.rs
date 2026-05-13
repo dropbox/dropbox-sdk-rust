@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -148,6 +149,132 @@ impl ::serde::ser::Serialize for ComputerBackupPolicyState {
     }
 }
 
+/// Policy governing default expiration date for new links shared outside the team.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum DefaultLinkExpirationDaysPolicy {
+    /// New links shared outside the team default to no expiration date.
+    None,
+    /// New links shared outside the team default to expire in one day.
+    Day1,
+    /// New links shared outside the team default to expire in three days.
+    Day3,
+    /// New links shared outside the team default to expire in seven days.
+    Day7,
+    /// New links shared outside the team default to expire in 30 days.
+    Day30,
+    /// New links shared outside the team default to expire in 90 days.
+    Day90,
+    /// New links shared outside the team default to expire in 180 days.
+    Day180,
+    /// New links shared outside the team default to expire in 365 days.
+    Year1,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DefaultLinkExpirationDaysPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DefaultLinkExpirationDaysPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DefaultLinkExpirationDaysPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "none" => DefaultLinkExpirationDaysPolicy::None,
+                    "day_1" => DefaultLinkExpirationDaysPolicy::Day1,
+                    "day_3" => DefaultLinkExpirationDaysPolicy::Day3,
+                    "day_7" => DefaultLinkExpirationDaysPolicy::Day7,
+                    "day_30" => DefaultLinkExpirationDaysPolicy::Day30,
+                    "day_90" => DefaultLinkExpirationDaysPolicy::Day90,
+                    "day_180" => DefaultLinkExpirationDaysPolicy::Day180,
+                    "year_1" => DefaultLinkExpirationDaysPolicy::Year1,
+                    _ => DefaultLinkExpirationDaysPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["none",
+                                    "day_1",
+                                    "day_3",
+                                    "day_7",
+                                    "day_30",
+                                    "day_90",
+                                    "day_180",
+                                    "year_1",
+                                    "other"];
+        deserializer.deserialize_struct("DefaultLinkExpirationDaysPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DefaultLinkExpirationDaysPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            DefaultLinkExpirationDaysPolicy::None => {
+                // unit
+                let mut s = serializer.serialize_struct("DefaultLinkExpirationDaysPolicy", 1)?;
+                s.serialize_field(".tag", "none")?;
+                s.end()
+            }
+            DefaultLinkExpirationDaysPolicy::Day1 => {
+                // unit
+                let mut s = serializer.serialize_struct("DefaultLinkExpirationDaysPolicy", 1)?;
+                s.serialize_field(".tag", "day_1")?;
+                s.end()
+            }
+            DefaultLinkExpirationDaysPolicy::Day3 => {
+                // unit
+                let mut s = serializer.serialize_struct("DefaultLinkExpirationDaysPolicy", 1)?;
+                s.serialize_field(".tag", "day_3")?;
+                s.end()
+            }
+            DefaultLinkExpirationDaysPolicy::Day7 => {
+                // unit
+                let mut s = serializer.serialize_struct("DefaultLinkExpirationDaysPolicy", 1)?;
+                s.serialize_field(".tag", "day_7")?;
+                s.end()
+            }
+            DefaultLinkExpirationDaysPolicy::Day30 => {
+                // unit
+                let mut s = serializer.serialize_struct("DefaultLinkExpirationDaysPolicy", 1)?;
+                s.serialize_field(".tag", "day_30")?;
+                s.end()
+            }
+            DefaultLinkExpirationDaysPolicy::Day90 => {
+                // unit
+                let mut s = serializer.serialize_struct("DefaultLinkExpirationDaysPolicy", 1)?;
+                s.serialize_field(".tag", "day_90")?;
+                s.end()
+            }
+            DefaultLinkExpirationDaysPolicy::Day180 => {
+                // unit
+                let mut s = serializer.serialize_struct("DefaultLinkExpirationDaysPolicy", 1)?;
+                s.serialize_field(".tag", "day_180")?;
+                s.end()
+            }
+            DefaultLinkExpirationDaysPolicy::Year1 => {
+                // unit
+                let mut s = serializer.serialize_struct("DefaultLinkExpirationDaysPolicy", 1)?;
+                s.serialize_field(".tag", "year_1")?;
+                s.end()
+            }
+            DefaultLinkExpirationDaysPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum EmmState {
@@ -219,6 +346,72 @@ impl ::serde::ser::Serialize for EmmState {
                 s.end()
             }
             EmmState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Policy governing whether new links shared outside the team require passwords.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum EnforceLinkPasswordPolicy {
+    /// New links shared outside the team do not require passwords.
+    Optional,
+    /// New links shared outside the team require passwords.
+    Required,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for EnforceLinkPasswordPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = EnforceLinkPasswordPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a EnforceLinkPasswordPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "optional" => EnforceLinkPasswordPolicy::Optional,
+                    "required" => EnforceLinkPasswordPolicy::Required,
+                    _ => EnforceLinkPasswordPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["optional",
+                                    "required",
+                                    "other"];
+        deserializer.deserialize_struct("EnforceLinkPasswordPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for EnforceLinkPasswordPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            EnforceLinkPasswordPolicy::Optional => {
+                // unit
+                let mut s = serializer.serialize_struct("EnforceLinkPasswordPolicy", 1)?;
+                s.serialize_field(".tag", "optional")?;
+                s.end()
+            }
+            EnforceLinkPasswordPolicy::Required => {
+                // unit
+                let mut s = serializer.serialize_struct("EnforceLinkPasswordPolicy", 1)?;
+                s.serialize_field(".tag", "required")?;
+                s.end()
+            }
+            EnforceLinkPasswordPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -372,6 +565,8 @@ pub enum FileProviderMigrationPolicyState {
     Enabled,
     /// Team admin has default value based on team tier.
     Default,
+    /// Team admin has chosen to do File Provider Migration immediately for the team.
+    Immediate,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -396,6 +591,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileProviderMigrationPolicyState {
                     "disabled" => FileProviderMigrationPolicyState::Disabled,
                     "enabled" => FileProviderMigrationPolicyState::Enabled,
                     "default" => FileProviderMigrationPolicyState::Default,
+                    "immediate" => FileProviderMigrationPolicyState::Immediate,
                     _ => FileProviderMigrationPolicyState::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -405,6 +601,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileProviderMigrationPolicyState {
         const VARIANTS: &[&str] = &["disabled",
                                     "enabled",
                                     "default",
+                                    "immediate",
                                     "other"];
         deserializer.deserialize_struct("FileProviderMigrationPolicyState", VARIANTS, EnumVisitor)
     }
@@ -431,6 +628,12 @@ impl ::serde::ser::Serialize for FileProviderMigrationPolicyState {
                 // unit
                 let mut s = serializer.serialize_struct("FileProviderMigrationPolicyState", 1)?;
                 s.serialize_field(".tag", "default")?;
+                s.end()
+            }
+            FileProviderMigrationPolicyState::Immediate => {
+                // unit
+                let mut s = serializer.serialize_struct("FileProviderMigrationPolicyState", 1)?;
+                s.serialize_field(".tag", "immediate")?;
                 s.end()
             }
             FileProviderMigrationPolicyState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -901,11 +1104,15 @@ impl ::serde::ser::Serialize for PasswordControlMode {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PasswordStrengthPolicy {
-    /// User passwords will adhere to the minimal password strength policy.
+    /// User passwords will not adhere to a password strength policy.
     MinimalRequirements,
-    /// User passwords will adhere to the moderate password strength policy.
+    /// User passwords will adhere to the strong password strength policy. Note that product
+    /// surfaces refer to this as the strong policy but the value must be kept as is for backwards
+    /// compatability.
     ModeratePassword,
-    /// User passwords will adhere to the very strong password strength policy.
+    /// User passwords will adhere to the very strong password strength policy. Note that product
+    /// surfaces refer to this as the very strong policy but the value must be kept as is for
+    /// backwards compatability.
     StrongPassword,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -1182,6 +1389,8 @@ pub enum SharedFolderMemberPolicy {
     Team,
     /// Anyone can be a member of a folder shared by a team member.
     Anyone,
+    /// Only a teammate and approved people can be a member of a folder shared by a team member.
+    TeamAndApproved,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1205,6 +1414,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
                 let value = match tag {
                     "team" => SharedFolderMemberPolicy::Team,
                     "anyone" => SharedFolderMemberPolicy::Anyone,
+                    "team_and_approved" => SharedFolderMemberPolicy::TeamAndApproved,
                     _ => SharedFolderMemberPolicy::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -1213,6 +1423,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
         }
         const VARIANTS: &[&str] = &["team",
                                     "anyone",
+                                    "team_and_approved",
                                     "other"];
         deserializer.deserialize_struct("SharedFolderMemberPolicy", VARIANTS, EnumVisitor)
     }
@@ -1233,6 +1444,12 @@ impl ::serde::ser::Serialize for SharedFolderMemberPolicy {
                 // unit
                 let mut s = serializer.serialize_struct("SharedFolderMemberPolicy", 1)?;
                 s.serialize_field(".tag", "anyone")?;
+                s.end()
+            }
+            SharedFolderMemberPolicy::TeamAndApproved => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedFolderMemberPolicy", 1)?;
+                s.serialize_field(".tag", "team_and_approved")?;
                 s.end()
             }
             SharedFolderMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -1327,6 +1544,81 @@ impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
                 s.end()
             }
             SharedLinkCreatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum SharedLinkDefaultPermissionsPolicy {
+    /// No team default. Member defaults used instead.
+    Default,
+    /// Default to edit when creating new sharing links
+    Edit,
+    /// Default to view-only when creating new sharing links
+    View,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedLinkDefaultPermissionsPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharedLinkDefaultPermissionsPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharedLinkDefaultPermissionsPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "default" => SharedLinkDefaultPermissionsPolicy::Default,
+                    "edit" => SharedLinkDefaultPermissionsPolicy::Edit,
+                    "view" => SharedLinkDefaultPermissionsPolicy::View,
+                    _ => SharedLinkDefaultPermissionsPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["default",
+                                    "edit",
+                                    "view",
+                                    "other"];
+        deserializer.deserialize_struct("SharedLinkDefaultPermissionsPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedLinkDefaultPermissionsPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            SharedLinkDefaultPermissionsPolicy::Default => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkDefaultPermissionsPolicy", 1)?;
+                s.serialize_field(".tag", "default")?;
+                s.end()
+            }
+            SharedLinkDefaultPermissionsPolicy::Edit => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkDefaultPermissionsPolicy", 1)?;
+                s.serialize_field(".tag", "edit")?;
+                s.end()
+            }
+            SharedLinkDefaultPermissionsPolicy::View => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkDefaultPermissionsPolicy", 1)?;
+                s.serialize_field(".tag", "view")?;
+                s.end()
+            }
+            SharedLinkDefaultPermissionsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -1813,6 +2105,9 @@ pub struct TeamMemberPolicies {
     /// The team policy on if teammembers are allowed to suggest users for admins to invite to the
     /// team.
     pub suggest_members_policy: SuggestMembersPolicy,
+    /// Policy for deciding whether members can edit team folders at the top level of the team
+    /// space.
+    pub top_level_content_policy: TopLevelContentPolicy,
 }
 
 impl TeamMemberPolicies {
@@ -1821,12 +2116,14 @@ impl TeamMemberPolicies {
         emm_state: EmmState,
         office_addin: OfficeAddInPolicy,
         suggest_members_policy: SuggestMembersPolicy,
+        top_level_content_policy: TopLevelContentPolicy,
     ) -> Self {
         TeamMemberPolicies {
             sharing,
             emm_state,
             office_addin,
             suggest_members_policy,
+            top_level_content_policy,
         }
     }
 }
@@ -1834,7 +2131,8 @@ impl TeamMemberPolicies {
 const TEAM_MEMBER_POLICIES_FIELDS: &[&str] = &["sharing",
                                                "emm_state",
                                                "office_addin",
-                                               "suggest_members_policy"];
+                                               "suggest_members_policy",
+                                               "top_level_content_policy"];
 impl TeamMemberPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1850,6 +2148,7 @@ impl TeamMemberPolicies {
         let mut field_emm_state = None;
         let mut field_office_addin = None;
         let mut field_suggest_members_policy = None;
+        let mut field_top_level_content_policy = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -1878,6 +2177,12 @@ impl TeamMemberPolicies {
                     }
                     field_suggest_members_policy = Some(map.next_value()?);
                 }
+                "top_level_content_policy" => {
+                    if field_top_level_content_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("top_level_content_policy"));
+                    }
+                    field_top_level_content_policy = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -1892,6 +2197,7 @@ impl TeamMemberPolicies {
             emm_state: field_emm_state.ok_or_else(|| ::serde::de::Error::missing_field("emm_state"))?,
             office_addin: field_office_addin.ok_or_else(|| ::serde::de::Error::missing_field("office_addin"))?,
             suggest_members_policy: field_suggest_members_policy.ok_or_else(|| ::serde::de::Error::missing_field("suggest_members_policy"))?,
+            top_level_content_policy: field_top_level_content_policy.ok_or_else(|| ::serde::de::Error::missing_field("top_level_content_policy"))?,
         };
         Ok(Some(result))
     }
@@ -1905,6 +2211,7 @@ impl TeamMemberPolicies {
         s.serialize_field("emm_state", &self.emm_state)?;
         s.serialize_field("office_addin", &self.office_addin)?;
         s.serialize_field("suggest_members_policy", &self.suggest_members_policy)?;
+        s.serialize_field("top_level_content_policy", &self.top_level_content_policy)?;
         Ok(())
     }
 }
@@ -1931,7 +2238,7 @@ impl ::serde::ser::Serialize for TeamMemberPolicies {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamMemberPolicies", 4)?;
+        let mut s = serializer.serialize_struct("TeamMemberPolicies", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1951,6 +2258,12 @@ pub struct TeamSharingPolicies {
     pub group_creation_policy: GroupCreation,
     /// Who can view links to content in shared folders.
     pub shared_folder_link_restriction_policy: SharedFolderBlanketLinkRestrictionPolicy,
+    /// If passwords are required for new links shared outside the team.
+    pub enforce_link_password_policy: EnforceLinkPasswordPolicy,
+    /// Default expiration date for new links shared outside the team.
+    pub default_link_expiration_days_policy: DefaultLinkExpirationDaysPolicy,
+    /// Default access level for new links shared by team members.
+    pub shared_link_default_permissions_policy: SharedLinkDefaultPermissionsPolicy,
 }
 
 impl TeamSharingPolicies {
@@ -1960,6 +2273,9 @@ impl TeamSharingPolicies {
         shared_link_create_policy: SharedLinkCreatePolicy,
         group_creation_policy: GroupCreation,
         shared_folder_link_restriction_policy: SharedFolderBlanketLinkRestrictionPolicy,
+        enforce_link_password_policy: EnforceLinkPasswordPolicy,
+        default_link_expiration_days_policy: DefaultLinkExpirationDaysPolicy,
+        shared_link_default_permissions_policy: SharedLinkDefaultPermissionsPolicy,
     ) -> Self {
         TeamSharingPolicies {
             shared_folder_member_policy,
@@ -1967,6 +2283,9 @@ impl TeamSharingPolicies {
             shared_link_create_policy,
             group_creation_policy,
             shared_folder_link_restriction_policy,
+            enforce_link_password_policy,
+            default_link_expiration_days_policy,
+            shared_link_default_permissions_policy,
         }
     }
 }
@@ -1975,7 +2294,10 @@ const TEAM_SHARING_POLICIES_FIELDS: &[&str] = &["shared_folder_member_policy",
                                                 "shared_folder_join_policy",
                                                 "shared_link_create_policy",
                                                 "group_creation_policy",
-                                                "shared_folder_link_restriction_policy"];
+                                                "shared_folder_link_restriction_policy",
+                                                "enforce_link_password_policy",
+                                                "default_link_expiration_days_policy",
+                                                "shared_link_default_permissions_policy"];
 impl TeamSharingPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1992,6 +2314,9 @@ impl TeamSharingPolicies {
         let mut field_shared_link_create_policy = None;
         let mut field_group_creation_policy = None;
         let mut field_shared_folder_link_restriction_policy = None;
+        let mut field_enforce_link_password_policy = None;
+        let mut field_default_link_expiration_days_policy = None;
+        let mut field_shared_link_default_permissions_policy = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -2026,6 +2351,24 @@ impl TeamSharingPolicies {
                     }
                     field_shared_folder_link_restriction_policy = Some(map.next_value()?);
                 }
+                "enforce_link_password_policy" => {
+                    if field_enforce_link_password_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("enforce_link_password_policy"));
+                    }
+                    field_enforce_link_password_policy = Some(map.next_value()?);
+                }
+                "default_link_expiration_days_policy" => {
+                    if field_default_link_expiration_days_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("default_link_expiration_days_policy"));
+                    }
+                    field_default_link_expiration_days_policy = Some(map.next_value()?);
+                }
+                "shared_link_default_permissions_policy" => {
+                    if field_shared_link_default_permissions_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_link_default_permissions_policy"));
+                    }
+                    field_shared_link_default_permissions_policy = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -2041,6 +2384,9 @@ impl TeamSharingPolicies {
             shared_link_create_policy: field_shared_link_create_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_link_create_policy"))?,
             group_creation_policy: field_group_creation_policy.ok_or_else(|| ::serde::de::Error::missing_field("group_creation_policy"))?,
             shared_folder_link_restriction_policy: field_shared_folder_link_restriction_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_link_restriction_policy"))?,
+            enforce_link_password_policy: field_enforce_link_password_policy.ok_or_else(|| ::serde::de::Error::missing_field("enforce_link_password_policy"))?,
+            default_link_expiration_days_policy: field_default_link_expiration_days_policy.ok_or_else(|| ::serde::de::Error::missing_field("default_link_expiration_days_policy"))?,
+            shared_link_default_permissions_policy: field_shared_link_default_permissions_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_link_default_permissions_policy"))?,
         };
         Ok(Some(result))
     }
@@ -2055,6 +2401,9 @@ impl TeamSharingPolicies {
         s.serialize_field("shared_link_create_policy", &self.shared_link_create_policy)?;
         s.serialize_field("group_creation_policy", &self.group_creation_policy)?;
         s.serialize_field("shared_folder_link_restriction_policy", &self.shared_folder_link_restriction_policy)?;
+        s.serialize_field("enforce_link_password_policy", &self.enforce_link_password_policy)?;
+        s.serialize_field("default_link_expiration_days_policy", &self.default_link_expiration_days_policy)?;
+        s.serialize_field("shared_link_default_permissions_policy", &self.shared_link_default_permissions_policy)?;
         Ok(())
     }
 }
@@ -2081,9 +2430,74 @@ impl ::serde::ser::Serialize for TeamSharingPolicies {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamSharingPolicies", 5)?;
+        let mut s = serializer.serialize_struct("TeamSharingPolicies", 8)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum TopLevelContentPolicy {
+    /// Only admins can edit team folders at the top level of the team space.
+    AdminOnly,
+    /// Everyone on the team can edit team folders at the top level of the team space.
+    Everyone,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TopLevelContentPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TopLevelContentPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TopLevelContentPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "admin_only" => TopLevelContentPolicy::AdminOnly,
+                    "everyone" => TopLevelContentPolicy::Everyone,
+                    _ => TopLevelContentPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["admin_only",
+                                    "everyone",
+                                    "other"];
+        deserializer.deserialize_struct("TopLevelContentPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TopLevelContentPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            TopLevelContentPolicy::AdminOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("TopLevelContentPolicy", 1)?;
+                s.serialize_field(".tag", "admin_only")?;
+                s.end()
+            }
+            TopLevelContentPolicy::Everyone => {
+                // unit
+                let mut s = serializer.serialize_struct("TopLevelContentPolicy", 1)?;
+                s.serialize_field(".tag", "everyone")?;
+                s.end()
+            }
+            TopLevelContentPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 

@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[allow(unused_imports)]
@@ -44,7 +45,7 @@ pub fn devices_list_members_devices(
 }
 
 /// List all device sessions of a team. Permission : Team member file access.
-#[deprecated(note = "replaced by devices_list_members_devices")]
+#[deprecated]
 pub fn devices_list_team_devices(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListTeamDevicesArg,
@@ -92,9 +93,9 @@ pub fn devices_revoke_device_session_batch(
     )
 }
 
-/// Get the values for one or more featues. This route allows you to check your account's capability
-/// for what feature you can access or what value you have for certain features. Permission : Team
-/// information.
+/// Get the values for one or more features. This route allows you to check your account's
+/// capability for what feature you can access or what value you have for certain features.
+/// Permission : Team information.
 pub fn features_get_values(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &FeaturesGetValuesBatchArg,
@@ -491,7 +492,7 @@ pub fn linked_apps_list_members_linked_apps(
 
 /// List all applications linked to the team members' accounts. Note, this endpoint doesn't list any
 /// team-linked applications.
-#[deprecated(note = "replaced by linked_apps_list_members_linked_apps")]
+#[deprecated]
 pub fn linked_apps_list_team_linked_apps(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListTeamAppsArg,
@@ -639,7 +640,7 @@ pub fn member_space_limits_remove_custom_quota(
     )
 }
 
-/// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be
+/// Set users custom quota. Custom quota has to be at least 2GB. A maximum of 1000 members can be
 /// specified in a single call. Note: to apply a custom space limit, a team admin needs to set a
 /// member space limit for the team first. (the team admin can check the settings here:
 /// https://www.dropbox.com/team/admin/settings/space).
@@ -687,10 +688,7 @@ pub fn members_add(
 /// Dropbox account will be created with the given email address, and that account will be invited
 /// to the team. If a personal Dropbox account exists with the email address specified in the call,
 /// this call will create a placeholder Dropbox account for the user on the team and send an email
-/// inviting the user to migrate their existing personal account onto the team. Team member
-/// management apps are required to set an initial given_name and surname for a user to use in the
-/// team invitation and for 'Perform as team member' actions taken on the user before they become
-/// 'active'.
+/// inviting the user to migrate their existing personal account onto the team.
 pub fn members_add_v2(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersAddV2Arg,
@@ -735,6 +733,25 @@ pub fn members_add_job_status_get_v2(
             crate::client_trait_common::Endpoint::Api,
             crate::client_trait_common::Style::Rpc,
             "team/members/add/job_status/get_v2",
+            arg,
+            None)
+    )
+}
+
+/// Permanently delete the files of a user who has been removed from the team. After permanent
+/// deletion, those files will not be available to be transferred to another team member. Permission
+/// : Team member management Exactly one of team_member_id, email, or external_id must be provided
+/// to identify the user account.
+pub fn members_delete_former_member_files(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersFormerMemberArg,
+) -> Result<(), crate::Error<MembersDeleteFormerMemberFilesError>> {
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "team/members/delete_former_member_files",
             arg,
             None)
     )
@@ -952,8 +969,9 @@ pub fn members_recover(
 /// [`members_add()`](crate::team::members_add) while a user is still recoverable on your team will
 /// return with [`MemberAddResult::UserAlreadyOnTeam`]. Accounts can have their files transferred
 /// via the admin console for a limited time, based on the version history length associated with
-/// the team (180 days for most teams). This endpoint may initiate an asynchronous job. To obtain
-/// the final result of the job, the client should periodically poll
+/// the team (180 days for most teams). Accounts can have their stacks transferred through the admin
+/// console. This only transfers stacks that they have created. This endpoint may initiate an
+/// asynchronous job. To obtain the final result of the job, the client should periodically poll
 /// [`members_remove_job_status_get()`](crate::team::members_remove_job_status_get).
 pub fn members_remove(
     client: &impl crate::client_trait::TeamAuthClient,
@@ -1256,39 +1274,6 @@ pub fn properties_template_get(
     )
 }
 
-/// Permission : Team member file access. The scope for the route is files.team_metadata.write.
-#[deprecated]
-pub fn properties_template_list(
-    client: &impl crate::client_trait::TeamAuthClient,
-) -> Result<crate::types::file_properties::ListTemplateResult, crate::Error<crate::types::file_properties::TemplateError>> {
-    crate::client_helpers::unwrap_async(
-        crate::client_helpers::request(
-            client,
-            crate::client_trait_common::Endpoint::Api,
-            crate::client_trait_common::Style::Rpc,
-            "team/properties/template/list",
-            &(),
-            None)
-    )
-}
-
-/// Permission : Team member file access.
-#[deprecated]
-pub fn properties_template_update(
-    client: &impl crate::client_trait::TeamAuthClient,
-    arg: &crate::types::file_properties::UpdateTemplateArg,
-) -> Result<crate::types::file_properties::UpdateTemplateResult, crate::Error<crate::types::file_properties::ModifyTemplateError>> {
-    crate::client_helpers::unwrap_async(
-        crate::client_helpers::request(
-            client,
-            crate::client_trait_common::Endpoint::Api,
-            crate::client_trait_common::Style::Rpc,
-            "team/properties/template/update",
-            arg,
-            None)
-    )
-}
-
 /// Retrieves reporting data about a team's user activity. Deprecated: Will be removed on July 1st
 /// 2021.
 #[deprecated]
@@ -1472,8 +1457,9 @@ pub fn team_folder_activate(
 }
 
 /// Sets an active team folder's status to archived and removes all folder and file members. This
-/// endpoint cannot be used for teams that have a shared team space. Permission : Team member file
-/// access.
+/// endpoint cannot be used for teams that have a shared team space. This route will either finish
+/// synchronously, or return a job ID and do the async archive job in background. Please use
+/// team_folder/archive/check to check the job status. Permission : Team member file access.
 pub fn team_folder_archive(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderArchiveArg,
@@ -1489,8 +1475,12 @@ pub fn team_folder_archive(
     )
 }
 
-/// Returns the status of an asynchronous job for archiving a team folder. Permission : Team member
-/// file access.
+/// Returns the status of an asynchronous job for archiving a team folder. The job may show '.tag'
+/// as complete, but the team folder could still be in the process of archiving (indicated by
+/// [`TeamFolderMetadata::status`](TeamFolderMetadata) with 'archive_in_progress'). To confirm that
+/// the team folder is fully archived, check the field
+/// [`TeamFolderMetadata::status`](TeamFolderMetadata) in the response for the value 'archived'.
+/// Permission : Team member file access.
 pub fn team_folder_archive_check(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &crate::types::dbx_async::PollArg,
@@ -1600,6 +1590,27 @@ pub fn team_folder_rename(
             crate::client_trait_common::Endpoint::Api,
             crate::client_trait_common::Style::Rpc,
             "team/team_folder/rename",
+            arg,
+            None)
+    )
+}
+
+/// Sets an inactive team folder's status to active. Permission: Team member file access.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn team_folder_restore(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &TeamFolderIdArg,
+) -> Result<TeamFolderMetadata, crate::Error<TeamFolderRestoreError>> {
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "team/team_folder/restore",
             arg,
             None)
     )

@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[allow(unused_imports)]
@@ -24,7 +25,7 @@ pub use crate::generated::types::check::*;
 pub fn app<'a>(
     client: &'a impl crate::async_client_trait::AppAuthClient,
     arg: &'a EchoArg,
-) -> impl std::future::Future<Output=Result<EchoResult, crate::Error<crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<EchoResult, crate::Error<EchoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,
@@ -46,7 +47,7 @@ pub fn app<'a>(
 pub fn user<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a EchoArg,
-) -> impl std::future::Future<Output=Result<EchoResult, crate::Error<crate::NoError>>> + Send + 'a {
+) -> impl std::future::Future<Output=Result<EchoResult, crate::Error<EchoError>>> + Send + 'a {
     crate::client_helpers::request(
         client,
         crate::client_trait_common::Endpoint::Api,

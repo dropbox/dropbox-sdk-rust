@@ -6,7 +6,336 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct AccountPhotoGetArg {
+    /// Encoded ID of the user. Must start either with 'dbid:' or 'dbaphid:'.
+    pub dbx_account_id: String,
+    /// A string representing the size of the photo.
+    pub size: String,
+    /// True if the photo should be cropped and false otherwise.
+    pub circle_crop: bool,
+    /// True if we expect account photo to exist.
+    pub expect_account_photo: bool,
+}
+
+impl AccountPhotoGetArg {
+    pub fn new(
+        dbx_account_id: String,
+        size: String,
+        circle_crop: bool,
+        expect_account_photo: bool,
+    ) -> Self {
+        AccountPhotoGetArg {
+            dbx_account_id,
+            size,
+            circle_crop,
+            expect_account_photo,
+        }
+    }
+}
+
+const ACCOUNT_PHOTO_GET_ARG_FIELDS: &[&str] = &["dbx_account_id",
+                                                "size",
+                                                "circle_crop",
+                                                "expect_account_photo"];
+impl AccountPhotoGetArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<AccountPhotoGetArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AccountPhotoGetArg>, V::Error> {
+        let mut field_dbx_account_id = None;
+        let mut field_size = None;
+        let mut field_circle_crop = None;
+        let mut field_expect_account_photo = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "dbx_account_id" => {
+                    if field_dbx_account_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("dbx_account_id"));
+                    }
+                    field_dbx_account_id = Some(map.next_value()?);
+                }
+                "size" => {
+                    if field_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("size"));
+                    }
+                    field_size = Some(map.next_value()?);
+                }
+                "circle_crop" => {
+                    if field_circle_crop.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("circle_crop"));
+                    }
+                    field_circle_crop = Some(map.next_value()?);
+                }
+                "expect_account_photo" => {
+                    if field_expect_account_photo.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("expect_account_photo"));
+                    }
+                    field_expect_account_photo = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AccountPhotoGetArg {
+            dbx_account_id: field_dbx_account_id.ok_or_else(|| ::serde::de::Error::missing_field("dbx_account_id"))?,
+            size: field_size.ok_or_else(|| ::serde::de::Error::missing_field("size"))?,
+            circle_crop: field_circle_crop.ok_or_else(|| ::serde::de::Error::missing_field("circle_crop"))?,
+            expect_account_photo: field_expect_account_photo.ok_or_else(|| ::serde::de::Error::missing_field("expect_account_photo"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("dbx_account_id", &self.dbx_account_id)?;
+        s.serialize_field("size", &self.size)?;
+        s.serialize_field("circle_crop", &self.circle_crop)?;
+        s.serialize_field("expect_account_photo", &self.expect_account_photo)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccountPhotoGetArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AccountPhotoGetArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AccountPhotoGetArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AccountPhotoGetArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AccountPhotoGetArg", ACCOUNT_PHOTO_GET_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccountPhotoGetArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AccountPhotoGetArg", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum AccountPhotoGetError {
+    /// Indicates infrastructural failure.
+    ThumbnailError(ThumbnailError),
+    /// Account photo is missing (but we did not expect it to exist).
+    AccountPhotoMissing,
+    /// Account photo was expected to exist, but it's missing.
+    ExpectedAccountPhotoMissing,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccountPhotoGetError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = AccountPhotoGetError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AccountPhotoGetError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "thumbnail_error" => {
+                        match map.next_key()? {
+                            Some("thumbnail_error") => AccountPhotoGetError::ThumbnailError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("thumbnail_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "account_photo_missing" => AccountPhotoGetError::AccountPhotoMissing,
+                    "expected_account_photo_missing" => AccountPhotoGetError::ExpectedAccountPhotoMissing,
+                    _ => AccountPhotoGetError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["thumbnail_error",
+                                    "account_photo_missing",
+                                    "expected_account_photo_missing",
+                                    "other"];
+        deserializer.deserialize_struct("AccountPhotoGetError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccountPhotoGetError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            AccountPhotoGetError::ThumbnailError(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("AccountPhotoGetError", 2)?;
+                s.serialize_field(".tag", "thumbnail_error")?;
+                s.serialize_field("thumbnail_error", x)?;
+                s.end()
+            }
+            AccountPhotoGetError::AccountPhotoMissing => {
+                // unit
+                let mut s = serializer.serialize_struct("AccountPhotoGetError", 1)?;
+                s.serialize_field(".tag", "account_photo_missing")?;
+                s.end()
+            }
+            AccountPhotoGetError::ExpectedAccountPhotoMissing => {
+                // unit
+                let mut s = serializer.serialize_struct("AccountPhotoGetError", 1)?;
+                s.serialize_field(".tag", "expected_account_photo_missing")?;
+                s.end()
+            }
+            AccountPhotoGetError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for AccountPhotoGetError {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AccountPhotoGetError::ThumbnailError(inner) => Some(inner),
+            _ => None,
+        }
+    }
+}
+
+impl ::std::fmt::Display for AccountPhotoGetError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            AccountPhotoGetError::ThumbnailError(inner) => write!(f, "Indicates infrastructural failure: {}", inner),
+            AccountPhotoGetError::AccountPhotoMissing => f.write_str("Account photo is missing (but we did not expect it to exist)."),
+            AccountPhotoGetError::ExpectedAccountPhotoMissing => f.write_str("Account photo was expected to exist, but it's missing."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct AccountPhotoGetResult {
+    /// The data returned by get_photo.
+    pub content_type: String,
+}
+
+impl AccountPhotoGetResult {
+    pub fn new(content_type: String) -> Self {
+        AccountPhotoGetResult {
+            content_type,
+        }
+    }
+}
+
+const ACCOUNT_PHOTO_GET_RESULT_FIELDS: &[&str] = &["content_type"];
+impl AccountPhotoGetResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<AccountPhotoGetResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AccountPhotoGetResult>, V::Error> {
+        let mut field_content_type = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "content_type" => {
+                    if field_content_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("content_type"));
+                    }
+                    field_content_type = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AccountPhotoGetResult {
+            content_type: field_content_type.ok_or_else(|| ::serde::de::Error::missing_field("content_type"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("content_type", &self.content_type)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccountPhotoGetResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AccountPhotoGetResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AccountPhotoGetResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AccountPhotoGetResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AccountPhotoGetResult", ACCOUNT_PHOTO_GET_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccountPhotoGetResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AccountPhotoGetResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -360,6 +689,84 @@ impl ::serde::ser::Serialize for SetProfilePhotoResult {
         let mut s = serializer.serialize_struct("SetProfilePhotoResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ThumbnailError {
+    /// Indicates permanent infrastructural failure.
+    PermanentFailure,
+    /// Indicates temporary infrastructural failure.
+    TemporaryFailure,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ThumbnailError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "permanent_failure" => ThumbnailError::PermanentFailure,
+                    "temporary_failure" => ThumbnailError::TemporaryFailure,
+                    _ => ThumbnailError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["permanent_failure",
+                                    "temporary_failure",
+                                    "other"];
+        deserializer.deserialize_struct("ThumbnailError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ThumbnailError::PermanentFailure => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailError", 1)?;
+                s.serialize_field(".tag", "permanent_failure")?;
+                s.end()
+            }
+            ThumbnailError::TemporaryFailure => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailError", 1)?;
+                s.serialize_field(".tag", "temporary_failure")?;
+                s.end()
+            }
+            ThumbnailError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ThumbnailError {
+}
+
+impl ::std::fmt::Display for ThumbnailError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            ThumbnailError::PermanentFailure => f.write_str("Indicates permanent infrastructural failure."),
+            ThumbnailError::TemporaryFailure => f.write_str("Indicates temporary infrastructural failure."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

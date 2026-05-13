@@ -6,6 +6,7 @@
     clippy::large_enum_variant,
     clippy::result_large_err,
     clippy::doc_markdown,
+    clippy::doc_lazy_continuation,
 )]
 
 #[allow(unused_imports)]
@@ -133,17 +134,16 @@ pub fn docs_folder_users_list_continue(
     )
 }
 
-/// Retrieves folder information for the given Paper doc. This includes:   - folder sharing policy;
-/// permissions for subfolders are set by the top-level folder.   - full 'filepath', i.e. the list
-/// of folders (both folderId and folderName) from     the root folder to the folder directly
-/// containing the Paper doc.
-///
-/// If the Paper doc is not in any folder (aka unfiled) the response will be empty. Note that this
-/// endpoint will continue to work for content created by users on the older version of Paper. To
-/// check which version of Paper a user is on, use /users/features/get_values. If the paper_as_files
-/// feature is enabled, then the user is running the new version of Paper. Refer to the [Paper
-/// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for
-/// migration information.
+/// Retrieves folder information for the given Paper doc. This includes: - folder sharing policy;
+/// permissions for subfolders are set by the top-level folder. - full 'filepath', i.e. the list of
+/// folders (both folderId and folderName) from the root folder to the folder directly containing
+/// the Paper doc. If the Paper doc is not in any folder (aka unfiled) the response will be empty.
+/// Note that this endpoint will continue to work for content created by users on the older version
+/// of Paper. To check which version of Paper a user is on, use /users/features/get_values. If the
+/// paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to
+/// the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 #[deprecated]
 pub fn docs_get_folder_info(
     client: &impl crate::client_trait::UserAuthClient,
@@ -155,6 +155,22 @@ pub fn docs_get_folder_info(
             crate::client_trait_common::Endpoint::Api,
             crate::client_trait_common::Style::Rpc,
             "paper/docs/get_folder_info",
+            arg,
+            None)
+    )
+}
+
+/// Returns metadata for a Paper doc or Cloud Doc.
+pub fn docs_get_metadata(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &GetDocMetadataArg,
+) -> Result<PaperDocGetMetadataResult, crate::Error<DocLookupError>> {
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "paper/docs/get_metadata",
             arg,
             None)
     )
