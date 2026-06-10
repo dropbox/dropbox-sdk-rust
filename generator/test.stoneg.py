@@ -6,7 +6,7 @@ import re
 import string
 import sys
 from _ast import Module
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from typing import Any, Dict, Iterator, Optional, Protocol
 
 try:
@@ -180,6 +180,8 @@ class TestBackend(RustHelperBackend):
                     '{".tag": "other"',
                     '{".tag": "dropbox-sdk-rust-bogus-test-variant"')
 
+            if test_value.is_deprecated():
+                self.emit('#[allow(deprecated)] // deprecated variant')
             with self._test_fn(type_name + test_value.test_suffix()):
                 self.emit(f'let json = r#"{json}"#;')
                 self.emit(f'let x = ::serde_json::from_str::<::dropbox_sdk::types::{ns_name}::{rsname}>(json).unwrap();')
@@ -207,6 +209,8 @@ class TestBackend(RustHelperBackend):
     def _emit_closed_union_test(self, ns: ir.ApiNamespace, typ: ir.Struct | ir.Union) -> None:
         ns_name = self.namespace_name(ns)
         type_name = self.struct_name(typ)
+        if any(v.deprecated for v in self.get_enum_variants(typ)):
+            self.emit('#[allow(deprecated)] // some variants are deprecated')
         with self._test_fn("ClosedUnion_" + type_name):
             self.emit('// This test ensures that an exhaustive match compiles.')
             self.emit(f'let x: Option<::dropbox_sdk::types::{ns_name}::{self.enum_name(typ)}> = None;')
@@ -215,7 +219,8 @@ class TestBackend(RustHelperBackend):
                 var_exps = []
                 for variant in self.get_enum_variants(typ):
                     v_name = self.enum_variant_name(variant)
-                    var_exp = f'::dropbox_sdk::types::{ns_name}::{type_name}::{v_name}'
+                    note = '/* deprecated */ ' if variant.deprecated else ''
+                    var_exp = f'{note}::dropbox_sdk::types::{ns_name}::{type_name}::{v_name}'
                     if not ir.is_void_type(variant.data_type):
                         var_exp += '(_)'
                     var_exps += [var_exp]
@@ -327,12 +332,14 @@ class TestField(object):
             test_value: TestStruct | TestUnion | TestPolymorphicStruct,
             stone_type: ir.DataType,
             option: bool,
+            deprecated: bool,
     ) -> None:
         self.name = name
         self.value = python_value
         self.test_value = test_value
         self.typ = stone_type
         self.option = option
+        self.deprecated = deprecated
 
     def emit_assert(self, codegen: RustHelperBackend, expression_path: str) -> None:
         extra = ('.' + self.name) if self.name else ''
@@ -375,6 +382,10 @@ class TestValue(object):
         # Not all types can round-trip back from Rust to JSON.
         return True
 
+    def is_deprecated(self) -> bool:
+        # only appropriate for enum variants
+        return False
+
     def test_suffix(self) -> str:
         return ""
 
@@ -411,10 +422,12 @@ class TestStruct(TestValue):
                     field.default if field.has_default else None,
                     field.data_type,
                     rust_generator,
-                    reference_impls)
+                    reference_impls,
+                    field.deprecated)
             else:
                 field_value = make_test_field(
-                        field.name, field.data_type, rust_generator, reference_impls, no_optional_fields)
+                        field.name, field.data_type, rust_generator, reference_impls,
+                        no_optional_fields, field.deprecated)
                 if field_value is None:
                     raise RuntimeError(f'Error: incomplete type generated: {stone_type.name}')
                 try:
@@ -425,7 +438,8 @@ class TestStruct(TestValue):
 
     def emit_asserts(self, codegen: RustHelperBackend, expression_path: str) -> None:
         for field in self.fields:
-            field.emit_assert(codegen, expression_path)
+            with codegen.block('#[allow(deprecated)]') if field.deprecated else nullcontext():
+                field.emit_assert(codegen, expression_path)
 
     def test_suffix(self) -> str:
         if self._no_optional_fields:
@@ -476,6 +490,9 @@ class TestUnion(TestValue):
             or (isinstance(self._stone_type, ir.Union) and not self._stone_type.closed)
 
     def emit_asserts(self, codegen: RustHelperBackend, expression_path: str) -> None:
+        if self._variant.deprecated:
+            codegen.emit('#[allow(deprecated)]')
+
         if expression_path[0] == '(' and expression_path[-1] == ')':
             expression_path = expression_path[1:-1]  # strip off superfluous parens
 
@@ -494,6 +511,9 @@ class TestUnion(TestValue):
 
     def is_serializable(self) -> bool:
         return not self._variant.catch_all
+
+    def is_deprecated(self) -> bool:
+        return self._variant.deprecated
 
     def test_suffix(self) -> str:
         suf = "_" + self._rust_variant_name
@@ -561,6 +581,7 @@ def test_field_with_value(
         stone_type: ir.DataType,
         rust_generator: RustHelperBackend,
         reference_impls: Dict[str, Module],
+        deprecated: bool = False,
 ) -> TestField:
     typ, option = ir.unwrap_nullable(stone_type)
     inner = None
@@ -583,7 +604,8 @@ def test_field_with_value(
         value,
         inner,
         typ,
-        option)
+        option,
+        deprecated)
 
 
 # Make a TestField with an arbitrary value that satisfies constraints. If no_optional_fields is True
@@ -594,6 +616,7 @@ def make_test_field(
         rust_generator: RustHelperBackend,
         reference_impls: Dict[str, Module],
         no_optional_fields: bool = False,
+        deprecated: bool = False,
 ) -> TestField:
     rust_name = rust_generator.field_name_raw(field_name) if field_name is not None else None
     typ, option = ir.unwrap_nullable(stone_type)
@@ -611,11 +634,17 @@ def make_test_field(
         # Pick the first tag.
         # We could generate tests for them all, but it would lead to a huge explosion of tests, and
         # the types themselves are tested elsewhere.
-        if len(typ.fields) == 0:
-            # there must be a parent type; go for it
-            variant = typ.all_fields[0]
+        # Skip over deprecated variants to make the tests better for detecting compat breakage.
+        fields = list(filter(lambda f: not f.deprecated and not f.catch_all, typ.fields))
+        if len(fields) == 0:
+            if len(typ.fields) == 0:
+                # there must be a parent type; go for it
+                variant = typ.all_fields[0]
+            else:
+                # okay so all variants are deprecated; I guess just go for it
+                variant = typ.fields[0]
         else:
-            variant = typ.fields[0]
+            variant = fields[0]
         inner = TestUnion(rust_generator, typ, reference_impls, variant, no_optional_fields)
         value = inner.value
     elif ir.is_list_type(typ):
@@ -641,7 +670,7 @@ def make_test_field(
         value = bytes([0, 1, 2, 3, 4, 5])
     elif not ir.is_void_type(typ):
         raise RuntimeError(f'Error: unhandled field type of {field_name}: {typ}')
-    return TestField(rust_name, value, inner, typ, option)
+    return TestField(rust_name, value, inner, typ, option, deprecated)
 
 
 class Unregex(object):
