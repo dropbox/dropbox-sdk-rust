@@ -861,6 +861,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                     "insufficient_plan" => AddFolderMemberError::InsufficientPlan,
                     "team_folder" => AddFolderMemberError::TeamFolder,
                     "no_permission" => AddFolderMemberError::NoPermission,
+                    #[allow(deprecated)]
                     "invalid_shared_folder" => AddFolderMemberError::InvalidSharedFolder,
                     _ => AddFolderMemberError::Other,
                 };
@@ -967,6 +968,7 @@ impl ::serde::ser::Serialize for AddFolderMemberError {
                 s.serialize_field(".tag", "no_permission")?;
                 s.end()
             }
+            #[allow(deprecated)]
             AddFolderMemberError::InvalidSharedFolder => {
                 // unit
                 let mut s = serializer.serialize_struct("AddFolderMemberError", 1)?;
@@ -1002,7 +1004,7 @@ impl ::std::fmt::Display for AddFolderMemberError {
             AddFolderMemberError::InsufficientPlan => f.write_str("The current user's account doesn't support this action. An example of this is when adding a read-only member. This action can only be performed by users that have upgraded to a Pro or Business plan."),
             AddFolderMemberError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
             AddFolderMemberError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
-            AddFolderMemberError::InvalidSharedFolder => f.write_str("Field is deprecated. Invalid shared folder error will be returned as an access_error."),
+            #[allow(deprecated)] AddFolderMemberError::InvalidSharedFolder => f.write_str("Field is deprecated. Invalid shared folder error will be returned as an access_error."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -1946,11 +1948,13 @@ impl CreateSharedLinkArg {
     pub fn new(path: String) -> Self {
         CreateSharedLinkArg {
             path,
-            short_url: false,
+            #[allow(deprecated)] short_url: false,
             pending_upload: None,
         }
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_short_url(mut self, value: bool) -> Self {
         self.short_url = value;
         self
@@ -2012,7 +2016,7 @@ impl CreateSharedLinkArg {
         }
         let result = CreateSharedLinkArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            short_url: field_short_url.unwrap_or(false),
+            #[allow(deprecated)] short_url: field_short_url.unwrap_or(false),
             pending_upload: field_pending_upload.and_then(Option::flatten),
         };
         Ok(Some(result))
@@ -2024,6 +2028,7 @@ impl CreateSharedLinkArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
+        #[allow(deprecated)]
         if self.short_url {
             s.serialize_field("short_url", &self.short_url)?;
         }
@@ -2691,7 +2696,9 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                     "invite_editor" => FileAction::InviteEditor,
                     "unshare" => FileAction::Unshare,
                     "relinquish_membership" => FileAction::RelinquishMembership,
+                    #[allow(deprecated)]
                     "share_link" => FileAction::ShareLink,
+                    #[allow(deprecated)]
                     "create_link" => FileAction::CreateLink,
                     "create_view_link" => FileAction::CreateViewLink,
                     "create_edit_link" => FileAction::CreateEditLink,
@@ -2771,12 +2778,14 @@ impl ::serde::ser::Serialize for FileAction {
                 s.serialize_field(".tag", "relinquish_membership")?;
                 s.end()
             }
+            #[allow(deprecated)]
             FileAction::ShareLink => {
                 // unit
                 let mut s = serializer.serialize_struct("FileAction", 1)?;
                 s.serialize_field(".tag", "share_link")?;
                 s.end()
             }
+            #[allow(deprecated)]
             FileAction::CreateLink => {
                 // unit
                 let mut s = serializer.serialize_struct("FileAction", 1)?;
@@ -3795,7 +3804,9 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                     "unmount" => FolderAction::Unmount,
                     "unshare" => FolderAction::Unshare,
                     "leave_a_copy" => FolderAction::LeaveACopy,
+                    #[allow(deprecated)]
                     "share_link" => FolderAction::ShareLink,
+                    #[allow(deprecated)]
                     "create_link" => FolderAction::CreateLink,
                     "create_view_link" => FolderAction::CreateViewLink,
                     "create_edit_link" => FolderAction::CreateEditLink,
@@ -3898,12 +3909,14 @@ impl ::serde::ser::Serialize for FolderAction {
                 s.serialize_field(".tag", "leave_a_copy")?;
                 s.end()
             }
+            #[allow(deprecated)]
             FolderAction::ShareLink => {
                 // unit
                 let mut s = serializer.serialize_struct("FolderAction", 1)?;
                 s.serialize_field(".tag", "share_link")?;
                 s.end()
             }
+            #[allow(deprecated)]
             FolderAction::CreateLink => {
                 // unit
                 let mut s = serializer.serialize_struct("FolderAction", 1)?;
@@ -5615,7 +5628,7 @@ impl GroupInfo {
             group_name,
             group_id,
             group_management_type,
-            group_type,
+            #[allow(deprecated)] group_type,
             is_member,
             is_owner,
             same_team,
@@ -5738,7 +5751,7 @@ impl GroupInfo {
             group_name: field_group_name.ok_or_else(|| ::serde::de::Error::missing_field("group_name"))?,
             group_id: field_group_id.ok_or_else(|| ::serde::de::Error::missing_field("group_id"))?,
             group_management_type: field_group_management_type.ok_or_else(|| ::serde::de::Error::missing_field("group_management_type"))?,
-            group_type: field_group_type.ok_or_else(|| ::serde::de::Error::missing_field("group_type"))?,
+            #[allow(deprecated)] group_type: field_group_type.ok_or_else(|| ::serde::de::Error::missing_field("group_type"))?,
             is_member: field_is_member.ok_or_else(|| ::serde::de::Error::missing_field("is_member"))?,
             is_owner: field_is_owner.ok_or_else(|| ::serde::de::Error::missing_field("is_owner"))?,
             same_team: field_same_team.ok_or_else(|| ::serde::de::Error::missing_field("same_team"))?,
@@ -5756,6 +5769,7 @@ impl GroupInfo {
         s.serialize_field("group_name", &self.group_name)?;
         s.serialize_field("group_id", &self.group_id)?;
         s.serialize_field("group_management_type", &self.group_management_type)?;
+        #[allow(deprecated)]
         s.serialize_field("group_type", &self.group_type)?;
         s.serialize_field("is_member", &self.is_member)?;
         s.serialize_field("is_owner", &self.is_owner)?;
@@ -5835,7 +5849,7 @@ impl GroupMembershipInfo {
             access_type,
             group,
             permissions: None,
-            initials: None,
+            #[allow(deprecated)] initials: None,
             is_inherited: false,
         }
     }
@@ -5845,6 +5859,8 @@ impl GroupMembershipInfo {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_initials(mut self, value: String) -> Self {
         self.initials = Some(value);
         self
@@ -5924,7 +5940,7 @@ impl GroupMembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             group: field_group.ok_or_else(|| ::serde::de::Error::missing_field("group"))?,
             permissions: field_permissions.and_then(Option::flatten),
-            initials: field_initials.and_then(Option::flatten),
+            #[allow(deprecated)] initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
         };
         Ok(Some(result))
@@ -5940,6 +5956,7 @@ impl GroupMembershipInfo {
         if let Some(val) = &self.permissions {
             s.serialize_field("permissions", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
@@ -5984,7 +6001,7 @@ impl From<GroupMembershipInfo> for MembershipInfo {
         Self {
             access_type: subtype.access_type,
             permissions: subtype.permissions,
-            initials: subtype.initials,
+            #[allow(deprecated)] initials: subtype.initials,
             is_inherited: subtype.is_inherited,
         }
     }
@@ -6308,7 +6325,7 @@ impl InviteeMembershipInfo {
             access_type,
             invitee,
             permissions: None,
-            initials: None,
+            #[allow(deprecated)] initials: None,
             is_inherited: false,
             user: None,
         }
@@ -6319,6 +6336,8 @@ impl InviteeMembershipInfo {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_initials(mut self, value: String) -> Self {
         self.initials = Some(value);
         self
@@ -6411,7 +6430,7 @@ impl InviteeMembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             invitee: field_invitee.ok_or_else(|| ::serde::de::Error::missing_field("invitee"))?,
             permissions: field_permissions.and_then(Option::flatten),
-            initials: field_initials.and_then(Option::flatten),
+            #[allow(deprecated)] initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
             user: field_user.and_then(Option::flatten),
         };
@@ -6428,6 +6447,7 @@ impl InviteeMembershipInfo {
         if let Some(val) = &self.permissions {
             s.serialize_field("permissions", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
@@ -6475,7 +6495,7 @@ impl From<InviteeMembershipInfo> for MembershipInfo {
         Self {
             access_type: subtype.access_type,
             permissions: subtype.permissions,
-            initials: subtype.initials,
+            #[allow(deprecated)] initials: subtype.initials,
             is_inherited: subtype.is_inherited,
         }
     }
@@ -6900,7 +6920,9 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                     "public" => LinkAudience::Public,
                     "team" => LinkAudience::Team,
                     "no_one" => LinkAudience::NoOne,
+                    #[allow(deprecated)]
                     "password" => LinkAudience::Password,
+                    #[allow(deprecated)]
                     "members" => LinkAudience::Members,
                     _ => LinkAudience::Other,
                 };
@@ -6941,12 +6963,14 @@ impl ::serde::ser::Serialize for LinkAudience {
                 s.serialize_field(".tag", "no_one")?;
                 s.end()
             }
+            #[allow(deprecated)]
             LinkAudience::Password => {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAudience", 1)?;
                 s.serialize_field(".tag", "password")?;
                 s.end()
             }
+            #[allow(deprecated)]
             LinkAudience::Members => {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAudience", 1)?;
@@ -7634,8 +7658,8 @@ impl LinkPermissions {
             allow_download,
             can_allow_download,
             can_disallow_download,
-            allow_comments,
-            team_restricts_comments,
+            #[allow(deprecated)] allow_comments,
+            #[allow(deprecated)] team_restricts_comments,
             resolved_visibility: None,
             requested_visibility: None,
             revoke_failure_reason: None,
@@ -7963,8 +7987,8 @@ impl LinkPermissions {
             allow_download: field_allow_download.ok_or_else(|| ::serde::de::Error::missing_field("allow_download"))?,
             can_allow_download: field_can_allow_download.ok_or_else(|| ::serde::de::Error::missing_field("can_allow_download"))?,
             can_disallow_download: field_can_disallow_download.ok_or_else(|| ::serde::de::Error::missing_field("can_disallow_download"))?,
-            allow_comments: field_allow_comments.ok_or_else(|| ::serde::de::Error::missing_field("allow_comments"))?,
-            team_restricts_comments: field_team_restricts_comments.ok_or_else(|| ::serde::de::Error::missing_field("team_restricts_comments"))?,
+            #[allow(deprecated)] allow_comments: field_allow_comments.ok_or_else(|| ::serde::de::Error::missing_field("allow_comments"))?,
+            #[allow(deprecated)] team_restricts_comments: field_team_restricts_comments.ok_or_else(|| ::serde::de::Error::missing_field("team_restricts_comments"))?,
             resolved_visibility: field_resolved_visibility.and_then(Option::flatten),
             requested_visibility: field_requested_visibility.and_then(Option::flatten),
             revoke_failure_reason: field_revoke_failure_reason.and_then(Option::flatten),
@@ -7996,7 +8020,9 @@ impl LinkPermissions {
         s.serialize_field("allow_download", &self.allow_download)?;
         s.serialize_field("can_allow_download", &self.can_allow_download)?;
         s.serialize_field("can_disallow_download", &self.can_disallow_download)?;
+        #[allow(deprecated)]
         s.serialize_field("allow_comments", &self.allow_comments)?;
+        #[allow(deprecated)]
         s.serialize_field("team_restricts_comments", &self.team_restricts_comments)?;
         if let Some(val) = &self.resolved_visibility {
             s.serialize_field("resolved_visibility", val)?;
@@ -11183,7 +11209,7 @@ impl MembershipInfo {
         MembershipInfo {
             access_type,
             permissions: None,
-            initials: None,
+            #[allow(deprecated)] initials: None,
             is_inherited: false,
         }
     }
@@ -11193,6 +11219,8 @@ impl MembershipInfo {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_initials(mut self, value: String) -> Self {
         self.initials = Some(value);
         self
@@ -11263,7 +11291,7 @@ impl MembershipInfo {
         let result = MembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             permissions: field_permissions.and_then(Option::flatten),
-            initials: field_initials.and_then(Option::flatten),
+            #[allow(deprecated)] initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
         };
         Ok(Some(result))
@@ -11278,6 +11306,7 @@ impl MembershipInfo {
         if let Some(val) = &self.permissions {
             s.serialize_field("permissions", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
@@ -17060,6 +17089,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderAccessError {
                     "invalid_id" => SharedFolderAccessError::InvalidId,
                     "not_a_member" => SharedFolderAccessError::NotAMember,
                     "invalid_member" => SharedFolderAccessError::InvalidMember,
+                    #[allow(deprecated)]
                     "email_unverified" => SharedFolderAccessError::EmailUnverified,
                     "unmounted" => SharedFolderAccessError::Unmounted,
                     _ => SharedFolderAccessError::Other,
@@ -17101,6 +17131,7 @@ impl ::serde::ser::Serialize for SharedFolderAccessError {
                 s.serialize_field(".tag", "invalid_member")?;
                 s.end()
             }
+            #[allow(deprecated)]
             SharedFolderAccessError::EmailUnverified => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedFolderAccessError", 1)?;
@@ -17127,7 +17158,7 @@ impl ::std::fmt::Display for SharedFolderAccessError {
             SharedFolderAccessError::InvalidId => f.write_str("This shared folder ID is invalid."),
             SharedFolderAccessError::NotAMember => f.write_str("The user is not a member of the shared folder thus cannot access it."),
             SharedFolderAccessError::InvalidMember => f.write_str("The user does not exist or their account is disabled."),
-            SharedFolderAccessError::EmailUnverified => f.write_str("Field is deprecated. Never set."),
+            #[allow(deprecated)] SharedFolderAccessError::EmailUnverified => f.write_str("Field is deprecated. Never set."),
             SharedFolderAccessError::Unmounted => f.write_str("The shared folder is unmounted."),
             _ => write!(f, "{:?}", *self),
         }
@@ -18502,6 +18533,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkPolicy {
                 };
                 let value = match tag {
                     "anyone" => SharedLinkPolicy::Anyone,
+                    #[allow(deprecated)]
                     "team" => SharedLinkPolicy::Team,
                     "members" => SharedLinkPolicy::Members,
                     _ => SharedLinkPolicy::Other,
@@ -18529,6 +18561,7 @@ impl ::serde::ser::Serialize for SharedLinkPolicy {
                 s.serialize_field(".tag", "anyone")?;
                 s.end()
             }
+            #[allow(deprecated)]
             SharedLinkPolicy::Team => {
                 // unit
                 let mut s = serializer.serialize_struct("SharedLinkPolicy", 1)?;
@@ -18596,6 +18629,8 @@ impl SharedLinkSettings {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_requested_visibility(mut self, value: RequestedVisibility) -> Self {
         self.requested_visibility = Some(value);
         self
@@ -18682,7 +18717,7 @@ impl SharedLinkSettings {
             expires: field_expires.and_then(Option::flatten),
             audience: field_audience.and_then(Option::flatten),
             access: field_access.and_then(Option::flatten),
-            requested_visibility: field_requested_visibility.and_then(Option::flatten),
+            #[allow(deprecated)] requested_visibility: field_requested_visibility.and_then(Option::flatten),
             allow_download: field_allow_download.and_then(Option::flatten),
         };
         Ok(result)
@@ -18708,6 +18743,7 @@ impl SharedLinkSettings {
         if let Some(val) = &self.access {
             s.serialize_field("access", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.requested_visibility {
             s.serialize_field("requested_visibility", val)?;
         }
@@ -20125,7 +20161,7 @@ impl UpdateFilePolicyArg {
         UpdateFilePolicyArg {
             file,
             actions: None,
-            link_settings: None,
+            #[allow(deprecated)] link_settings: None,
             viewer_info_policy: None,
         }
     }
@@ -20135,6 +20171,8 @@ impl UpdateFilePolicyArg {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_link_settings(mut self, value: LinkSettings) -> Self {
         self.link_settings = Some(value);
         self
@@ -20205,7 +20243,7 @@ impl UpdateFilePolicyArg {
         let result = UpdateFilePolicyArg {
             file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
             actions: field_actions.and_then(Option::flatten),
-            link_settings: field_link_settings.and_then(Option::flatten),
+            #[allow(deprecated)] link_settings: field_link_settings.and_then(Option::flatten),
             viewer_info_policy: field_viewer_info_policy.and_then(Option::flatten),
         };
         Ok(Some(result))
@@ -20220,6 +20258,7 @@ impl UpdateFilePolicyArg {
         if let Some(val) = &self.actions {
             s.serialize_field("actions", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.link_settings {
             s.serialize_field("link_settings", val)?;
         }
@@ -21002,7 +21041,7 @@ impl UserFileMembershipInfo {
             access_type,
             user,
             permissions: None,
-            initials: None,
+            #[allow(deprecated)] initials: None,
             is_inherited: false,
             time_last_seen: None,
             platform_type: None,
@@ -21014,6 +21053,8 @@ impl UserFileMembershipInfo {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_initials(mut self, value: String) -> Self {
         self.initials = Some(value);
         self
@@ -21119,7 +21160,7 @@ impl UserFileMembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
             permissions: field_permissions.and_then(Option::flatten),
-            initials: field_initials.and_then(Option::flatten),
+            #[allow(deprecated)] initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
             time_last_seen: field_time_last_seen.and_then(Option::flatten),
             platform_type: field_platform_type.and_then(Option::flatten),
@@ -21137,6 +21178,7 @@ impl UserFileMembershipInfo {
         if let Some(val) = &self.permissions {
             s.serialize_field("permissions", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
@@ -21188,7 +21230,7 @@ impl From<UserFileMembershipInfo> for UserMembershipInfo {
             access_type: subtype.access_type,
             user: subtype.user,
             permissions: subtype.permissions,
-            initials: subtype.initials,
+            #[allow(deprecated)] initials: subtype.initials,
             is_inherited: subtype.is_inherited,
         }
     }
@@ -21376,7 +21418,7 @@ impl UserMembershipInfo {
             access_type,
             user,
             permissions: None,
-            initials: None,
+            #[allow(deprecated)] initials: None,
             is_inherited: false,
         }
     }
@@ -21386,6 +21428,8 @@ impl UserMembershipInfo {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_initials(mut self, value: String) -> Self {
         self.initials = Some(value);
         self
@@ -21465,7 +21509,7 @@ impl UserMembershipInfo {
             access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
             permissions: field_permissions.and_then(Option::flatten),
-            initials: field_initials.and_then(Option::flatten),
+            #[allow(deprecated)] initials: field_initials.and_then(Option::flatten),
             is_inherited: field_is_inherited.unwrap_or(false),
         };
         Ok(Some(result))
@@ -21481,6 +21525,7 @@ impl UserMembershipInfo {
         if let Some(val) = &self.permissions {
             s.serialize_field("permissions", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.initials {
             s.serialize_field("initials", val)?;
         }
@@ -21525,7 +21570,7 @@ impl From<UserMembershipInfo> for MembershipInfo {
         Self {
             access_type: subtype.access_type,
             permissions: subtype.permissions,
-            initials: subtype.initials,
+            #[allow(deprecated)] initials: subtype.initials,
             is_inherited: subtype.is_inherited,
         }
     }
