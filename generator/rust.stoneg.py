@@ -483,28 +483,29 @@ class RustBackend(RustHelperBackend):
                     with self.block(f'let result = {type_name}', delim=('{', '};')):
                         for field in struct.all_fields:
                             field_name = self.field_name(field)
+                            attr = '#[allow(deprecated)] ' if field.deprecated else ''
                             if isinstance(field.data_type, ir.Nullable):
                                 # None -> field is not present
                                 # Some(None) -> field is present with null value
                                 # Some(Some(x)) -> field is present and non-null
                                 # First two are equivalent here, hence Option::flatten().
-                                self.emit(f'{field_name}: field_{field_name}.and_then(Option::flatten),')
+                                self.emit(f'{attr}{field_name}: field_{field_name}.and_then(Option::flatten),')
                             elif field.has_default:
                                 default_value = self._default_value(field)
                                 if isinstance(field.data_type, ir.String) \
                                         and not field.default:
-                                    self.emit(f'{field_name}: field_{field_name}.unwrap_or_default(),')
+                                    self.emit(f'{attr}{field_name}: field_{field_name}.unwrap_or_default(),')
                                 elif (ir.is_primitive_type(ir.unwrap_aliases(field.data_type)[0])
                                         # Also, as a rough but effective heuristic, consider values
                                         # that have no parentheses in them to be "trivial", and
                                         # don't enclose them in a closure. This avoids running
                                         # afoul of the clippy::unnecessary_lazy_evaluations lint.
                                         or not "(" in default_value):
-                                    self.emit(f'{field_name}: field_{field_name}.unwrap_or({default_value}),')
+                                    self.emit(f'{attr}{field_name}: field_{field_name}.unwrap_or({default_value}),')
                                 else:
-                                    self.emit(f'{field_name}: field_{field_name}.unwrap_or_else(|| {default_value}),')
+                                    self.emit(f'{attr}{field_name}: field_{field_name}.unwrap_or_else(|| {default_value}),')
                             else:
-                                self.emit(f'{field_name}: field_{field_name}.ok_or_else(|| '
+                                self.emit(f'{attr}{field_name}: field_{field_name}.ok_or_else(|| '
                                           f'::serde::de::Error::missing_field("{field.name}"))?,')
                     if optional:
                         self.emit('Ok(Some(result))')
@@ -519,6 +520,8 @@ class RustBackend(RustHelperBackend):
                         access='pub(crate)'):
                     self.emit('use serde::ser::SerializeStruct;')
                     for field in struct.all_fields:
+                        if field.deprecated:
+                            self.emit('#[allow(deprecated)]')
                         if ir.is_nullable_type(field.data_type):
                             # note: Stone requires a field can't be nullable and also have a
                             # non-null default
@@ -673,6 +676,8 @@ class RustBackend(RustHelperBackend):
                                     continue
                                 variant_name = self.enum_variant_name(field)
                                 ultimate_type = ir.unwrap(field.data_type)[0]
+                                if field.deprecated:
+                                    self.emit('#[allow(deprecated)]')
                                 if isinstance(field.data_type, ir.Void):
                                     self.emit(f'"{field.name}" => {type_name}::{variant_name},')
                                 elif isinstance(ultimate_type, ir.Struct) \
@@ -733,6 +738,8 @@ class RustBackend(RustHelperBackend):
                         if field.catch_all:
                             # Handle the 'Other' variant at the end.
                             continue
+                        if field.deprecated:
+                            self.emit('#[allow(deprecated)]')
                         variant_name = self.enum_variant_name(field)
                         if isinstance(field.data_type, ir.Void):
                             with self.block(f'{type_name}::{variant_name} =>'):
@@ -803,7 +810,8 @@ class RustBackend(RustHelperBackend):
                 with self.block('Self'):
                     for field in parent.all_fields:
                         field_name = self.field_name(field)
-                        self.emit(f'{field_name}: subtype.{field_name},')
+                        attr = '#[allow(deprecated)] ' if field.deprecated else ''
+                        self.emit(f'{attr}{field_name}: subtype.{field_name},')
 
     # "extends" for polymorphic structs means it's one of the supertype's variants, so we can
     # convert from the subtype to the supertype.
@@ -951,7 +959,8 @@ class RustBackend(RustHelperBackend):
                     for field in struct.all_fields:
                         name = self.field_name(field)
                         value = self._default_value(field)
-                        self.emit(f'{name}: {value},')
+                        attr = '#[allow(deprecated)] ' if field.deprecated else ''
+                        self.emit(f'{attr}{name}: {value},')
 
     @contextmanager
     def _impl_struct(self, struct: ir.Struct) -> Iterator[None]:
@@ -970,13 +979,15 @@ class RustBackend(RustHelperBackend):
                     'Self',
                     access='pub'):
                 with self.block(struct_name):
-                    for field in struct.all_required_fields:
-                        # shorthand assignment
-                        self.emit(f'{self.field_name(field)},')
-                    for field in struct.all_optional_fields:
+                    for field in struct.all_fields:
                         name = self.field_name(field)
-                        value = self._default_value(field)
-                        self.emit(f'{name}: {value},')
+                        attr = '#[allow(deprecated)] ' if field.deprecated else ''
+                        if field in struct.all_required_fields:
+                            # shorthand assignment
+                            self.emit(f'{attr}{name},')
+                        if field in struct.all_optional_fields:
+                            value = self._default_value(field)
+                            self.emit(f'{attr}{name}: {value},')
             first = False
 
         for field in struct.all_optional_fields:
@@ -996,6 +1007,9 @@ class RustBackend(RustHelperBackend):
                 field_type = field.data_type
                 value = 'value'
 
+            if field.deprecated:
+                self.emit('#[deprecated]')
+                self.emit('#[allow(deprecated)]')
             with self.emit_rust_function_def(
                     f'with_{field_name}',
                     ['mut self', f'value: {self._rust_type(field_type)}'],
@@ -1121,7 +1135,8 @@ class RustBackend(RustHelperBackend):
                 any_skipped = False
                 for variant in variants:
                     variant_name = self.enum_variant_name(variant)
-                    var_exp = f'{type_name}::{variant_name}'
+                    attr = '#[allow(deprecated)] ' if variant.deprecated else ''
+                    var_exp = f'{attr}{type_name}::{variant_name}'
                     msg = ''
                     args = ''
                     if variant.doc:

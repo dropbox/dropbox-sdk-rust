@@ -262,7 +262,7 @@ impl AlphaGetMetadataArg {
             include_deleted: false,
             include_has_explicit_shared_members: false,
             include_property_groups: None,
-            include_property_templates: None,
+            #[allow(deprecated)] include_property_templates: None,
         }
     }
 
@@ -289,6 +289,8 @@ impl AlphaGetMetadataArg {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_include_property_templates(
         mut self,
         value: Vec<crate::types::file_properties::TemplateId>,
@@ -376,7 +378,7 @@ impl AlphaGetMetadataArg {
             include_deleted: field_include_deleted.unwrap_or(false),
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
             include_property_groups: field_include_property_groups.and_then(Option::flatten),
-            include_property_templates: field_include_property_templates.and_then(Option::flatten),
+            #[allow(deprecated)] include_property_templates: field_include_property_templates.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -399,6 +401,7 @@ impl AlphaGetMetadataArg {
         if let Some(val) = &self.include_property_groups {
             s.serialize_field("include_property_groups", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.include_property_templates {
             s.serialize_field("include_property_templates", val)?;
         }
@@ -2271,6 +2274,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 let value = match tag {
+                    #[allow(deprecated)]
                     "too_many_write_operations" => DeleteBatchError::TooManyWriteOperations,
                     _ => DeleteBatchError::Other,
                 };
@@ -2289,6 +2293,7 @@ impl ::serde::ser::Serialize for DeleteBatchError {
         // union serializer
         use serde::ser::SerializeStruct;
         match self {
+            #[allow(deprecated)]
             DeleteBatchError::TooManyWriteOperations => {
                 // unit
                 let mut s = serializer.serialize_struct("DeleteBatchError", 1)?;
@@ -2984,7 +2989,7 @@ impl DeletedMetadata {
             name,
             path_lower: None,
             path_display: None,
-            parent_shared_folder_id: None,
+            #[allow(deprecated)] parent_shared_folder_id: None,
             preview_url: None,
         }
     }
@@ -2999,6 +3004,8 @@ impl DeletedMetadata {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_parent_shared_folder_id(
         mut self,
         value: crate::types::common::SharedFolderId,
@@ -3081,7 +3088,7 @@ impl DeletedMetadata {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             path_lower: field_path_lower.and_then(Option::flatten),
             path_display: field_path_display.and_then(Option::flatten),
-            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            #[allow(deprecated)] parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
             preview_url: field_preview_url.and_then(Option::flatten),
         };
         Ok(Some(result))
@@ -3099,6 +3106,7 @@ impl DeletedMetadata {
         if let Some(val) = &self.path_display {
             s.serialize_field("path_display", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.parent_shared_folder_id {
             s.serialize_field("parent_shared_folder_id", val)?;
         }
@@ -3262,10 +3270,12 @@ impl DownloadArg {
     pub fn new(path: ReadPath) -> Self {
         DownloadArg {
             path,
-            rev: None,
+            #[allow(deprecated)] rev: None,
         }
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_rev(mut self, value: Rev) -> Self {
         self.rev = Some(value);
         self
@@ -3314,7 +3324,7 @@ impl DownloadArg {
         }
         let result = DownloadArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            rev: field_rev.and_then(Option::flatten),
+            #[allow(deprecated)] rev: field_rev.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -3325,6 +3335,7 @@ impl DownloadArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
+        #[allow(deprecated)]
         if let Some(val) = &self.rev {
             s.serialize_field("rev", val)?;
         }
@@ -4839,7 +4850,7 @@ impl FileMetadata {
             size,
             path_lower: None,
             path_display: None,
-            parent_shared_folder_id: None,
+            #[allow(deprecated)] parent_shared_folder_id: None,
             preview_url: None,
             media_info: None,
             symlink_info: None,
@@ -4863,6 +4874,8 @@ impl FileMetadata {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_parent_shared_folder_id(
         mut self,
         value: crate::types::common::SharedFolderId,
@@ -5110,7 +5123,7 @@ impl FileMetadata {
             size: field_size.ok_or_else(|| ::serde::de::Error::missing_field("size"))?,
             path_lower: field_path_lower.and_then(Option::flatten),
             path_display: field_path_display.and_then(Option::flatten),
-            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            #[allow(deprecated)] parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
             preview_url: field_preview_url.and_then(Option::flatten),
             media_info: field_media_info.and_then(Option::flatten),
             symlink_info: field_symlink_info.and_then(Option::flatten),
@@ -5142,6 +5155,7 @@ impl FileMetadata {
         if let Some(val) = &self.path_display {
             s.serialize_field("path_display", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.parent_shared_folder_id {
             s.serialize_field("parent_shared_folder_id", val)?;
         }
@@ -5499,9 +5513,9 @@ impl FolderMetadata {
             id,
             path_lower: None,
             path_display: None,
-            parent_shared_folder_id: None,
+            #[allow(deprecated)] parent_shared_folder_id: None,
             preview_url: None,
-            shared_folder_id: None,
+            #[allow(deprecated)] shared_folder_id: None,
             sharing_info: None,
             property_groups: None,
         }
@@ -5517,6 +5531,8 @@ impl FolderMetadata {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_parent_shared_folder_id(
         mut self,
         value: crate::types::common::SharedFolderId,
@@ -5530,6 +5546,8 @@ impl FolderMetadata {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_shared_folder_id(mut self, value: crate::types::common::SharedFolderId) -> Self {
         self.shared_folder_id = Some(value);
         self
@@ -5650,9 +5668,9 @@ impl FolderMetadata {
             id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
             path_lower: field_path_lower.and_then(Option::flatten),
             path_display: field_path_display.and_then(Option::flatten),
-            parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
+            #[allow(deprecated)] parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
             preview_url: field_preview_url.and_then(Option::flatten),
-            shared_folder_id: field_shared_folder_id.and_then(Option::flatten),
+            #[allow(deprecated)] shared_folder_id: field_shared_folder_id.and_then(Option::flatten),
             sharing_info: field_sharing_info.and_then(Option::flatten),
             property_groups: field_property_groups.and_then(Option::flatten),
         };
@@ -5672,12 +5690,14 @@ impl FolderMetadata {
         if let Some(val) = &self.path_display {
             s.serialize_field("path_display", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.parent_shared_folder_id {
             s.serialize_field("parent_shared_folder_id", val)?;
         }
         if let Some(val) = &self.preview_url {
             s.serialize_field("preview_url", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.shared_folder_id {
             s.serialize_field("shared_folder_id", val)?;
         }
@@ -7900,7 +7920,7 @@ impl ListFolderArg {
         ListFolderArg {
             path,
             recursive: false,
-            include_media_info: false,
+            #[allow(deprecated)] include_media_info: false,
             include_deleted: false,
             include_has_explicit_shared_members: false,
             include_mounted_folders: true,
@@ -7916,6 +7936,8 @@ impl ListFolderArg {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_include_media_info(mut self, value: bool) -> Self {
         self.include_media_info = value;
         self
@@ -8067,7 +8089,7 @@ impl ListFolderArg {
         let result = ListFolderArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             recursive: field_recursive.unwrap_or(false),
-            include_media_info: field_include_media_info.unwrap_or(false),
+            #[allow(deprecated)] include_media_info: field_include_media_info.unwrap_or(false),
             include_deleted: field_include_deleted.unwrap_or(false),
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
             include_mounted_folders: field_include_mounted_folders.unwrap_or(true),
@@ -8088,6 +8110,7 @@ impl ListFolderArg {
         if self.recursive {
             s.serialize_field("recursive", &self.recursive)?;
         }
+        #[allow(deprecated)]
         if self.include_media_info {
             s.serialize_field("include_media_info", &self.include_media_info)?;
         }
@@ -9932,7 +9955,7 @@ impl LockFileResult {
     pub fn new(metadata: Metadata, lock: FileLock) -> Self {
         LockFileResult {
             metadata,
-            lock,
+            #[allow(deprecated)] lock,
         }
     }
 }
@@ -9979,7 +10002,7 @@ impl LockFileResult {
         }
         let result = LockFileResult {
             metadata: field_metadata.ok_or_else(|| ::serde::de::Error::missing_field("metadata"))?,
-            lock: field_lock.ok_or_else(|| ::serde::de::Error::missing_field("lock"))?,
+            #[allow(deprecated)] lock: field_lock.ok_or_else(|| ::serde::de::Error::missing_field("lock"))?,
         };
         Ok(Some(result))
     }
@@ -9990,6 +10013,7 @@ impl LockFileResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
+        #[allow(deprecated)]
         s.serialize_field("lock", &self.lock)?;
         Ok(())
     }
@@ -12203,10 +12227,12 @@ impl PreviewArg {
     pub fn new(path: ReadPath) -> Self {
         PreviewArg {
             path,
-            rev: None,
+            #[allow(deprecated)] rev: None,
         }
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_rev(mut self, value: Rev) -> Self {
         self.rev = Some(value);
         self
@@ -12255,7 +12281,7 @@ impl PreviewArg {
         }
         let result = PreviewArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            rev: field_rev.and_then(Option::flatten),
+            #[allow(deprecated)] rev: field_rev.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -12266,6 +12292,7 @@ impl PreviewArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
+        #[allow(deprecated)]
         if let Some(val) = &self.rev {
             s.serialize_field("rev", val)?;
         }
@@ -12532,12 +12559,14 @@ impl RelocationArg {
         RelocationArg {
             from_path,
             to_path,
-            allow_shared_folder: false,
+            #[allow(deprecated)] allow_shared_folder: false,
             autorename: false,
             allow_ownership_transfer: false,
         }
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
         self.allow_shared_folder = value;
         self
@@ -12621,7 +12650,7 @@ impl RelocationArg {
         let result = RelocationArg {
             from_path: field_from_path.ok_or_else(|| ::serde::de::Error::missing_field("from_path"))?,
             to_path: field_to_path.ok_or_else(|| ::serde::de::Error::missing_field("to_path"))?,
-            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
+            #[allow(deprecated)] allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
             autorename: field_autorename.unwrap_or(false),
             allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
         };
@@ -12635,6 +12664,7 @@ impl RelocationArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("from_path", &self.from_path)?;
         s.serialize_field("to_path", &self.to_path)?;
+        #[allow(deprecated)]
         if self.allow_shared_folder {
             s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
         }
@@ -12706,7 +12736,7 @@ impl RelocationBatchArg {
         RelocationBatchArg {
             entries,
             autorename: false,
-            allow_shared_folder: false,
+            #[allow(deprecated)] allow_shared_folder: false,
             allow_ownership_transfer: false,
         }
     }
@@ -12716,6 +12746,8 @@ impl RelocationBatchArg {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
         self.allow_shared_folder = value;
         self
@@ -12786,7 +12818,7 @@ impl RelocationBatchArg {
         let result = RelocationBatchArg {
             entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
             autorename: field_autorename.unwrap_or(false),
-            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
+            #[allow(deprecated)] allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
             allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
         };
         Ok(Some(result))
@@ -12801,6 +12833,7 @@ impl RelocationBatchArg {
         if self.autorename {
             s.serialize_field("autorename", &self.autorename)?;
         }
+        #[allow(deprecated)]
         if self.allow_shared_folder {
             s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
         }
@@ -16852,7 +16885,7 @@ impl SearchV2Arg {
             query,
             options: None,
             match_field_options: None,
-            include_highlights: None,
+            #[allow(deprecated)] include_highlights: None,
         }
     }
 
@@ -16866,6 +16899,8 @@ impl SearchV2Arg {
         self
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_include_highlights(mut self, value: bool) -> Self {
         self.include_highlights = Some(value);
         self
@@ -16932,7 +16967,7 @@ impl SearchV2Arg {
             query: field_query.ok_or_else(|| ::serde::de::Error::missing_field("query"))?,
             options: field_options.and_then(Option::flatten),
             match_field_options: field_match_field_options.and_then(Option::flatten),
-            include_highlights: field_include_highlights.and_then(Option::flatten),
+            #[allow(deprecated)] include_highlights: field_include_highlights.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -16949,6 +16984,7 @@ impl SearchV2Arg {
         if let Some(val) = &self.match_field_options {
             s.serialize_field("match_field_options", val)?;
         }
+        #[allow(deprecated)]
         if let Some(val) = &self.include_highlights {
             s.serialize_field("include_highlights", val)?;
         }
@@ -21235,6 +21271,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    #[allow(deprecated)]
                     "too_many_shared_folder_targets" => UploadSessionFinishError::TooManySharedFolderTargets,
                     "too_many_write_operations" => UploadSessionFinishError::TooManyWriteOperations,
                     "concurrent_session_data_not_allowed" => UploadSessionFinishError::ConcurrentSessionDataNotAllowed,
@@ -21291,6 +21328,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishError {
                 s.serialize_field("properties_error", x)?;
                 s.end()
             }
+            #[allow(deprecated)]
             UploadSessionFinishError::TooManySharedFolderTargets => {
                 // unit
                 let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
@@ -21361,7 +21399,7 @@ impl ::std::fmt::Display for UploadSessionFinishError {
             UploadSessionFinishError::LookupFailed(inner) => write!(f, "The session arguments are incorrect; the value explains the reason: {}", inner),
             UploadSessionFinishError::Path(inner) => write!(f, "Unable to save the uploaded contents to a file. Data has already been appended to the upload session. Please retry with empty data body and updated offset: {}", inner),
             UploadSessionFinishError::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
-            UploadSessionFinishError::TooManySharedFolderTargets => f.write_str("Field is deprecated. The batch request commits files into too many different shared folders. Please limit your batch request to files contained in a single shared folder."),
+            #[allow(deprecated)] UploadSessionFinishError::TooManySharedFolderTargets => f.write_str("Field is deprecated. The batch request commits files into too many different shared folders. Please limit your batch request to files contained in a single shared folder."),
             UploadSessionFinishError::TooManyWriteOperations => f.write_str("There are too many write operations happening in the user's Dropbox. You should retry uploading this file."),
             UploadSessionFinishError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when finishing concurrent upload session."),
             UploadSessionFinishError::ConcurrentSessionNotClosed => f.write_str("Concurrent upload sessions need to be closed before finishing."),

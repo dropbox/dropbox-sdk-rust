@@ -341,6 +341,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddSecondaryEmailResult {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    #[allow(deprecated)]
                     "transient_error" => {
                         match map.next_key()? {
                             Some("transient_error") => AddSecondaryEmailResult::TransientError(map.next_value()?),
@@ -429,6 +430,7 @@ impl ::serde::ser::Serialize for AddSecondaryEmailResult {
                 s.serialize_field("reached_limit", x)?;
                 s.end()
             }
+            #[allow(deprecated)]
             AddSecondaryEmailResult::TransientError(x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("AddSecondaryEmailResult", 2)?;
@@ -6046,7 +6048,7 @@ impl GroupMembersChangeResult {
     ) -> Self {
         GroupMembersChangeResult {
             group_info,
-            async_job_id,
+            #[allow(deprecated)] async_job_id,
         }
     }
 }
@@ -6093,7 +6095,7 @@ impl GroupMembersChangeResult {
         }
         let result = GroupMembersChangeResult {
             group_info: field_group_info.ok_or_else(|| ::serde::de::Error::missing_field("group_info"))?,
-            async_job_id: field_async_job_id.ok_or_else(|| ::serde::de::Error::missing_field("async_job_id"))?,
+            #[allow(deprecated)] async_job_id: field_async_job_id.ok_or_else(|| ::serde::de::Error::missing_field("async_job_id"))?,
         };
         Ok(Some(result))
     }
@@ -6104,6 +6106,7 @@ impl GroupMembersChangeResult {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group_info", &self.group_info)?;
+        #[allow(deprecated)]
         s.serialize_field("async_job_id", &self.async_job_id)?;
         Ok(())
     }
@@ -23036,10 +23039,12 @@ impl RevokeLinkedApiAppArg {
         RevokeLinkedApiAppArg {
             app_id,
             team_member_id,
-            keep_app_folder: true,
+            #[allow(deprecated)] keep_app_folder: true,
         }
     }
 
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_keep_app_folder(mut self, value: bool) -> Self {
         self.keep_app_folder = value;
         self
@@ -23097,7 +23102,7 @@ impl RevokeLinkedApiAppArg {
         let result = RevokeLinkedApiAppArg {
             app_id: field_app_id.ok_or_else(|| ::serde::de::Error::missing_field("app_id"))?,
             team_member_id: field_team_member_id.ok_or_else(|| ::serde::de::Error::missing_field("team_member_id"))?,
-            keep_app_folder: field_keep_app_folder.unwrap_or(true),
+            #[allow(deprecated)] keep_app_folder: field_keep_app_folder.unwrap_or(true),
         };
         Ok(Some(result))
     }
@@ -23109,6 +23114,7 @@ impl RevokeLinkedApiAppArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_id", &self.app_id)?;
         s.serialize_field("team_member_id", &self.team_member_id)?;
+        #[allow(deprecated)]
         if !self.keep_app_folder {
             s.serialize_field("keep_app_folder", &self.keep_app_folder)?;
         }
@@ -28785,6 +28791,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMembershipType {
                 };
                 let value = match tag {
                     "full" => TeamMembershipType::Full,
+                    #[allow(deprecated)]
                     "limited" => TeamMembershipType::Limited,
                     _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
                 };
@@ -28809,6 +28816,7 @@ impl ::serde::ser::Serialize for TeamMembershipType {
                 s.serialize_field(".tag", "full")?;
                 s.end()
             }
+            #[allow(deprecated)]
             TeamMembershipType::Limited => {
                 // unit
                 let mut s = serializer.serialize_struct("TeamMembershipType", 1)?;
@@ -28830,12 +28838,14 @@ pub struct TeamNamespacesListArg {
 impl Default for TeamNamespacesListArg {
     fn default() -> Self {
         TeamNamespacesListArg {
-            limit: 1000,
+            #[allow(deprecated)] limit: 1000,
         }
     }
 }
 
 impl TeamNamespacesListArg {
+    #[deprecated]
+    #[allow(deprecated)]
     pub fn with_limit(mut self, value: u32) -> Self {
         self.limit = value;
         self
@@ -28864,7 +28874,7 @@ impl TeamNamespacesListArg {
             }
         }
         let result = TeamNamespacesListArg {
-            limit: field_limit.unwrap_or(1000),
+            #[allow(deprecated)] limit: field_limit.unwrap_or(1000),
         };
         Ok(result)
     }
@@ -28874,6 +28884,7 @@ impl TeamNamespacesListArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
+        #[allow(deprecated)]
         if self.limit != 1000 {
             s.serialize_field("limit", &self.limit)?;
         }
