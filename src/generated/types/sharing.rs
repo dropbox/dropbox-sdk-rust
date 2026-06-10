@@ -802,6 +802,7 @@ pub enum AddFolderMemberError {
     /// The current user does not have permission to perform this action.
     NoPermission,
     /// Field is deprecated. Invalid shared folder error will be returned as an access_error.
+    #[deprecated]
     InvalidSharedFolder,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -1933,6 +1934,7 @@ pub struct CreateSharedLinkArg {
     /// The path to share.
     pub path: String,
     /// Field is deprecated. None
+    #[deprecated]
     pub short_url: bool,
     /// If it's okay to share a path that does not yet exist, set this to either
     /// [`PendingUploadMode::File`] or [`PendingUploadMode::Folder`] to indicate whether to assume
@@ -2651,8 +2653,10 @@ pub enum FileAction {
     /// Relinquish one's own membership to the file.
     RelinquishMembership,
     /// Field is deprecated. Use create_view_link and create_edit_link instead.
+    #[deprecated]
     ShareLink,
     /// Field is deprecated. Use create_view_link and create_edit_link instead.
+    #[deprecated]
     CreateLink,
     /// Create a shared link to a file that only allows users to view the content.
     CreateViewLink,
@@ -3748,8 +3752,10 @@ pub enum FolderAction {
     /// Keep a copy of the contents upon leaving or being kicked from the folder.
     LeaveACopy,
     /// Field is deprecated. Use create_view_link and create_edit_link instead.
+    #[deprecated]
     ShareLink,
     /// Field is deprecated. Use create_view_link and create_edit_link instead.
+    #[deprecated]
     CreateLink,
     /// Create a shared link that only allows users to view the content.
     CreateViewLink,
@@ -5581,6 +5587,7 @@ pub struct GroupInfo {
     /// Who is allowed to manage the group.
     pub group_management_type: crate::types::team_common::GroupManagementType,
     /// Field is deprecated. The type of group.
+    #[deprecated]
     pub group_type: crate::types::team_common::GroupType,
     /// If the current user is a member of the group.
     pub is_member: bool,
@@ -5816,6 +5823,7 @@ pub struct GroupMembershipInfo {
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
     /// Field is deprecated. Never set.
+    #[deprecated]
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,
@@ -6286,6 +6294,7 @@ pub struct InviteeMembershipInfo {
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
     /// Field is deprecated. Never set.
+    #[deprecated]
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,
@@ -6862,8 +6871,10 @@ pub enum LinkAudience {
     NoOne,
     /// Field is deprecated. Use `require_password` instead. A link-specific password is required to
     /// access the link. Login is not required.
+    #[deprecated]
     Password,
     /// Field is deprecated. Link is accessible only by members of the content.
+    #[deprecated]
     Members,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -7546,8 +7557,10 @@ pub struct LinkPermissions {
     pub can_disallow_download: bool,
     /// Field is deprecated. Whether comments are enabled for the linked file. This takes the team
     /// commenting policy into account.
+    #[deprecated]
     pub allow_comments: bool,
     /// Field is deprecated. Whether the team has disabled commenting globally.
+    #[deprecated]
     pub team_restricts_comments: bool,
     /// The current visibility of the link after considering the shared links policies of the the
     /// team (in case the link's owner is part of a team) and the shared folder (in case the linked
@@ -11159,6 +11172,7 @@ pub struct MembershipInfo {
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
     /// Field is deprecated. Never set.
+    #[deprecated]
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,
@@ -17018,6 +17032,7 @@ pub enum SharedFolderAccessError {
     /// The user does not exist or their account is disabled.
     InvalidMember,
     /// Field is deprecated. Never set.
+    #[deprecated]
     EmailUnverified,
     /// The shared folder is unmounted.
     Unmounted,
@@ -18461,6 +18476,7 @@ pub enum SharedLinkPolicy {
     /// Links can be shared with anyone.
     Anyone,
     /// Field is deprecated. Links can be shared with anyone on the same team as the owner.
+    #[deprecated]
     Team,
     /// Links can only be shared among members of the shared folder.
     Members,
@@ -18548,6 +18564,7 @@ pub struct SharedLinkSettings {
     /// level for an existing link is not supported.
     pub access: Option<RequestedLinkAccessLevel>,
     /// Field is deprecated. Use `audience` instead.  The requested access for this shared link.
+    #[deprecated]
     pub requested_visibility: Option<RequestedVisibility>,
     /// Boolean flag to allow or not download capabilities for shared links.
     pub allow_download: Option<bool>,
@@ -20097,6 +20114,7 @@ pub struct UpdateFilePolicyArg {
     /// actions the authenticated user can perform on the file.
     pub actions: Option<Vec<FileAction>>,
     /// Field is deprecated. Settings on the link for the file.
+    #[deprecated]
     pub link_settings: Option<LinkSettings>,
     /// The presence and seen state policy on the file.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
@@ -20967,6 +20985,7 @@ pub struct UserFileMembershipInfo {
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
     /// Field is deprecated. Never set.
+    #[deprecated]
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,
@@ -21345,6 +21364,7 @@ pub struct UserMembershipInfo {
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
     /// Field is deprecated. Never set.
+    #[deprecated]
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,

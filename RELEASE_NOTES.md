@@ -1,6 +1,7 @@
 # unreleased changes
 * API spec update 2026-06-05
     * technically a breaking change, as dropbox_sdk::types::sharing::RelinquishAccessError::GroupAccess was removed, but this is very minor
+* Annotate struct fields and enum variants as deprecated or preview, where appropriate.
 
 # v0.20.0
 2026-05-12

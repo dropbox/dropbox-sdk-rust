@@ -159,6 +159,10 @@ class RustBackend(RustHelperBackend):
                 name = self.field_name(field)
                 typ = self._rust_type(field.data_type)
                 self._emit_doc(field.doc)
+                if field.deprecated:
+                    self.emit(f'#[deprecated]')
+                if field.preview:
+                    self._emit_preview_attr(field)
                 self.emit(f'pub {name}: {typ},')
         self.emit()
 
@@ -197,6 +201,10 @@ class RustBackend(RustHelperBackend):
             for subtype in struct.get_enumerated_subtypes():
                 name = self.enum_variant_name(subtype)
                 typ = self._rust_type(subtype.data_type)
+                if subtype.deprecated:
+                    self.emit(f'#[deprecated]')
+                if subtype.preview:
+                    self._emit_preview_attr(subtype)
                 self.emit(f'{name}({typ}),')
             if struct.is_catch_all():
                 self._emit_other_variant()
@@ -219,6 +227,10 @@ class RustBackend(RustHelperBackend):
                     # Handle the 'Other' variant at the end.
                     continue
                 self._emit_doc(field.doc)
+                if field.deprecated:
+                    self.emit(f'#[deprecated]')
+                if field.preview:
+                    self._emit_preview_attr(field)
                 variant_name = self.enum_variant_name(field)
                 if isinstance(field.data_type, ir.Void):
                     self.emit(f'{variant_name},')
@@ -294,12 +306,7 @@ class RustBackend(RustHelperBackend):
         self._emit_doc(fn.doc)
 
         if fn.attrs.get('is_preview'):
-            if fn.doc:
-                self.emit('///')
-            self.emit('/// # Stability')
-            self.emit('/// *PREVIEW*: This function may change or disappear without notice.')
-            self.emit('#[cfg(feature = "unstable")]')
-            self.emit('#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]')
+            self._emit_preview_attr(fn)
 
         if fn.deprecated:
             if fn.deprecated.by:
@@ -388,6 +395,14 @@ class RustBackend(RustHelperBackend):
                 ' out of date.',
                 prefix='/// ', width=100)
         self.emit('Other,')
+
+    def _emit_preview_attr(self, thing: ir.Field | ir.ApiRoute) -> None:
+        if thing.doc:
+            self.emit('///')
+        self.emit('/// # Stability')
+        self.emit('/// *PREVIEW*: This function may change or disappear without notice.')
+        self.emit('#[cfg(feature = "unstable")]')
+        self.emit('#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]')
 
     # Serialization
 
