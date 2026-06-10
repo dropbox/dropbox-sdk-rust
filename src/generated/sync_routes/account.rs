@@ -12,6 +12,22 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::account::*;
 
+/// Deletes the current user's profile photo.
+pub fn delete_profile_photo(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &DeleteProfilePhotoArg,
+) -> Result<DeleteProfilePhotoResult, crate::Error<DeleteProfilePhotoError>> {
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "account/delete_profile_photo",
+            arg,
+            None)
+    )
+}
+
 /// This lovely endpoint gets the account photo of a given user.
 pub fn get_photo(
     client: &impl crate::client_trait::UserAuthClient,

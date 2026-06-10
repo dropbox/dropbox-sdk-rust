@@ -773,6 +773,22 @@ pub fn update_file_member(
     )
 }
 
+/// Update the viewer info policy of a file.
+pub fn update_file_policy(
+    client: &impl crate::client_trait::UserAuthClient,
+    arg: &UpdateFilePolicyArg,
+) -> Result<SharedFileMetadata, crate::Error<UpdateFilePolicyError>> {
+    crate::client_helpers::unwrap_async(
+        crate::client_helpers::request(
+            client,
+            crate::client_trait_common::Endpoint::Api,
+            crate::client_trait_common::Style::Rpc,
+            "sharing/update_file_policy",
+            arg,
+            None)
+    )
+}
+
 /// Allows an owner or editor of a shared folder to update another member's permissions.
 pub fn update_folder_member(
     client: &impl crate::client_trait::UserAuthClient,

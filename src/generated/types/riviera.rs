@@ -559,6 +559,403 @@ impl ::serde::ser::Serialize for FileIdOrUrl {
     }
 }
 
+/// Arguments for the asynchronous `get_markdown_async` route. Exactly one of `file_id`, `path`, or
+/// `url` must be supplied via `file_id_or_url` to identify the document to convert to markdown.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetMarkdownArgs {
+    /// Identifier of the document to convert. Callers must set exactly one of the oneof variants: -
+    /// file_id: a Dropbox-issued file id (format: "id:<id>") for a file the authenticated user has
+    /// access to. - path: an absolute Dropbox path, e.g. "/folder/report.docx". - url: either a
+    /// Dropbox shared link (www.dropbox.com) or an external HTTPS URL pointing to a supported
+    /// document file. - Dropbox shared links are resolved internally using the caller's
+    /// authenticated identity and the link's visibility / download settings. They therefore require
+    /// an authenticated user context (anonymous `url` requests against Dropbox links are rejected
+    /// with an `ACCESS_ERROR`). Links protected by a password are rejected with
+    /// `shared_link_password_protected`; links with downloads disabled are rejected with
+    /// `link_download_disabled_error`. - External URLs are fetched over HTTPS through the backend's
+    /// egress proxy and must point at a supported document file extension. The referenced file must
+    /// be a document in a supported format; requests against unsupported formats return
+    /// `unsupported_format_error`.
+    pub file_id_or_url: Option<FileIdOrUrl>,
+    /// Enable OCR for PDF documents. Processing is slower when enabled.
+    pub enable_ocr: bool,
+    /// When true, embed images as base64 data URIs in the markdown output. This can significantly
+    /// increase output size.
+    pub embed_images: bool,
+}
+
+impl GetMarkdownArgs {
+    pub fn with_file_id_or_url(mut self, value: FileIdOrUrl) -> Self {
+        self.file_id_or_url = Some(value);
+        self
+    }
+
+    pub fn with_enable_ocr(mut self, value: bool) -> Self {
+        self.enable_ocr = value;
+        self
+    }
+
+    pub fn with_embed_images(mut self, value: bool) -> Self {
+        self.embed_images = value;
+        self
+    }
+}
+
+const GET_MARKDOWN_ARGS_FIELDS: &[&str] = &["file_id_or_url",
+                                            "enable_ocr",
+                                            "embed_images"];
+impl GetMarkdownArgs {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMarkdownArgs, V::Error> {
+        let mut field_file_id_or_url = None;
+        let mut field_enable_ocr = None;
+        let mut field_embed_images = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "file_id_or_url" => {
+                    if field_file_id_or_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_id_or_url"));
+                    }
+                    field_file_id_or_url = Some(map.next_value()?);
+                }
+                "enable_ocr" => {
+                    if field_enable_ocr.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("enable_ocr"));
+                    }
+                    field_enable_ocr = Some(map.next_value()?);
+                }
+                "embed_images" => {
+                    if field_embed_images.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("embed_images"));
+                    }
+                    field_embed_images = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetMarkdownArgs {
+            file_id_or_url: field_file_id_or_url.and_then(Option::flatten),
+            enable_ocr: field_enable_ocr.unwrap_or(false),
+            embed_images: field_embed_images.unwrap_or(false),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.file_id_or_url {
+            s.serialize_field("file_id_or_url", val)?;
+        }
+        if self.enable_ocr {
+            s.serialize_field("enable_ocr", &self.enable_ocr)?;
+        }
+        if self.embed_images {
+            s.serialize_field("embed_images", &self.embed_images)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMarkdownArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetMarkdownArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetMarkdownArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetMarkdownArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetMarkdownArgs", GET_MARKDOWN_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMarkdownArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetMarkdownArgs", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Result type for EventBus async check
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum GetMarkdownAsyncCheckResult {
+    InProgress,
+    Complete(GetMarkdownResult),
+    Failed(GetMarkdownAsyncError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMarkdownAsyncCheckResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetMarkdownAsyncCheckResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetMarkdownAsyncCheckResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "in_progress" => GetMarkdownAsyncCheckResult::InProgress,
+                    "complete" => GetMarkdownAsyncCheckResult::Complete(GetMarkdownResult::internal_deserialize(&mut map)?),
+                    "failed" => GetMarkdownAsyncCheckResult::Failed(GetMarkdownAsyncError::internal_deserialize(&mut map)?),
+                    _ => GetMarkdownAsyncCheckResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("GetMarkdownAsyncCheckResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMarkdownAsyncCheckResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            GetMarkdownAsyncCheckResult::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("GetMarkdownAsyncCheckResult", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            GetMarkdownAsyncCheckResult::Complete(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetMarkdownAsyncCheckResult", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetMarkdownAsyncCheckResult::Failed(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetMarkdownAsyncCheckResult", 3)?;
+                s.serialize_field(".tag", "failed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetMarkdownAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetMarkdownAsyncError {
+    pub error_code: ErrorCode,
+    pub error_details: Option<MarkdownConversionApiV2Error>,
+}
+
+impl Default for GetMarkdownAsyncError {
+    fn default() -> Self {
+        GetMarkdownAsyncError {
+            error_code: ErrorCode::UnknownError,
+            error_details: None,
+        }
+    }
+}
+
+impl GetMarkdownAsyncError {
+    pub fn with_error_code(mut self, value: ErrorCode) -> Self {
+        self.error_code = value;
+        self
+    }
+
+    pub fn with_error_details(mut self, value: MarkdownConversionApiV2Error) -> Self {
+        self.error_details = Some(value);
+        self
+    }
+}
+
+const GET_MARKDOWN_ASYNC_ERROR_FIELDS: &[&str] = &["error_code",
+                                                   "error_details"];
+impl GetMarkdownAsyncError {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMarkdownAsyncError, V::Error> {
+        let mut field_error_code = None;
+        let mut field_error_details = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "error_code" => {
+                    if field_error_code.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("error_code"));
+                    }
+                    field_error_code = Some(map.next_value()?);
+                }
+                "error_details" => {
+                    if field_error_details.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("error_details"));
+                    }
+                    field_error_details = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetMarkdownAsyncError {
+            error_code: field_error_code.unwrap_or(ErrorCode::UnknownError),
+            error_details: field_error_details.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.error_code != ErrorCode::UnknownError {
+            s.serialize_field("error_code", &self.error_code)?;
+        }
+        if let Some(val) = &self.error_details {
+            s.serialize_field("error_details", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMarkdownAsyncError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetMarkdownAsyncError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetMarkdownAsyncError struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetMarkdownAsyncError::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetMarkdownAsyncError", GET_MARKDOWN_ASYNC_ERROR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMarkdownAsyncError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetMarkdownAsyncError", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetMarkdownResult {
+    /// The converted markdown content
+    pub markdown: String,
+}
+
+impl GetMarkdownResult {
+    pub fn with_markdown(mut self, value: String) -> Self {
+        self.markdown = value;
+        self
+    }
+}
+
+const GET_MARKDOWN_RESULT_FIELDS: &[&str] = &["markdown"];
+impl GetMarkdownResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMarkdownResult, V::Error> {
+        let mut field_markdown = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "markdown" => {
+                    if field_markdown.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("markdown"));
+                    }
+                    field_markdown = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetMarkdownResult {
+            markdown: field_markdown.unwrap_or_default(),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if !self.markdown.is_empty() {
+            s.serialize_field("markdown", &self.markdown)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMarkdownResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetMarkdownResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetMarkdownResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetMarkdownResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetMarkdownResult", GET_MARKDOWN_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMarkdownResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetMarkdownResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Arguments for the asynchronous `get_transcript_async` route. Exactly one of `file_id`, `path`,
 /// or `url` must be supplied via `file_id_or_url` to identify the audio or video asset to
 /// transcribe.
@@ -992,6 +1389,141 @@ impl ::serde::ser::Serialize for GetTranscriptResult {
         let mut s = serializer.serialize_struct("GetTranscriptResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MarkdownConversionApiV2Error {
+    ServerError(String),
+    UserError(String),
+    UnsupportedFormatError,
+    LinkDownloadDisabledError,
+    SharedLinkPasswordProtected,
+    LimitExceededError,
+    ConversionFailureError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MarkdownConversionApiV2Error {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MarkdownConversionApiV2Error;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MarkdownConversionApiV2Error structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "server_error" => {
+                        match map.next_key()? {
+                            Some("server_error") => MarkdownConversionApiV2Error::ServerError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("server_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_error" => {
+                        match map.next_key()? {
+                            Some("user_error") => MarkdownConversionApiV2Error::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unsupported_format_error" => MarkdownConversionApiV2Error::UnsupportedFormatError,
+                    "link_download_disabled_error" => MarkdownConversionApiV2Error::LinkDownloadDisabledError,
+                    "shared_link_password_protected" => MarkdownConversionApiV2Error::SharedLinkPasswordProtected,
+                    "limit_exceeded_error" => MarkdownConversionApiV2Error::LimitExceededError,
+                    "conversion_failure_error" => MarkdownConversionApiV2Error::ConversionFailureError,
+                    _ => MarkdownConversionApiV2Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["server_error",
+                                    "user_error",
+                                    "unsupported_format_error",
+                                    "link_download_disabled_error",
+                                    "shared_link_password_protected",
+                                    "limit_exceeded_error",
+                                    "conversion_failure_error",
+                                    "other"];
+        deserializer.deserialize_struct("MarkdownConversionApiV2Error", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MarkdownConversionApiV2Error {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            MarkdownConversionApiV2Error::ServerError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 2)?;
+                s.serialize_field(".tag", "server_error")?;
+                s.serialize_field("server_error", x)?;
+                s.end()
+            }
+            MarkdownConversionApiV2Error::UserError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 2)?;
+                s.serialize_field(".tag", "user_error")?;
+                s.serialize_field("user_error", x)?;
+                s.end()
+            }
+            MarkdownConversionApiV2Error::UnsupportedFormatError => {
+                // unit
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_format_error")?;
+                s.end()
+            }
+            MarkdownConversionApiV2Error::LinkDownloadDisabledError => {
+                // unit
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 1)?;
+                s.serialize_field(".tag", "link_download_disabled_error")?;
+                s.end()
+            }
+            MarkdownConversionApiV2Error::SharedLinkPasswordProtected => {
+                // unit
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 1)?;
+                s.serialize_field(".tag", "shared_link_password_protected")?;
+                s.end()
+            }
+            MarkdownConversionApiV2Error::LimitExceededError => {
+                // unit
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 1)?;
+                s.serialize_field(".tag", "limit_exceeded_error")?;
+                s.end()
+            }
+            MarkdownConversionApiV2Error::ConversionFailureError => {
+                // unit
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 1)?;
+                s.serialize_field(".tag", "conversion_failure_error")?;
+                s.end()
+            }
+            MarkdownConversionApiV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MarkdownConversionApiV2Error {
+}
+
+impl ::std::fmt::Display for MarkdownConversionApiV2Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            MarkdownConversionApiV2Error::ServerError(inner) => write!(f, "server_error: {:?}", inner),
+            MarkdownConversionApiV2Error::UserError(inner) => write!(f, "user_error: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
