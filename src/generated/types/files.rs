@@ -250,6 +250,7 @@ pub struct AlphaGetMetadataArg {
     pub include_property_groups: Option<crate::types::file_properties::TemplateFilterBase>,
     /// Field is deprecated. If set to a valid list of template IDs,
     /// [`FileMetadata::property_groups`](FileMetadata) is set for files with custom properties.
+    #[deprecated]
     pub include_property_templates: Option<Vec<crate::types::file_properties::TemplateId>>,
 }
 
@@ -2247,6 +2248,7 @@ pub enum DeleteBatchError {
     /// Field is deprecated. Use [`DeleteError::TooManyWriteOperations`].
     /// [`delete_batch()`](crate::files::delete_batch) now provides smaller granularity about which
     /// entry has failed because of this.
+    #[deprecated]
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2970,6 +2972,7 @@ pub struct DeletedMetadata {
     /// Field is deprecated. Please use
     /// [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
+    #[deprecated]
     pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
     pub preview_url: Option<String>,
@@ -3251,6 +3254,7 @@ pub struct DownloadArg {
     /// The path of the file to download.
     pub path: ReadPath,
     /// Field is deprecated. Please specify revision in `path` instead.
+    #[deprecated]
     pub rev: Option<Rev>,
 }
 
@@ -4781,6 +4785,7 @@ pub struct FileMetadata {
     /// Field is deprecated. Please use
     /// [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
+    #[deprecated]
     pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
     pub preview_url: Option<String>,
@@ -5472,10 +5477,12 @@ pub struct FolderMetadata {
     /// Field is deprecated. Please use
     /// [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
+    #[deprecated]
     pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
     pub preview_url: Option<String>,
     /// Field is deprecated. Please use `sharing_info` instead.
+    #[deprecated]
     pub shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// Set if the folder is contained in a shared folder or is a shared folder mount point.
     pub sharing_info: Option<FolderSharingInfo>,
@@ -7863,6 +7870,7 @@ pub struct ListFolderArg {
     pub recursive: bool,
     /// Field is deprecated. If true, [`FileMetadata::media_info`](FileMetadata) is set for photo
     /// and video. This parameter will no longer have an effect starting December 2, 2019.
+    #[deprecated]
     pub include_media_info: bool,
     /// If true, the results will include entries for files and folders that used to exist but were
     /// deleted.
@@ -9916,6 +9924,7 @@ pub struct LockFileResult {
     /// Metadata of the file.
     pub metadata: Metadata,
     /// Field is deprecated. The file lock state after the operation.
+    #[deprecated]
     pub lock: FileLock,
 }
 
@@ -12186,6 +12195,7 @@ pub struct PreviewArg {
     /// The path of the file to preview.
     pub path: ReadPath,
     /// Field is deprecated. Please specify revision in `path` instead.
+    #[deprecated]
     pub rev: Option<Rev>,
 }
 
@@ -12507,6 +12517,7 @@ pub struct RelocationArg {
     /// Path in the user's Dropbox that is the destination.
     pub to_path: WritePathOrId,
     /// Field is deprecated. This flag has no effect.
+    #[deprecated]
     pub allow_shared_folder: bool,
     /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
@@ -12683,6 +12694,7 @@ pub struct RelocationBatchArg {
     /// avoid the conflict.
     pub autorename: bool,
     /// Field is deprecated. This flag has no effect.
+    #[deprecated]
     pub allow_shared_folder: bool,
     /// Allow moves by owner even if it would result in an ownership transfer for the content being
     /// moved. This does not apply to copies.
@@ -16830,6 +16842,7 @@ pub struct SearchV2Arg {
     /// Options for search results match fields.
     pub match_field_options: Option<SearchMatchFieldOptions>,
     /// Field is deprecated. Deprecated and moved this option to SearchMatchFieldOptions.
+    #[deprecated]
     pub include_highlights: Option<bool>,
 }
 
@@ -21162,6 +21175,7 @@ pub enum UploadSessionFinishError {
     PropertiesError(crate::types::file_properties::InvalidPropertyGroupError),
     /// Field is deprecated. The batch request commits files into too many different shared folders.
     /// Please limit your batch request to files contained in a single shared folder.
+    #[deprecated]
     TooManySharedFolderTargets,
     /// There are too many write operations happening in the user's Dropbox. You should retry
     /// uploading this file.

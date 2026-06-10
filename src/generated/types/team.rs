@@ -283,6 +283,7 @@ pub enum AddSecondaryEmailResult {
     /// User already has the maximum number of secondary emails allowed.
     ReachedLimit(crate::types::common::EmailAddress),
     /// Field is deprecated. A transient error occurred. Please try again later.
+    #[deprecated]
     TransientError(crate::types::common::EmailAddress),
     /// An error occurred due to conflicting updates. Please try again later.
     TooManyUpdates(crate::types::common::EmailAddress),
@@ -6034,6 +6035,7 @@ pub struct GroupMembersChangeResult {
     /// Field is deprecated. For legacy purposes async_job_id will always return one space ' '.
     /// Formerly, it was an ID that was used to obtain the status of granting/revoking group-owned
     /// resources. It's no longer necessary because the async processing now happens automatically.
+    #[deprecated]
     pub async_job_id: crate::types::dbx_async::AsyncJobId,
 }
 
@@ -23025,6 +23027,7 @@ pub struct RevokeLinkedApiAppArg {
     pub team_member_id: String,
     /// Field is deprecated. This flag is not longer supported, the application dedicated folder (in
     /// case the application uses one) will be kept.
+    #[deprecated]
     pub keep_app_folder: bool,
 }
 
@@ -28761,6 +28764,7 @@ pub enum TeamMembershipType {
     Full,
     /// Field is deprecated. User does not have access to the shared quota and team admins have
     /// restricted administrative control.
+    #[deprecated]
     Limited,
 }
 
@@ -28819,6 +28823,7 @@ impl ::serde::ser::Serialize for TeamMembershipType {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamNamespacesListArg {
     /// Field is deprecated. Specifying a value here has no effect.
+    #[deprecated]
     pub limit: u32,
 }
 
