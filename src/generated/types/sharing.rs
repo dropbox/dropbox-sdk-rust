@@ -801,7 +801,7 @@ pub enum AddFolderMemberError {
     TeamFolder,
     /// The current user does not have permission to perform this action.
     NoPermission,
-    /// Invalid shared folder error will be returned as an access_error.
+    /// Field is deprecated. Invalid shared folder error will be returned as an access_error.
     InvalidSharedFolder,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -1001,7 +1001,7 @@ impl ::std::fmt::Display for AddFolderMemberError {
             AddFolderMemberError::InsufficientPlan => f.write_str("The current user's account doesn't support this action. An example of this is when adding a read-only member. This action can only be performed by users that have upgraded to a Pro or Business plan."),
             AddFolderMemberError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
             AddFolderMemberError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
-            AddFolderMemberError::InvalidSharedFolder => f.write_str("Invalid shared folder error will be returned as an access_error."),
+            AddFolderMemberError::InvalidSharedFolder => f.write_str("Field is deprecated. Invalid shared folder error will be returned as an access_error."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -1932,6 +1932,7 @@ impl From<CollectionLinkMetadata> for LinkMetadata {
 pub struct CreateSharedLinkArg {
     /// The path to share.
     pub path: String,
+    /// Field is deprecated. None
     pub short_url: bool,
     /// If it's okay to share a path that does not yet exist, set this to either
     /// [`PendingUploadMode::File`] or [`PendingUploadMode::Folder`] to indicate whether to assume
@@ -2649,9 +2650,9 @@ pub enum FileAction {
     Unshare,
     /// Relinquish one's own membership to the file.
     RelinquishMembership,
-    /// Use create_view_link and create_edit_link instead.
+    /// Field is deprecated. Use create_view_link and create_edit_link instead.
     ShareLink,
-    /// Use create_view_link and create_edit_link instead.
+    /// Field is deprecated. Use create_view_link and create_edit_link instead.
     CreateLink,
     /// Create a shared link to a file that only allows users to view the content.
     CreateViewLink,
@@ -3746,9 +3747,9 @@ pub enum FolderAction {
     Unshare,
     /// Keep a copy of the contents upon leaving or being kicked from the folder.
     LeaveACopy,
-    /// Use create_view_link and create_edit_link instead.
+    /// Field is deprecated. Use create_view_link and create_edit_link instead.
     ShareLink,
-    /// Use create_view_link and create_edit_link instead.
+    /// Field is deprecated. Use create_view_link and create_edit_link instead.
     CreateLink,
     /// Create a shared link that only allows users to view the content.
     CreateViewLink,
@@ -5579,7 +5580,7 @@ pub struct GroupInfo {
     pub group_id: crate::types::team_common::GroupId,
     /// Who is allowed to manage the group.
     pub group_management_type: crate::types::team_common::GroupManagementType,
-    /// The type of group.
+    /// Field is deprecated. The type of group.
     pub group_type: crate::types::team_common::GroupType,
     /// If the current user is a member of the group.
     pub is_member: bool,
@@ -5814,7 +5815,7 @@ pub struct GroupMembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Never set.
+    /// Field is deprecated. Never set.
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,
@@ -6284,7 +6285,7 @@ pub struct InviteeMembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Never set.
+    /// Field is deprecated. Never set.
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,
@@ -6859,10 +6860,10 @@ pub enum LinkAudience {
     /// grant additional rights to the user. Members of the content who use this link can only
     /// access the content with their pre-existing access rights.
     NoOne,
-    /// Use `require_password` instead. A link-specific password is required to access the link.
-    /// Login is not required.
+    /// Field is deprecated. Use `require_password` instead. A link-specific password is required to
+    /// access the link. Login is not required.
     Password,
-    /// Link is accessible only by members of the content.
+    /// Field is deprecated. Link is accessible only by members of the content.
     Members,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -7543,10 +7544,10 @@ pub struct LinkPermissions {
     /// Whether the user can disallow downloads via the link. This refers to the ability to impose a
     /// no-download restriction on the link.
     pub can_disallow_download: bool,
-    /// Whether comments are enabled for the linked file. This takes the team commenting policy into
-    /// account.
+    /// Field is deprecated. Whether comments are enabled for the linked file. This takes the team
+    /// commenting policy into account.
     pub allow_comments: bool,
-    /// Whether the team has disabled commenting globally.
+    /// Field is deprecated. Whether the team has disabled commenting globally.
     pub team_restricts_comments: bool,
     /// The current visibility of the link after considering the shared links policies of the the
     /// team (in case the link's owner is part of a team) and the shared folder (in case the linked
@@ -11157,7 +11158,7 @@ pub struct MembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Never set.
+    /// Field is deprecated. Never set.
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,
@@ -12451,10 +12452,11 @@ pub enum RelinquishAccessError {
     EmailUnverified,
     /// User is the owner of the file/folder.
     Owner,
-    /// User only has inherited access from a parent folder.
+    /// User has only non-removable access — inherited from a parent folder or via group membership.
+    /// Either way, relinquish_access cannot remove the caller's access from this surface; the
+    /// caller must take action on the source of the access (e.g. leave the parent shared folder, or
+    /// be removed from the group).
     NoExplicitAccess,
-    /// User has access only via group membership.
-    GroupAccess,
     /// Team folder restrictions apply.
     TeamFolder,
     /// Caller does not have permission to perform this action. Generic fallback.
@@ -12484,7 +12486,6 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishAccessError {
                     "email_unverified" => RelinquishAccessError::EmailUnverified,
                     "owner" => RelinquishAccessError::Owner,
                     "no_explicit_access" => RelinquishAccessError::NoExplicitAccess,
-                    "group_access" => RelinquishAccessError::GroupAccess,
                     "team_folder" => RelinquishAccessError::TeamFolder,
                     "no_permission" => RelinquishAccessError::NoPermission,
                     _ => RelinquishAccessError::Other,
@@ -12497,7 +12498,6 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishAccessError {
                                     "email_unverified",
                                     "owner",
                                     "no_explicit_access",
-                                    "group_access",
                                     "team_folder",
                                     "no_permission",
                                     "other"];
@@ -12534,12 +12534,6 @@ impl ::serde::ser::Serialize for RelinquishAccessError {
                 s.serialize_field(".tag", "no_explicit_access")?;
                 s.end()
             }
-            RelinquishAccessError::GroupAccess => {
-                // unit
-                let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
-                s.serialize_field(".tag", "group_access")?;
-                s.end()
-            }
             RelinquishAccessError::TeamFolder => {
                 // unit
                 let mut s = serializer.serialize_struct("RelinquishAccessError", 1)?;
@@ -12566,8 +12560,7 @@ impl ::std::fmt::Display for RelinquishAccessError {
             RelinquishAccessError::InvalidFileId => f.write_str("File or folder not found or has been deleted."),
             RelinquishAccessError::EmailUnverified => f.write_str("Caller's email address is not verified."),
             RelinquishAccessError::Owner => f.write_str("User is the owner of the file/folder."),
-            RelinquishAccessError::NoExplicitAccess => f.write_str("User only has inherited access from a parent folder."),
-            RelinquishAccessError::GroupAccess => f.write_str("User has access only via group membership."),
+            RelinquishAccessError::NoExplicitAccess => f.write_str("User has only non-removable access — inherited from a parent folder or via group membership. Either way, relinquish_access cannot remove the caller's access from this surface; the caller must take action on the source of the access (e.g. leave the parent shared folder, or be removed from the group)."),
             RelinquishAccessError::TeamFolder => f.write_str("Team folder restrictions apply."),
             RelinquishAccessError::NoPermission => f.write_str("Caller does not have permission to perform this action. Generic fallback."),
             _ => write!(f, "{:?}", *self),
@@ -17024,7 +17017,7 @@ pub enum SharedFolderAccessError {
     NotAMember,
     /// The user does not exist or their account is disabled.
     InvalidMember,
-    /// Never set.
+    /// Field is deprecated. Never set.
     EmailUnverified,
     /// The shared folder is unmounted.
     Unmounted,
@@ -17119,7 +17112,7 @@ impl ::std::fmt::Display for SharedFolderAccessError {
             SharedFolderAccessError::InvalidId => f.write_str("This shared folder ID is invalid."),
             SharedFolderAccessError::NotAMember => f.write_str("The user is not a member of the shared folder thus cannot access it."),
             SharedFolderAccessError::InvalidMember => f.write_str("The user does not exist or their account is disabled."),
-            SharedFolderAccessError::EmailUnverified => f.write_str("Never set."),
+            SharedFolderAccessError::EmailUnverified => f.write_str("Field is deprecated. Never set."),
             SharedFolderAccessError::Unmounted => f.write_str("The shared folder is unmounted."),
             _ => write!(f, "{:?}", *self),
         }
@@ -18467,7 +18460,7 @@ impl From<SharedLinkError> for SharedLinkMetadataError {
 pub enum SharedLinkPolicy {
     /// Links can be shared with anyone.
     Anyone,
-    /// Links can be shared with anyone on the same team as the owner.
+    /// Field is deprecated. Links can be shared with anyone on the same team as the owner.
     Team,
     /// Links can only be shared among members of the shared folder.
     Members,
@@ -18554,7 +18547,7 @@ pub struct SharedLinkSettings {
     /// Requested access level you want the audience to gain from this link. Note, modifying access
     /// level for an existing link is not supported.
     pub access: Option<RequestedLinkAccessLevel>,
-    /// Use `audience` instead.  The requested access for this shared link.
+    /// Field is deprecated. Use `audience` instead.  The requested access for this shared link.
     pub requested_visibility: Option<RequestedVisibility>,
     /// Boolean flag to allow or not download capabilities for shared links.
     pub allow_download: Option<bool>,
@@ -20093,6 +20086,262 @@ impl ::serde::ser::Serialize for UpdateFileMemberArgs {
     }
 }
 
+/// Arguments for [`update_file_policy()`](crate::sharing::update_file_policy).
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct UpdateFilePolicyArg {
+    /// File that we are changing the policy for.
+    pub file: PathOrId,
+    /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
+    /// response's [`SharedFileMetadata::permissions`](SharedFileMetadata) field describing the
+    /// actions the authenticated user can perform on the file.
+    pub actions: Option<Vec<FileAction>>,
+    /// Field is deprecated. Settings on the link for the file.
+    pub link_settings: Option<LinkSettings>,
+    /// The presence and seen state policy on the file.
+    pub viewer_info_policy: Option<ViewerInfoPolicy>,
+}
+
+impl UpdateFilePolicyArg {
+    pub fn new(file: PathOrId) -> Self {
+        UpdateFilePolicyArg {
+            file,
+            actions: None,
+            link_settings: None,
+            viewer_info_policy: None,
+        }
+    }
+
+    pub fn with_actions(mut self, value: Vec<FileAction>) -> Self {
+        self.actions = Some(value);
+        self
+    }
+
+    pub fn with_link_settings(mut self, value: LinkSettings) -> Self {
+        self.link_settings = Some(value);
+        self
+    }
+
+    pub fn with_viewer_info_policy(mut self, value: ViewerInfoPolicy) -> Self {
+        self.viewer_info_policy = Some(value);
+        self
+    }
+}
+
+const UPDATE_FILE_POLICY_ARG_FIELDS: &[&str] = &["file",
+                                                 "actions",
+                                                 "link_settings",
+                                                 "viewer_info_policy"];
+impl UpdateFilePolicyArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UpdateFilePolicyArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UpdateFilePolicyArg>, V::Error> {
+        let mut field_file = None;
+        let mut field_actions = None;
+        let mut field_link_settings = None;
+        let mut field_viewer_info_policy = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "file" => {
+                    if field_file.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file"));
+                    }
+                    field_file = Some(map.next_value()?);
+                }
+                "actions" => {
+                    if field_actions.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("actions"));
+                    }
+                    field_actions = Some(map.next_value()?);
+                }
+                "link_settings" => {
+                    if field_link_settings.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("link_settings"));
+                    }
+                    field_link_settings = Some(map.next_value()?);
+                }
+                "viewer_info_policy" => {
+                    if field_viewer_info_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("viewer_info_policy"));
+                    }
+                    field_viewer_info_policy = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UpdateFilePolicyArg {
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
+            actions: field_actions.and_then(Option::flatten),
+            link_settings: field_link_settings.and_then(Option::flatten),
+            viewer_info_policy: field_viewer_info_policy.and_then(Option::flatten),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("file", &self.file)?;
+        if let Some(val) = &self.actions {
+            s.serialize_field("actions", val)?;
+        }
+        if let Some(val) = &self.link_settings {
+            s.serialize_field("link_settings", val)?;
+        }
+        if let Some(val) = &self.viewer_info_policy {
+            s.serialize_field("viewer_info_policy", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UpdateFilePolicyArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UpdateFilePolicyArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UpdateFilePolicyArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UpdateFilePolicyArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UpdateFilePolicyArg", UPDATE_FILE_POLICY_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UpdateFilePolicyArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UpdateFilePolicyArg", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Error result for [`update_file_policy()`](crate::sharing::update_file_policy).
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum UpdateFilePolicyError {
+    AccessError(SharingFileAccessError),
+    /// The file settings are invalid.
+    InvalidFileSettings,
+    /// The current user does not have permission to perform this action.
+    NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UpdateFilePolicyError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UpdateFilePolicyError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UpdateFilePolicyError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "access_error" => {
+                        match map.next_key()? {
+                            Some("access_error") => UpdateFilePolicyError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "invalid_file_settings" => UpdateFilePolicyError::InvalidFileSettings,
+                    "no_permission" => UpdateFilePolicyError::NoPermission,
+                    _ => UpdateFilePolicyError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["access_error",
+                                    "invalid_file_settings",
+                                    "no_permission",
+                                    "other"];
+        deserializer.deserialize_struct("UpdateFilePolicyError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UpdateFilePolicyError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            UpdateFilePolicyError::AccessError(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("UpdateFilePolicyError", 2)?;
+                s.serialize_field(".tag", "access_error")?;
+                s.serialize_field("access_error", x)?;
+                s.end()
+            }
+            UpdateFilePolicyError::InvalidFileSettings => {
+                // unit
+                let mut s = serializer.serialize_struct("UpdateFilePolicyError", 1)?;
+                s.serialize_field(".tag", "invalid_file_settings")?;
+                s.end()
+            }
+            UpdateFilePolicyError::NoPermission => {
+                // unit
+                let mut s = serializer.serialize_struct("UpdateFilePolicyError", 1)?;
+                s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            UpdateFilePolicyError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UpdateFilePolicyError {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UpdateFilePolicyError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
+    }
+}
+
+impl ::std::fmt::Display for UpdateFilePolicyError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            UpdateFilePolicyError::AccessError(inner) => write!(f, "UpdateFilePolicyError: {}", inner),
+            UpdateFilePolicyError::InvalidFileSettings => f.write_str("The file settings are invalid."),
+            UpdateFilePolicyError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFolderMemberArg {
@@ -20717,7 +20966,7 @@ pub struct UserFileMembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Never set.
+    /// Field is deprecated. Never set.
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,
@@ -21095,7 +21344,7 @@ pub struct UserMembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Never set.
+    /// Field is deprecated. Never set.
     pub initials: Option<String>,
     /// True if the member has access on a parent folder.
     pub is_inherited: bool,

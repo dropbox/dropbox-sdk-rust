@@ -337,6 +337,149 @@ impl ::serde::ser::Serialize for AccountPhotoGetResult {
     }
 }
 
+/// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with
+/// Stone.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct DeleteProfilePhotoArg {
+}
+
+const DELETE_PROFILE_PHOTO_ARG_FIELDS: &[&str] = &[];
+impl DeleteProfilePhotoArg {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeleteProfilePhotoArg, V::Error> {
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DeleteProfilePhotoArg {})
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteProfilePhotoArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeleteProfilePhotoArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteProfilePhotoArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeleteProfilePhotoArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeleteProfilePhotoArg", DELETE_PROFILE_PHOTO_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteProfilePhotoArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DeleteProfilePhotoArg", 0)?.end()
+    }
+}
+
+/// This union is empty. The comment here is intentionally emitted to avoid indentation issues with
+/// Stone.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum DeleteProfilePhotoError {
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteProfilePhotoError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DeleteProfilePhotoError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteProfilePhotoError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                // open enum with no defined variants
+                let _ = tag;
+                crate::eat_json_fields(&mut map)?;
+                Ok(DeleteProfilePhotoError::Other)
+            }
+        }
+        const VARIANTS: &[&str] = &["other"];
+        deserializer.deserialize_struct("DeleteProfilePhotoError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteProfilePhotoError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        #![allow(unused_variables)]
+        Err(::serde::ser::Error::custom("cannot serialize an open union with no defined variants"))
+    }
+}
+
+impl ::std::error::Error for DeleteProfilePhotoError {
+}
+
+impl ::std::fmt::Display for DeleteProfilePhotoError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with
+/// Stone.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct DeleteProfilePhotoResult {
+}
+
+const DELETE_PROFILE_PHOTO_RESULT_FIELDS: &[&str] = &[];
+impl DeleteProfilePhotoResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeleteProfilePhotoResult, V::Error> {
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DeleteProfilePhotoResult {})
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteProfilePhotoResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeleteProfilePhotoResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteProfilePhotoResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeleteProfilePhotoResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeleteProfilePhotoResult", DELETE_PROFILE_PHOTO_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteProfilePhotoResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DeleteProfilePhotoResult", 0)?.end()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PhotoSourceArg {

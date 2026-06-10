@@ -971,7 +971,7 @@ pub fn save_url_check_job_status<'a>(
 /// Searches for files and folders. Note: Recent changes will be reflected in search results within
 /// a few seconds and older revisions of existing files may still match your query for up to a few
 /// days.
-#[deprecated(note = "replaced by search_v2")]
+#[deprecated]
 pub fn search<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
     arg: &'a SearchArg,
@@ -1003,6 +1003,24 @@ pub fn search_v2<'a>(
         None)
 }
 
+/// Searches for files and folders. Note: [`search_v2()`](crate::files::search_v2) along with
+/// [`search_continue_v2()`](crate::files::search_continue_v2) can only be used to retrieve a
+/// maximum of 10,000 matches. Recent changes may not immediately be reflected in search results due
+/// to a short delay in indexing. Duplicate results may be returned across pages. Some results may
+/// not be returned.
+pub fn search_v2_app_auth<'a>(
+    client: &'a impl crate::async_client_trait::AppAuthClient,
+    arg: &'a SearchV2Arg,
+) -> impl std::future::Future<Output=Result<SearchV2Result, crate::Error<SearchError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "files/search_v2",
+        arg,
+        None)
+}
+
 /// Fetches the next page of search results returned from [`search_v2()`](crate::files::search_v2).
 /// Note: [`search_v2()`](crate::files::search_v2) along with
 /// [`search_continue_v2()`](crate::files::search_continue_v2) can only be used to retrieve a
@@ -1011,6 +1029,25 @@ pub fn search_v2<'a>(
 /// not be returned.
 pub fn search_continue_v2<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a SearchV2ContinueArg,
+) -> impl std::future::Future<Output=Result<SearchV2Result, crate::Error<SearchError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "files/search/continue_v2",
+        arg,
+        None)
+}
+
+/// Fetches the next page of search results returned from [`search_v2()`](crate::files::search_v2).
+/// Note: [`search_v2()`](crate::files::search_v2) along with
+/// [`search_continue_v2()`](crate::files::search_continue_v2) can only be used to retrieve a
+/// maximum of 10,000 matches. Recent changes may not immediately be reflected in search results due
+/// to a short delay in indexing. Duplicate results may be returned across pages. Some results may
+/// not be returned.
+pub fn search_continue_v2_app_auth<'a>(
+    client: &'a impl crate::async_client_trait::AppAuthClient,
     arg: &'a SearchV2ContinueArg,
 ) -> impl std::future::Future<Output=Result<SearchV2Result, crate::Error<SearchError>>> + Send + 'a {
     crate::client_helpers::request(

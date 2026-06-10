@@ -685,6 +685,20 @@ pub fn update_file_member<'a>(
         None)
 }
 
+/// Update the viewer info policy of a file.
+pub fn update_file_policy<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a UpdateFilePolicyArg,
+) -> impl std::future::Future<Output=Result<SharedFileMetadata, crate::Error<UpdateFilePolicyError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "sharing/update_file_policy",
+        arg,
+        None)
+}
+
 /// Allows an owner or editor of a shared folder to update another member's permissions.
 pub fn update_folder_member<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,

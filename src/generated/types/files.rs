@@ -248,8 +248,8 @@ pub struct AlphaGetMetadataArg {
     /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
     /// set if there exists property data associated with the file and each of the listed templates.
     pub include_property_groups: Option<crate::types::file_properties::TemplateFilterBase>,
-    /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
-    /// set for files with custom properties.
+    /// Field is deprecated. If set to a valid list of template IDs,
+    /// [`FileMetadata::property_groups`](FileMetadata) is set for files with custom properties.
     pub include_property_templates: Option<Vec<crate::types::file_properties::TemplateId>>,
 }
 
@@ -2244,8 +2244,9 @@ impl ::serde::ser::Serialize for DeleteBatchArg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteBatchError {
-    /// Use [`DeleteError::TooManyWriteOperations`]. [`delete_batch()`](crate::files::delete_batch)
-    /// now provides smaller granularity about which entry has failed because of this.
+    /// Field is deprecated. Use [`DeleteError::TooManyWriteOperations`].
+    /// [`delete_batch()`](crate::files::delete_batch) now provides smaller granularity about which
+    /// entry has failed because of this.
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2966,7 +2967,8 @@ pub struct DeletedMetadata {
     /// [`list_folder_continue()`](crate::files::list_folder_continue). This field will be null if
     /// the file or folder is not mounted.
     pub path_display: Option<String>,
-    /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
+    /// Field is deprecated. Please use
+    /// [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
@@ -3248,7 +3250,7 @@ impl ::serde::ser::Serialize for Dimensions {
 pub struct DownloadArg {
     /// The path of the file to download.
     pub path: ReadPath,
-    /// Please specify revision in `path` instead.
+    /// Field is deprecated. Please specify revision in `path` instead.
     pub rev: Option<Rev>,
 }
 
@@ -4776,7 +4778,8 @@ pub struct FileMetadata {
     /// [`list_folder_continue()`](crate::files::list_folder_continue). This field will be null if
     /// the file or folder is not mounted.
     pub path_display: Option<String>,
-    /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
+    /// Field is deprecated. Please use
+    /// [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
@@ -5466,12 +5469,13 @@ pub struct FolderMetadata {
     /// [`list_folder_continue()`](crate::files::list_folder_continue). This field will be null if
     /// the file or folder is not mounted.
     pub path_display: Option<String>,
-    /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
+    /// Field is deprecated. Please use
+    /// [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
     pub preview_url: Option<String>,
-    /// Please use `sharing_info` instead.
+    /// Field is deprecated. Please use `sharing_info` instead.
     pub shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// Set if the folder is contained in a shared folder or is a shared folder mount point.
     pub sharing_info: Option<FolderSharingInfo>,
@@ -7857,8 +7861,8 @@ pub struct ListFolderArg {
     /// workaround for such cases is to set [`ListFolderArg::recursive`](ListFolderArg) to `false`
     /// and traverse subfolders one at a time.
     pub recursive: bool,
-    /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. This
-    /// parameter will no longer have an effect starting December 2, 2019.
+    /// Field is deprecated. If true, [`FileMetadata::media_info`](FileMetadata) is set for photo
+    /// and video. This parameter will no longer have an effect starting December 2, 2019.
     pub include_media_info: bool,
     /// If true, the results will include entries for files and folders that used to exist but were
     /// deleted.
@@ -9911,7 +9915,7 @@ impl ::std::fmt::Display for LockFileError {
 pub struct LockFileResult {
     /// Metadata of the file.
     pub metadata: Metadata,
-    /// The file lock state after the operation.
+    /// Field is deprecated. The file lock state after the operation.
     pub lock: FileLock,
 }
 
@@ -12181,7 +12185,7 @@ impl From<PhotoMetadata> for MediaMetadata {
 pub struct PreviewArg {
     /// The path of the file to preview.
     pub path: ReadPath,
-    /// Please specify revision in `path` instead.
+    /// Field is deprecated. Please specify revision in `path` instead.
     pub rev: Option<Rev>,
 }
 
@@ -12502,7 +12506,7 @@ pub struct RelocationArg {
     pub from_path: WritePathOrId,
     /// Path in the user's Dropbox that is the destination.
     pub to_path: WritePathOrId,
-    /// This flag has no effect.
+    /// Field is deprecated. This flag has no effect.
     pub allow_shared_folder: bool,
     /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
@@ -12678,7 +12682,7 @@ pub struct RelocationBatchArg {
     /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
     /// avoid the conflict.
     pub autorename: bool,
-    /// This flag has no effect.
+    /// Field is deprecated. This flag has no effect.
     pub allow_shared_folder: bool,
     /// Allow moves by owner even if it would result in an ownership transfer for the content being
     /// moved. This does not apply to copies.
@@ -16825,7 +16829,7 @@ pub struct SearchV2Arg {
     pub options: Option<SearchOptions>,
     /// Options for search results match fields.
     pub match_field_options: Option<SearchMatchFieldOptions>,
-    /// Deprecated and moved this option to SearchMatchFieldOptions.
+    /// Field is deprecated. Deprecated and moved this option to SearchMatchFieldOptions.
     pub include_highlights: Option<bool>,
 }
 
@@ -21156,8 +21160,8 @@ pub enum UploadSessionFinishError {
     Path(WriteError),
     /// The supplied property group is invalid. The file has uploaded without property groups.
     PropertiesError(crate::types::file_properties::InvalidPropertyGroupError),
-    /// The batch request commits files into too many different shared folders. Please limit your
-    /// batch request to files contained in a single shared folder.
+    /// Field is deprecated. The batch request commits files into too many different shared folders.
+    /// Please limit your batch request to files contained in a single shared folder.
     TooManySharedFolderTargets,
     /// There are too many write operations happening in the user's Dropbox. You should retry
     /// uploading this file.
@@ -21343,7 +21347,7 @@ impl ::std::fmt::Display for UploadSessionFinishError {
             UploadSessionFinishError::LookupFailed(inner) => write!(f, "The session arguments are incorrect; the value explains the reason: {}", inner),
             UploadSessionFinishError::Path(inner) => write!(f, "Unable to save the uploaded contents to a file. Data has already been appended to the upload session. Please retry with empty data body and updated offset: {}", inner),
             UploadSessionFinishError::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
-            UploadSessionFinishError::TooManySharedFolderTargets => f.write_str("The batch request commits files into too many different shared folders. Please limit your batch request to files contained in a single shared folder."),
+            UploadSessionFinishError::TooManySharedFolderTargets => f.write_str("Field is deprecated. The batch request commits files into too many different shared folders. Please limit your batch request to files contained in a single shared folder."),
             UploadSessionFinishError::TooManyWriteOperations => f.write_str("There are too many write operations happening in the user's Dropbox. You should retry uploading this file."),
             UploadSessionFinishError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when finishing concurrent upload session."),
             UploadSessionFinishError::ConcurrentSessionNotClosed => f.write_str("Concurrent upload sessions need to be closed before finishing."),

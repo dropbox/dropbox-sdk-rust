@@ -282,7 +282,7 @@ pub enum AddSecondaryEmailResult {
     AlreadyOwnedByUser(crate::types::common::EmailAddress),
     /// User already has the maximum number of secondary emails allowed.
     ReachedLimit(crate::types::common::EmailAddress),
-    /// A transient error occurred. Please try again later.
+    /// Field is deprecated. A transient error occurred. Please try again later.
     TransientError(crate::types::common::EmailAddress),
     /// An error occurred due to conflicting updates. Please try again later.
     TooManyUpdates(crate::types::common::EmailAddress),
@@ -6031,9 +6031,9 @@ impl From<GroupSelectorWithTeamGroupError> for GroupMembersAddError {
 pub struct GroupMembersChangeResult {
     /// The group info after member change operation has been performed.
     pub group_info: GroupFullInfo,
-    /// For legacy purposes async_job_id will always return one space ' '. Formerly, it was an ID
-    /// that was used to obtain the status of granting/revoking group-owned resources. It's no
-    /// longer necessary because the async processing now happens automatically.
+    /// Field is deprecated. For legacy purposes async_job_id will always return one space ' '.
+    /// Formerly, it was an ID that was used to obtain the status of granting/revoking group-owned
+    /// resources. It's no longer necessary because the async processing now happens automatically.
     pub async_job_id: crate::types::dbx_async::AsyncJobId,
 }
 
@@ -21679,6 +21679,8 @@ pub struct NamespaceMetadata {
     /// If this is a team member or app folder, the ID of the owning team member. Otherwise, this
     /// field is not present.
     pub team_member_id: Option<crate::types::team_common::TeamMemberId>,
+    /// The quota limit in bytes for this namespace tree. Only applicable to team folders.
+    pub quota_limit: i64,
 }
 
 impl NamespaceMetadata {
@@ -21692,6 +21694,7 @@ impl NamespaceMetadata {
             namespace_id,
             namespace_type,
             team_member_id: None,
+            quota_limit: 0,
         }
     }
 
@@ -21699,12 +21702,18 @@ impl NamespaceMetadata {
         self.team_member_id = Some(value);
         self
     }
+
+    pub fn with_quota_limit(mut self, value: i64) -> Self {
+        self.quota_limit = value;
+        self
+    }
 }
 
 const NAMESPACE_METADATA_FIELDS: &[&str] = &["name",
                                              "namespace_id",
                                              "namespace_type",
-                                             "team_member_id"];
+                                             "team_member_id",
+                                             "quota_limit"];
 impl NamespaceMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -21720,6 +21729,7 @@ impl NamespaceMetadata {
         let mut field_namespace_id = None;
         let mut field_namespace_type = None;
         let mut field_team_member_id = None;
+        let mut field_quota_limit = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -21748,6 +21758,12 @@ impl NamespaceMetadata {
                     }
                     field_team_member_id = Some(map.next_value()?);
                 }
+                "quota_limit" => {
+                    if field_quota_limit.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("quota_limit"));
+                    }
+                    field_quota_limit = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -21762,6 +21778,7 @@ impl NamespaceMetadata {
             namespace_id: field_namespace_id.ok_or_else(|| ::serde::de::Error::missing_field("namespace_id"))?,
             namespace_type: field_namespace_type.ok_or_else(|| ::serde::de::Error::missing_field("namespace_type"))?,
             team_member_id: field_team_member_id.and_then(Option::flatten),
+            quota_limit: field_quota_limit.unwrap_or(0),
         };
         Ok(Some(result))
     }
@@ -21776,6 +21793,9 @@ impl NamespaceMetadata {
         s.serialize_field("namespace_type", &self.namespace_type)?;
         if let Some(val) = &self.team_member_id {
             s.serialize_field("team_member_id", val)?;
+        }
+        if self.quota_limit != 0 {
+            s.serialize_field("quota_limit", &self.quota_limit)?;
         }
         Ok(())
     }
@@ -21803,7 +21823,7 @@ impl ::serde::ser::Serialize for NamespaceMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("NamespaceMetadata", 4)?;
+        let mut s = serializer.serialize_struct("NamespaceMetadata", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -23003,8 +23023,8 @@ pub struct RevokeLinkedApiAppArg {
     pub app_id: String,
     /// The unique id of the member owning the device.
     pub team_member_id: String,
-    /// This flag is not longer supported, the application dedicated folder (in case the application
-    /// uses one) will be kept.
+    /// Field is deprecated. This flag is not longer supported, the application dedicated folder (in
+    /// case the application uses one) will be kept.
     pub keep_app_folder: bool,
 }
 
@@ -28739,8 +28759,8 @@ impl ::serde::ser::Serialize for TeamMemberStatus {
 pub enum TeamMembershipType {
     /// User uses a license and has full access to team resources like the shared quota.
     Full,
-    /// User does not have access to the shared quota and team admins have restricted administrative
-    /// control.
+    /// Field is deprecated. User does not have access to the shared quota and team admins have
+    /// restricted administrative control.
     Limited,
 }
 
@@ -28798,7 +28818,7 @@ impl ::serde::ser::Serialize for TeamMembershipType {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamNamespacesListArg {
-    /// Specifying a value here has no effect.
+    /// Field is deprecated. Specifying a value here has no effect.
     pub limit: u32,
 }
 

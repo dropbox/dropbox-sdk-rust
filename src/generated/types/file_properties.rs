@@ -9,8 +9,9 @@
     clippy::doc_lazy_continuation,
 )]
 
-//! This namespace contains helpers for property and template metadata endpoints. These endpoints
-//! enable you to tag arbitrary key/value data to Dropbox files.
+//! This namespace contains helpers for property and template metadata endpoints.
+//!
+//! These endpoints enable you to tag arbitrary key/value data to Dropbox files.
 //!
 //! The most basic unit in this namespace is the [`PropertyField`]. These fields encapsulate the
 //! actual key/value data.
@@ -30,10 +31,10 @@
 //! properties can't be accessed by any app other than the app that created them, and even then,
 //! only when the app is linked with the owner of the template (either a user or team).
 //!
-//! User-owned templates are accessed via the user-auth file_properties/templates/*_for_user
+//! User-owned templates are accessed via the user-auth `file_properties/templates/*_for_user`
 //! endpoints, while team-owned templates are accessed via the team-auth
-//! file_properties/templates/*_for_team endpoints. Properties associated with either type of
-//! template can be accessed via the user-auth properties/* endpoints.
+//! `file_properties/templates/*_for_team` endpoints. Properties associated with either type of
+//! template can be accessed via the user-auth `properties/*` endpoints.
 //!
 //! Finally, properties can be accessed from a number of endpoints that return metadata, including
 //! `files/get_metadata`, and `files/list_folder`. Properties can also be added during upload, using
