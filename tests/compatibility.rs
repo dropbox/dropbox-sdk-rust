@@ -10,16 +10,18 @@
 fn test_extra_fields() {
     let json = r#"{
         ".tag": "deleted",
-        "name": "f",
+        "name": "spaghetti",
         "some extra field": "whatever",
         "some more": {"some": "complex", "other": "stuff"},
-        "parent_shared_folder_id": "spaghetti",
+        "path_lower": "/pasta/spaghetti",
+        "path_display": "/PASTA/spaghetti",
         "one more extra": "~~~~"
     }"#;
     let x = serde_json::from_str::<dropbox_sdk::files::Metadata>(json).unwrap();
     if let dropbox_sdk::files::Metadata::Deleted(d) = x {
-        assert_eq!("f", &d.name);
-        assert_eq!(Some("spaghetti"), d.parent_shared_folder_id.as_deref());
+        assert_eq!("spaghetti", d.name);
+        assert_eq!(Some("/pasta/spaghetti"), d.path_lower.as_deref());
+        assert_eq!(Some("/PASTA/spaghetti"), d.path_display.as_deref());
     } else {
         panic!("wrong variant");
     }
