@@ -25607,6 +25607,8 @@ pub enum TeamFolderCreateError {
     FolderNameReserved,
     /// An error occurred setting the sync settings.
     SyncSettingsError(crate::types::files::SyncSettingsError),
+    /// The team has reached the maximum number of team folders allowed by its plan.
+    FolderCountLimitExceeded,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -25638,6 +25640,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "folder_count_limit_exceeded" => TeamFolderCreateError::FolderCountLimitExceeded,
                     _ => TeamFolderCreateError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -25648,6 +25651,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateError {
                                     "folder_name_already_used",
                                     "folder_name_reserved",
                                     "sync_settings_error",
+                                    "folder_count_limit_exceeded",
                                     "other"];
         deserializer.deserialize_struct("TeamFolderCreateError", VARIANTS, EnumVisitor)
     }
@@ -25683,6 +25687,12 @@ impl ::serde::ser::Serialize for TeamFolderCreateError {
                 s.serialize_field("sync_settings_error", x)?;
                 s.end()
             }
+            TeamFolderCreateError::FolderCountLimitExceeded => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamFolderCreateError", 1)?;
+                s.serialize_field(".tag", "folder_count_limit_exceeded")?;
+                s.end()
+            }
             TeamFolderCreateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -25704,6 +25714,7 @@ impl ::std::fmt::Display for TeamFolderCreateError {
             TeamFolderCreateError::FolderNameAlreadyUsed => f.write_str("There is already a team folder with the provided name."),
             TeamFolderCreateError::FolderNameReserved => f.write_str("The provided name cannot be used because it is reserved."),
             TeamFolderCreateError::SyncSettingsError(inner) => write!(f, "An error occurred setting the sync settings: {}", inner),
+            TeamFolderCreateError::FolderCountLimitExceeded => f.write_str("The team has reached the maximum number of team folders allowed by its plan."),
             _ => write!(f, "{:?}", *self),
         }
     }

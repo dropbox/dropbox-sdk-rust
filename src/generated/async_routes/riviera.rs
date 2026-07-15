@@ -88,6 +88,82 @@ pub fn get_markdown_async_check_app_auth<'a>(
         None)
 }
 
+/// Asynchronous file metadata extraction for supported file formats.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn get_metadata_async<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a GetMetadataArgs,
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchResultBase, crate::Error<crate::NoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "riviera/get_metadata_async",
+        arg,
+        None)
+}
+
+/// Asynchronous file metadata extraction for supported file formats.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn get_metadata_async_app_auth<'a>(
+    client: &'a impl crate::async_client_trait::AppAuthClient,
+    arg: &'a GetMetadataArgs,
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchResultBase, crate::Error<crate::NoError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "riviera/get_metadata_async",
+        arg,
+        None)
+}
+
+/// Returns the status or result of specified get_metadata_async task.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn get_metadata_async_check<'a>(
+    client: &'a impl crate::async_client_trait::UserAuthClient,
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=Result<GetMetadataAsyncCheckResult, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "riviera/get_metadata_async/check",
+        arg,
+        None)
+}
+
+/// Returns the status or result of specified get_metadata_async task.
+///
+/// # Stability
+/// *PREVIEW*: This function may change or disappear without notice.
+#[cfg(feature = "unstable")]
+#[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
+pub fn get_metadata_async_check_app_auth<'a>(
+    client: &'a impl crate::async_client_trait::AppAuthClient,
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=Result<GetMetadataAsyncCheckResult, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "riviera/get_metadata_async/check",
+        arg,
+        None)
+}
+
 /// Asynchronous transcript generation for audio and video files.
 ///
 /// # Stability
