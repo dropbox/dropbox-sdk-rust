@@ -2981,6 +2981,8 @@ pub struct DeletedMetadata {
     pub parent_shared_folder_id: Option<crate::types::common::SharedFolderId>,
     /// The preview URL of the file.
     pub preview_url: Option<String>,
+    /// If present, indicates whether this deleted entry can be restored.
+    pub is_restorable: Option<bool>,
 }
 
 impl DeletedMetadata {
@@ -2991,6 +2993,7 @@ impl DeletedMetadata {
             path_display: None,
             #[allow(deprecated)] parent_shared_folder_id: None,
             preview_url: None,
+            is_restorable: None,
         }
     }
 
@@ -3018,13 +3021,19 @@ impl DeletedMetadata {
         self.preview_url = Some(value);
         self
     }
+
+    pub fn with_is_restorable(mut self, value: bool) -> Self {
+        self.is_restorable = Some(value);
+        self
+    }
 }
 
 const DELETED_METADATA_FIELDS: &[&str] = &["name",
                                            "path_lower",
                                            "path_display",
                                            "parent_shared_folder_id",
-                                           "preview_url"];
+                                           "preview_url",
+                                           "is_restorable"];
 impl DeletedMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -3041,6 +3050,7 @@ impl DeletedMetadata {
         let mut field_path_display = None;
         let mut field_parent_shared_folder_id = None;
         let mut field_preview_url = None;
+        let mut field_is_restorable = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -3075,6 +3085,12 @@ impl DeletedMetadata {
                     }
                     field_preview_url = Some(map.next_value()?);
                 }
+                "is_restorable" => {
+                    if field_is_restorable.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_restorable"));
+                    }
+                    field_is_restorable = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -3090,6 +3106,7 @@ impl DeletedMetadata {
             path_display: field_path_display.and_then(Option::flatten),
             #[allow(deprecated)] parent_shared_folder_id: field_parent_shared_folder_id.and_then(Option::flatten),
             preview_url: field_preview_url.and_then(Option::flatten),
+            is_restorable: field_is_restorable.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -3112,6 +3129,9 @@ impl DeletedMetadata {
         }
         if let Some(val) = &self.preview_url {
             s.serialize_field("preview_url", val)?;
+        }
+        if let Some(val) = &self.is_restorable {
+            s.serialize_field("is_restorable", val)?;
         }
         Ok(())
     }
@@ -3139,7 +3159,7 @@ impl ::serde::ser::Serialize for DeletedMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeletedMetadata", 5)?;
+        let mut s = serializer.serialize_struct("DeletedMetadata", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -4830,6 +4850,8 @@ pub struct FileMetadata {
     pub content_hash: Option<Sha256HexHash>,
     /// If present, the metadata associated with the file's current lock.
     pub file_lock_info: Option<FileLockMetadata>,
+    /// If present, indicates whether this file revision can be restored.
+    pub is_restorable: Option<bool>,
 }
 
 impl FileMetadata {
@@ -4861,6 +4883,7 @@ impl FileMetadata {
             has_explicit_shared_members: None,
             content_hash: None,
             file_lock_info: None,
+            is_restorable: None,
         }
     }
 
@@ -4936,6 +4959,11 @@ impl FileMetadata {
         self.file_lock_info = Some(value);
         self
     }
+
+    pub fn with_is_restorable(mut self, value: bool) -> Self {
+        self.is_restorable = Some(value);
+        self
+    }
 }
 
 const FILE_METADATA_FIELDS: &[&str] = &["name",
@@ -4956,7 +4984,8 @@ const FILE_METADATA_FIELDS: &[&str] = &["name",
                                         "property_groups",
                                         "has_explicit_shared_members",
                                         "content_hash",
-                                        "file_lock_info"];
+                                        "file_lock_info",
+                                        "is_restorable"];
 impl FileMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -4987,6 +5016,7 @@ impl FileMetadata {
         let mut field_has_explicit_shared_members = None;
         let mut field_content_hash = None;
         let mut field_file_lock_info = None;
+        let mut field_is_restorable = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -5105,6 +5135,12 @@ impl FileMetadata {
                     }
                     field_file_lock_info = Some(map.next_value()?);
                 }
+                "is_restorable" => {
+                    if field_is_restorable.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_restorable"));
+                    }
+                    field_is_restorable = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -5134,6 +5170,7 @@ impl FileMetadata {
             has_explicit_shared_members: field_has_explicit_shared_members.and_then(Option::flatten),
             content_hash: field_content_hash.and_then(Option::flatten),
             file_lock_info: field_file_lock_info.and_then(Option::flatten),
+            is_restorable: field_is_restorable.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -5189,6 +5226,9 @@ impl FileMetadata {
         if let Some(val) = &self.file_lock_info {
             s.serialize_field("file_lock_info", val)?;
         }
+        if let Some(val) = &self.is_restorable {
+            s.serialize_field("is_restorable", val)?;
+        }
         Ok(())
     }
 }
@@ -5215,7 +5255,7 @@ impl ::serde::ser::Serialize for FileMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileMetadata", 19)?;
+        let mut s = serializer.serialize_struct("FileMetadata", 20)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -7913,6 +7953,8 @@ pub struct ListFolderArg {
     pub include_property_groups: Option<crate::types::file_properties::TemplateFilterBase>,
     /// If true, include files that are not downloadable, i.e. Google Docs.
     pub include_non_downloadable_files: bool,
+    /// If true, each returned deleted entry will include whether that entry can be restored.
+    pub include_restorable_info: bool,
 }
 
 impl ListFolderArg {
@@ -7928,6 +7970,7 @@ impl ListFolderArg {
             shared_link: None,
             include_property_groups: None,
             include_non_downloadable_files: true,
+            include_restorable_info: false,
         }
     }
 
@@ -7980,6 +8023,11 @@ impl ListFolderArg {
         self.include_non_downloadable_files = value;
         self
     }
+
+    pub fn with_include_restorable_info(mut self, value: bool) -> Self {
+        self.include_restorable_info = value;
+        self
+    }
 }
 
 const LIST_FOLDER_ARG_FIELDS: &[&str] = &["path",
@@ -7991,7 +8039,8 @@ const LIST_FOLDER_ARG_FIELDS: &[&str] = &["path",
                                           "limit",
                                           "shared_link",
                                           "include_property_groups",
-                                          "include_non_downloadable_files"];
+                                          "include_non_downloadable_files",
+                                          "include_restorable_info"];
 impl ListFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -8013,6 +8062,7 @@ impl ListFolderArg {
         let mut field_shared_link = None;
         let mut field_include_property_groups = None;
         let mut field_include_non_downloadable_files = None;
+        let mut field_include_restorable_info = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -8077,6 +8127,12 @@ impl ListFolderArg {
                     }
                     field_include_non_downloadable_files = Some(map.next_value()?);
                 }
+                "include_restorable_info" => {
+                    if field_include_restorable_info.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("include_restorable_info"));
+                    }
+                    field_include_restorable_info = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -8097,6 +8153,7 @@ impl ListFolderArg {
             shared_link: field_shared_link.and_then(Option::flatten),
             include_property_groups: field_include_property_groups.and_then(Option::flatten),
             include_non_downloadable_files: field_include_non_downloadable_files.unwrap_or(true),
+            include_restorable_info: field_include_restorable_info.unwrap_or(false),
         };
         Ok(Some(result))
     }
@@ -8135,6 +8192,9 @@ impl ListFolderArg {
         if !self.include_non_downloadable_files {
             s.serialize_field("include_non_downloadable_files", &self.include_non_downloadable_files)?;
         }
+        if self.include_restorable_info {
+            s.serialize_field("include_restorable_info", &self.include_restorable_info)?;
+        }
         Ok(())
     }
 }
@@ -8161,7 +8221,7 @@ impl ::serde::ser::Serialize for ListFolderArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderArg", 10)?;
+        let mut s = serializer.serialize_struct("ListFolderArg", 11)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -8963,6 +9023,8 @@ pub struct ListRevisionsArg {
     /// last revision from a previous call to list_revisions to fetch the next page of revisions.
     /// Only supported in path mode.
     pub before_rev: Option<Rev>,
+    /// If true, each returned revision will include whether that revision can be restored.
+    pub include_restorable_info: bool,
 }
 
 impl ListRevisionsArg {
@@ -8972,6 +9034,7 @@ impl ListRevisionsArg {
             mode: ListRevisionsMode::Path,
             limit: 10,
             before_rev: None,
+            include_restorable_info: false,
         }
     }
 
@@ -8989,12 +9052,18 @@ impl ListRevisionsArg {
         self.before_rev = Some(value);
         self
     }
+
+    pub fn with_include_restorable_info(mut self, value: bool) -> Self {
+        self.include_restorable_info = value;
+        self
+    }
 }
 
 const LIST_REVISIONS_ARG_FIELDS: &[&str] = &["path",
                                              "mode",
                                              "limit",
-                                             "before_rev"];
+                                             "before_rev",
+                                             "include_restorable_info"];
 impl ListRevisionsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -9010,6 +9079,7 @@ impl ListRevisionsArg {
         let mut field_mode = None;
         let mut field_limit = None;
         let mut field_before_rev = None;
+        let mut field_include_restorable_info = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -9038,6 +9108,12 @@ impl ListRevisionsArg {
                     }
                     field_before_rev = Some(map.next_value()?);
                 }
+                "include_restorable_info" => {
+                    if field_include_restorable_info.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("include_restorable_info"));
+                    }
+                    field_include_restorable_info = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -9052,6 +9128,7 @@ impl ListRevisionsArg {
             mode: field_mode.unwrap_or(ListRevisionsMode::Path),
             limit: field_limit.unwrap_or(10),
             before_rev: field_before_rev.and_then(Option::flatten),
+            include_restorable_info: field_include_restorable_info.unwrap_or(false),
         };
         Ok(Some(result))
     }
@@ -9070,6 +9147,9 @@ impl ListRevisionsArg {
         }
         if let Some(val) = &self.before_rev {
             s.serialize_field("before_rev", val)?;
+        }
+        if self.include_restorable_info {
+            s.serialize_field("include_restorable_info", &self.include_restorable_info)?;
         }
         Ok(())
     }
@@ -9097,7 +9177,7 @@ impl ::serde::ser::Serialize for ListRevisionsArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListRevisionsArg", 4)?;
+        let mut s = serializer.serialize_struct("ListRevisionsArg", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -10425,7 +10505,7 @@ impl ::serde::ser::Serialize for Metadata {
         use serde::ser::SerializeStruct;
         match self {
             Metadata::File(x) => {
-                let mut s = serializer.serialize_struct("Metadata", 20)?;
+                let mut s = serializer.serialize_struct("Metadata", 21)?;
                 s.serialize_field(".tag", "file")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -10437,7 +10517,7 @@ impl ::serde::ser::Serialize for Metadata {
                 s.end()
             }
             Metadata::Deleted(x) => {
-                let mut s = serializer.serialize_struct("Metadata", 6)?;
+                let mut s = serializer.serialize_struct("Metadata", 7)?;
                 s.serialize_field(".tag", "deleted")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -15522,7 +15602,7 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
             }
             SaveUrlJobStatus::Complete(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 20)?;
+                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 21)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -15605,7 +15685,7 @@ impl ::serde::ser::Serialize for SaveUrlResult {
             }
             SaveUrlResult::Complete(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlResult", 20)?;
+                let mut s = serializer.serialize_struct("SaveUrlResult", 21)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -18111,7 +18191,7 @@ pub struct ThumbnailArg {
     pub size: ThumbnailSize,
     /// How to resize and crop the image to achieve the desired size.
     pub mode: ThumbnailMode,
-    /// Quality of the thumbnail image.
+    /// Field is only returned for "internal" callers. Quality of the thumbnail image.
     pub quality: ThumbnailQuality,
     /// Normally, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. When this
     /// flag is true, [`FileMetadata::media_info`](FileMetadata) is not populated. This improves
@@ -18634,7 +18714,7 @@ pub enum ThumbnailSize {
     W1024h768,
     /// 2048 by 1536 px.
     W2048h1536,
-    /// 3200 by 2400 px.
+    /// Field is only returned for "internal" callers. 3200 by 2400 px.
     W3200h2400,
 }
 
@@ -18767,7 +18847,7 @@ pub struct ThumbnailV2Arg {
     pub size: ThumbnailSize,
     /// How to resize and crop the image to achieve the desired size.
     pub mode: ThumbnailMode,
-    /// Quality of the thumbnail image.
+    /// Field is only returned for "internal" callers. Quality of the thumbnail image.
     pub quality: ThumbnailQuality,
     /// Normally, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. When this
     /// flag is true, [`FileMetadata::media_info`](FileMetadata) is not populated. This improves
@@ -21183,7 +21263,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
         match self {
             UploadSessionFinishBatchResultEntry::Success(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 20)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 21)?;
                 s.serialize_field(".tag", "success")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()

@@ -1120,26 +1120,6 @@ pub fn search_v2(
     )
 }
 
-/// Searches for files and folders. Note: [`search_v2()`](crate::files::search_v2) along with
-/// [`search_continue_v2()`](crate::files::search_continue_v2) can only be used to retrieve a
-/// maximum of 10,000 matches. Recent changes may not immediately be reflected in search results due
-/// to a short delay in indexing. Duplicate results may be returned across pages. Some results may
-/// not be returned.
-pub fn search_v2_app_auth(
-    client: &impl crate::client_trait::AppAuthClient,
-    arg: &SearchV2Arg,
-) -> Result<SearchV2Result, crate::Error<SearchError>> {
-    crate::client_helpers::unwrap_async(
-        crate::client_helpers::request(
-            client,
-            crate::client_trait_common::Endpoint::Api,
-            crate::client_trait_common::Style::Rpc,
-            "files/search_v2",
-            arg,
-            None)
-    )
-}
-
 /// Fetches the next page of search results returned from [`search_v2()`](crate::files::search_v2).
 /// Note: [`search_v2()`](crate::files::search_v2) along with
 /// [`search_continue_v2()`](crate::files::search_continue_v2) can only be used to retrieve a
@@ -1148,27 +1128,6 @@ pub fn search_v2_app_auth(
 /// not be returned.
 pub fn search_continue_v2(
     client: &impl crate::client_trait::UserAuthClient,
-    arg: &SearchV2ContinueArg,
-) -> Result<SearchV2Result, crate::Error<SearchError>> {
-    crate::client_helpers::unwrap_async(
-        crate::client_helpers::request(
-            client,
-            crate::client_trait_common::Endpoint::Api,
-            crate::client_trait_common::Style::Rpc,
-            "files/search/continue_v2",
-            arg,
-            None)
-    )
-}
-
-/// Fetches the next page of search results returned from [`search_v2()`](crate::files::search_v2).
-/// Note: [`search_v2()`](crate::files::search_v2) along with
-/// [`search_continue_v2()`](crate::files::search_continue_v2) can only be used to retrieve a
-/// maximum of 10,000 matches. Recent changes may not immediately be reflected in search results due
-/// to a short delay in indexing. Duplicate results may be returned across pages. Some results may
-/// not be returned.
-pub fn search_continue_v2_app_auth(
-    client: &impl crate::client_trait::AppAuthClient,
     arg: &SearchV2ContinueArg,
 ) -> Result<SearchV2Result, crate::Error<SearchError>> {
     crate::client_helpers::unwrap_async(

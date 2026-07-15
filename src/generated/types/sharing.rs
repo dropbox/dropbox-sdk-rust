@@ -282,7 +282,7 @@ pub struct AddFileMemberArgs {
     pub access_level: Option<AccessLevel>,
     /// If the custom message should be added as a comment on the file. Only meant for Paper files.
     pub add_message_as_comment: bool,
-    /// The FingerprintJS Sealed Client Result value
+    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
     pub fp_sealed_result: Option<String>,
 }
 
@@ -614,7 +614,7 @@ pub struct AddFolderMemberArg {
     pub quiet: bool,
     /// Optional message to display to added members in their invitation.
     pub custom_message: Option<String>,
-    /// The FingerprintJS Sealed Client Result value
+    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
     pub fp_sealed_result: Option<String>,
 }
 

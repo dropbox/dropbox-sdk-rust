@@ -9,6 +9,1397 @@
     clippy::doc_lazy_continuation,
 )]
 
+/// GPS coordinates and related tags extracted from image EXIF data. Fields are populated on a
+/// best-effort basis and may be empty when absent from the source file.
+#[derive(Debug, Clone, PartialEq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ApiExifGpsMetadata {
+    /// Latitude / longitude in decimal degrees (positive = N/E, negative = S/W).
+    pub latitude: f32,
+    pub longitude: f32,
+    /// Altitude in meters, as reported by the source (string to preserve the original
+    /// representation, which may include a reference direction).
+    pub altitude: String,
+    /// Timestamp / datestamp of the GPS fix, in the EXIF-provided format.
+    pub timestamp: String,
+    pub datestamp: String,
+}
+
+impl ApiExifGpsMetadata {
+    pub fn with_latitude(mut self, value: f32) -> Self {
+        self.latitude = value;
+        self
+    }
+
+    pub fn with_longitude(mut self, value: f32) -> Self {
+        self.longitude = value;
+        self
+    }
+
+    pub fn with_altitude(mut self, value: String) -> Self {
+        self.altitude = value;
+        self
+    }
+
+    pub fn with_timestamp(mut self, value: String) -> Self {
+        self.timestamp = value;
+        self
+    }
+
+    pub fn with_datestamp(mut self, value: String) -> Self {
+        self.datestamp = value;
+        self
+    }
+}
+
+const API_EXIF_GPS_METADATA_FIELDS: &[&str] = &["latitude",
+                                                "longitude",
+                                                "altitude",
+                                                "timestamp",
+                                                "datestamp"];
+impl ApiExifGpsMetadata {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiExifGpsMetadata, V::Error> {
+        let mut field_latitude = None;
+        let mut field_longitude = None;
+        let mut field_altitude = None;
+        let mut field_timestamp = None;
+        let mut field_datestamp = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "latitude" => {
+                    if field_latitude.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("latitude"));
+                    }
+                    field_latitude = Some(map.next_value()?);
+                }
+                "longitude" => {
+                    if field_longitude.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("longitude"));
+                    }
+                    field_longitude = Some(map.next_value()?);
+                }
+                "altitude" => {
+                    if field_altitude.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("altitude"));
+                    }
+                    field_altitude = Some(map.next_value()?);
+                }
+                "timestamp" => {
+                    if field_timestamp.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("timestamp"));
+                    }
+                    field_timestamp = Some(map.next_value()?);
+                }
+                "datestamp" => {
+                    if field_datestamp.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("datestamp"));
+                    }
+                    field_datestamp = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ApiExifGpsMetadata {
+            latitude: field_latitude.unwrap_or(0.0),
+            longitude: field_longitude.unwrap_or(0.0),
+            altitude: field_altitude.unwrap_or_default(),
+            timestamp: field_timestamp.unwrap_or_default(),
+            datestamp: field_datestamp.unwrap_or_default(),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.latitude != 0.0 {
+            s.serialize_field("latitude", &self.latitude)?;
+        }
+        if self.longitude != 0.0 {
+            s.serialize_field("longitude", &self.longitude)?;
+        }
+        if !self.altitude.is_empty() {
+            s.serialize_field("altitude", &self.altitude)?;
+        }
+        if !self.timestamp.is_empty() {
+            s.serialize_field("timestamp", &self.timestamp)?;
+        }
+        if !self.datestamp.is_empty() {
+            s.serialize_field("datestamp", &self.datestamp)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ApiExifGpsMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ApiExifGpsMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ApiExifGpsMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ApiExifGpsMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ApiExifGpsMetadata", API_EXIF_GPS_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ApiExifGpsMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ApiExifGpsMetadata", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Image EXIF metadata. Mirrors the useful subset of the internal `riviera.ExifMetadata` message.
+/// Fields are best-effort and may be empty.
+#[derive(Debug, Clone, PartialEq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ApiExifMetadata {
+    pub image_width: u32,
+    pub image_height: u32,
+    pub camera_make: String,
+    pub camera_model: String,
+    pub lens_model: String,
+    /// Capture time in the EXIF-provided format (local time of the camera).
+    pub date_time_original: String,
+    /// Timezone offset for `date_time_original`, e.g. "+09:00".
+    pub offset_time_original: String,
+    /// EXIF orientation value (1-8). See the EXIF spec; 1 is the normal upright orientation.
+    pub orientation: u32,
+    /// fraction in string form, e.g. "1/250"
+    pub exposure_time: String,
+    pub aperture_value: f64,
+    pub iso_speed: u32,
+    /// e.g. "26.0 mm"
+    pub focal_length: String,
+    pub megapixels: f64,
+    pub artist: String,
+    pub copyright: String,
+    pub gps_metadata: Option<ApiExifGpsMetadata>,
+}
+
+impl ApiExifMetadata {
+    pub fn with_image_width(mut self, value: u32) -> Self {
+        self.image_width = value;
+        self
+    }
+
+    pub fn with_image_height(mut self, value: u32) -> Self {
+        self.image_height = value;
+        self
+    }
+
+    pub fn with_camera_make(mut self, value: String) -> Self {
+        self.camera_make = value;
+        self
+    }
+
+    pub fn with_camera_model(mut self, value: String) -> Self {
+        self.camera_model = value;
+        self
+    }
+
+    pub fn with_lens_model(mut self, value: String) -> Self {
+        self.lens_model = value;
+        self
+    }
+
+    pub fn with_date_time_original(mut self, value: String) -> Self {
+        self.date_time_original = value;
+        self
+    }
+
+    pub fn with_offset_time_original(mut self, value: String) -> Self {
+        self.offset_time_original = value;
+        self
+    }
+
+    pub fn with_orientation(mut self, value: u32) -> Self {
+        self.orientation = value;
+        self
+    }
+
+    pub fn with_exposure_time(mut self, value: String) -> Self {
+        self.exposure_time = value;
+        self
+    }
+
+    pub fn with_aperture_value(mut self, value: f64) -> Self {
+        self.aperture_value = value;
+        self
+    }
+
+    pub fn with_iso_speed(mut self, value: u32) -> Self {
+        self.iso_speed = value;
+        self
+    }
+
+    pub fn with_focal_length(mut self, value: String) -> Self {
+        self.focal_length = value;
+        self
+    }
+
+    pub fn with_megapixels(mut self, value: f64) -> Self {
+        self.megapixels = value;
+        self
+    }
+
+    pub fn with_artist(mut self, value: String) -> Self {
+        self.artist = value;
+        self
+    }
+
+    pub fn with_copyright(mut self, value: String) -> Self {
+        self.copyright = value;
+        self
+    }
+
+    pub fn with_gps_metadata(mut self, value: ApiExifGpsMetadata) -> Self {
+        self.gps_metadata = Some(value);
+        self
+    }
+}
+
+const API_EXIF_METADATA_FIELDS: &[&str] = &["image_width",
+                                            "image_height",
+                                            "camera_make",
+                                            "camera_model",
+                                            "lens_model",
+                                            "date_time_original",
+                                            "offset_time_original",
+                                            "orientation",
+                                            "exposure_time",
+                                            "aperture_value",
+                                            "iso_speed",
+                                            "focal_length",
+                                            "megapixels",
+                                            "artist",
+                                            "copyright",
+                                            "gps_metadata"];
+impl ApiExifMetadata {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiExifMetadata, V::Error> {
+        let mut field_image_width = None;
+        let mut field_image_height = None;
+        let mut field_camera_make = None;
+        let mut field_camera_model = None;
+        let mut field_lens_model = None;
+        let mut field_date_time_original = None;
+        let mut field_offset_time_original = None;
+        let mut field_orientation = None;
+        let mut field_exposure_time = None;
+        let mut field_aperture_value = None;
+        let mut field_iso_speed = None;
+        let mut field_focal_length = None;
+        let mut field_megapixels = None;
+        let mut field_artist = None;
+        let mut field_copyright = None;
+        let mut field_gps_metadata = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "image_width" => {
+                    if field_image_width.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("image_width"));
+                    }
+                    field_image_width = Some(map.next_value()?);
+                }
+                "image_height" => {
+                    if field_image_height.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("image_height"));
+                    }
+                    field_image_height = Some(map.next_value()?);
+                }
+                "camera_make" => {
+                    if field_camera_make.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("camera_make"));
+                    }
+                    field_camera_make = Some(map.next_value()?);
+                }
+                "camera_model" => {
+                    if field_camera_model.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("camera_model"));
+                    }
+                    field_camera_model = Some(map.next_value()?);
+                }
+                "lens_model" => {
+                    if field_lens_model.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("lens_model"));
+                    }
+                    field_lens_model = Some(map.next_value()?);
+                }
+                "date_time_original" => {
+                    if field_date_time_original.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("date_time_original"));
+                    }
+                    field_date_time_original = Some(map.next_value()?);
+                }
+                "offset_time_original" => {
+                    if field_offset_time_original.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("offset_time_original"));
+                    }
+                    field_offset_time_original = Some(map.next_value()?);
+                }
+                "orientation" => {
+                    if field_orientation.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("orientation"));
+                    }
+                    field_orientation = Some(map.next_value()?);
+                }
+                "exposure_time" => {
+                    if field_exposure_time.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("exposure_time"));
+                    }
+                    field_exposure_time = Some(map.next_value()?);
+                }
+                "aperture_value" => {
+                    if field_aperture_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("aperture_value"));
+                    }
+                    field_aperture_value = Some(map.next_value()?);
+                }
+                "iso_speed" => {
+                    if field_iso_speed.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("iso_speed"));
+                    }
+                    field_iso_speed = Some(map.next_value()?);
+                }
+                "focal_length" => {
+                    if field_focal_length.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("focal_length"));
+                    }
+                    field_focal_length = Some(map.next_value()?);
+                }
+                "megapixels" => {
+                    if field_megapixels.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("megapixels"));
+                    }
+                    field_megapixels = Some(map.next_value()?);
+                }
+                "artist" => {
+                    if field_artist.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("artist"));
+                    }
+                    field_artist = Some(map.next_value()?);
+                }
+                "copyright" => {
+                    if field_copyright.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("copyright"));
+                    }
+                    field_copyright = Some(map.next_value()?);
+                }
+                "gps_metadata" => {
+                    if field_gps_metadata.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("gps_metadata"));
+                    }
+                    field_gps_metadata = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ApiExifMetadata {
+            image_width: field_image_width.unwrap_or(0),
+            image_height: field_image_height.unwrap_or(0),
+            camera_make: field_camera_make.unwrap_or_default(),
+            camera_model: field_camera_model.unwrap_or_default(),
+            lens_model: field_lens_model.unwrap_or_default(),
+            date_time_original: field_date_time_original.unwrap_or_default(),
+            offset_time_original: field_offset_time_original.unwrap_or_default(),
+            orientation: field_orientation.unwrap_or(0),
+            exposure_time: field_exposure_time.unwrap_or_default(),
+            aperture_value: field_aperture_value.unwrap_or(0.0),
+            iso_speed: field_iso_speed.unwrap_or(0),
+            focal_length: field_focal_length.unwrap_or_default(),
+            megapixels: field_megapixels.unwrap_or(0.0),
+            artist: field_artist.unwrap_or_default(),
+            copyright: field_copyright.unwrap_or_default(),
+            gps_metadata: field_gps_metadata.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.image_width != 0 {
+            s.serialize_field("image_width", &self.image_width)?;
+        }
+        if self.image_height != 0 {
+            s.serialize_field("image_height", &self.image_height)?;
+        }
+        if !self.camera_make.is_empty() {
+            s.serialize_field("camera_make", &self.camera_make)?;
+        }
+        if !self.camera_model.is_empty() {
+            s.serialize_field("camera_model", &self.camera_model)?;
+        }
+        if !self.lens_model.is_empty() {
+            s.serialize_field("lens_model", &self.lens_model)?;
+        }
+        if !self.date_time_original.is_empty() {
+            s.serialize_field("date_time_original", &self.date_time_original)?;
+        }
+        if !self.offset_time_original.is_empty() {
+            s.serialize_field("offset_time_original", &self.offset_time_original)?;
+        }
+        if self.orientation != 0 {
+            s.serialize_field("orientation", &self.orientation)?;
+        }
+        if !self.exposure_time.is_empty() {
+            s.serialize_field("exposure_time", &self.exposure_time)?;
+        }
+        if self.aperture_value != 0.0 {
+            s.serialize_field("aperture_value", &self.aperture_value)?;
+        }
+        if self.iso_speed != 0 {
+            s.serialize_field("iso_speed", &self.iso_speed)?;
+        }
+        if !self.focal_length.is_empty() {
+            s.serialize_field("focal_length", &self.focal_length)?;
+        }
+        if self.megapixels != 0.0 {
+            s.serialize_field("megapixels", &self.megapixels)?;
+        }
+        if !self.artist.is_empty() {
+            s.serialize_field("artist", &self.artist)?;
+        }
+        if !self.copyright.is_empty() {
+            s.serialize_field("copyright", &self.copyright)?;
+        }
+        if let Some(val) = &self.gps_metadata {
+            s.serialize_field("gps_metadata", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ApiExifMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ApiExifMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ApiExifMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ApiExifMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ApiExifMetadata", API_EXIF_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ApiExifMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ApiExifMetadata", 16)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Audio/video container and per-stream metadata. Mirrors the useful subset of the internal
+/// `riviera.MediaMetadata` message.
+#[derive(Debug, Clone, PartialEq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ApiMediaMetadata {
+    pub bitrate_bps: u64,
+    pub duration_s: f64,
+    /// Container-level creation time, when present.
+    pub creation_time: String,
+    pub streams: Option<Vec<ApiMediaStream>>,
+}
+
+impl ApiMediaMetadata {
+    pub fn with_bitrate_bps(mut self, value: u64) -> Self {
+        self.bitrate_bps = value;
+        self
+    }
+
+    pub fn with_duration_s(mut self, value: f64) -> Self {
+        self.duration_s = value;
+        self
+    }
+
+    pub fn with_creation_time(mut self, value: String) -> Self {
+        self.creation_time = value;
+        self
+    }
+
+    pub fn with_streams(mut self, value: Vec<ApiMediaStream>) -> Self {
+        self.streams = Some(value);
+        self
+    }
+}
+
+const API_MEDIA_METADATA_FIELDS: &[&str] = &["bitrate_bps",
+                                             "duration_s",
+                                             "creation_time",
+                                             "streams"];
+impl ApiMediaMetadata {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiMediaMetadata, V::Error> {
+        let mut field_bitrate_bps = None;
+        let mut field_duration_s = None;
+        let mut field_creation_time = None;
+        let mut field_streams = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "bitrate_bps" => {
+                    if field_bitrate_bps.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("bitrate_bps"));
+                    }
+                    field_bitrate_bps = Some(map.next_value()?);
+                }
+                "duration_s" => {
+                    if field_duration_s.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("duration_s"));
+                    }
+                    field_duration_s = Some(map.next_value()?);
+                }
+                "creation_time" => {
+                    if field_creation_time.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("creation_time"));
+                    }
+                    field_creation_time = Some(map.next_value()?);
+                }
+                "streams" => {
+                    if field_streams.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("streams"));
+                    }
+                    field_streams = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ApiMediaMetadata {
+            bitrate_bps: field_bitrate_bps.unwrap_or(0),
+            duration_s: field_duration_s.unwrap_or(0.0),
+            creation_time: field_creation_time.unwrap_or_default(),
+            streams: field_streams.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.bitrate_bps != 0 {
+            s.serialize_field("bitrate_bps", &self.bitrate_bps)?;
+        }
+        if self.duration_s != 0.0 {
+            s.serialize_field("duration_s", &self.duration_s)?;
+        }
+        if !self.creation_time.is_empty() {
+            s.serialize_field("creation_time", &self.creation_time)?;
+        }
+        if let Some(val) = &self.streams {
+            s.serialize_field("streams", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ApiMediaMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ApiMediaMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ApiMediaMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ApiMediaMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ApiMediaMetadata", API_MEDIA_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ApiMediaMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ApiMediaMetadata", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// A single audio or video stream within a media file.
+#[derive(Debug, Clone, PartialEq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ApiMediaStream {
+    pub index: u32,
+    /// "audio", "video", etc.
+    pub codec_type: String,
+    pub codec_name: String,
+    pub bitrate_bps: u64,
+    pub duration_s: f64,
+    /// Video-specific fields (zero / empty for audio streams).
+    pub width: u32,
+    pub height: u32,
+    pub frames_per_second: f64,
+    pub rotation: i32,
+    /// e.g. "16:9"
+    pub display_aspect_ratio: String,
+    /// Audio-specific fields (zero / empty for video streams).
+    pub channels: u32,
+    pub channel_layout: String,
+    pub sample_rate_s: u64,
+    /// ISO 639 language code for the stream, when present.
+    pub language_iso_639: String,
+}
+
+impl ApiMediaStream {
+    pub fn with_index(mut self, value: u32) -> Self {
+        self.index = value;
+        self
+    }
+
+    pub fn with_codec_type(mut self, value: String) -> Self {
+        self.codec_type = value;
+        self
+    }
+
+    pub fn with_codec_name(mut self, value: String) -> Self {
+        self.codec_name = value;
+        self
+    }
+
+    pub fn with_bitrate_bps(mut self, value: u64) -> Self {
+        self.bitrate_bps = value;
+        self
+    }
+
+    pub fn with_duration_s(mut self, value: f64) -> Self {
+        self.duration_s = value;
+        self
+    }
+
+    pub fn with_width(mut self, value: u32) -> Self {
+        self.width = value;
+        self
+    }
+
+    pub fn with_height(mut self, value: u32) -> Self {
+        self.height = value;
+        self
+    }
+
+    pub fn with_frames_per_second(mut self, value: f64) -> Self {
+        self.frames_per_second = value;
+        self
+    }
+
+    pub fn with_rotation(mut self, value: i32) -> Self {
+        self.rotation = value;
+        self
+    }
+
+    pub fn with_display_aspect_ratio(mut self, value: String) -> Self {
+        self.display_aspect_ratio = value;
+        self
+    }
+
+    pub fn with_channels(mut self, value: u32) -> Self {
+        self.channels = value;
+        self
+    }
+
+    pub fn with_channel_layout(mut self, value: String) -> Self {
+        self.channel_layout = value;
+        self
+    }
+
+    pub fn with_sample_rate_s(mut self, value: u64) -> Self {
+        self.sample_rate_s = value;
+        self
+    }
+
+    pub fn with_language_iso_639(mut self, value: String) -> Self {
+        self.language_iso_639 = value;
+        self
+    }
+}
+
+const API_MEDIA_STREAM_FIELDS: &[&str] = &["index",
+                                           "codec_type",
+                                           "codec_name",
+                                           "bitrate_bps",
+                                           "duration_s",
+                                           "width",
+                                           "height",
+                                           "frames_per_second",
+                                           "rotation",
+                                           "display_aspect_ratio",
+                                           "channels",
+                                           "channel_layout",
+                                           "sample_rate_s",
+                                           "language_iso_639"];
+impl ApiMediaStream {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiMediaStream, V::Error> {
+        let mut field_index = None;
+        let mut field_codec_type = None;
+        let mut field_codec_name = None;
+        let mut field_bitrate_bps = None;
+        let mut field_duration_s = None;
+        let mut field_width = None;
+        let mut field_height = None;
+        let mut field_frames_per_second = None;
+        let mut field_rotation = None;
+        let mut field_display_aspect_ratio = None;
+        let mut field_channels = None;
+        let mut field_channel_layout = None;
+        let mut field_sample_rate_s = None;
+        let mut field_language_iso_639 = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "index" => {
+                    if field_index.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("index"));
+                    }
+                    field_index = Some(map.next_value()?);
+                }
+                "codec_type" => {
+                    if field_codec_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("codec_type"));
+                    }
+                    field_codec_type = Some(map.next_value()?);
+                }
+                "codec_name" => {
+                    if field_codec_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("codec_name"));
+                    }
+                    field_codec_name = Some(map.next_value()?);
+                }
+                "bitrate_bps" => {
+                    if field_bitrate_bps.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("bitrate_bps"));
+                    }
+                    field_bitrate_bps = Some(map.next_value()?);
+                }
+                "duration_s" => {
+                    if field_duration_s.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("duration_s"));
+                    }
+                    field_duration_s = Some(map.next_value()?);
+                }
+                "width" => {
+                    if field_width.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("width"));
+                    }
+                    field_width = Some(map.next_value()?);
+                }
+                "height" => {
+                    if field_height.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("height"));
+                    }
+                    field_height = Some(map.next_value()?);
+                }
+                "frames_per_second" => {
+                    if field_frames_per_second.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("frames_per_second"));
+                    }
+                    field_frames_per_second = Some(map.next_value()?);
+                }
+                "rotation" => {
+                    if field_rotation.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("rotation"));
+                    }
+                    field_rotation = Some(map.next_value()?);
+                }
+                "display_aspect_ratio" => {
+                    if field_display_aspect_ratio.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("display_aspect_ratio"));
+                    }
+                    field_display_aspect_ratio = Some(map.next_value()?);
+                }
+                "channels" => {
+                    if field_channels.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("channels"));
+                    }
+                    field_channels = Some(map.next_value()?);
+                }
+                "channel_layout" => {
+                    if field_channel_layout.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("channel_layout"));
+                    }
+                    field_channel_layout = Some(map.next_value()?);
+                }
+                "sample_rate_s" => {
+                    if field_sample_rate_s.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("sample_rate_s"));
+                    }
+                    field_sample_rate_s = Some(map.next_value()?);
+                }
+                "language_iso_639" => {
+                    if field_language_iso_639.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("language_iso_639"));
+                    }
+                    field_language_iso_639 = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ApiMediaStream {
+            index: field_index.unwrap_or(0),
+            codec_type: field_codec_type.unwrap_or_default(),
+            codec_name: field_codec_name.unwrap_or_default(),
+            bitrate_bps: field_bitrate_bps.unwrap_or(0),
+            duration_s: field_duration_s.unwrap_or(0.0),
+            width: field_width.unwrap_or(0),
+            height: field_height.unwrap_or(0),
+            frames_per_second: field_frames_per_second.unwrap_or(0.0),
+            rotation: field_rotation.unwrap_or(0),
+            display_aspect_ratio: field_display_aspect_ratio.unwrap_or_default(),
+            channels: field_channels.unwrap_or(0),
+            channel_layout: field_channel_layout.unwrap_or_default(),
+            sample_rate_s: field_sample_rate_s.unwrap_or(0),
+            language_iso_639: field_language_iso_639.unwrap_or_default(),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.index != 0 {
+            s.serialize_field("index", &self.index)?;
+        }
+        if !self.codec_type.is_empty() {
+            s.serialize_field("codec_type", &self.codec_type)?;
+        }
+        if !self.codec_name.is_empty() {
+            s.serialize_field("codec_name", &self.codec_name)?;
+        }
+        if self.bitrate_bps != 0 {
+            s.serialize_field("bitrate_bps", &self.bitrate_bps)?;
+        }
+        if self.duration_s != 0.0 {
+            s.serialize_field("duration_s", &self.duration_s)?;
+        }
+        if self.width != 0 {
+            s.serialize_field("width", &self.width)?;
+        }
+        if self.height != 0 {
+            s.serialize_field("height", &self.height)?;
+        }
+        if self.frames_per_second != 0.0 {
+            s.serialize_field("frames_per_second", &self.frames_per_second)?;
+        }
+        if self.rotation != 0 {
+            s.serialize_field("rotation", &self.rotation)?;
+        }
+        if !self.display_aspect_ratio.is_empty() {
+            s.serialize_field("display_aspect_ratio", &self.display_aspect_ratio)?;
+        }
+        if self.channels != 0 {
+            s.serialize_field("channels", &self.channels)?;
+        }
+        if !self.channel_layout.is_empty() {
+            s.serialize_field("channel_layout", &self.channel_layout)?;
+        }
+        if self.sample_rate_s != 0 {
+            s.serialize_field("sample_rate_s", &self.sample_rate_s)?;
+        }
+        if !self.language_iso_639.is_empty() {
+            s.serialize_field("language_iso_639", &self.language_iso_639)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ApiMediaStream {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ApiMediaStream;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ApiMediaStream struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ApiMediaStream::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ApiMediaStream", API_MEDIA_STREAM_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ApiMediaStream {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ApiMediaStream", 14)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// MS Office document metadata. Mirrors the internal `riviera.OfficeMetadata` message. Some fields
+/// apply only to specific document types (e.g. `slides` for PowerPoint, `words`/`pages` for Word).
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ApiOfficeMetadata {
+    pub file_type: OfficeFileType,
+    pub creator: String,
+    pub company: String,
+    pub title: String,
+    pub subject: String,
+    pub keywords: String,
+    pub description: String,
+    pub total_edit_time_minutes: u32,
+    /// Word only.
+    pub pages: u32,
+    pub words: u32,
+    /// PowerPoint only.
+    pub slides: u32,
+    pub revision_number: String,
+}
+
+impl Default for ApiOfficeMetadata {
+    fn default() -> Self {
+        ApiOfficeMetadata {
+            file_type: OfficeFileType::OfficeFiletypeUnknown,
+            creator: String::new(),
+            company: String::new(),
+            title: String::new(),
+            subject: String::new(),
+            keywords: String::new(),
+            description: String::new(),
+            total_edit_time_minutes: 0,
+            pages: 0,
+            words: 0,
+            slides: 0,
+            revision_number: String::new(),
+        }
+    }
+}
+
+impl ApiOfficeMetadata {
+    pub fn with_file_type(mut self, value: OfficeFileType) -> Self {
+        self.file_type = value;
+        self
+    }
+
+    pub fn with_creator(mut self, value: String) -> Self {
+        self.creator = value;
+        self
+    }
+
+    pub fn with_company(mut self, value: String) -> Self {
+        self.company = value;
+        self
+    }
+
+    pub fn with_title(mut self, value: String) -> Self {
+        self.title = value;
+        self
+    }
+
+    pub fn with_subject(mut self, value: String) -> Self {
+        self.subject = value;
+        self
+    }
+
+    pub fn with_keywords(mut self, value: String) -> Self {
+        self.keywords = value;
+        self
+    }
+
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = value;
+        self
+    }
+
+    pub fn with_total_edit_time_minutes(mut self, value: u32) -> Self {
+        self.total_edit_time_minutes = value;
+        self
+    }
+
+    pub fn with_pages(mut self, value: u32) -> Self {
+        self.pages = value;
+        self
+    }
+
+    pub fn with_words(mut self, value: u32) -> Self {
+        self.words = value;
+        self
+    }
+
+    pub fn with_slides(mut self, value: u32) -> Self {
+        self.slides = value;
+        self
+    }
+
+    pub fn with_revision_number(mut self, value: String) -> Self {
+        self.revision_number = value;
+        self
+    }
+}
+
+const API_OFFICE_METADATA_FIELDS: &[&str] = &["file_type",
+                                              "creator",
+                                              "company",
+                                              "title",
+                                              "subject",
+                                              "keywords",
+                                              "description",
+                                              "total_edit_time_minutes",
+                                              "pages",
+                                              "words",
+                                              "slides",
+                                              "revision_number"];
+impl ApiOfficeMetadata {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiOfficeMetadata, V::Error> {
+        let mut field_file_type = None;
+        let mut field_creator = None;
+        let mut field_company = None;
+        let mut field_title = None;
+        let mut field_subject = None;
+        let mut field_keywords = None;
+        let mut field_description = None;
+        let mut field_total_edit_time_minutes = None;
+        let mut field_pages = None;
+        let mut field_words = None;
+        let mut field_slides = None;
+        let mut field_revision_number = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "file_type" => {
+                    if field_file_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_type"));
+                    }
+                    field_file_type = Some(map.next_value()?);
+                }
+                "creator" => {
+                    if field_creator.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("creator"));
+                    }
+                    field_creator = Some(map.next_value()?);
+                }
+                "company" => {
+                    if field_company.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("company"));
+                    }
+                    field_company = Some(map.next_value()?);
+                }
+                "title" => {
+                    if field_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("title"));
+                    }
+                    field_title = Some(map.next_value()?);
+                }
+                "subject" => {
+                    if field_subject.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("subject"));
+                    }
+                    field_subject = Some(map.next_value()?);
+                }
+                "keywords" => {
+                    if field_keywords.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("keywords"));
+                    }
+                    field_keywords = Some(map.next_value()?);
+                }
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                "total_edit_time_minutes" => {
+                    if field_total_edit_time_minutes.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("total_edit_time_minutes"));
+                    }
+                    field_total_edit_time_minutes = Some(map.next_value()?);
+                }
+                "pages" => {
+                    if field_pages.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("pages"));
+                    }
+                    field_pages = Some(map.next_value()?);
+                }
+                "words" => {
+                    if field_words.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("words"));
+                    }
+                    field_words = Some(map.next_value()?);
+                }
+                "slides" => {
+                    if field_slides.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("slides"));
+                    }
+                    field_slides = Some(map.next_value()?);
+                }
+                "revision_number" => {
+                    if field_revision_number.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("revision_number"));
+                    }
+                    field_revision_number = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ApiOfficeMetadata {
+            file_type: field_file_type.unwrap_or(OfficeFileType::OfficeFiletypeUnknown),
+            creator: field_creator.unwrap_or_default(),
+            company: field_company.unwrap_or_default(),
+            title: field_title.unwrap_or_default(),
+            subject: field_subject.unwrap_or_default(),
+            keywords: field_keywords.unwrap_or_default(),
+            description: field_description.unwrap_or_default(),
+            total_edit_time_minutes: field_total_edit_time_minutes.unwrap_or(0),
+            pages: field_pages.unwrap_or(0),
+            words: field_words.unwrap_or(0),
+            slides: field_slides.unwrap_or(0),
+            revision_number: field_revision_number.unwrap_or_default(),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.file_type != OfficeFileType::OfficeFiletypeUnknown {
+            s.serialize_field("file_type", &self.file_type)?;
+        }
+        if !self.creator.is_empty() {
+            s.serialize_field("creator", &self.creator)?;
+        }
+        if !self.company.is_empty() {
+            s.serialize_field("company", &self.company)?;
+        }
+        if !self.title.is_empty() {
+            s.serialize_field("title", &self.title)?;
+        }
+        if !self.subject.is_empty() {
+            s.serialize_field("subject", &self.subject)?;
+        }
+        if !self.keywords.is_empty() {
+            s.serialize_field("keywords", &self.keywords)?;
+        }
+        if !self.description.is_empty() {
+            s.serialize_field("description", &self.description)?;
+        }
+        if self.total_edit_time_minutes != 0 {
+            s.serialize_field("total_edit_time_minutes", &self.total_edit_time_minutes)?;
+        }
+        if self.pages != 0 {
+            s.serialize_field("pages", &self.pages)?;
+        }
+        if self.words != 0 {
+            s.serialize_field("words", &self.words)?;
+        }
+        if self.slides != 0 {
+            s.serialize_field("slides", &self.slides)?;
+        }
+        if !self.revision_number.is_empty() {
+            s.serialize_field("revision_number", &self.revision_number)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ApiOfficeMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ApiOfficeMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ApiOfficeMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ApiOfficeMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ApiOfficeMetadata", API_OFFICE_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ApiOfficeMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ApiOfficeMetadata", 12)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// PDF document metadata.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ApiPdfMetadata {
+    pub pages: u32,
+    /// Width / height of the first page, in PDF points.
+    pub width: u32,
+    pub height: u32,
+}
+
+impl ApiPdfMetadata {
+    pub fn with_pages(mut self, value: u32) -> Self {
+        self.pages = value;
+        self
+    }
+
+    pub fn with_width(mut self, value: u32) -> Self {
+        self.width = value;
+        self
+    }
+
+    pub fn with_height(mut self, value: u32) -> Self {
+        self.height = value;
+        self
+    }
+}
+
+const API_PDF_METADATA_FIELDS: &[&str] = &["pages",
+                                           "width",
+                                           "height"];
+impl ApiPdfMetadata {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiPdfMetadata, V::Error> {
+        let mut field_pages = None;
+        let mut field_width = None;
+        let mut field_height = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "pages" => {
+                    if field_pages.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("pages"));
+                    }
+                    field_pages = Some(map.next_value()?);
+                }
+                "width" => {
+                    if field_width.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("width"));
+                    }
+                    field_width = Some(map.next_value()?);
+                }
+                "height" => {
+                    if field_height.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("height"));
+                    }
+                    field_height = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ApiPdfMetadata {
+            pages: field_pages.unwrap_or(0),
+            width: field_width.unwrap_or(0),
+            height: field_height.unwrap_or(0),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.pages != 0 {
+            s.serialize_field("pages", &self.pages)?;
+        }
+        if self.width != 0 {
+            s.serialize_field("width", &self.width)?;
+        }
+        if self.height != 0 {
+            s.serialize_field("height", &self.height)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ApiPdfMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ApiPdfMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ApiPdfMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ApiPdfMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ApiPdfMetadata", API_PDF_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ApiPdfMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ApiPdfMetadata", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Structured transcript for APIv2
 #[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -235,6 +1626,10 @@ pub enum ContentApiV2Error {
     LinkDownloadDisabledError,
     SharedLinkPasswordProtected,
     LimitExceededError,
+    /// The referenced file does not exist or is not accessible.
+    NotFoundError,
+    /// The target is a folder, not a file.
+    IsAFolderError,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -275,6 +1670,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ContentApiV2Error {
                     "link_download_disabled_error" => ContentApiV2Error::LinkDownloadDisabledError,
                     "shared_link_password_protected" => ContentApiV2Error::SharedLinkPasswordProtected,
                     "limit_exceeded_error" => ContentApiV2Error::LimitExceededError,
+                    "not_found_error" => ContentApiV2Error::NotFoundError,
+                    "is_a_folder_error" => ContentApiV2Error::IsAFolderError,
                     _ => ContentApiV2Error::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -288,6 +1685,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ContentApiV2Error {
                                     "link_download_disabled_error",
                                     "shared_link_password_protected",
                                     "limit_exceeded_error",
+                                    "not_found_error",
+                                    "is_a_folder_error",
                                     "other"];
         deserializer.deserialize_struct("ContentApiV2Error", VARIANTS, EnumVisitor)
     }
@@ -343,6 +1742,18 @@ impl ::serde::ser::Serialize for ContentApiV2Error {
                 s.serialize_field(".tag", "limit_exceeded_error")?;
                 s.end()
             }
+            ContentApiV2Error::NotFoundError => {
+                // unit
+                let mut s = serializer.serialize_struct("ContentApiV2Error", 1)?;
+                s.serialize_field(".tag", "not_found_error")?;
+                s.end()
+            }
+            ContentApiV2Error::IsAFolderError => {
+                // unit
+                let mut s = serializer.serialize_struct("ContentApiV2Error", 1)?;
+                s.serialize_field(".tag", "is_a_folder_error")?;
+                s.end()
+            }
             ContentApiV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -357,6 +1768,8 @@ impl ::std::fmt::Display for ContentApiV2Error {
             ContentApiV2Error::ServerError(inner) => write!(f, "server_error: {:?}", inner),
             ContentApiV2Error::UserError(inner) => write!(f, "user_error: {:?}", inner),
             ContentApiV2Error::MediaDurationError(inner) => write!(f, "media_duration_error: {:?}", inner),
+            ContentApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
+            ContentApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -956,6 +2369,394 @@ impl ::serde::ser::Serialize for GetMarkdownResult {
     }
 }
 
+/// Arguments for the asynchronous `get_metadata_async` route. Exactly one of `file_id`, `path`, or
+/// `url` must be supplied via `file_id_or_url` to identify the file whose metadata should be
+/// extracted.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetMetadataArgs {
+    /// Identifier of the file to extract metadata from. Callers must set exactly one of the oneof
+    /// variants: - file_id: a Dropbox-issued file id (format: "id:<id>") for a file the
+    /// authenticated user has access to. - path: an absolute Dropbox path, e.g.
+    /// "/folder/photo.jpg". - url: either a Dropbox shared link (www.dropbox.com) or an external
+    /// HTTPS URL pointing to a supported file. - Dropbox shared links are resolved internally using
+    /// the caller's authenticated identity and the link's visibility / download settings. They
+    /// therefore require an authenticated user context (anonymous `url` requests against Dropbox
+    /// links are rejected with an `ACCESS_ERROR`). Links protected by a password are rejected with
+    /// `shared_link_password_protected`; links with downloads disabled are rejected with
+    /// `link_download_disabled_error`. - External URLs are fetched over HTTPS through the backend's
+    /// egress proxy and must point at a supported file extension. The kind of metadata returned is
+    /// determined by the file type: image files return EXIF metadata, audio/video files return
+    /// media metadata, PDFs return PDF metadata, and MS Office documents (docx, pptx, xlsx) return
+    /// Office metadata. Requests against unsupported formats return `unsupported_format_error`.
+    pub file_id_or_url: Option<FileIdOrUrl>,
+}
+
+impl GetMetadataArgs {
+    pub fn with_file_id_or_url(mut self, value: FileIdOrUrl) -> Self {
+        self.file_id_or_url = Some(value);
+        self
+    }
+}
+
+const GET_METADATA_ARGS_FIELDS: &[&str] = &["file_id_or_url"];
+impl GetMetadataArgs {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMetadataArgs, V::Error> {
+        let mut field_file_id_or_url = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "file_id_or_url" => {
+                    if field_file_id_or_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_id_or_url"));
+                    }
+                    field_file_id_or_url = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetMetadataArgs {
+            file_id_or_url: field_file_id_or_url.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.file_id_or_url {
+            s.serialize_field("file_id_or_url", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMetadataArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetMetadataArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetMetadataArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetMetadataArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetMetadataArgs", GET_METADATA_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMetadataArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetMetadataArgs", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Result type for EventBus async check - must end in "CheckResult"
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum GetMetadataAsyncCheckResult {
+    InProgress,
+    Complete(GetMetadataResult),
+    Failed(GetMetadataAsyncError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMetadataAsyncCheckResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetMetadataAsyncCheckResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetMetadataAsyncCheckResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "in_progress" => GetMetadataAsyncCheckResult::InProgress,
+                    "complete" => GetMetadataAsyncCheckResult::Complete(GetMetadataResult::internal_deserialize(&mut map)?),
+                    "failed" => GetMetadataAsyncCheckResult::Failed(GetMetadataAsyncError::internal_deserialize(&mut map)?),
+                    _ => GetMetadataAsyncCheckResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("GetMetadataAsyncCheckResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMetadataAsyncCheckResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            GetMetadataAsyncCheckResult::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("GetMetadataAsyncCheckResult", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            GetMetadataAsyncCheckResult::Complete(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetMetadataAsyncCheckResult", 3)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetMetadataAsyncCheckResult::Failed(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetMetadataAsyncCheckResult", 3)?;
+                s.serialize_field(".tag", "failed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetMetadataAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetMetadataAsyncError {
+    pub error_code: ErrorCode,
+    pub error_details: Option<MetadataExtractionApiV2Error>,
+}
+
+impl Default for GetMetadataAsyncError {
+    fn default() -> Self {
+        GetMetadataAsyncError {
+            error_code: ErrorCode::UnknownError,
+            error_details: None,
+        }
+    }
+}
+
+impl GetMetadataAsyncError {
+    pub fn with_error_code(mut self, value: ErrorCode) -> Self {
+        self.error_code = value;
+        self
+    }
+
+    pub fn with_error_details(mut self, value: MetadataExtractionApiV2Error) -> Self {
+        self.error_details = Some(value);
+        self
+    }
+}
+
+const GET_METADATA_ASYNC_ERROR_FIELDS: &[&str] = &["error_code",
+                                                   "error_details"];
+impl GetMetadataAsyncError {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMetadataAsyncError, V::Error> {
+        let mut field_error_code = None;
+        let mut field_error_details = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "error_code" => {
+                    if field_error_code.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("error_code"));
+                    }
+                    field_error_code = Some(map.next_value()?);
+                }
+                "error_details" => {
+                    if field_error_details.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("error_details"));
+                    }
+                    field_error_details = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetMetadataAsyncError {
+            error_code: field_error_code.unwrap_or(ErrorCode::UnknownError),
+            error_details: field_error_details.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.error_code != ErrorCode::UnknownError {
+            s.serialize_field("error_code", &self.error_code)?;
+        }
+        if let Some(val) = &self.error_details {
+            s.serialize_field("error_details", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMetadataAsyncError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetMetadataAsyncError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetMetadataAsyncError struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetMetadataAsyncError::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetMetadataAsyncError", GET_METADATA_ASYNC_ERROR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMetadataAsyncError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetMetadataAsyncError", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetMetadataResult {
+    /// The kind of metadata that was extracted for the requested file. Callers should read the
+    /// matching field of the `metadata` oneof.
+    pub metadata_type: MetadataType,
+    pub metadata: Option<MetadataUnion>,
+}
+
+impl Default for GetMetadataResult {
+    fn default() -> Self {
+        GetMetadataResult {
+            metadata_type: MetadataType::MetadataTypeUnknown,
+            metadata: None,
+        }
+    }
+}
+
+impl GetMetadataResult {
+    pub fn with_metadata_type(mut self, value: MetadataType) -> Self {
+        self.metadata_type = value;
+        self
+    }
+
+    pub fn with_metadata(mut self, value: MetadataUnion) -> Self {
+        self.metadata = Some(value);
+        self
+    }
+}
+
+const GET_METADATA_RESULT_FIELDS: &[&str] = &["metadata_type",
+                                              "metadata"];
+impl GetMetadataResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMetadataResult, V::Error> {
+        let mut field_metadata_type = None;
+        let mut field_metadata = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "metadata_type" => {
+                    if field_metadata_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("metadata_type"));
+                    }
+                    field_metadata_type = Some(map.next_value()?);
+                }
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetMetadataResult {
+            metadata_type: field_metadata_type.unwrap_or(MetadataType::MetadataTypeUnknown),
+            metadata: field_metadata.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.metadata_type != MetadataType::MetadataTypeUnknown {
+            s.serialize_field("metadata_type", &self.metadata_type)?;
+        }
+        if let Some(val) = &self.metadata {
+            s.serialize_field("metadata", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMetadataResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetMetadataResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetMetadataResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetMetadataResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetMetadataResult", GET_METADATA_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMetadataResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetMetadataResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Arguments for the asynchronous `get_transcript_async` route. Exactly one of `file_id`, `path`,
 /// or `url` must be supplied via `file_id_or_url` to identify the audio or video asset to
 /// transcribe.
@@ -984,10 +2785,10 @@ pub struct GetTranscriptArgs {
     /// `"uh, ah, uhm"`. By default these fillers are stripped. Unrecognized tokens are ignored.
     /// Leave empty to use the default filtering behavior.
     pub included_special_words: String,
-    /// Optional BCP-47 language tag hinting the spoken language of the source audio (e.g. "en-US",
-    /// "ja-JP"). When empty, the service auto-detects the language; supplying a hint improves
-    /// accuracy and latency for short or ambiguous clips. Unsupported languages fall back to
-    /// auto-detection.
+    /// Optional ISO 639-1 two-letter language code hinting the spoken language of the source audio
+    /// (e.g. "en", "ja"). When empty, the service auto-detects the language; supplying a hint
+    /// improves accuracy and latency for short or ambiguous clips. Unsupported languages fall back
+    /// to auto-detection.
     pub audio_language: String,
 }
 
@@ -1402,6 +3203,10 @@ pub enum MarkdownConversionApiV2Error {
     SharedLinkPasswordProtected,
     LimitExceededError,
     ConversionFailureError,
+    /// The referenced file does not exist or is not accessible.
+    NotFoundError,
+    /// The target is a folder, not a file.
+    IsAFolderError,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1442,6 +3247,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MarkdownConversionApiV2Error {
                     "shared_link_password_protected" => MarkdownConversionApiV2Error::SharedLinkPasswordProtected,
                     "limit_exceeded_error" => MarkdownConversionApiV2Error::LimitExceededError,
                     "conversion_failure_error" => MarkdownConversionApiV2Error::ConversionFailureError,
+                    "not_found_error" => MarkdownConversionApiV2Error::NotFoundError,
+                    "is_a_folder_error" => MarkdownConversionApiV2Error::IsAFolderError,
                     _ => MarkdownConversionApiV2Error::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -1455,6 +3262,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MarkdownConversionApiV2Error {
                                     "shared_link_password_protected",
                                     "limit_exceeded_error",
                                     "conversion_failure_error",
+                                    "not_found_error",
+                                    "is_a_folder_error",
                                     "other"];
         deserializer.deserialize_struct("MarkdownConversionApiV2Error", VARIANTS, EnumVisitor)
     }
@@ -1509,6 +3318,18 @@ impl ::serde::ser::Serialize for MarkdownConversionApiV2Error {
                 s.serialize_field(".tag", "conversion_failure_error")?;
                 s.end()
             }
+            MarkdownConversionApiV2Error::NotFoundError => {
+                // unit
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 1)?;
+                s.serialize_field(".tag", "not_found_error")?;
+                s.end()
+            }
+            MarkdownConversionApiV2Error::IsAFolderError => {
+                // unit
+                let mut s = serializer.serialize_struct("MarkdownConversionApiV2Error", 1)?;
+                s.serialize_field(".tag", "is_a_folder_error")?;
+                s.end()
+            }
             MarkdownConversionApiV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -1522,6 +3343,8 @@ impl ::std::fmt::Display for MarkdownConversionApiV2Error {
         match self {
             MarkdownConversionApiV2Error::ServerError(inner) => write!(f, "server_error: {:?}", inner),
             MarkdownConversionApiV2Error::UserError(inner) => write!(f, "user_error: {:?}", inner),
+            MarkdownConversionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
+            MarkdownConversionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -1609,6 +3432,336 @@ impl ::serde::ser::Serialize for MediaDurationError {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
+pub enum MetadataExtractionApiV2Error {
+    ServerError(String),
+    UserError(String),
+    UnsupportedFormatError,
+    LinkDownloadDisabledError,
+    SharedLinkPasswordProtected,
+    LimitExceededError,
+    ConversionFailureError,
+    /// The referenced file does not exist or is not accessible.
+    NotFoundError,
+    /// The target is a folder, not a file.
+    IsAFolderError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MetadataExtractionApiV2Error {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MetadataExtractionApiV2Error;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MetadataExtractionApiV2Error structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "server_error" => {
+                        match map.next_key()? {
+                            Some("server_error") => MetadataExtractionApiV2Error::ServerError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("server_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_error" => {
+                        match map.next_key()? {
+                            Some("user_error") => MetadataExtractionApiV2Error::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unsupported_format_error" => MetadataExtractionApiV2Error::UnsupportedFormatError,
+                    "link_download_disabled_error" => MetadataExtractionApiV2Error::LinkDownloadDisabledError,
+                    "shared_link_password_protected" => MetadataExtractionApiV2Error::SharedLinkPasswordProtected,
+                    "limit_exceeded_error" => MetadataExtractionApiV2Error::LimitExceededError,
+                    "conversion_failure_error" => MetadataExtractionApiV2Error::ConversionFailureError,
+                    "not_found_error" => MetadataExtractionApiV2Error::NotFoundError,
+                    "is_a_folder_error" => MetadataExtractionApiV2Error::IsAFolderError,
+                    _ => MetadataExtractionApiV2Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["server_error",
+                                    "user_error",
+                                    "unsupported_format_error",
+                                    "link_download_disabled_error",
+                                    "shared_link_password_protected",
+                                    "limit_exceeded_error",
+                                    "conversion_failure_error",
+                                    "not_found_error",
+                                    "is_a_folder_error",
+                                    "other"];
+        deserializer.deserialize_struct("MetadataExtractionApiV2Error", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MetadataExtractionApiV2Error {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            MetadataExtractionApiV2Error::ServerError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 2)?;
+                s.serialize_field(".tag", "server_error")?;
+                s.serialize_field("server_error", x)?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::UserError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 2)?;
+                s.serialize_field(".tag", "user_error")?;
+                s.serialize_field("user_error", x)?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::UnsupportedFormatError => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_format_error")?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::LinkDownloadDisabledError => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "link_download_disabled_error")?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::SharedLinkPasswordProtected => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "shared_link_password_protected")?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::LimitExceededError => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "limit_exceeded_error")?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::ConversionFailureError => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "conversion_failure_error")?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::NotFoundError => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "not_found_error")?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::IsAFolderError => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "is_a_folder_error")?;
+                s.end()
+            }
+            MetadataExtractionApiV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MetadataExtractionApiV2Error {
+}
+
+impl ::std::fmt::Display for MetadataExtractionApiV2Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            MetadataExtractionApiV2Error::ServerError(inner) => write!(f, "server_error: {:?}", inner),
+            MetadataExtractionApiV2Error::UserError(inner) => write!(f, "user_error: {:?}", inner),
+            MetadataExtractionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
+            MetadataExtractionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// Which metadata variant is populated in a `GetMetadataResult`, derived from the file type.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MetadataType {
+    MetadataTypeUnknown,
+    MetadataTypeExif,
+    MetadataTypeMedia,
+    MetadataTypePdf,
+    MetadataTypeOffice,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MetadataType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MetadataType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MetadataType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "metadata_type_unknown" => MetadataType::MetadataTypeUnknown,
+                    "metadata_type_exif" => MetadataType::MetadataTypeExif,
+                    "metadata_type_media" => MetadataType::MetadataTypeMedia,
+                    "metadata_type_pdf" => MetadataType::MetadataTypePdf,
+                    "metadata_type_office" => MetadataType::MetadataTypeOffice,
+                    _ => MetadataType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["metadata_type_unknown",
+                                    "metadata_type_exif",
+                                    "metadata_type_media",
+                                    "metadata_type_pdf",
+                                    "metadata_type_office",
+                                    "other"];
+        deserializer.deserialize_struct("MetadataType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MetadataType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            MetadataType::MetadataTypeUnknown => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataType", 1)?;
+                s.serialize_field(".tag", "metadata_type_unknown")?;
+                s.end()
+            }
+            MetadataType::MetadataTypeExif => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataType", 1)?;
+                s.serialize_field(".tag", "metadata_type_exif")?;
+                s.end()
+            }
+            MetadataType::MetadataTypeMedia => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataType", 1)?;
+                s.serialize_field(".tag", "metadata_type_media")?;
+                s.end()
+            }
+            MetadataType::MetadataTypePdf => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataType", 1)?;
+                s.serialize_field(".tag", "metadata_type_pdf")?;
+                s.end()
+            }
+            MetadataType::MetadataTypeOffice => {
+                // unit
+                let mut s = serializer.serialize_struct("MetadataType", 1)?;
+                s.serialize_field(".tag", "metadata_type_office")?;
+                s.end()
+            }
+            MetadataType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// The kind of MS Office document that produced an `ApiOfficeMetadata` result.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum OfficeFileType {
+    OfficeFiletypeUnknown,
+    OfficeFiletypeWord,
+    OfficeFiletypePowerpoint,
+    OfficeFiletypeExcel,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for OfficeFileType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = OfficeFileType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a OfficeFileType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "office_filetype_unknown" => OfficeFileType::OfficeFiletypeUnknown,
+                    "office_filetype_word" => OfficeFileType::OfficeFiletypeWord,
+                    "office_filetype_powerpoint" => OfficeFileType::OfficeFiletypePowerpoint,
+                    "office_filetype_excel" => OfficeFileType::OfficeFiletypeExcel,
+                    _ => OfficeFileType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["office_filetype_unknown",
+                                    "office_filetype_word",
+                                    "office_filetype_powerpoint",
+                                    "office_filetype_excel",
+                                    "other"];
+        deserializer.deserialize_struct("OfficeFileType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for OfficeFileType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            OfficeFileType::OfficeFiletypeUnknown => {
+                // unit
+                let mut s = serializer.serialize_struct("OfficeFileType", 1)?;
+                s.serialize_field(".tag", "office_filetype_unknown")?;
+                s.end()
+            }
+            OfficeFileType::OfficeFiletypeWord => {
+                // unit
+                let mut s = serializer.serialize_struct("OfficeFileType", 1)?;
+                s.serialize_field(".tag", "office_filetype_word")?;
+                s.end()
+            }
+            OfficeFileType::OfficeFiletypePowerpoint => {
+                // unit
+                let mut s = serializer.serialize_struct("OfficeFileType", 1)?;
+                s.serialize_field(".tag", "office_filetype_powerpoint")?;
+                s.end()
+            }
+            OfficeFileType::OfficeFiletypeExcel => {
+                // unit
+                let mut s = serializer.serialize_struct("OfficeFileType", 1)?;
+                s.serialize_field(".tag", "office_filetype_excel")?;
+                s.end()
+            }
+            OfficeFileType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TimestampLevel {
     Unknown,
     Sentence,
@@ -1675,6 +3828,92 @@ impl ::serde::ser::Serialize for TimestampLevel {
                 s.end()
             }
             TimestampLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Exactly one variant is populated, corresponding to `metadata_type`.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MetadataUnion {
+    Exif(ApiExifMetadata),
+    Media(ApiMediaMetadata),
+    Pdf(ApiPdfMetadata),
+    Office(ApiOfficeMetadata),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MetadataUnion {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MetadataUnion;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a metadata_union structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "exif" => MetadataUnion::Exif(ApiExifMetadata::internal_deserialize(&mut map)?),
+                    "media" => MetadataUnion::Media(ApiMediaMetadata::internal_deserialize(&mut map)?),
+                    "pdf" => MetadataUnion::Pdf(ApiPdfMetadata::internal_deserialize(&mut map)?),
+                    "office" => MetadataUnion::Office(ApiOfficeMetadata::internal_deserialize(&mut map)?),
+                    _ => MetadataUnion::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["exif",
+                                    "media",
+                                    "pdf",
+                                    "office",
+                                    "other"];
+        deserializer.deserialize_struct("metadata_union", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MetadataUnion {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            MetadataUnion::Exif(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("metadata_union", 17)?;
+                s.serialize_field(".tag", "exif")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            MetadataUnion::Media(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("metadata_union", 5)?;
+                s.serialize_field(".tag", "media")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            MetadataUnion::Pdf(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("metadata_union", 4)?;
+                s.serialize_field(".tag", "pdf")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            MetadataUnion::Office(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("metadata_union", 13)?;
+                s.serialize_field(".tag", "office")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            MetadataUnion::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

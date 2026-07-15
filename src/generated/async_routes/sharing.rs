@@ -227,11 +227,11 @@ pub fn get_shared_link_metadata_app_auth<'a>(
         None)
 }
 
+/// DEPRECATED: Use list_shared_links instead. This endpoint will be retired in October 2026.
 /// Returns a list of [`LinkMetadata`] objects for this user, including collection links. If no path
 /// is given, returns a list of all shared links for the current user, including collection links,
 /// up to a maximum of 1000 links. If a non-empty path is given, returns a list of all shared links
 /// that allow access to the given path. Collection links are never returned in this case.
-/// DEPRECATED: Use list_shared_links instead.
 #[deprecated]
 pub fn get_shared_links<'a>(
     client: &'a impl crate::async_client_trait::UserAuthClient,
