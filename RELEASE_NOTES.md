@@ -1,4 +1,5 @@
-# unreleased changes
+# v0.20.2
+2026-07-15
 * API spec update 2027-06-29
 * API spec update 2026-07-13
     * technically a breaking change, as `dropbox_sdk::files::search[_continue]_v2_app_auth()` was removed, but it never actually worked
