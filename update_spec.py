@@ -2,6 +2,7 @@
 
 import argparse
 import contextlib
+import json
 import os
 import subprocess
 
@@ -42,17 +43,14 @@ def main():
     update_manifest(args.spec_path)
 
     # cargo metadata | jq '.packages[] | select(.name == "dropbox-sdk") | .features | keys | map(select(IN("default","unstable") | not)) | join(",")'
-    cargo_metadata = subprocess.Popen(["cargo", "metadata"], stdout=subprocess.PIPE)
-    features = subprocess.check_output(["jq", "-r", '.packages[] \
-            | select(.name == "dropbox-sdk") \
-            | .features \
-            | keys \
-            | map(select(IN("default", "unstable") | not)) \
-            | join(",")',
-            ], stdin=cargo_metadata.stdout)
-    print(f"Running tests with features: {features.strip()}")
+    cargo_metadata_out = subprocess.run(["cargo", "metadata", "--format-version=1"], stdout=subprocess.PIPE, check=True)
+    cargo_metadata = json.loads(cargo_metadata_out.stdout.decode("utf-8").strip())
+    pkg = [pkg for pkg in cargo_metadata["packages"] if pkg["name"] == "dropbox-sdk"][0]
+    features = ",".join(sorted(pkg["features"].keys() - {"default", "unstable"}))
 
-    cargo_result = subprocess.run(["cargo", "test", "--no-default-features", "--features", features.strip(), "--no-fail-fast"])
+    print(f"Running tests with features: {features}")
+
+    cargo_result = subprocess.run(["cargo", "test", "--no-default-features", "--features", features, "--no-fail-fast"])
     if cargo_result.returncode == 0:
         print()
         print("Tests from the old spec succeeded.")
