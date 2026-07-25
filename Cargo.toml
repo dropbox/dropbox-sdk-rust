@@ -111,6 +111,10 @@ async_routes = []
 # If disabled, export the async routes there instead.
 sync_routes_in_root = ["sync_routes"]
 
+# Exclude tests of unstable features.
+# Only affects test code, no library code.
+only_semver_tests = []
+
 # Include all namespaces by default.
 # Enable sync default client, sync routes, and make the sync routes default, to match pre-v0.19.
 default = [

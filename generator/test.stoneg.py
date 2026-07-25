@@ -57,6 +57,11 @@ class TestBackend(RustHelperBackend):
         self.reference = PythonTypesBackend(self.ref_path, args + ["--package", "reference"])
         self.reference_impls: Dict[str, Module] = {}
 
+        # The set of types which are only used in unstable routes should have
+        #   #[cfg(not(feature = "only_semver_tests"))]
+        # applied to their tests, so that they are not included in semver checks.
+        self.unstable_types = set()
+
     # Make test values for this type.
     # If it's a union or polymorphic type, make values for all variants.
     # If the type or any of its variants have optional fields, also make two versions: one with all
@@ -86,6 +91,9 @@ class TestBackend(RustHelperBackend):
         return vals
 
     def generate(self, api: ir.Api) -> None:
+        print('Categorizing types')
+        self._categorize_types(api)
+
         print('Generating Python reference code')
         self.reference.generate(api)
         with self.output_to_relative_path('reference/__init__.py'):
@@ -182,6 +190,8 @@ class TestBackend(RustHelperBackend):
 
             if test_value.is_deprecated():
                 self.emit('#[allow(deprecated)] // deprecated variant')
+            if typ in self.unstable_types:
+                self.emit('#[cfg(not(feature = "only_semver_tests"))]')
             with self._test_fn(type_name + test_value.test_suffix()):
                 self.emit(f'let json = r#"{json}"#;')
                 self.emit(f'let x = ::serde_json::from_str::<::dropbox_sdk::types::{ns_name}::{rsname}>(json).unwrap();')
@@ -211,6 +221,8 @@ class TestBackend(RustHelperBackend):
         type_name = self.struct_name(typ)
         if any(v.deprecated for v in self.get_enum_variants(typ)):
             self.emit('#[allow(deprecated)] // some variants are deprecated')
+        if typ in self.unstable_types:
+            self.emit('#[cfg(not(feature = "only_semver_tests"))]')
         with self._test_fn("ClosedUnion_" + type_name):
             self.emit('// This test ensures that an exhaustive match compiles.')
             self.emit(f'let x: Option<::dropbox_sdk::types::{ns_name}::{self.enum_name(typ)}> = None;')
@@ -284,7 +296,7 @@ class TestBackend(RustHelperBackend):
                 auth_type = auths[0]
 
         if route.attrs.get('is_preview'):
-            self.emit('#[cfg(feature = "unstable")]')
+            self.emit('#[cfg(all(feature = "unstable", not(feature = "only_semver_tests")))]')
 
         if route.deprecated:
             self.emit('#[allow(deprecated)]')
@@ -315,6 +327,40 @@ class TestBackend(RustHelperBackend):
         self.emit('#[test]')
         with self.emit_rust_function_def('test_' + name):
             yield
+
+    def _categorize_types(self, api: ir.Api) -> None:
+        stable_types = set()
+        unstable_types = set()
+
+        for ns in api.namespaces.values():
+            for route in ns.routes:
+                typeset = unstable_types if route.attrs.get('is_preview') else stable_types
+                for typ in [route.arg_data_type, route.result_data_type, route.error_data_type]:
+                    _categorize_types_visitor(typ, typeset)
+        # If a type is used by both stable and unstable routes, it is part of the stable API.
+        # This set means ONLY used by unstable routes.
+        self.unstable_types = unstable_types - stable_types
+
+
+def _categorize_types_visitor(
+        typ: Optional[ir.DataType],
+        typeset: set[ir.DataType],
+) -> None:
+    if isinstance(typ, ir.UserDefined):
+        typeset.add(typ)
+
+    # continue into the fields of structs and variants of unions
+    if hasattr(typ, 'all_fields') and typ.all_fields:
+        for field in typ.all_fields:
+            _categorize_types_visitor(field.data_type, typeset)
+
+    # continue into the inner data types of lists, maps, nullables, etc
+    inner_attrs = ['data_type', 'key_data_type', 'value_data_type']
+    for attr in inner_attrs:
+        if hasattr(typ, attr):
+            inner_typ = getattr(typ, attr)
+            if inner_typ:
+                _categorize_types_visitor(inner_typ, typeset)
 
 
 def _typ_or_void(typ: ir.DataType) -> ir.DataType:
