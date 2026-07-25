@@ -48,7 +48,7 @@ def generate_code(spec_root: str, gen_rust: bool, gen_test: bool):
 
     specs = []
     for path in spec_files(spec_root):
-        with open(path) as f:
+        with open(path, encoding='utf-8') as f:
             specs.append((path, f.read()))
 
     try:

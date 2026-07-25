@@ -28,7 +28,7 @@ def update_manifest(stone_root: str):
             continue
         if not module in deps:
             deps[module] = set()
-        with open(filepath) as f:
+        with open(filepath, encoding='utf-8') as f:
             for line in f:
                 if line.startswith('import '):
                     imported = line.strip().split('import ')[1]
