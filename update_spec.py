@@ -41,7 +41,18 @@ def main():
     generate_code(args.spec_path, gen_rust=True, gen_test=False)
     update_manifest(args.spec_path)
 
-    cargo_result = subprocess.run(["cargo", "test", "--all-features", "--no-fail-fast"])
+    # cargo metadata | jq '.packages[] | select(.name == "dropbox-sdk") | .features | keys | map(select(IN("default","unstable") | not)) | join(",")'
+    cargo_metadata = subprocess.Popen(["cargo", "metadata"], stdout=subprocess.PIPE)
+    features = subprocess.check_output(["jq", "-r", '.packages[] \
+            | select(.name == "dropbox-sdk") \
+            | .features \
+            | keys \
+            | map(select(IN("default", "unstable") | not)) \
+            | join(",")',
+            ], stdin=cargo_metadata.stdout)
+    print(f"Running tests with features: {features.strip()}")
+
+    cargo_result = subprocess.run(["cargo", "test", "--no-default-features", "--features", features.strip(), "--no-fail-fast"])
     if cargo_result.returncode == 0:
         print()
         print("Tests from the old spec succeeded.")

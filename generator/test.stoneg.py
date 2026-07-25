@@ -58,7 +58,7 @@ class TestBackend(RustHelperBackend):
         self.reference_impls: Dict[str, Module] = {}
 
         # The set of types which are only used in unstable routes should have
-        #   #[cfg(not(feature = "only_semver_tests"))]
+        #   #[cfg(feature = "unstable")]
         # applied to their tests, so that they are not included in semver checks.
         self.unstable_types = set()
 
@@ -191,7 +191,7 @@ class TestBackend(RustHelperBackend):
             if test_value.is_deprecated():
                 self.emit('#[allow(deprecated)] // deprecated variant')
             if typ in self.unstable_types:
-                self.emit('#[cfg(not(feature = "only_semver_tests"))]')
+                self.emit('#[cfg(feature = "unstable")]')
             with self._test_fn(type_name + test_value.test_suffix()):
                 self.emit(f'let json = r#"{json}"#;')
                 self.emit(f'let x = ::serde_json::from_str::<::dropbox_sdk::types::{ns_name}::{rsname}>(json).unwrap();')
@@ -222,7 +222,7 @@ class TestBackend(RustHelperBackend):
         if any(v.deprecated for v in self.get_enum_variants(typ)):
             self.emit('#[allow(deprecated)] // some variants are deprecated')
         if typ in self.unstable_types:
-            self.emit('#[cfg(not(feature = "only_semver_tests"))]')
+            self.emit('#[cfg(feature = "unstable")]')
         with self._test_fn("ClosedUnion_" + type_name):
             self.emit('// This test ensures that an exhaustive match compiles.')
             self.emit(f'let x: Option<::dropbox_sdk::types::{ns_name}::{self.enum_name(typ)}> = None;')
@@ -296,7 +296,7 @@ class TestBackend(RustHelperBackend):
                 auth_type = auths[0]
 
         if route.attrs.get('is_preview'):
-            self.emit('#[cfg(all(feature = "unstable", not(feature = "only_semver_tests")))]')
+            self.emit('#[cfg(feature = "unstable")]')
 
         if route.deprecated:
             self.emit('#[allow(deprecated)]')

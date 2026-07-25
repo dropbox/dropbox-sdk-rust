@@ -1,3 +1,6 @@
+// this whole test depends on the unstable /check/user route
+#![cfg(feature = "unstable")]
+
 use bytes::Bytes;
 use dropbox_sdk::Error;
 use dropbox_sdk::async_client_trait::*;
