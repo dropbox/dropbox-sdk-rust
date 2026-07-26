@@ -349,10 +349,16 @@ def _categorize_types_visitor(
     if isinstance(typ, ir.UserDefined):
         typeset.add(typ)
 
-    # continue into the fields of structs and variants of unions
+    # continue into the fields of structs
     if hasattr(typ, 'all_fields') and typ.all_fields:
         for field in typ.all_fields:
             _categorize_types_visitor(field.data_type, typeset)
+
+    # union variants
+    if hasattr(typ, 'get_enumerated_subtypes') and hasattr(typ, 'has_enumerated_subtypes') \
+            and typ.has_enumerated_subtypes():
+        for variant in typ.get_enumerated_subtypes():
+            _categorize_types_visitor(variant.data_type, typeset)
 
     # continue into the inner data types of lists, maps, nullables, etc
     inner_attrs = ['data_type', 'key_data_type', 'value_data_type']
@@ -361,6 +367,11 @@ def _categorize_types_visitor(
             inner_typ = getattr(typ, attr)
             if inner_typ:
                 _categorize_types_visitor(inner_typ, typeset)
+
+    while hasattr(typ, 'parent_type') and typ.parent_type:
+        if isinstance(typ.parent_type, ir.UserDefined):
+            typeset.add(typ.parent_type)
+        typ = typ.parent_type
 
 
 def _typ_or_void(typ: ir.DataType) -> ir.DataType:
