@@ -16,7 +16,7 @@ rust-version = "1.85.0" # Feb 20, 2025
 
 [dependencies]
 async-lock = "3"
-base64 = "0.22"
+base64 = "0.23"
 bytes = "1"
 log = "0.4"
 ring = "0.17"
