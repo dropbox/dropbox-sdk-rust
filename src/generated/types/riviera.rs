@@ -1616,10 +1616,18 @@ impl ::serde::ser::Serialize for ApiTranscriptSegment {
     }
 }
 
+/// Reason a transcript job failed. Returned in the `failed` variant of
+/// `GetTranscriptAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll
+/// request itself is unaffected (a poll that surfaces a failed job is still a normal successful
+/// poll response). Callers should branch on the variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ContentApiV2Error {
+    /// An unexpected, typically transient, server-side failure. The string is a human-readable
+    /// message; retrying with backoff may succeed.
     ServerError(String),
+    /// The request could not be processed as supplied (a problem with the caller's input). The
+    /// string is a human-readable message; retrying the same request will not help.
     UserError(String),
     MediaDurationError(MediaDurationError),
     NoAudioError,
@@ -1765,8 +1773,8 @@ impl ::std::error::Error for ContentApiV2Error {
 impl ::std::fmt::Display for ContentApiV2Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            ContentApiV2Error::ServerError(inner) => write!(f, "server_error: {:?}", inner),
-            ContentApiV2Error::UserError(inner) => write!(f, "user_error: {:?}", inner),
+            ContentApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
+            ContentApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
             ContentApiV2Error::MediaDurationError(inner) => write!(f, "media_duration_error: {:?}", inner),
             ContentApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
             ContentApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
@@ -1777,113 +1785,20 @@ impl ::std::fmt::Display for ContentApiV2Error {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
-pub enum ErrorCode {
-    UnknownError,
-    /// 400
-    BadRequest,
-    /// 409
-    ApiError,
-    /// 403
-    AccessError,
-    /// 429
-    RatelimitError,
-    /// 503
-    Unavailable,
-    /// Catch-all used for unrecognized values returned from the server. Encountering this value
-    /// typically indicates that this SDK version is out of date.
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ErrorCode {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ErrorCode;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a ErrorCode structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                let value = match tag {
-                    "unknown_error" => ErrorCode::UnknownError,
-                    "bad_request" => ErrorCode::BadRequest,
-                    "api_error" => ErrorCode::ApiError,
-                    "access_error" => ErrorCode::AccessError,
-                    "ratelimit_error" => ErrorCode::RatelimitError,
-                    "unavailable" => ErrorCode::Unavailable,
-                    _ => ErrorCode::Other,
-                };
-                crate::eat_json_fields(&mut map)?;
-                Ok(value)
-            }
-        }
-        const VARIANTS: &[&str] = &["unknown_error",
-                                    "bad_request",
-                                    "api_error",
-                                    "access_error",
-                                    "ratelimit_error",
-                                    "unavailable",
-                                    "other"];
-        deserializer.deserialize_struct("ErrorCode", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ErrorCode {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match self {
-            ErrorCode::UnknownError => {
-                // unit
-                let mut s = serializer.serialize_struct("ErrorCode", 1)?;
-                s.serialize_field(".tag", "unknown_error")?;
-                s.end()
-            }
-            ErrorCode::BadRequest => {
-                // unit
-                let mut s = serializer.serialize_struct("ErrorCode", 1)?;
-                s.serialize_field(".tag", "bad_request")?;
-                s.end()
-            }
-            ErrorCode::ApiError => {
-                // unit
-                let mut s = serializer.serialize_struct("ErrorCode", 1)?;
-                s.serialize_field(".tag", "api_error")?;
-                s.end()
-            }
-            ErrorCode::AccessError => {
-                // unit
-                let mut s = serializer.serialize_struct("ErrorCode", 1)?;
-                s.serialize_field(".tag", "access_error")?;
-                s.end()
-            }
-            ErrorCode::RatelimitError => {
-                // unit
-                let mut s = serializer.serialize_struct("ErrorCode", 1)?;
-                s.serialize_field(".tag", "ratelimit_error")?;
-                s.end()
-            }
-            ErrorCode::Unavailable => {
-                // unit
-                let mut s = serializer.serialize_struct("ErrorCode", 1)?;
-                s.serialize_field(".tag", "unavailable")?;
-                s.end()
-            }
-            ErrorCode::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[non_exhaustive] // variants may be added in the future
 pub enum FileIdOrUrl {
+    /// A Dropbox-issued file id (format: "id:<id>") for a file the authenticated user has access
+    /// to.
     FileId(String),
+    /// Either a Dropbox shared link (www.dropbox.com) or an external HTTP or HTTPS URL pointing to
+    /// a supported file. - Dropbox shared links are resolved internally using the caller's
+    /// authenticated identity and the link's visibility / download settings. They therefore require
+    /// an authenticated user context (anonymous `url` requests against Dropbox links are rejected
+    /// with an `access_error`). Links protected by a password are rejected with
+    /// `shared_link_password_protected`; links with downloads disabled are rejected with
+    /// `link_download_disabled_error`. - External URLs are fetched through the backend's egress
+    /// proxy and must point at a supported file extension.
     Url(String),
+    /// An absolute Dropbox path, e.g. "/folder/example.pdf".
     Path(String),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -1977,18 +1892,9 @@ impl ::serde::ser::Serialize for FileIdOrUrl {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMarkdownArgs {
-    /// Identifier of the document to convert. Callers must set exactly one of the oneof variants: -
-    /// file_id: a Dropbox-issued file id (format: "id:<id>") for a file the authenticated user has
-    /// access to. - path: an absolute Dropbox path, e.g. "/folder/report.docx". - url: either a
-    /// Dropbox shared link (www.dropbox.com) or an external HTTPS URL pointing to a supported
-    /// document file. - Dropbox shared links are resolved internally using the caller's
-    /// authenticated identity and the link's visibility / download settings. They therefore require
-    /// an authenticated user context (anonymous `url` requests against Dropbox links are rejected
-    /// with an `ACCESS_ERROR`). Links protected by a password are rejected with
-    /// `shared_link_password_protected`; links with downloads disabled are rejected with
-    /// `link_download_disabled_error`. - External URLs are fetched over HTTPS through the backend's
-    /// egress proxy and must point at a supported document file extension. The referenced file must
-    /// be a document in a supported format; requests against unsupported formats return
+    /// Identifier of the document to convert. Callers must set exactly one of the `FileIdOrUrl`
+    /// variants. The referenced file must be a document in a supported format (see the route
+    /// description for the list); requests against unsupported formats return
     /// `unsupported_format_error`.
     pub file_id_or_url: Option<FileIdOrUrl>,
     /// Enable OCR for PDF documents. Processing is slower when enabled.
@@ -2112,7 +2018,7 @@ impl ::serde::ser::Serialize for GetMarkdownArgs {
 pub enum GetMarkdownAsyncCheckResult {
     InProgress,
     Complete(GetMarkdownResult),
-    Failed(GetMarkdownAsyncError),
+    Failed(MarkdownConversionApiV2Error),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2136,7 +2042,13 @@ impl<'de> ::serde::de::Deserialize<'de> for GetMarkdownAsyncCheckResult {
                 let value = match tag {
                     "in_progress" => GetMarkdownAsyncCheckResult::InProgress,
                     "complete" => GetMarkdownAsyncCheckResult::Complete(GetMarkdownResult::internal_deserialize(&mut map)?),
-                    "failed" => GetMarkdownAsyncCheckResult::Failed(GetMarkdownAsyncError::internal_deserialize(&mut map)?),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => GetMarkdownAsyncCheckResult::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => GetMarkdownAsyncCheckResult::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -2170,121 +2082,14 @@ impl ::serde::ser::Serialize for GetMarkdownAsyncCheckResult {
                 s.end()
             }
             GetMarkdownAsyncCheckResult::Failed(x) => {
-                // struct
-                let mut s = serializer.serialize_struct("GetMarkdownAsyncCheckResult", 3)?;
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("GetMarkdownAsyncCheckResult", 2)?;
                 s.serialize_field(".tag", "failed")?;
-                x.internal_serialize::<S>(&mut s)?;
+                s.serialize_field("failed", x)?;
                 s.end()
             }
             GetMarkdownAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[non_exhaustive] // structs may have more fields added in the future.
-pub struct GetMarkdownAsyncError {
-    pub error_code: ErrorCode,
-    pub error_details: Option<MarkdownConversionApiV2Error>,
-}
-
-impl Default for GetMarkdownAsyncError {
-    fn default() -> Self {
-        GetMarkdownAsyncError {
-            error_code: ErrorCode::UnknownError,
-            error_details: None,
-        }
-    }
-}
-
-impl GetMarkdownAsyncError {
-    pub fn with_error_code(mut self, value: ErrorCode) -> Self {
-        self.error_code = value;
-        self
-    }
-
-    pub fn with_error_details(mut self, value: MarkdownConversionApiV2Error) -> Self {
-        self.error_details = Some(value);
-        self
-    }
-}
-
-const GET_MARKDOWN_ASYNC_ERROR_FIELDS: &[&str] = &["error_code",
-                                                   "error_details"];
-impl GetMarkdownAsyncError {
-    // no _opt deserializer
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<GetMarkdownAsyncError, V::Error> {
-        let mut field_error_code = None;
-        let mut field_error_details = None;
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                "error_code" => {
-                    if field_error_code.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("error_code"));
-                    }
-                    field_error_code = Some(map.next_value()?);
-                }
-                "error_details" => {
-                    if field_error_details.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("error_details"));
-                    }
-                    field_error_details = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = GetMarkdownAsyncError {
-            error_code: field_error_code.unwrap_or(ErrorCode::UnknownError),
-            error_details: field_error_details.and_then(Option::flatten),
-        };
-        Ok(result)
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        if self.error_code != ErrorCode::UnknownError {
-            s.serialize_field("error_code", &self.error_code)?;
-        }
-        if let Some(val) = &self.error_details {
-            s.serialize_field("error_details", val)?;
-        }
-        Ok(())
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetMarkdownAsyncError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetMarkdownAsyncError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a GetMarkdownAsyncError struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetMarkdownAsyncError::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetMarkdownAsyncError", GET_MARKDOWN_ASYNC_ERROR_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetMarkdownAsyncError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetMarkdownAsyncError", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
@@ -2375,20 +2180,12 @@ impl ::serde::ser::Serialize for GetMarkdownResult {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMetadataArgs {
-    /// Identifier of the file to extract metadata from. Callers must set exactly one of the oneof
-    /// variants: - file_id: a Dropbox-issued file id (format: "id:<id>") for a file the
-    /// authenticated user has access to. - path: an absolute Dropbox path, e.g.
-    /// "/folder/photo.jpg". - url: either a Dropbox shared link (www.dropbox.com) or an external
-    /// HTTPS URL pointing to a supported file. - Dropbox shared links are resolved internally using
-    /// the caller's authenticated identity and the link's visibility / download settings. They
-    /// therefore require an authenticated user context (anonymous `url` requests against Dropbox
-    /// links are rejected with an `ACCESS_ERROR`). Links protected by a password are rejected with
-    /// `shared_link_password_protected`; links with downloads disabled are rejected with
-    /// `link_download_disabled_error`. - External URLs are fetched over HTTPS through the backend's
-    /// egress proxy and must point at a supported file extension. The kind of metadata returned is
-    /// determined by the file type: image files return EXIF metadata, audio/video files return
-    /// media metadata, PDFs return PDF metadata, and MS Office documents (docx, pptx, xlsx) return
-    /// Office metadata. Requests against unsupported formats return `unsupported_format_error`.
+    /// Identifier of the file to extract metadata from. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. The kind of metadata returned is determined by the file type: image
+    /// files return EXIF metadata, audio/video files return media metadata, PDFs return PDF
+    /// metadata, and MS Office documents (docx, pptx, xlsx) return Office metadata. See the route
+    /// description for the supported formats. Requests against unsupported formats return
+    /// `unsupported_format_error`.
     pub file_id_or_url: Option<FileIdOrUrl>,
 }
 
@@ -2472,7 +2269,7 @@ impl ::serde::ser::Serialize for GetMetadataArgs {
 pub enum GetMetadataAsyncCheckResult {
     InProgress,
     Complete(GetMetadataResult),
-    Failed(GetMetadataAsyncError),
+    Failed(MetadataExtractionApiV2Error),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2496,7 +2293,13 @@ impl<'de> ::serde::de::Deserialize<'de> for GetMetadataAsyncCheckResult {
                 let value = match tag {
                     "in_progress" => GetMetadataAsyncCheckResult::InProgress,
                     "complete" => GetMetadataAsyncCheckResult::Complete(GetMetadataResult::internal_deserialize(&mut map)?),
-                    "failed" => GetMetadataAsyncCheckResult::Failed(GetMetadataAsyncError::internal_deserialize(&mut map)?),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => GetMetadataAsyncCheckResult::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => GetMetadataAsyncCheckResult::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -2530,121 +2333,14 @@ impl ::serde::ser::Serialize for GetMetadataAsyncCheckResult {
                 s.end()
             }
             GetMetadataAsyncCheckResult::Failed(x) => {
-                // struct
-                let mut s = serializer.serialize_struct("GetMetadataAsyncCheckResult", 3)?;
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("GetMetadataAsyncCheckResult", 2)?;
                 s.serialize_field(".tag", "failed")?;
-                x.internal_serialize::<S>(&mut s)?;
+                s.serialize_field("failed", x)?;
                 s.end()
             }
             GetMetadataAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[non_exhaustive] // structs may have more fields added in the future.
-pub struct GetMetadataAsyncError {
-    pub error_code: ErrorCode,
-    pub error_details: Option<MetadataExtractionApiV2Error>,
-}
-
-impl Default for GetMetadataAsyncError {
-    fn default() -> Self {
-        GetMetadataAsyncError {
-            error_code: ErrorCode::UnknownError,
-            error_details: None,
-        }
-    }
-}
-
-impl GetMetadataAsyncError {
-    pub fn with_error_code(mut self, value: ErrorCode) -> Self {
-        self.error_code = value;
-        self
-    }
-
-    pub fn with_error_details(mut self, value: MetadataExtractionApiV2Error) -> Self {
-        self.error_details = Some(value);
-        self
-    }
-}
-
-const GET_METADATA_ASYNC_ERROR_FIELDS: &[&str] = &["error_code",
-                                                   "error_details"];
-impl GetMetadataAsyncError {
-    // no _opt deserializer
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<GetMetadataAsyncError, V::Error> {
-        let mut field_error_code = None;
-        let mut field_error_details = None;
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                "error_code" => {
-                    if field_error_code.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("error_code"));
-                    }
-                    field_error_code = Some(map.next_value()?);
-                }
-                "error_details" => {
-                    if field_error_details.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("error_details"));
-                    }
-                    field_error_details = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = GetMetadataAsyncError {
-            error_code: field_error_code.unwrap_or(ErrorCode::UnknownError),
-            error_details: field_error_details.and_then(Option::flatten),
-        };
-        Ok(result)
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        if self.error_code != ErrorCode::UnknownError {
-            s.serialize_field("error_code", &self.error_code)?;
-        }
-        if let Some(val) = &self.error_details {
-            s.serialize_field("error_details", val)?;
-        }
-        Ok(())
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetMetadataAsyncError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetMetadataAsyncError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a GetMetadataAsyncError struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetMetadataAsyncError::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetMetadataAsyncError", GET_METADATA_ASYNC_ERROR_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetMetadataAsyncError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetMetadataAsyncError", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
@@ -2763,23 +2459,15 @@ impl ::serde::ser::Serialize for GetMetadataResult {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTranscriptArgs {
-    /// Identifier of the media asset to transcribe. Callers must set exactly one of the oneof
-    /// variants: - file_id: a Dropbox-issued file id (format: "id:<id>") for a file the
-    /// authenticated user has access to. - path: an absolute Dropbox path, e.g.
-    /// "/folder/recording.mp4". - url: either a Dropbox shared link (www.dropbox.com) or an
-    /// external HTTPS URL pointing to a supported audio/video file. - Dropbox shared links are
-    /// resolved internally using the caller's authenticated identity and the link's visibility /
-    /// download settings. They therefore require an authenticated user context (anonymous `url`
-    /// requests against Dropbox links are rejected with an `ACCESS_ERROR`). Links protected by a
-    /// password are rejected with `shared_link_password_protected`; links with downloads disabled
-    /// are rejected with `link_download_disabled_error`. - External URLs are fetched over HTTPS
-    /// through the backend's egress proxy and must point at a supported audio/video file extension.
-    /// The referenced asset must be an audio or video file in a supported format; requests against
-    /// files with no audio track return a `no_audio_error`.
+    /// Identifier of the media asset to transcribe. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. The referenced asset must be an audio or video file in a supported
+    /// format (see the route description for the list); requests against files with no audio track
+    /// return a `no_audio_error`.
     pub file_id_or_url: Option<FileIdOrUrl>,
-    /// Granularity of the time offsets returned for each transcript segment. Defaults to `SENTENCE.
-    /// - SENTENCE: one segment per spoken sentence (recommended). - WORD: one segment per word,
-    /// useful for fine-grained alignment such as captioning or highlight-as-you-listen experiences.
+    /// Granularity of the time offsets returned for each transcript segment. Defaults to `SENTENCE`
+    /// when the field is omitted. - SENTENCE: one segment per spoken sentence (recommended). -
+    /// WORD: one segment per word, useful for fine-grained alignment such as captioning or
+    /// highlight-as-you-listen experiences.
     pub timestamp_level: TimestampLevel,
     /// Comma-delimited list of non-lexical filler words to preserve in the transcript output, e.g.
     /// `"uh, ah, uhm"`. By default these fillers are stripped. Unrecognized tokens are ignored.
@@ -2796,7 +2484,7 @@ impl Default for GetTranscriptArgs {
     fn default() -> Self {
         GetTranscriptArgs {
             file_id_or_url: None,
-            timestamp_level: TimestampLevel::Unknown,
+            timestamp_level: TimestampLevel::Sentence,
             included_special_words: String::new(),
             audio_language: String::new(),
         }
@@ -2872,7 +2560,7 @@ impl GetTranscriptArgs {
         }
         let result = GetTranscriptArgs {
             file_id_or_url: field_file_id_or_url.and_then(Option::flatten),
-            timestamp_level: field_timestamp_level.unwrap_or(TimestampLevel::Unknown),
+            timestamp_level: field_timestamp_level.unwrap_or(TimestampLevel::Sentence),
             included_special_words: field_included_special_words.unwrap_or_default(),
             audio_language: field_audio_language.unwrap_or_default(),
         };
@@ -2887,7 +2575,7 @@ impl GetTranscriptArgs {
         if let Some(val) = &self.file_id_or_url {
             s.serialize_field("file_id_or_url", val)?;
         }
-        if self.timestamp_level != TimestampLevel::Unknown {
+        if self.timestamp_level != TimestampLevel::Sentence {
             s.serialize_field("timestamp_level", &self.timestamp_level)?;
         }
         if !self.included_special_words.is_empty() {
@@ -2934,7 +2622,7 @@ impl ::serde::ser::Serialize for GetTranscriptArgs {
 pub enum GetTranscriptAsyncCheckResult {
     InProgress,
     Complete(GetTranscriptResult),
-    Failed(GetTranscriptAsyncError),
+    Failed(ContentApiV2Error),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2958,7 +2646,13 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTranscriptAsyncCheckResult {
                 let value = match tag {
                     "in_progress" => GetTranscriptAsyncCheckResult::InProgress,
                     "complete" => GetTranscriptAsyncCheckResult::Complete(GetTranscriptResult::internal_deserialize(&mut map)?),
-                    "failed" => GetTranscriptAsyncCheckResult::Failed(GetTranscriptAsyncError::internal_deserialize(&mut map)?),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => GetTranscriptAsyncCheckResult::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => GetTranscriptAsyncCheckResult::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -2992,121 +2686,14 @@ impl ::serde::ser::Serialize for GetTranscriptAsyncCheckResult {
                 s.end()
             }
             GetTranscriptAsyncCheckResult::Failed(x) => {
-                // struct
-                let mut s = serializer.serialize_struct("GetTranscriptAsyncCheckResult", 3)?;
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("GetTranscriptAsyncCheckResult", 2)?;
                 s.serialize_field(".tag", "failed")?;
-                x.internal_serialize::<S>(&mut s)?;
+                s.serialize_field("failed", x)?;
                 s.end()
             }
             GetTranscriptAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[non_exhaustive] // structs may have more fields added in the future.
-pub struct GetTranscriptAsyncError {
-    pub error_code: ErrorCode,
-    pub error_details: Option<ContentApiV2Error>,
-}
-
-impl Default for GetTranscriptAsyncError {
-    fn default() -> Self {
-        GetTranscriptAsyncError {
-            error_code: ErrorCode::UnknownError,
-            error_details: None,
-        }
-    }
-}
-
-impl GetTranscriptAsyncError {
-    pub fn with_error_code(mut self, value: ErrorCode) -> Self {
-        self.error_code = value;
-        self
-    }
-
-    pub fn with_error_details(mut self, value: ContentApiV2Error) -> Self {
-        self.error_details = Some(value);
-        self
-    }
-}
-
-const GET_TRANSCRIPT_ASYNC_ERROR_FIELDS: &[&str] = &["error_code",
-                                                     "error_details"];
-impl GetTranscriptAsyncError {
-    // no _opt deserializer
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<GetTranscriptAsyncError, V::Error> {
-        let mut field_error_code = None;
-        let mut field_error_details = None;
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                "error_code" => {
-                    if field_error_code.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("error_code"));
-                    }
-                    field_error_code = Some(map.next_value()?);
-                }
-                "error_details" => {
-                    if field_error_details.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("error_details"));
-                    }
-                    field_error_details = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = GetTranscriptAsyncError {
-            error_code: field_error_code.unwrap_or(ErrorCode::UnknownError),
-            error_details: field_error_details.and_then(Option::flatten),
-        };
-        Ok(result)
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        if self.error_code != ErrorCode::UnknownError {
-            s.serialize_field("error_code", &self.error_code)?;
-        }
-        if let Some(val) = &self.error_details {
-            s.serialize_field("error_details", val)?;
-        }
-        Ok(())
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetTranscriptAsyncError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetTranscriptAsyncError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a GetTranscriptAsyncError struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetTranscriptAsyncError::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetTranscriptAsyncError", GET_TRANSCRIPT_ASYNC_ERROR_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetTranscriptAsyncError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetTranscriptAsyncError", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
@@ -3193,10 +2780,18 @@ impl ::serde::ser::Serialize for GetTranscriptResult {
     }
 }
 
+/// Reason a markdown conversion job failed. Returned in the `failed` variant of
+/// `GetMarkdownAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll
+/// request itself is unaffected (a poll that surfaces a failed job is still a normal successful
+/// poll response). Callers should branch on the variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MarkdownConversionApiV2Error {
+    /// An unexpected, typically transient, server-side failure. The string is a human-readable
+    /// message; retrying with backoff may succeed.
     ServerError(String),
+    /// The request could not be processed as supplied (a problem with the caller's input). The
+    /// string is a human-readable message; retrying the same request will not help.
     UserError(String),
     UnsupportedFormatError,
     LinkDownloadDisabledError,
@@ -3341,8 +2936,8 @@ impl ::std::error::Error for MarkdownConversionApiV2Error {
 impl ::std::fmt::Display for MarkdownConversionApiV2Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            MarkdownConversionApiV2Error::ServerError(inner) => write!(f, "server_error: {:?}", inner),
-            MarkdownConversionApiV2Error::UserError(inner) => write!(f, "user_error: {:?}", inner),
+            MarkdownConversionApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
+            MarkdownConversionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
             MarkdownConversionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
             MarkdownConversionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
             _ => write!(f, "{:?}", *self),
@@ -3430,10 +3025,18 @@ impl ::serde::ser::Serialize for MediaDurationError {
     }
 }
 
+/// Reason a metadata extraction job failed. Returned in the `failed` variant of
+/// `GetMetadataAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll
+/// request itself is unaffected (a poll that surfaces a failed job is still a normal successful
+/// poll response). Callers should branch on the variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MetadataExtractionApiV2Error {
+    /// An unexpected, typically transient, server-side failure. The string is a human-readable
+    /// message; retrying with backoff may succeed.
     ServerError(String),
+    /// The request could not be processed as supplied (a problem with the caller's input). The
+    /// string is a human-readable message; retrying the same request will not help.
     UserError(String),
     UnsupportedFormatError,
     LinkDownloadDisabledError,
@@ -3578,8 +3181,8 @@ impl ::std::error::Error for MetadataExtractionApiV2Error {
 impl ::std::fmt::Display for MetadataExtractionApiV2Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            MetadataExtractionApiV2Error::ServerError(inner) => write!(f, "server_error: {:?}", inner),
-            MetadataExtractionApiV2Error::UserError(inner) => write!(f, "user_error: {:?}", inner),
+            MetadataExtractionApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
+            MetadataExtractionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
             MetadataExtractionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
             MetadataExtractionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
             _ => write!(f, "{:?}", *self),
@@ -3763,7 +3366,6 @@ impl ::serde::ser::Serialize for OfficeFileType {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TimestampLevel {
-    Unknown,
     Sentence,
     Word,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -3787,7 +3389,6 @@ impl<'de> ::serde::de::Deserialize<'de> for TimestampLevel {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 let value = match tag {
-                    "unknown" => TimestampLevel::Unknown,
                     "sentence" => TimestampLevel::Sentence,
                     "word" => TimestampLevel::Word,
                     _ => TimestampLevel::Other,
@@ -3796,8 +3397,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TimestampLevel {
                 Ok(value)
             }
         }
-        const VARIANTS: &[&str] = &["unknown",
-                                    "sentence",
+        const VARIANTS: &[&str] = &["sentence",
                                     "word",
                                     "other"];
         deserializer.deserialize_struct("TimestampLevel", VARIANTS, EnumVisitor)
@@ -3809,12 +3409,6 @@ impl ::serde::ser::Serialize for TimestampLevel {
         // union serializer
         use serde::ser::SerializeStruct;
         match self {
-            TimestampLevel::Unknown => {
-                // unit
-                let mut s = serializer.serialize_struct("TimestampLevel", 1)?;
-                s.serialize_field(".tag", "unknown")?;
-                s.end()
-            }
             TimestampLevel::Sentence => {
                 // unit
                 let mut s = serializer.serialize_struct("TimestampLevel", 1)?;

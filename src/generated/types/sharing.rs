@@ -18591,7 +18591,7 @@ pub struct SharedLinkSettings {
     /// The new audience who can benefit from the access level specified by the link's access level
     /// specified in the `link_access_level` field of `LinkPermissions`. This is used in conjunction
     /// with team policies and shared folder policies to determine the final effective audience type
-    /// in the `effective_audience` field of `LinkPermissions.
+    /// in the `effective_audience` field of `LinkPermissions`.
     pub audience: Option<LinkAudience>,
     /// Requested access level you want the audience to gain from this link. Note, modifying access
     /// level for an existing link is not supported.

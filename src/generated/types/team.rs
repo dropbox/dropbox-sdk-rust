@@ -1192,6 +1192,901 @@ impl ::std::fmt::Display for BaseTeamFolderError {
     }
 }
 
+/// Launches one action-specific bulk suspend job.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct BulkSuspendArg {
+    /// Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
+    /// item IDs and duplicate member selectors.
+    pub members: Vec<BulkSuspendMemberTarget>,
+}
+
+impl BulkSuspendArg {
+    pub fn new(members: Vec<BulkSuspendMemberTarget>) -> Self {
+        BulkSuspendArg {
+            members,
+        }
+    }
+}
+
+const BULK_SUSPEND_ARG_FIELDS: &[&str] = &["members"];
+impl BulkSuspendArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BulkSuspendArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BulkSuspendArg>, V::Error> {
+        let mut field_members = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "members" => {
+                    if field_members.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("members"));
+                    }
+                    field_members = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BulkSuspendArg {
+            members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("members", &self.members)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BulkSuspendArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BulkSuspendArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BulkSuspendArg", BULK_SUSPEND_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BulkSuspendArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct BulkSuspendComplete {
+    pub requested: i64,
+    pub suspended: i64,
+    pub failed: i64,
+    pub unknown: i64,
+    pub report_delivery: BulkSuspendReportDeliveryStatus,
+}
+
+impl BulkSuspendComplete {
+    pub fn new(
+        requested: i64,
+        suspended: i64,
+        failed: i64,
+        unknown: i64,
+        report_delivery: BulkSuspendReportDeliveryStatus,
+    ) -> Self {
+        BulkSuspendComplete {
+            requested,
+            suspended,
+            failed,
+            unknown,
+            report_delivery,
+        }
+    }
+}
+
+const BULK_SUSPEND_COMPLETE_FIELDS: &[&str] = &["requested",
+                                                "suspended",
+                                                "failed",
+                                                "unknown",
+                                                "report_delivery"];
+impl BulkSuspendComplete {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BulkSuspendComplete, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BulkSuspendComplete>, V::Error> {
+        let mut field_requested = None;
+        let mut field_suspended = None;
+        let mut field_failed = None;
+        let mut field_unknown = None;
+        let mut field_report_delivery = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "requested" => {
+                    if field_requested.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("requested"));
+                    }
+                    field_requested = Some(map.next_value()?);
+                }
+                "suspended" => {
+                    if field_suspended.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("suspended"));
+                    }
+                    field_suspended = Some(map.next_value()?);
+                }
+                "failed" => {
+                    if field_failed.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("failed"));
+                    }
+                    field_failed = Some(map.next_value()?);
+                }
+                "unknown" => {
+                    if field_unknown.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("unknown"));
+                    }
+                    field_unknown = Some(map.next_value()?);
+                }
+                "report_delivery" => {
+                    if field_report_delivery.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("report_delivery"));
+                    }
+                    field_report_delivery = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BulkSuspendComplete {
+            requested: field_requested.ok_or_else(|| ::serde::de::Error::missing_field("requested"))?,
+            suspended: field_suspended.ok_or_else(|| ::serde::de::Error::missing_field("suspended"))?,
+            failed: field_failed.ok_or_else(|| ::serde::de::Error::missing_field("failed"))?,
+            unknown: field_unknown.ok_or_else(|| ::serde::de::Error::missing_field("unknown"))?,
+            report_delivery: field_report_delivery.ok_or_else(|| ::serde::de::Error::missing_field("report_delivery"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("requested", &self.requested)?;
+        s.serialize_field("suspended", &self.suspended)?;
+        s.serialize_field("failed", &self.failed)?;
+        s.serialize_field("unknown", &self.unknown)?;
+        s.serialize_field("report_delivery", &self.report_delivery)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendComplete {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BulkSuspendComplete;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendComplete struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BulkSuspendComplete::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BulkSuspendComplete", BULK_SUSPEND_COMPLETE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendComplete {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BulkSuspendComplete", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// A typed launch rejection. Authorization failures continue to use the API v2
+/// authentication/permission error surface.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum BulkSuspendError {
+    InvalidRequest,
+    TooManyMembers,
+    DuplicateClientItemId,
+    DuplicateTeamMemberId,
+    ActingAdmin,
+    LastAdmin,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = BulkSuspendError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "invalid_request" => BulkSuspendError::InvalidRequest,
+                    "too_many_members" => BulkSuspendError::TooManyMembers,
+                    "duplicate_client_item_id" => BulkSuspendError::DuplicateClientItemId,
+                    "duplicate_team_member_id" => BulkSuspendError::DuplicateTeamMemberId,
+                    "acting_admin" => BulkSuspendError::ActingAdmin,
+                    "last_admin" => BulkSuspendError::LastAdmin,
+                    _ => BulkSuspendError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["invalid_request",
+                                    "too_many_members",
+                                    "duplicate_client_item_id",
+                                    "duplicate_team_member_id",
+                                    "acting_admin",
+                                    "last_admin",
+                                    "other"];
+        deserializer.deserialize_struct("BulkSuspendError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            BulkSuspendError::InvalidRequest => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendError", 1)?;
+                s.serialize_field(".tag", "invalid_request")?;
+                s.end()
+            }
+            BulkSuspendError::TooManyMembers => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendError", 1)?;
+                s.serialize_field(".tag", "too_many_members")?;
+                s.end()
+            }
+            BulkSuspendError::DuplicateClientItemId => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendError", 1)?;
+                s.serialize_field(".tag", "duplicate_client_item_id")?;
+                s.end()
+            }
+            BulkSuspendError::DuplicateTeamMemberId => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendError", 1)?;
+                s.serialize_field(".tag", "duplicate_team_member_id")?;
+                s.end()
+            }
+            BulkSuspendError::ActingAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendError", 1)?;
+                s.serialize_field(".tag", "acting_admin")?;
+                s.end()
+            }
+            BulkSuspendError::LastAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendError", 1)?;
+                s.serialize_field(".tag", "last_admin")?;
+                s.end()
+            }
+            BulkSuspendError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for BulkSuspendError {
+}
+
+impl ::std::fmt::Display for BulkSuspendError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Coarse job state. Live row progress and report contents are intentionally omitted; callers
+/// receive row details in the terminal email report.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum BulkSuspendJobStatus {
+    /// The asynchronous job is still in progress.
+    InProgress,
+    Complete(BulkSuspendComplete),
+    Failed(BulkSuspendTaskFailure),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendJobStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = BulkSuspendJobStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendJobStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "in_progress" => BulkSuspendJobStatus::InProgress,
+                    "complete" => BulkSuspendJobStatus::Complete(BulkSuspendComplete::internal_deserialize(&mut map)?),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => BulkSuspendJobStatus::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => BulkSuspendJobStatus::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("BulkSuspendJobStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendJobStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            BulkSuspendJobStatus::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendJobStatus", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            BulkSuspendJobStatus::Complete(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("BulkSuspendJobStatus", 6)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            BulkSuspendJobStatus::Failed(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("BulkSuspendJobStatus", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            BulkSuspendJobStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+// union extends crate::types::dbx_async::PollResultBase
+impl From<crate::types::dbx_async::PollResultBase> for BulkSuspendJobStatus {
+    fn from(parent: crate::types::dbx_async::PollResultBase) -> Self {
+        match parent {
+            crate::types::dbx_async::PollResultBase::InProgress => BulkSuspendJobStatus::InProgress,
+        }
+    }
+}
+/// One member selected for suspension. The opaque client item ID correlates the eventual report row
+/// with the caller's input without sending CSV data.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct BulkSuspendMemberTarget {
+    pub client_item_id: String,
+    pub suspend_arg: MembersDeactivateArg,
+}
+
+impl BulkSuspendMemberTarget {
+    pub fn new(client_item_id: String, suspend_arg: MembersDeactivateArg) -> Self {
+        BulkSuspendMemberTarget {
+            client_item_id,
+            suspend_arg,
+        }
+    }
+}
+
+const BULK_SUSPEND_MEMBER_TARGET_FIELDS: &[&str] = &["client_item_id",
+                                                     "suspend_arg"];
+impl BulkSuspendMemberTarget {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BulkSuspendMemberTarget, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BulkSuspendMemberTarget>, V::Error> {
+        let mut field_client_item_id = None;
+        let mut field_suspend_arg = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "client_item_id" => {
+                    if field_client_item_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("client_item_id"));
+                    }
+                    field_client_item_id = Some(map.next_value()?);
+                }
+                "suspend_arg" => {
+                    if field_suspend_arg.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("suspend_arg"));
+                    }
+                    field_suspend_arg = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BulkSuspendMemberTarget {
+            client_item_id: field_client_item_id.ok_or_else(|| ::serde::de::Error::missing_field("client_item_id"))?,
+            suspend_arg: field_suspend_arg.ok_or_else(|| ::serde::de::Error::missing_field("suspend_arg"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("client_item_id", &self.client_item_id)?;
+        s.serialize_field("suspend_arg", &self.suspend_arg)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendMemberTarget {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BulkSuspendMemberTarget;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendMemberTarget struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BulkSuspendMemberTarget::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BulkSuspendMemberTarget", BULK_SUSPEND_MEMBER_TARGET_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendMemberTarget {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BulkSuspendMemberTarget", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum BulkSuspendReportDeliveryStatus {
+    BulkSuspendReportDeliveryStatusUnspecified,
+    BulkSuspendReportDeliveryStatusPending,
+    BulkSuspendReportDeliveryStatusDelivered,
+    BulkSuspendReportDeliveryStatusFailed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendReportDeliveryStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = BulkSuspendReportDeliveryStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendReportDeliveryStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "bulk_suspend_report_delivery_status_unspecified" => BulkSuspendReportDeliveryStatus::BulkSuspendReportDeliveryStatusUnspecified,
+                    "bulk_suspend_report_delivery_status_pending" => BulkSuspendReportDeliveryStatus::BulkSuspendReportDeliveryStatusPending,
+                    "bulk_suspend_report_delivery_status_delivered" => BulkSuspendReportDeliveryStatus::BulkSuspendReportDeliveryStatusDelivered,
+                    "bulk_suspend_report_delivery_status_failed" => BulkSuspendReportDeliveryStatus::BulkSuspendReportDeliveryStatusFailed,
+                    _ => BulkSuspendReportDeliveryStatus::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["bulk_suspend_report_delivery_status_unspecified",
+                                    "bulk_suspend_report_delivery_status_pending",
+                                    "bulk_suspend_report_delivery_status_delivered",
+                                    "bulk_suspend_report_delivery_status_failed",
+                                    "other"];
+        deserializer.deserialize_struct("BulkSuspendReportDeliveryStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendReportDeliveryStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            BulkSuspendReportDeliveryStatus::BulkSuspendReportDeliveryStatusUnspecified => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendReportDeliveryStatus", 1)?;
+                s.serialize_field(".tag", "bulk_suspend_report_delivery_status_unspecified")?;
+                s.end()
+            }
+            BulkSuspendReportDeliveryStatus::BulkSuspendReportDeliveryStatusPending => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendReportDeliveryStatus", 1)?;
+                s.serialize_field(".tag", "bulk_suspend_report_delivery_status_pending")?;
+                s.end()
+            }
+            BulkSuspendReportDeliveryStatus::BulkSuspendReportDeliveryStatusDelivered => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendReportDeliveryStatus", 1)?;
+                s.serialize_field(".tag", "bulk_suspend_report_delivery_status_delivered")?;
+                s.end()
+            }
+            BulkSuspendReportDeliveryStatus::BulkSuspendReportDeliveryStatusFailed => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendReportDeliveryStatus", 1)?;
+                s.serialize_field(".tag", "bulk_suspend_report_delivery_status_failed")?;
+                s.end()
+            }
+            BulkSuspendReportDeliveryStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Stable machine-readable reasons used by the terminal row report.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum BulkSuspendRowFailure {
+    /// No matching user found. The provided team_member_id, email, or external_id does not exist on
+    /// this team.
+    UserNotFound,
+    /// The user is not a member of the team.
+    UserNotInTeam,
+    /// The user is not active, so it cannot be suspended.
+    SuspendInactiveUser,
+    /// The user is the last admin of the team, so it cannot be suspended.
+    SuspendLastAdmin,
+    /// Team is full. The organization has no available licenses.
+    TeamLicenseLimit,
+    ProtectedActingAdmin,
+    PermissionChanged,
+    SuspendFailed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendRowFailure {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = BulkSuspendRowFailure;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendRowFailure structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "user_not_found" => BulkSuspendRowFailure::UserNotFound,
+                    "user_not_in_team" => BulkSuspendRowFailure::UserNotInTeam,
+                    "suspend_inactive_user" => BulkSuspendRowFailure::SuspendInactiveUser,
+                    "suspend_last_admin" => BulkSuspendRowFailure::SuspendLastAdmin,
+                    "team_license_limit" => BulkSuspendRowFailure::TeamLicenseLimit,
+                    "protected_acting_admin" => BulkSuspendRowFailure::ProtectedActingAdmin,
+                    "permission_changed" => BulkSuspendRowFailure::PermissionChanged,
+                    "suspend_failed" => BulkSuspendRowFailure::SuspendFailed,
+                    _ => BulkSuspendRowFailure::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other",
+                                    "suspend_inactive_user",
+                                    "suspend_last_admin",
+                                    "team_license_limit",
+                                    "protected_acting_admin",
+                                    "permission_changed",
+                                    "suspend_failed"];
+        deserializer.deserialize_struct("BulkSuspendRowFailure", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendRowFailure {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            BulkSuspendRowFailure::UserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowFailure", 1)?;
+                s.serialize_field(".tag", "user_not_found")?;
+                s.end()
+            }
+            BulkSuspendRowFailure::UserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowFailure", 1)?;
+                s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            BulkSuspendRowFailure::SuspendInactiveUser => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowFailure", 1)?;
+                s.serialize_field(".tag", "suspend_inactive_user")?;
+                s.end()
+            }
+            BulkSuspendRowFailure::SuspendLastAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowFailure", 1)?;
+                s.serialize_field(".tag", "suspend_last_admin")?;
+                s.end()
+            }
+            BulkSuspendRowFailure::TeamLicenseLimit => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowFailure", 1)?;
+                s.serialize_field(".tag", "team_license_limit")?;
+                s.end()
+            }
+            BulkSuspendRowFailure::ProtectedActingAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowFailure", 1)?;
+                s.serialize_field(".tag", "protected_acting_admin")?;
+                s.end()
+            }
+            BulkSuspendRowFailure::PermissionChanged => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowFailure", 1)?;
+                s.serialize_field(".tag", "permission_changed")?;
+                s.end()
+            }
+            BulkSuspendRowFailure::SuspendFailed => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowFailure", 1)?;
+                s.serialize_field(".tag", "suspend_failed")?;
+                s.end()
+            }
+            BulkSuspendRowFailure::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+// union extends MembersSuspendError
+impl From<MembersSuspendError> for BulkSuspendRowFailure {
+    fn from(parent: MembersSuspendError) -> Self {
+        match parent {
+            MembersSuspendError::UserNotFound => BulkSuspendRowFailure::UserNotFound,
+            MembersSuspendError::UserNotInTeam => BulkSuspendRowFailure::UserNotInTeam,
+            MembersSuspendError::Other => BulkSuspendRowFailure::Other,
+            MembersSuspendError::SuspendInactiveUser => BulkSuspendRowFailure::SuspendInactiveUser,
+            MembersSuspendError::SuspendLastAdmin => BulkSuspendRowFailure::SuspendLastAdmin,
+            MembersSuspendError::TeamLicenseLimit => BulkSuspendRowFailure::TeamLicenseLimit,
+        }
+    }
+}
+/// The terminal outcome for one requested member. Row outcomes are delivered in the report rather
+/// than embedded in the status response.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum BulkSuspendRowOutcome {
+    Suspended,
+    Failed(BulkSuspendRowFailure),
+    Unknown,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendRowOutcome {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = BulkSuspendRowOutcome;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendRowOutcome structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "suspended" => BulkSuspendRowOutcome::Suspended,
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => BulkSuspendRowOutcome::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unknown" => BulkSuspendRowOutcome::Unknown,
+                    _ => BulkSuspendRowOutcome::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["suspended",
+                                    "failed",
+                                    "unknown",
+                                    "other"];
+        deserializer.deserialize_struct("BulkSuspendRowOutcome", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendRowOutcome {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            BulkSuspendRowOutcome::Suspended => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowOutcome", 1)?;
+                s.serialize_field(".tag", "suspended")?;
+                s.end()
+            }
+            BulkSuspendRowOutcome::Failed(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("BulkSuspendRowOutcome", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            BulkSuspendRowOutcome::Unknown => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendRowOutcome", 1)?;
+                s.serialize_field(".tag", "unknown")?;
+                s.end()
+            }
+            BulkSuspendRowOutcome::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum BulkSuspendTaskFailure {
+    UnusableResult,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BulkSuspendTaskFailure {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = BulkSuspendTaskFailure;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BulkSuspendTaskFailure structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "unusable_result" => BulkSuspendTaskFailure::UnusableResult,
+                    _ => BulkSuspendTaskFailure::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["unusable_result",
+                                    "other"];
+        deserializer.deserialize_struct("BulkSuspendTaskFailure", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BulkSuspendTaskFailure {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            BulkSuspendTaskFailure::UnusableResult => {
+                // unit
+                let mut s = serializer.serialize_struct("BulkSuspendTaskFailure", 1)?;
+                s.serialize_field(".tag", "unusable_result")?;
+                s.end()
+            }
+            BulkSuspendTaskFailure::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Error returned when getting member custom quota.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -24950,13 +25845,14 @@ impl ::std::fmt::Display for TeamFolderAccessError {
     }
 }
 
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderActivateError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
+    /// The team has reached the maximum number of team folders allowed by its plan.
+    FolderCountLimitExceeded,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -24999,6 +25895,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderActivateError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "folder_count_limit_exceeded" => TeamFolderActivateError::FolderCountLimitExceeded,
                     _ => TeamFolderActivateError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -25008,7 +25905,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderActivateError {
         const VARIANTS: &[&str] = &["access_error",
                                     "status_error",
                                     "team_shared_dropbox_error",
-                                    "other"];
+                                    "other",
+                                    "folder_count_limit_exceeded"];
         deserializer.deserialize_struct("TeamFolderActivateError", VARIANTS, EnumVisitor)
     }
 }
@@ -25039,6 +25937,12 @@ impl ::serde::ser::Serialize for TeamFolderActivateError {
                 s.serialize_field("team_shared_dropbox_error", x)?;
                 s.end()
             }
+            TeamFolderActivateError::FolderCountLimitExceeded => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamFolderActivateError", 1)?;
+                s.serialize_field(".tag", "folder_count_limit_exceeded")?;
+                s.end()
+            }
             TeamFolderActivateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -25061,6 +25965,7 @@ impl ::std::fmt::Display for TeamFolderActivateError {
             TeamFolderActivateError::AccessError(inner) => write!(f, "TeamFolderActivateError: {}", inner),
             TeamFolderActivateError::StatusError(inner) => write!(f, "TeamFolderActivateError: {}", inner),
             TeamFolderActivateError::TeamSharedDropboxError(inner) => write!(f, "TeamFolderActivateError: {}", inner),
+            TeamFolderActivateError::FolderCountLimitExceeded => f.write_str("The team has reached the maximum number of team folders allowed by its plan."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -27110,13 +28015,14 @@ impl From<BaseTeamFolderError> for TeamFolderRenameError {
         }
     }
 }
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderRestoreError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
+    /// The team has reached the maximum number of team folders allowed by its plan.
+    FolderCountLimitExceeded,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -27159,6 +28065,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRestoreError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "folder_count_limit_exceeded" => TeamFolderRestoreError::FolderCountLimitExceeded,
                     _ => TeamFolderRestoreError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -27168,7 +28075,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRestoreError {
         const VARIANTS: &[&str] = &["access_error",
                                     "status_error",
                                     "team_shared_dropbox_error",
-                                    "other"];
+                                    "other",
+                                    "folder_count_limit_exceeded"];
         deserializer.deserialize_struct("TeamFolderRestoreError", VARIANTS, EnumVisitor)
     }
 }
@@ -27199,6 +28107,12 @@ impl ::serde::ser::Serialize for TeamFolderRestoreError {
                 s.serialize_field("team_shared_dropbox_error", x)?;
                 s.end()
             }
+            TeamFolderRestoreError::FolderCountLimitExceeded => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamFolderRestoreError", 1)?;
+                s.serialize_field(".tag", "folder_count_limit_exceeded")?;
+                s.end()
+            }
             TeamFolderRestoreError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -27221,6 +28135,7 @@ impl ::std::fmt::Display for TeamFolderRestoreError {
             TeamFolderRestoreError::AccessError(inner) => write!(f, "TeamFolderRestoreError: {}", inner),
             TeamFolderRestoreError::StatusError(inner) => write!(f, "TeamFolderRestoreError: {}", inner),
             TeamFolderRestoreError::TeamSharedDropboxError(inner) => write!(f, "TeamFolderRestoreError: {}", inner),
+            TeamFolderRestoreError::FolderCountLimitExceeded => f.write_str("The team has reached the maximum number of team folders allowed by its plan."),
             _ => write!(f, "{:?}", *self),
         }
     }

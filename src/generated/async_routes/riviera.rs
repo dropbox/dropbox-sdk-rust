@@ -12,7 +12,10 @@
 #[allow(unused_imports)]
 pub use crate::generated::types::riviera::*;
 
-/// Asynchronous document-to-markdown conversion for supported file formats.
+/// Asynchronous document-to-markdown conversion for supported file formats. Supported formats:
+/// .binder, .docx, .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Unsupported formats
+/// return an `unsupported_format_error`. Size limit: the source file must be at most 50 MB. Larger
+/// files are rejected.
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -31,7 +34,10 @@ pub fn get_markdown_async<'a>(
         None)
 }
 
-/// Asynchronous document-to-markdown conversion for supported file formats.
+/// Asynchronous document-to-markdown conversion for supported file formats. Supported formats:
+/// .binder, .docx, .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Unsupported formats
+/// return an `unsupported_format_error`. Size limit: the source file must be at most 50 MB. Larger
+/// files are rejected.
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -88,7 +94,15 @@ pub fn get_markdown_async_check_app_auth<'a>(
         None)
 }
 
-/// Asynchronous file metadata extraction for supported file formats.
+/// Asynchronous file metadata extraction for supported file formats. The kind of metadata returned
+/// depends on the file type: - Image (EXIF) formats: .3fr, .arw, .avif, .bmp, .cr2, .cr3, .crw,
+/// .dcr, .dcs, .dng, .erf, .gif, .heic, .j2c, .j2k, .jp2, .jpc, .jpeg, .jpf, .jpg, .jpg2, .jpm,
+/// .jpx, .kdc, .mef, .mos, .mrw, .nef, .nrw, .orf, .pef, .png, .ppm, .r3d, .raf, .rw2, .rwl, .sr2,
+/// .tga, .tif, .tiff, .wbmp, .web, .webp, .x3f. - Audio/video (media) formats: .aac, .aif, .aiff,
+/// .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma, .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv,
+/// .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .oggtheora, .ogv, .rm, .ts, .vob,
+/// .webm, .wmv. - PDF format: .pdf. - MS Office formats: .docx, .pptx, .xlsx. Unsupported formats
+/// return an `unsupported_format_error`.
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -107,7 +121,15 @@ pub fn get_metadata_async<'a>(
         None)
 }
 
-/// Asynchronous file metadata extraction for supported file formats.
+/// Asynchronous file metadata extraction for supported file formats. The kind of metadata returned
+/// depends on the file type: - Image (EXIF) formats: .3fr, .arw, .avif, .bmp, .cr2, .cr3, .crw,
+/// .dcr, .dcs, .dng, .erf, .gif, .heic, .j2c, .j2k, .jp2, .jpc, .jpeg, .jpf, .jpg, .jpg2, .jpm,
+/// .jpx, .kdc, .mef, .mos, .mrw, .nef, .nrw, .orf, .pef, .png, .ppm, .r3d, .raf, .rw2, .rwl, .sr2,
+/// .tga, .tif, .tiff, .wbmp, .web, .webp, .x3f. - Audio/video (media) formats: .aac, .aif, .aiff,
+/// .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma, .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv,
+/// .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .oggtheora, .ogv, .rm, .ts, .vob,
+/// .webm, .wmv. - PDF format: .pdf. - MS Office formats: .docx, .pptx, .xlsx. Unsupported formats
+/// return an `unsupported_format_error`.
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -164,7 +186,12 @@ pub fn get_metadata_async_check_app_auth<'a>(
         None)
 }
 
-/// Asynchronous transcript generation for audio and video files.
+/// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac,
+/// .aif, .aiff, .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma. Supported video formats: .3gp,
+/// .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts,
+/// .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. Unsupported formats return an
+/// `unsupported_format_error`. Size limits: the source file must be at most 10 GB and its audio
+/// track at most 1 hour in duration. Files exceeding these limits are rejected.
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.
@@ -183,7 +210,12 @@ pub fn get_transcript_async<'a>(
         None)
 }
 
-/// Asynchronous transcript generation for audio and video files.
+/// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac,
+/// .aif, .aiff, .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma. Supported video formats: .3gp,
+/// .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts,
+/// .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. Unsupported formats return an
+/// `unsupported_format_error`. Size limits: the source file must be at most 10 GB and its audio
+/// track at most 1 hour in duration. Files exceeding these limits are rejected.
 ///
 /// # Stability
 /// *PREVIEW*: This function may change or disappear without notice.

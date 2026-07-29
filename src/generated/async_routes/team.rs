@@ -654,6 +654,34 @@ pub fn members_add_job_status_get_v2<'a>(
         None)
 }
 
+/// Launch a bulk suspend job. The server enforces a maximum of 500 members.
+pub fn members_bulk_suspend<'a>(
+    client: &'a impl crate::async_client_trait::TeamAuthClient,
+    arg: &'a BulkSuspendArg,
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchResultBase, crate::Error<BulkSuspendError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "team/members/bulk_suspend",
+        arg,
+        None)
+}
+
+/// Poll a previously launched bulk suspend job.
+pub fn members_bulk_suspend_job_status_check<'a>(
+    client: &'a impl crate::async_client_trait::TeamAuthClient,
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=Result<BulkSuspendJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "team/members/bulk_suspend/job_status/check",
+        arg,
+        None)
+}
+
 /// Permanently delete the files of a user who has been removed from the team. After permanent
 /// deletion, those files will not be available to be transferred to another team member. Permission
 /// : Team member management Exactly one of team_member_id, email, or external_id must be provided

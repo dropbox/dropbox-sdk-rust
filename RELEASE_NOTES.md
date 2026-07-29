@@ -1,3 +1,6 @@
+# unreleased changes
+* API spec update 2027-07-29
+
 # v0.20.2
 2026-07-15
 * API spec update 2027-06-29
