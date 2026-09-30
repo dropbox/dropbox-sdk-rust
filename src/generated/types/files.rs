@@ -13335,7 +13335,7 @@ impl ::std::error::Error for RelocationBatchError {
             RelocationBatchError::FromLookup(inner) => Some(inner),
             RelocationBatchError::FromWrite(inner) => Some(inner),
             RelocationBatchError::To(inner) => Some(inner),
-            RelocationBatchError::CantMoveIntoVault(inner) => Some(inner),
+            #[allow(deprecated)] RelocationBatchError::CantMoveIntoVault(inner) => Some(inner),
             RelocationBatchError::CantMoveIntoFamily(inner) => Some(inner),
             _ => None,
         }
@@ -14403,7 +14403,7 @@ impl ::std::error::Error for RelocationError {
             RelocationError::FromLookup(inner) => Some(inner),
             RelocationError::FromWrite(inner) => Some(inner),
             RelocationError::To(inner) => Some(inner),
-            RelocationError::CantMoveIntoVault(inner) => Some(inner),
+            #[allow(deprecated)] RelocationError::CantMoveIntoVault(inner) => Some(inner),
             RelocationError::CantMoveIntoFamily(inner) => Some(inner),
             _ => None,
         }
