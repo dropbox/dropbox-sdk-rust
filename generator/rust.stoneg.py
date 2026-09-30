@@ -1112,7 +1112,8 @@ class RustBackend(RustHelperBackend):
                     with self.block('match self'):
                         for variant in has_inner:
                             variant_name = self.enum_variant_name(variant)
-                            self.emit(f'{type_name}::{variant_name}(inner) => Some(inner),')
+                            attr = '#[allow(deprecated)] ' if variant.deprecated else ''
+                            self.emit(f'{attr}{type_name}::{variant_name}(inner) => Some(inner),')
                         if not self.is_closed_union(typ) or has_inner != variants:
                             self.emit('_ => None,')
 
