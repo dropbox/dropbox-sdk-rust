@@ -10943,6 +10943,7 @@ impl ::std::fmt::Display for MoveIntoFamilyError {
     }
 }
 
+/// Deprecated: the server no longer emits this error.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MoveIntoVaultError {
@@ -13100,11 +13101,17 @@ pub enum RelocationBatchError {
     InternalError,
     /// Can't move the shared folder to the given destination.
     CantMoveSharedFolder,
-    /// Some content cannot be moved into Vault under certain circumstances, see detailed error.
+    /// Field is deprecated. Some content cannot be moved into Vault under certain circumstances,
+    /// see detailed error. Deprecated: the server no longer emits this error.
+    #[deprecated]
     CantMoveIntoVault(MoveIntoVaultError),
     /// Some content cannot be moved into the Family Room folder under certain circumstances, see
     /// detailed error.
     CantMoveIntoFamily(MoveIntoFamilyError),
+    /// The destination team folder has reached its storage limit.
+    TeamFolderInsufficientQuota,
+    /// The user's member folder has reached its storage limit.
+    MemberFolderInsufficientQuota,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -13158,6 +13165,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                     "insufficient_quota" => RelocationBatchError::InsufficientQuota,
                     "internal_error" => RelocationBatchError::InternalError,
                     "cant_move_shared_folder" => RelocationBatchError::CantMoveSharedFolder,
+                    #[allow(deprecated)]
                     "cant_move_into_vault" => {
                         match map.next_key()? {
                             Some("cant_move_into_vault") => RelocationBatchError::CantMoveIntoVault(map.next_value()?),
@@ -13172,6 +13180,8 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "team_folder_insufficient_quota" => RelocationBatchError::TeamFolderInsufficientQuota,
+                    "member_folder_insufficient_quota" => RelocationBatchError::MemberFolderInsufficientQuota,
                     "too_many_write_operations" => RelocationBatchError::TooManyWriteOperations,
                     _ => RelocationBatchError::Other,
                 };
@@ -13193,6 +13203,8 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                                     "cant_move_shared_folder",
                                     "cant_move_into_vault",
                                     "cant_move_into_family",
+                                    "team_folder_insufficient_quota",
+                                    "member_folder_insufficient_quota",
                                     "other",
                                     "too_many_write_operations"];
         deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
@@ -13279,6 +13291,7 @@ impl ::serde::ser::Serialize for RelocationBatchError {
                 s.serialize_field(".tag", "cant_move_shared_folder")?;
                 s.end()
             }
+            #[allow(deprecated)]
             RelocationBatchError::CantMoveIntoVault(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RelocationBatchError", 2)?;
@@ -13291,6 +13304,18 @@ impl ::serde::ser::Serialize for RelocationBatchError {
                 let mut s = serializer.serialize_struct("RelocationBatchError", 2)?;
                 s.serialize_field(".tag", "cant_move_into_family")?;
                 s.serialize_field("cant_move_into_family", x)?;
+                s.end()
+            }
+            RelocationBatchError::TeamFolderInsufficientQuota => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "team_folder_insufficient_quota")?;
+                s.end()
+            }
+            RelocationBatchError::MemberFolderInsufficientQuota => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "member_folder_insufficient_quota")?;
                 s.end()
             }
             RelocationBatchError::TooManyWriteOperations => {
@@ -13330,8 +13355,10 @@ impl ::std::fmt::Display for RelocationBatchError {
             RelocationBatchError::InsufficientQuota => f.write_str("The current user does not have enough space to move or copy the files."),
             RelocationBatchError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
             RelocationBatchError::CantMoveSharedFolder => f.write_str("Can't move the shared folder to the given destination."),
-            RelocationBatchError::CantMoveIntoVault(inner) => write!(f, "Some content cannot be moved into Vault under certain circumstances, see detailed error: {}", inner),
+            #[allow(deprecated)] RelocationBatchError::CantMoveIntoVault(inner) => write!(f, "Field is deprecated. Some content cannot be moved into Vault under certain circumstances, see detailed error. Deprecated: the server no longer emits this error: {}", inner),
             RelocationBatchError::CantMoveIntoFamily(inner) => write!(f, "Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error: {}", inner),
+            RelocationBatchError::TeamFolderInsufficientQuota => f.write_str("The destination team folder has reached its storage limit."),
+            RelocationBatchError::MemberFolderInsufficientQuota => f.write_str("The user's member folder has reached its storage limit."),
             RelocationBatchError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
             _ => write!(f, "{:?}", *self),
         }
@@ -13356,6 +13383,8 @@ impl From<RelocationError> for RelocationBatchError {
             RelocationError::CantMoveSharedFolder => RelocationBatchError::CantMoveSharedFolder,
             RelocationError::CantMoveIntoVault(x) => RelocationBatchError::CantMoveIntoVault(x),
             RelocationError::CantMoveIntoFamily(x) => RelocationBatchError::CantMoveIntoFamily(x),
+            RelocationError::TeamFolderInsufficientQuota => RelocationBatchError::TeamFolderInsufficientQuota,
+            RelocationError::MemberFolderInsufficientQuota => RelocationBatchError::MemberFolderInsufficientQuota,
             RelocationError::Other => RelocationBatchError::Other,
         }
     }
@@ -14150,11 +14179,17 @@ pub enum RelocationError {
     InternalError,
     /// Can't move the shared folder to the given destination.
     CantMoveSharedFolder,
-    /// Some content cannot be moved into Vault under certain circumstances, see detailed error.
+    /// Field is deprecated. Some content cannot be moved into Vault under certain circumstances,
+    /// see detailed error. Deprecated: the server no longer emits this error.
+    #[deprecated]
     CantMoveIntoVault(MoveIntoVaultError),
     /// Some content cannot be moved into the Family Room folder under certain circumstances, see
     /// detailed error.
     CantMoveIntoFamily(MoveIntoFamilyError),
+    /// The destination team folder has reached its storage limit.
+    TeamFolderInsufficientQuota,
+    /// The user's member folder has reached its storage limit.
+    MemberFolderInsufficientQuota,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -14206,6 +14241,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                     "insufficient_quota" => RelocationError::InsufficientQuota,
                     "internal_error" => RelocationError::InternalError,
                     "cant_move_shared_folder" => RelocationError::CantMoveSharedFolder,
+                    #[allow(deprecated)]
                     "cant_move_into_vault" => {
                         match map.next_key()? {
                             Some("cant_move_into_vault") => RelocationError::CantMoveIntoVault(map.next_value()?),
@@ -14220,6 +14256,8 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "team_folder_insufficient_quota" => RelocationError::TeamFolderInsufficientQuota,
+                    "member_folder_insufficient_quota" => RelocationError::MemberFolderInsufficientQuota,
                     _ => RelocationError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -14240,6 +14278,8 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                                     "cant_move_shared_folder",
                                     "cant_move_into_vault",
                                     "cant_move_into_family",
+                                    "team_folder_insufficient_quota",
+                                    "member_folder_insufficient_quota",
                                     "other"];
         deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
     }
@@ -14325,6 +14365,7 @@ impl ::serde::ser::Serialize for RelocationError {
                 s.serialize_field(".tag", "cant_move_shared_folder")?;
                 s.end()
             }
+            #[allow(deprecated)]
             RelocationError::CantMoveIntoVault(x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("RelocationError", 2)?;
@@ -14337,6 +14378,18 @@ impl ::serde::ser::Serialize for RelocationError {
                 let mut s = serializer.serialize_struct("RelocationError", 2)?;
                 s.serialize_field(".tag", "cant_move_into_family")?;
                 s.serialize_field("cant_move_into_family", x)?;
+                s.end()
+            }
+            RelocationError::TeamFolderInsufficientQuota => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "team_folder_insufficient_quota")?;
+                s.end()
+            }
+            RelocationError::MemberFolderInsufficientQuota => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "member_folder_insufficient_quota")?;
                 s.end()
             }
             RelocationError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -14370,8 +14423,10 @@ impl ::std::fmt::Display for RelocationError {
             RelocationError::InsufficientQuota => f.write_str("The current user does not have enough space to move or copy the files."),
             RelocationError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
             RelocationError::CantMoveSharedFolder => f.write_str("Can't move the shared folder to the given destination."),
-            RelocationError::CantMoveIntoVault(inner) => write!(f, "Some content cannot be moved into Vault under certain circumstances, see detailed error: {}", inner),
+            #[allow(deprecated)] RelocationError::CantMoveIntoVault(inner) => write!(f, "Field is deprecated. Some content cannot be moved into Vault under certain circumstances, see detailed error. Deprecated: the server no longer emits this error: {}", inner),
             RelocationError::CantMoveIntoFamily(inner) => write!(f, "Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error: {}", inner),
+            RelocationError::TeamFolderInsufficientQuota => f.write_str("The destination team folder has reached its storage limit."),
+            RelocationError::MemberFolderInsufficientQuota => f.write_str("The user's member folder has reached its storage limit."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -18191,8 +18246,6 @@ pub struct ThumbnailArg {
     pub size: ThumbnailSize,
     /// How to resize and crop the image to achieve the desired size.
     pub mode: ThumbnailMode,
-    /// Field is only returned for "internal" callers. Quality of the thumbnail image.
-    pub quality: ThumbnailQuality,
     /// Normally, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. When this
     /// flag is true, [`FileMetadata::media_info`](FileMetadata) is not populated. This improves
     /// latency for use cases where `media_info` is not needed.
@@ -18206,7 +18259,6 @@ impl ThumbnailArg {
             format: ThumbnailFormat::Jpeg,
             size: ThumbnailSize::W64h64,
             mode: ThumbnailMode::Strict,
-            quality: ThumbnailQuality::Quality80,
             exclude_media_info: None,
         }
     }
@@ -18226,11 +18278,6 @@ impl ThumbnailArg {
         self
     }
 
-    pub fn with_quality(mut self, value: ThumbnailQuality) -> Self {
-        self.quality = value;
-        self
-    }
-
     pub fn with_exclude_media_info(mut self, value: bool) -> Self {
         self.exclude_media_info = Some(value);
         self
@@ -18241,7 +18288,6 @@ const THUMBNAIL_ARG_FIELDS: &[&str] = &["path",
                                         "format",
                                         "size",
                                         "mode",
-                                        "quality",
                                         "exclude_media_info"];
 impl ThumbnailArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -18258,7 +18304,6 @@ impl ThumbnailArg {
         let mut field_format = None;
         let mut field_size = None;
         let mut field_mode = None;
-        let mut field_quality = None;
         let mut field_exclude_media_info = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -18288,12 +18333,6 @@ impl ThumbnailArg {
                     }
                     field_mode = Some(map.next_value()?);
                 }
-                "quality" => {
-                    if field_quality.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("quality"));
-                    }
-                    field_quality = Some(map.next_value()?);
-                }
                 "exclude_media_info" => {
                     if field_exclude_media_info.is_some() {
                         return Err(::serde::de::Error::duplicate_field("exclude_media_info"));
@@ -18314,7 +18353,6 @@ impl ThumbnailArg {
             format: field_format.unwrap_or(ThumbnailFormat::Jpeg),
             size: field_size.unwrap_or(ThumbnailSize::W64h64),
             mode: field_mode.unwrap_or(ThumbnailMode::Strict),
-            quality: field_quality.unwrap_or(ThumbnailQuality::Quality80),
             exclude_media_info: field_exclude_media_info.and_then(Option::flatten),
         };
         Ok(Some(result))
@@ -18334,9 +18372,6 @@ impl ThumbnailArg {
         }
         if self.mode != ThumbnailMode::Strict {
             s.serialize_field("mode", &self.mode)?;
-        }
-        if self.quality != ThumbnailQuality::Quality80 {
-            s.serialize_field("quality", &self.quality)?;
         }
         if let Some(val) = &self.exclude_media_info {
             s.serialize_field("exclude_media_info", val)?;
@@ -18367,7 +18402,7 @@ impl ::serde::ser::Serialize for ThumbnailArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ThumbnailArg", 6)?;
+        let mut s = serializer.serialize_struct("ThumbnailArg", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -18714,8 +18749,6 @@ pub enum ThumbnailSize {
     W1024h768,
     /// 2048 by 1536 px.
     W2048h1536,
-    /// Field is only returned for "internal" callers. 3200 by 2400 px.
-    W3200h2400,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
@@ -18743,7 +18776,6 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                     "w960h640" => ThumbnailSize::W960h640,
                     "w1024h768" => ThumbnailSize::W1024h768,
                     "w2048h1536" => ThumbnailSize::W2048h1536,
-                    "w3200h2400" => ThumbnailSize::W3200h2400,
                     _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -18758,8 +18790,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                                     "w640h480",
                                     "w960h640",
                                     "w1024h768",
-                                    "w2048h1536",
-                                    "w3200h2400"];
+                                    "w2048h1536"];
         deserializer.deserialize_struct("ThumbnailSize", VARIANTS, EnumVisitor)
     }
 }
@@ -18823,12 +18854,6 @@ impl ::serde::ser::Serialize for ThumbnailSize {
                 s.serialize_field(".tag", "w2048h1536")?;
                 s.end()
             }
-            ThumbnailSize::W3200h2400 => {
-                // unit
-                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
-                s.serialize_field(".tag", "w3200h2400")?;
-                s.end()
-            }
         }
     }
 }
@@ -18847,12 +18872,14 @@ pub struct ThumbnailV2Arg {
     pub size: ThumbnailSize,
     /// How to resize and crop the image to achieve the desired size.
     pub mode: ThumbnailMode,
-    /// Field is only returned for "internal" callers. Quality of the thumbnail image.
-    pub quality: ThumbnailQuality,
     /// Normally, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. When this
     /// flag is true, [`FileMetadata::media_info`](FileMetadata) is not populated. This improves
     /// latency for use cases where `media_info` is not needed.
     pub exclude_media_info: Option<bool>,
+    /// Whether to preserve the original image's transparency in the thumbnail. This is supported
+    /// only when the output format is PNG or WebP. Requests that set this flag with JPEG output
+    /// return an error.
+    pub preserve_transparency: bool,
 }
 
 impl ThumbnailV2Arg {
@@ -18862,8 +18889,8 @@ impl ThumbnailV2Arg {
             format: ThumbnailFormat::Jpeg,
             size: ThumbnailSize::W64h64,
             mode: ThumbnailMode::Strict,
-            quality: ThumbnailQuality::Quality80,
             exclude_media_info: None,
+            preserve_transparency: false,
         }
     }
 
@@ -18882,13 +18909,13 @@ impl ThumbnailV2Arg {
         self
     }
 
-    pub fn with_quality(mut self, value: ThumbnailQuality) -> Self {
-        self.quality = value;
+    pub fn with_exclude_media_info(mut self, value: bool) -> Self {
+        self.exclude_media_info = Some(value);
         self
     }
 
-    pub fn with_exclude_media_info(mut self, value: bool) -> Self {
-        self.exclude_media_info = Some(value);
+    pub fn with_preserve_transparency(mut self, value: bool) -> Self {
+        self.preserve_transparency = value;
         self
     }
 }
@@ -18897,8 +18924,8 @@ const THUMBNAIL_V2_ARG_FIELDS: &[&str] = &["resource",
                                            "format",
                                            "size",
                                            "mode",
-                                           "quality",
-                                           "exclude_media_info"];
+                                           "exclude_media_info",
+                                           "preserve_transparency"];
 impl ThumbnailV2Arg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -18914,8 +18941,8 @@ impl ThumbnailV2Arg {
         let mut field_format = None;
         let mut field_size = None;
         let mut field_mode = None;
-        let mut field_quality = None;
         let mut field_exclude_media_info = None;
+        let mut field_preserve_transparency = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -18944,17 +18971,17 @@ impl ThumbnailV2Arg {
                     }
                     field_mode = Some(map.next_value()?);
                 }
-                "quality" => {
-                    if field_quality.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("quality"));
-                    }
-                    field_quality = Some(map.next_value()?);
-                }
                 "exclude_media_info" => {
                     if field_exclude_media_info.is_some() {
                         return Err(::serde::de::Error::duplicate_field("exclude_media_info"));
                     }
                     field_exclude_media_info = Some(map.next_value()?);
+                }
+                "preserve_transparency" => {
+                    if field_preserve_transparency.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("preserve_transparency"));
+                    }
+                    field_preserve_transparency = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -18970,8 +18997,8 @@ impl ThumbnailV2Arg {
             format: field_format.unwrap_or(ThumbnailFormat::Jpeg),
             size: field_size.unwrap_or(ThumbnailSize::W64h64),
             mode: field_mode.unwrap_or(ThumbnailMode::Strict),
-            quality: field_quality.unwrap_or(ThumbnailQuality::Quality80),
             exclude_media_info: field_exclude_media_info.and_then(Option::flatten),
+            preserve_transparency: field_preserve_transparency.unwrap_or(false),
         };
         Ok(Some(result))
     }
@@ -18991,11 +19018,11 @@ impl ThumbnailV2Arg {
         if self.mode != ThumbnailMode::Strict {
             s.serialize_field("mode", &self.mode)?;
         }
-        if self.quality != ThumbnailQuality::Quality80 {
-            s.serialize_field("quality", &self.quality)?;
-        }
         if let Some(val) = &self.exclude_media_info {
             s.serialize_field("exclude_media_info", val)?;
+        }
+        if self.preserve_transparency {
+            s.serialize_field("preserve_transparency", &self.preserve_transparency)?;
         }
         Ok(())
     }
@@ -19046,6 +19073,8 @@ pub enum ThumbnailV2Error {
     AccessDenied,
     /// The shared link does not exist.
     NotFound,
+    /// Transparency preservation is supported only for PNG and WebP output.
+    UnsupportedOutputFormat,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -19080,6 +19109,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailV2Error {
                     "conversion_error" => ThumbnailV2Error::ConversionError,
                     "access_denied" => ThumbnailV2Error::AccessDenied,
                     "not_found" => ThumbnailV2Error::NotFound,
+                    "unsupported_output_format" => ThumbnailV2Error::UnsupportedOutputFormat,
                     _ => ThumbnailV2Error::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -19093,6 +19123,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailV2Error {
                                     "conversion_error",
                                     "access_denied",
                                     "not_found",
+                                    "unsupported_output_format",
                                     "other"];
         deserializer.deserialize_struct("ThumbnailV2Error", VARIANTS, EnumVisitor)
     }
@@ -19146,6 +19177,12 @@ impl ::serde::ser::Serialize for ThumbnailV2Error {
                 s.serialize_field(".tag", "not_found")?;
                 s.end()
             }
+            ThumbnailV2Error::UnsupportedOutputFormat => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_output_format")?;
+                s.end()
+            }
             ThumbnailV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -19170,6 +19207,7 @@ impl ::std::fmt::Display for ThumbnailV2Error {
             ThumbnailV2Error::ConversionError => f.write_str("An error occurred during thumbnail conversion."),
             ThumbnailV2Error::AccessDenied => f.write_str("Access to this shared link is forbidden."),
             ThumbnailV2Error::NotFound => f.write_str("The shared link does not exist."),
+            ThumbnailV2Error::UnsupportedOutputFormat => f.write_str("Transparency preservation is supported only for PNG and WebP output."),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -19385,7 +19423,8 @@ pub struct UploadArg {
     /// conflict even when the target path refers to a file with identical contents.
     pub strict_conflict: bool,
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does
-    /// not match this hash, an error will be returned. For more information see our [Content
+    /// not match this hash, an error will be returned. Optional, but recommended to avoid
+    /// committing data corrupted in transit. For more information see our [Content
     /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub content_hash: Option<Sha256HexHash>,
 }
@@ -19753,7 +19792,8 @@ pub struct UploadSessionAppendArg {
     /// current session.
     pub close: bool,
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does
-    /// not match this hash, an error will be returned. For more information see our [Content
+    /// not match this hash, an error will be returned. Optional, but recommended to avoid
+    /// committing data corrupted in transit. For more information see our [Content
     /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub content_hash: Option<Sha256HexHash>,
 }
@@ -19883,10 +19923,10 @@ impl ::serde::ser::Serialize for UploadSessionAppendArg {
 pub struct UploadSessionAppendBatchArg {
     /// Append information for each file in the batch.
     pub entries: Vec<UploadSessionAppendBatchArgEntry>,
-    /// A hash of the entire request body which is all the concatenated pieces of file content that
-    /// were uploaded in this call. If provided and the uploaded content does not match this hash,
-    /// an error will be returned. For more information see our [Content
-    /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
+    /// A single hash of all the concatenated file contents uploaded in this call. If provided and
+    /// the uploaded content does not match this hash, an error will be returned. Optional, but
+    /// recommended to avoid committing data corrupted in transit. For more information see our
+    /// [Content hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub content_hash: Option<Sha256HexHash>,
 }
 
@@ -20760,7 +20800,8 @@ pub struct UploadSessionFinishArg {
     /// Contains the path and other optional modifiers for the commit.
     pub commit: CommitInfo,
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does
-    /// not match this hash, an error will be returned. For more information see our [Content
+    /// not match this hash, an error will be returned. Optional, but recommended to avoid
+    /// committing data corrupted in transit. For more information see our [Content
     /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub content_hash: Option<Sha256HexHash>,
 }
@@ -21744,7 +21785,8 @@ pub struct UploadSessionStartArg {
     /// [`UploadSessionType::Sequential`].
     pub session_type: Option<UploadSessionType>,
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does
-    /// not match this hash, an error will be returned. For more information see our [Content
+    /// not match this hash, an error will be returned. Optional, but recommended to avoid
+    /// committing data corrupted in transit. For more information see our [Content
     /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub content_hash: Option<Sha256HexHash>,
 }
@@ -22775,6 +22817,12 @@ pub enum WriteError {
     /// The user doesn't have permission to perform the action due to restrictions set by a team
     /// administrator
     AccessRestricted,
+    /// The destination team folder has reached its storage limit.
+    TeamFolderInsufficientSpace,
+    /// The user's member folder has reached its storage limit.
+    MemberFolderInsufficientSpace,
+    /// The user has reached their monthly upload traffic limit.
+    UploadTrafficLimitReached,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -22817,6 +22865,9 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                     "operation_suppressed" => WriteError::OperationSuppressed,
                     "too_many_write_operations" => WriteError::TooManyWriteOperations,
                     "access_restricted" => WriteError::AccessRestricted,
+                    "team_folder_insufficient_space" => WriteError::TeamFolderInsufficientSpace,
+                    "member_folder_insufficient_space" => WriteError::MemberFolderInsufficientSpace,
+                    "upload_traffic_limit_reached" => WriteError::UploadTrafficLimitReached,
                     _ => WriteError::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -22832,6 +22883,9 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                                     "operation_suppressed",
                                     "too_many_write_operations",
                                     "access_restricted",
+                                    "team_folder_insufficient_space",
+                                    "member_folder_insufficient_space",
+                                    "upload_traffic_limit_reached",
                                     "other"];
         deserializer.deserialize_struct("WriteError", VARIANTS, EnumVisitor)
     }
@@ -22901,6 +22955,24 @@ impl ::serde::ser::Serialize for WriteError {
                 s.serialize_field(".tag", "access_restricted")?;
                 s.end()
             }
+            WriteError::TeamFolderInsufficientSpace => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "team_folder_insufficient_space")?;
+                s.end()
+            }
+            WriteError::MemberFolderInsufficientSpace => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "member_folder_insufficient_space")?;
+                s.end()
+            }
+            WriteError::UploadTrafficLimitReached => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "upload_traffic_limit_reached")?;
+                s.end()
+            }
             WriteError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -22927,6 +22999,9 @@ impl ::std::fmt::Display for WriteError {
             WriteError::OperationSuppressed => f.write_str("This file operation is not allowed at this path."),
             WriteError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
             WriteError::AccessRestricted => f.write_str("The user doesn't have permission to perform the action due to restrictions set by a team administrator"),
+            WriteError::TeamFolderInsufficientSpace => f.write_str("The destination team folder has reached its storage limit."),
+            WriteError::MemberFolderInsufficientSpace => f.write_str("The user's member folder has reached its storage limit."),
+            WriteError::UploadTrafficLimitReached => f.write_str("The user has reached their monthly upload traffic limit."),
             _ => write!(f, "{:?}", *self),
         }
     }

@@ -143,7 +143,10 @@ impl ::std::fmt::Display for AccessError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AuthError {
-    /// The access token is invalid.
+    /// The access token is invalid. This can happen if the access token has been revoked by Dropbox
+    /// or the user. To fix this, you should re-authenticate the user. Note: Access tokens that are
+    /// not returned exactly as provisioned will return this error. Be sure not to truncate or
+    /// otherwise malform access tokens provided by Dropbox.
     InvalidAccessToken,
     /// The user specified in 'Dropbox-API-Select-User' is no longer on the team.
     InvalidSelectUser,
@@ -262,7 +265,7 @@ impl ::std::error::Error for AuthError {
 impl ::std::fmt::Display for AuthError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            AuthError::InvalidAccessToken => f.write_str("The access token is invalid."),
+            AuthError::InvalidAccessToken => f.write_str("The access token is invalid. This can happen if the access token has been revoked by Dropbox or the user. To fix this, you should re-authenticate the user. Note: Access tokens that are not returned exactly as provisioned will return this error. Be sure not to truncate or otherwise malform access tokens provided by Dropbox."),
             AuthError::InvalidSelectUser => f.write_str("The user specified in 'Dropbox-API-Select-User' is no longer on the team."),
             AuthError::InvalidSelectAdmin => f.write_str("The user specified in 'Dropbox-API-Select-Admin' is not a Dropbox Business team admin."),
             AuthError::UserSuspended => f.write_str("The user has been suspended."),
@@ -277,7 +280,7 @@ impl ::std::fmt::Display for AuthError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum InvalidAccountTypeError {
-    /// Current account type doesn't have permission to access this route endpoint.
+    /// Current account type doesn't have permission to access this endpoint.
     Endpoint,
     /// Current account type doesn't have permission to access this feature.
     Feature,
@@ -345,7 +348,7 @@ impl ::std::error::Error for InvalidAccountTypeError {
 impl ::std::fmt::Display for InvalidAccountTypeError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            InvalidAccountTypeError::Endpoint => f.write_str("Current account type doesn't have permission to access this route endpoint."),
+            InvalidAccountTypeError::Endpoint => f.write_str("Current account type doesn't have permission to access this endpoint."),
             InvalidAccountTypeError::Feature => f.write_str("Current account type doesn't have permission to access this feature."),
             _ => write!(f, "{:?}", *self),
         }
