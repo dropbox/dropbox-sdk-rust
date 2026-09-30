@@ -86,19 +86,52 @@ pub fn prepare_request<T: HttpClient>(
                 req = req.set_header("Content-Type", params_type.content_type());
                 params_body = Some(Bytes::from(params));
             }
-            Style::Upload => {
+            Style::Download | Style::Upload => {
                 // Send params in a header.
-                req = req.set_header("Dropbox-API-Arg", &params);
-                req = req.set_header("Content-Type", "application/octet-stream");
-            }
-            Style::Download => {
-                // Send params in a header.
-                req = req.set_header("Dropbox-API-Arg", &params);
+                req = req.set_header("Dropbox-API-Arg", &json_escape_header(params));
             }
         }
     };
 
+    if style == Style::Upload {
+        req = req.set_header("Content-Type", "application/octet-stream");
+    }
+
     (req, params_body)
+}
+
+/// Replaces any characters in JSON text not suitable for transmission in an HTTP header with a
+/// '\uXXXX' escape sequence.
+///
+/// RFC 7230 says valid HTTP header value characters are:
+/// - "VCHAR": "visible ASCII", defined in RFC 5234 as 0x21 - 0x7E
+/// - SP: 0x20
+/// - HTAB: 0x09
+/// - "obs-text": 0x80 - 0xFF
+///
+/// Non-ASCII is not consistently supported by software, and HTAB is too visually similar to SP, so
+/// while technically allowed by the spec, these ranges are also escaped.
+/// Therefore, we escape U+0000 - U+001F and U+007F and above.
+fn json_escape_header(s: String) -> String {
+    let mut replaced = None;
+    for (i, c) in s.char_indices() {
+        if !('\x20'..'\x7f').contains(&c) {
+            let mstr = match replaced {
+                None => {
+                    // We've had all valid chars up to this point.
+                    // Clone the string up until the current char, and from now on we'll be pushing
+                    // chars to it.
+                    replaced = Some(s[0..i].to_owned());
+                    replaced.as_mut().unwrap()
+                }
+                Some(ref mut m) => m,
+            };
+            mstr.push_str(&format!("\\u{:04x}", c as u32));
+        } else if let Some(ref mut o) = replaced {
+            o.push(c);
+        }
+    }
+    replaced.unwrap_or(s)
 }
 
 async fn body_to_string(body: &mut (dyn AsyncRead + Send + Unpin)) -> Result<String, Error> {
@@ -415,3 +448,21 @@ mod sync_helpers {
 
 #[cfg(feature = "sync_routes")]
 pub use sync_helpers::*;
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_json_escape() {
+        assert_eq!("foobar", json_escape_header("foobar".to_owned()));
+        assert_eq!(
+            r#"{"field": "some_\u00fc\u00f1\u00eec\u00f8d\u00e9_and_\u007f"}"#,
+            json_escape_header("{\"field\": \"some_üñîcødé_and_\x7f\"}".to_owned())
+        );
+        assert_eq!(
+            "almost,\\u007f but not quite",
+            json_escape_header("almost,\x7f but not quite".to_owned())
+        );
+    }
+}
