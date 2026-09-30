@@ -839,8 +839,9 @@ class RustBackend(RustHelperBackend):
                 with self.block(f'match parent'):
                     for field in parent.all_fields:
                         variant_name = self.enum_variant_name(field)
+                        attr = '#[allow(deprecated)] ' if field.deprecated else ''
                         x = "" if isinstance(field.data_type, ir.Void) else "(x)"
-                        self.emit(f'{supertype}::{variant_name}{x} => {subtype}::{variant_name}{x},')
+                        self.emit(f'{attr}{supertype}::{variant_name}{x} => {subtype}::{variant_name}{x},')
 
     # Helpers
 

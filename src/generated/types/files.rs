@@ -13381,7 +13381,7 @@ impl From<RelocationError> for RelocationBatchError {
             RelocationError::InsufficientQuota => RelocationBatchError::InsufficientQuota,
             RelocationError::InternalError => RelocationBatchError::InternalError,
             RelocationError::CantMoveSharedFolder => RelocationBatchError::CantMoveSharedFolder,
-            RelocationError::CantMoveIntoVault(x) => RelocationBatchError::CantMoveIntoVault(x),
+            #[allow(deprecated)] RelocationError::CantMoveIntoVault(x) => RelocationBatchError::CantMoveIntoVault(x),
             RelocationError::CantMoveIntoFamily(x) => RelocationBatchError::CantMoveIntoFamily(x),
             RelocationError::TeamFolderInsufficientQuota => RelocationBatchError::TeamFolderInsufficientQuota,
             RelocationError::MemberFolderInsufficientQuota => RelocationBatchError::MemberFolderInsufficientQuota,
