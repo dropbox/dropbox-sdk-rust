@@ -826,7 +826,8 @@ class RustBackend(RustHelperBackend):
                     if subtype.data_type != struct:
                         continue
                     variant_name = self.enum_variant_name(subtype)
-                    self.emit(f'{supertype}::{variant_name}(subtype)')
+                    attr = '#[allow(deprecated)] ' if subtype.deprecated else ''
+                    self.emit(f'{attr}{supertype}::{variant_name}(subtype)')
 
     # "extends" for unions means the subtype adds additional variants, so we can convert from the
     # supertype to the subtype.
