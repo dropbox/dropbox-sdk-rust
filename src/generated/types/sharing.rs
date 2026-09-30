@@ -16073,8 +16073,8 @@ impl From<SharePathErrorBaseV2> for SharePathErrorV2 {
             SharePathErrorBaseV2::InvalidPath => SharePathErrorV2::InvalidPath,
             SharePathErrorBaseV2::IsOsxPackage => SharePathErrorV2::IsOsxPackage,
             SharePathErrorBaseV2::InsideOsxPackage => SharePathErrorV2::InsideOsxPackage,
-            SharePathErrorBaseV2::IsVault => SharePathErrorV2::IsVault,
-            SharePathErrorBaseV2::IsVaultLocked => SharePathErrorV2::IsVaultLocked,
+            #[allow(deprecated)] SharePathErrorBaseV2::IsVault => SharePathErrorV2::IsVault,
+            #[allow(deprecated)] SharePathErrorBaseV2::IsVaultLocked => SharePathErrorV2::IsVaultLocked,
             SharePathErrorBaseV2::Other => SharePathErrorV2::Other,
         }
     }
