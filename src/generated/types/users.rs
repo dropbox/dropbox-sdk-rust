@@ -18,12 +18,15 @@ pub type GetAccountBatchResult = Vec<BasicAccount>;
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct Account {
-    /// The user's unique Dropbox ID.
+    /// The user's unique and stable Dropbox ID.
     pub account_id: crate::types::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
     /// The user's email address. Do not rely on this without checking the `email_verified` field.
-    /// Even then, it's possible that the user has since lost access to their email.
+    /// Even then, it's possible that the user has since lost access to their email. Note: email is
+    /// not a unique or stable identifier for a Dropbox account. Users can change their email, and
+    /// emails can be reused by different accounts. Apps should not use email as a key for account
+    /// identification; use `account_id` instead.
     pub email: String,
     /// Whether the user has verified their email address.
     pub email_verified: bool,
@@ -189,12 +192,15 @@ impl ::serde::ser::Serialize for Account {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct BasicAccount {
-    /// The user's unique Dropbox ID.
+    /// The user's unique and stable Dropbox ID.
     pub account_id: crate::types::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
     /// The user's email address. Do not rely on this without checking the `email_verified` field.
-    /// Even then, it's possible that the user has since lost access to their email.
+    /// Even then, it's possible that the user has since lost access to their email. Note: email is
+    /// not a unique or stable identifier for a Dropbox account. Users can change their email, and
+    /// emails can be reused by different accounts. Apps should not use email as a key for account
+    /// identification; use `account_id` instead.
     pub email: String,
     /// Whether the user has verified their email address.
     pub email_verified: bool,
@@ -538,12 +544,15 @@ impl ::serde::ser::Serialize for FileLockingValue {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FullAccount {
-    /// The user's unique Dropbox ID.
+    /// The user's unique and stable Dropbox ID.
     pub account_id: crate::types::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
     /// The user's email address. Do not rely on this without checking the `email_verified` field.
-    /// Even then, it's possible that the user has since lost access to their email.
+    /// Even then, it's possible that the user has since lost access to their email. Note: email is
+    /// not a unique or stable identifier for a Dropbox account. Users can change their email, and
+    /// emails can be reused by different accounts. Apps should not use email as a key for account
+    /// identification; use `account_id` instead.
     pub email: String,
     /// Whether the user has verified their email address.
     pub email_verified: bool,

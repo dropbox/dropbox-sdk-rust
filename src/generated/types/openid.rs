@@ -202,18 +202,22 @@ impl ::std::fmt::Display for UserInfoError {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfoResult {
-    /// Last name of user.
+    /// Last name of the user.
     pub family_name: Option<String>,
-    /// First name of user.
+    /// First name of the user.
     pub given_name: Option<String>,
-    /// Email address of user.
+    /// The user's email address. Be aware it's possible that the user has since lost access to
+    /// their email. Note: email is not a unique or stable identifier for a Dropbox account. Users
+    /// can change their email, and emails can be reused by different accounts. Apps should not use
+    /// email as a key for account identification; use `sub` instead.
     pub email: Option<String>,
-    /// If user is email verified.
+    /// If the user's email address is verified.
     pub email_verified: Option<bool>,
-    /// Issuer of token (in this case Dropbox).
+    /// Issuer of the token (in this case Dropbox).
     pub iss: String,
     /// An identifier for the user. This is the Dropbox account_id, a string value such as
-    /// dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc.
+    /// dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc. The account_id is a unique and stable identifier
+    /// for a Dropbox account, suitable for use as a key in authentication and account management.
     pub sub: String,
 }
 

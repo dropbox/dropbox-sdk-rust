@@ -31252,9 +31252,15 @@ pub enum EventDetails {
     ProtectActionDeleteDetails(ProtectActionDeleteDetails),
     ProtectActionExportDetails(ProtectActionExportDetails),
     ProtectActionRemoveCollaboratorDetails(ProtectActionRemoveCollaboratorDetails),
+    ProtectActionRemoveDomainsDetails(ProtectActionRemoveDomainsDetails),
     ProtectActionRemoveLinkDetails(ProtectActionRemoveLinkDetails),
     ProtectActionStopSharingDetails(ProtectActionStopSharingDetails),
     ProtectInternalDomainsChangedDetails(ProtectInternalDomainsChangedDetails),
+    ProtectPolicyActivatedDetails(ProtectPolicyActivatedDetails),
+    ProtectPolicyDeactivatedDetails(ProtectPolicyDeactivatedDetails),
+    ProtectPolicyScheduledDetails(ProtectPolicyScheduledDetails),
+    ProtectPolicyUpdatedDetails(ProtectPolicyUpdatedDetails),
+    ProtectReportViewDetails(ProtectReportViewDetails),
     ClassificationCreateReportDetails(ClassificationCreateReportDetails),
     ClassificationCreateReportFailDetails(ClassificationCreateReportFailDetails),
     EmmCreateExceptionsReportDetails(EmmCreateExceptionsReportDetails),
@@ -31506,6 +31512,7 @@ pub enum EventDetails {
     PaperDesktopPolicyChangedDetails(PaperDesktopPolicyChangedDetails),
     PaperEnabledUsersGroupAdditionDetails(PaperEnabledUsersGroupAdditionDetails),
     PaperEnabledUsersGroupRemovalDetails(PaperEnabledUsersGroupRemovalDetails),
+    PaperOfflineModePolicyChangedDetails(PaperOfflineModePolicyChangedDetails),
     PasskeyLoginPolicyChangedDetails(PasskeyLoginPolicyChangedDetails),
     PasswordStrengthRequirementsChangePolicyDetails(PasswordStrengthRequirementsChangePolicyDetails),
     PermanentDeleteChangePolicyDetails(PermanentDeleteChangePolicyDetails),
@@ -31537,6 +31544,8 @@ pub enum EventDetails {
     StackCrossTeamAccessPolicyChangedDetails(StackCrossTeamAccessPolicyChangedDetails),
     TeamBrandingPolicyChangedDetails(TeamBrandingPolicyChangedDetails),
     TeamExtensionsPolicyChangedDetails(TeamExtensionsPolicyChangedDetails),
+    TeamExternalSharingControlsActivationStateChangedDetails(TeamExternalSharingControlsActivationStateChangedDetails),
+    TeamExternalSharingControlsRecipientListsChangedDetails(TeamExternalSharingControlsRecipientListsChangedDetails),
     TeamMemberStorageRequestPolicyChangedDetails(TeamMemberStorageRequestPolicyChangedDetails),
     TeamSelectiveSyncPolicyChangedDetails(TeamSelectiveSyncPolicyChangedDetails),
     TeamSharingWhitelistSubjectsChangedDetails(TeamSharingWhitelistSubjectsChangedDetails),
@@ -31901,9 +31910,15 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "protect_action_delete_details" => EventDetails::ProtectActionDeleteDetails(ProtectActionDeleteDetails::internal_deserialize(&mut map)?),
                     "protect_action_export_details" => EventDetails::ProtectActionExportDetails(ProtectActionExportDetails::internal_deserialize(&mut map)?),
                     "protect_action_remove_collaborator_details" => EventDetails::ProtectActionRemoveCollaboratorDetails(ProtectActionRemoveCollaboratorDetails::internal_deserialize(&mut map)?),
+                    "protect_action_remove_domains_details" => EventDetails::ProtectActionRemoveDomainsDetails(ProtectActionRemoveDomainsDetails::internal_deserialize(&mut map)?),
                     "protect_action_remove_link_details" => EventDetails::ProtectActionRemoveLinkDetails(ProtectActionRemoveLinkDetails::internal_deserialize(&mut map)?),
                     "protect_action_stop_sharing_details" => EventDetails::ProtectActionStopSharingDetails(ProtectActionStopSharingDetails::internal_deserialize(&mut map)?),
                     "protect_internal_domains_changed_details" => EventDetails::ProtectInternalDomainsChangedDetails(ProtectInternalDomainsChangedDetails::internal_deserialize(&mut map)?),
+                    "protect_policy_activated_details" => EventDetails::ProtectPolicyActivatedDetails(ProtectPolicyActivatedDetails::internal_deserialize(&mut map)?),
+                    "protect_policy_deactivated_details" => EventDetails::ProtectPolicyDeactivatedDetails(ProtectPolicyDeactivatedDetails::internal_deserialize(&mut map)?),
+                    "protect_policy_scheduled_details" => EventDetails::ProtectPolicyScheduledDetails(ProtectPolicyScheduledDetails::internal_deserialize(&mut map)?),
+                    "protect_policy_updated_details" => EventDetails::ProtectPolicyUpdatedDetails(ProtectPolicyUpdatedDetails::internal_deserialize(&mut map)?),
+                    "protect_report_view_details" => EventDetails::ProtectReportViewDetails(ProtectReportViewDetails::internal_deserialize(&mut map)?),
                     "classification_create_report_details" => EventDetails::ClassificationCreateReportDetails(ClassificationCreateReportDetails::internal_deserialize(&mut map)?),
                     "classification_create_report_fail_details" => EventDetails::ClassificationCreateReportFailDetails(ClassificationCreateReportFailDetails::internal_deserialize(&mut map)?),
                     "emm_create_exceptions_report_details" => EventDetails::EmmCreateExceptionsReportDetails(EmmCreateExceptionsReportDetails::internal_deserialize(&mut map)?),
@@ -32155,6 +32170,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "paper_desktop_policy_changed_details" => EventDetails::PaperDesktopPolicyChangedDetails(PaperDesktopPolicyChangedDetails::internal_deserialize(&mut map)?),
                     "paper_enabled_users_group_addition_details" => EventDetails::PaperEnabledUsersGroupAdditionDetails(PaperEnabledUsersGroupAdditionDetails::internal_deserialize(&mut map)?),
                     "paper_enabled_users_group_removal_details" => EventDetails::PaperEnabledUsersGroupRemovalDetails(PaperEnabledUsersGroupRemovalDetails::internal_deserialize(&mut map)?),
+                    "paper_offline_mode_policy_changed_details" => EventDetails::PaperOfflineModePolicyChangedDetails(PaperOfflineModePolicyChangedDetails::internal_deserialize(&mut map)?),
                     "passkey_login_policy_changed_details" => EventDetails::PasskeyLoginPolicyChangedDetails(PasskeyLoginPolicyChangedDetails::internal_deserialize(&mut map)?),
                     "password_strength_requirements_change_policy_details" => EventDetails::PasswordStrengthRequirementsChangePolicyDetails(PasswordStrengthRequirementsChangePolicyDetails::internal_deserialize(&mut map)?),
                     "permanent_delete_change_policy_details" => EventDetails::PermanentDeleteChangePolicyDetails(PermanentDeleteChangePolicyDetails::internal_deserialize(&mut map)?),
@@ -32186,6 +32202,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "stack_cross_team_access_policy_changed_details" => EventDetails::StackCrossTeamAccessPolicyChangedDetails(StackCrossTeamAccessPolicyChangedDetails::internal_deserialize(&mut map)?),
                     "team_branding_policy_changed_details" => EventDetails::TeamBrandingPolicyChangedDetails(TeamBrandingPolicyChangedDetails::internal_deserialize(&mut map)?),
                     "team_extensions_policy_changed_details" => EventDetails::TeamExtensionsPolicyChangedDetails(TeamExtensionsPolicyChangedDetails::internal_deserialize(&mut map)?),
+                    "team_external_sharing_controls_activation_state_changed_details" => EventDetails::TeamExternalSharingControlsActivationStateChangedDetails(TeamExternalSharingControlsActivationStateChangedDetails::internal_deserialize(&mut map)?),
+                    "team_external_sharing_controls_recipient_lists_changed_details" => EventDetails::TeamExternalSharingControlsRecipientListsChangedDetails(TeamExternalSharingControlsRecipientListsChangedDetails::internal_deserialize(&mut map)?),
                     "team_member_storage_request_policy_changed_details" => EventDetails::TeamMemberStorageRequestPolicyChangedDetails(TeamMemberStorageRequestPolicyChangedDetails::internal_deserialize(&mut map)?),
                     "team_selective_sync_policy_changed_details" => EventDetails::TeamSelectiveSyncPolicyChangedDetails(TeamSelectiveSyncPolicyChangedDetails::internal_deserialize(&mut map)?),
                     "team_sharing_whitelist_subjects_changed_details" => EventDetails::TeamSharingWhitelistSubjectsChangedDetails(TeamSharingWhitelistSubjectsChangedDetails::internal_deserialize(&mut map)?),
@@ -32534,9 +32552,15 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "protect_action_delete_details",
                                     "protect_action_export_details",
                                     "protect_action_remove_collaborator_details",
+                                    "protect_action_remove_domains_details",
                                     "protect_action_remove_link_details",
                                     "protect_action_stop_sharing_details",
                                     "protect_internal_domains_changed_details",
+                                    "protect_policy_activated_details",
+                                    "protect_policy_deactivated_details",
+                                    "protect_policy_scheduled_details",
+                                    "protect_policy_updated_details",
+                                    "protect_report_view_details",
                                     "classification_create_report_details",
                                     "classification_create_report_fail_details",
                                     "emm_create_exceptions_report_details",
@@ -32788,6 +32812,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "paper_desktop_policy_changed_details",
                                     "paper_enabled_users_group_addition_details",
                                     "paper_enabled_users_group_removal_details",
+                                    "paper_offline_mode_policy_changed_details",
                                     "passkey_login_policy_changed_details",
                                     "password_strength_requirements_change_policy_details",
                                     "permanent_delete_change_policy_details",
@@ -32819,6 +32844,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "stack_cross_team_access_policy_changed_details",
                                     "team_branding_policy_changed_details",
                                     "team_extensions_policy_changed_details",
+                                    "team_external_sharing_controls_activation_state_changed_details",
+                                    "team_external_sharing_controls_recipient_lists_changed_details",
                                     "team_member_storage_request_policy_changed_details",
                                     "team_selective_sync_policy_changed_details",
                                     "team_sharing_whitelist_subjects_changed_details",
@@ -34803,6 +34830,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::ProtectActionRemoveDomainsDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "protect_action_remove_domains_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::ProtectActionRemoveLinkDetails(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
@@ -34821,6 +34855,41 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "protect_internal_domains_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ProtectPolicyActivatedDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "protect_policy_activated_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ProtectPolicyDeactivatedDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "protect_policy_deactivated_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ProtectPolicyScheduledDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "protect_policy_scheduled_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ProtectPolicyUpdatedDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "protect_policy_updated_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ProtectReportViewDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "protect_report_view_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -35066,21 +35135,21 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::MediaHubProjectTeamAddDetails(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "media_hub_project_team_add_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::MediaHubProjectTeamDeleteDetails(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "media_hub_project_team_delete_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::MediaHubProjectTeamRoleChangedDetails(x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 5)?;
                 s.serialize_field(".tag", "media_hub_project_team_role_changed_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -36530,6 +36599,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "paper_enabled_users_group_removal_details")?;
                 s.end()
             }
+            EventDetails::PaperOfflineModePolicyChangedDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "paper_offline_mode_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::PasskeyLoginPolicyChangedDetails(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
@@ -36744,6 +36820,20 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "team_extensions_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::TeamExternalSharingControlsActivationStateChangedDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "team_external_sharing_controls_activation_state_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::TeamExternalSharingControlsRecipientListsChangedDetails(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 5)?;
+                s.serialize_field(".tag", "team_external_sharing_controls_recipient_lists_changed_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -37722,12 +37812,24 @@ pub enum EventType {
     ProtectActionExport(ProtectActionExportType),
     /// (protect) Removed collaborators via Dropbox Protect
     ProtectActionRemoveCollaborator(ProtectActionRemoveCollaboratorType),
+    /// (protect) Removed domains via Dropbox Protect
+    ProtectActionRemoveDomains(ProtectActionRemoveDomainsType),
     /// (protect) Removed a link via Dropbox Protect
     ProtectActionRemoveLink(ProtectActionRemoveLinkType),
     /// (protect) Stopped sharing content via Dropbox Protect
     ProtectActionStopSharing(ProtectActionStopSharingType),
     /// (protect) Modified Protect internal domains list
     ProtectInternalDomainsChanged(ProtectInternalDomainsChangedType),
+    /// (protect) Activated a Dropbox Protect policy
+    ProtectPolicyActivated(ProtectPolicyActivatedType),
+    /// (protect) Deactivated a Dropbox Protect policy
+    ProtectPolicyDeactivated(ProtectPolicyDeactivatedType),
+    /// (protect) Scheduled a Dropbox Protect policy
+    ProtectPolicyScheduled(ProtectPolicyScheduledType),
+    /// (protect) Updated a Dropbox Protect policy
+    ProtectPolicyUpdated(ProtectPolicyUpdatedType),
+    /// (protect) Viewed a Dropbox Protect report
+    ProtectReportView(ProtectReportViewType),
     /// (reports) Created Classification report
     ClassificationCreateReport(ClassificationCreateReportType),
     /// (reports) Couldn't create Classification report
@@ -38241,6 +38343,8 @@ pub enum EventType {
     PaperEnabledUsersGroupAddition(PaperEnabledUsersGroupAdditionType),
     /// (team_policies) Removed users from Paper-enabled users list
     PaperEnabledUsersGroupRemoval(PaperEnabledUsersGroupRemovalType),
+    /// (team_policies) Enabled/disabled Paper offline mode for team
+    PaperOfflineModePolicyChanged(PaperOfflineModePolicyChangedType),
     /// (team_policies) Changed passkey login policy for team
     PasskeyLoginPolicyChanged(PasskeyLoginPolicyChangedType),
     /// (team_policies) Changed team password strength requirements
@@ -38305,6 +38409,10 @@ pub enum EventType {
     TeamBrandingPolicyChanged(TeamBrandingPolicyChangedType),
     /// (team_policies) Changed App Integrations setting for team
     TeamExtensionsPolicyChanged(TeamExtensionsPolicyChangedType),
+    /// (team_policies) Changed external sharing controls activation state
+    TeamExternalSharingControlsActivationStateChanged(TeamExternalSharingControlsActivationStateChangedType),
+    /// (team_policies) Changed approved or blocked entries for external sharing controls
+    TeamExternalSharingControlsRecipientListsChanged(TeamExternalSharingControlsRecipientListsChangedType),
     /// (team_policies) Changed team member storage request policy for team
     TeamMemberStorageRequestPolicyChanged(TeamMemberStorageRequestPolicyChangedType),
     /// (team_policies) Enabled/disabled Team Selective Sync for team
@@ -38736,9 +38844,15 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "protect_action_delete" => EventType::ProtectActionDelete(ProtectActionDeleteType::internal_deserialize(&mut map)?),
                     "protect_action_export" => EventType::ProtectActionExport(ProtectActionExportType::internal_deserialize(&mut map)?),
                     "protect_action_remove_collaborator" => EventType::ProtectActionRemoveCollaborator(ProtectActionRemoveCollaboratorType::internal_deserialize(&mut map)?),
+                    "protect_action_remove_domains" => EventType::ProtectActionRemoveDomains(ProtectActionRemoveDomainsType::internal_deserialize(&mut map)?),
                     "protect_action_remove_link" => EventType::ProtectActionRemoveLink(ProtectActionRemoveLinkType::internal_deserialize(&mut map)?),
                     "protect_action_stop_sharing" => EventType::ProtectActionStopSharing(ProtectActionStopSharingType::internal_deserialize(&mut map)?),
                     "protect_internal_domains_changed" => EventType::ProtectInternalDomainsChanged(ProtectInternalDomainsChangedType::internal_deserialize(&mut map)?),
+                    "protect_policy_activated" => EventType::ProtectPolicyActivated(ProtectPolicyActivatedType::internal_deserialize(&mut map)?),
+                    "protect_policy_deactivated" => EventType::ProtectPolicyDeactivated(ProtectPolicyDeactivatedType::internal_deserialize(&mut map)?),
+                    "protect_policy_scheduled" => EventType::ProtectPolicyScheduled(ProtectPolicyScheduledType::internal_deserialize(&mut map)?),
+                    "protect_policy_updated" => EventType::ProtectPolicyUpdated(ProtectPolicyUpdatedType::internal_deserialize(&mut map)?),
+                    "protect_report_view" => EventType::ProtectReportView(ProtectReportViewType::internal_deserialize(&mut map)?),
                     "classification_create_report" => EventType::ClassificationCreateReport(ClassificationCreateReportType::internal_deserialize(&mut map)?),
                     "classification_create_report_fail" => EventType::ClassificationCreateReportFail(ClassificationCreateReportFailType::internal_deserialize(&mut map)?),
                     "emm_create_exceptions_report" => EventType::EmmCreateExceptionsReport(EmmCreateExceptionsReportType::internal_deserialize(&mut map)?),
@@ -38990,6 +39104,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "paper_desktop_policy_changed" => EventType::PaperDesktopPolicyChanged(PaperDesktopPolicyChangedType::internal_deserialize(&mut map)?),
                     "paper_enabled_users_group_addition" => EventType::PaperEnabledUsersGroupAddition(PaperEnabledUsersGroupAdditionType::internal_deserialize(&mut map)?),
                     "paper_enabled_users_group_removal" => EventType::PaperEnabledUsersGroupRemoval(PaperEnabledUsersGroupRemovalType::internal_deserialize(&mut map)?),
+                    "paper_offline_mode_policy_changed" => EventType::PaperOfflineModePolicyChanged(PaperOfflineModePolicyChangedType::internal_deserialize(&mut map)?),
                     "passkey_login_policy_changed" => EventType::PasskeyLoginPolicyChanged(PasskeyLoginPolicyChangedType::internal_deserialize(&mut map)?),
                     "password_strength_requirements_change_policy" => EventType::PasswordStrengthRequirementsChangePolicy(PasswordStrengthRequirementsChangePolicyType::internal_deserialize(&mut map)?),
                     "permanent_delete_change_policy" => EventType::PermanentDeleteChangePolicy(PermanentDeleteChangePolicyType::internal_deserialize(&mut map)?),
@@ -39021,6 +39136,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "stack_cross_team_access_policy_changed" => EventType::StackCrossTeamAccessPolicyChanged(StackCrossTeamAccessPolicyChangedType::internal_deserialize(&mut map)?),
                     "team_branding_policy_changed" => EventType::TeamBrandingPolicyChanged(TeamBrandingPolicyChangedType::internal_deserialize(&mut map)?),
                     "team_extensions_policy_changed" => EventType::TeamExtensionsPolicyChanged(TeamExtensionsPolicyChangedType::internal_deserialize(&mut map)?),
+                    "team_external_sharing_controls_activation_state_changed" => EventType::TeamExternalSharingControlsActivationStateChanged(TeamExternalSharingControlsActivationStateChangedType::internal_deserialize(&mut map)?),
+                    "team_external_sharing_controls_recipient_lists_changed" => EventType::TeamExternalSharingControlsRecipientListsChanged(TeamExternalSharingControlsRecipientListsChangedType::internal_deserialize(&mut map)?),
                     "team_member_storage_request_policy_changed" => EventType::TeamMemberStorageRequestPolicyChanged(TeamMemberStorageRequestPolicyChangedType::internal_deserialize(&mut map)?),
                     "team_selective_sync_policy_changed" => EventType::TeamSelectiveSyncPolicyChanged(TeamSelectiveSyncPolicyChangedType::internal_deserialize(&mut map)?),
                     "team_sharing_whitelist_subjects_changed" => EventType::TeamSharingWhitelistSubjectsChanged(TeamSharingWhitelistSubjectsChangedType::internal_deserialize(&mut map)?),
@@ -39368,9 +39485,15 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "protect_action_delete",
                                     "protect_action_export",
                                     "protect_action_remove_collaborator",
+                                    "protect_action_remove_domains",
                                     "protect_action_remove_link",
                                     "protect_action_stop_sharing",
                                     "protect_internal_domains_changed",
+                                    "protect_policy_activated",
+                                    "protect_policy_deactivated",
+                                    "protect_policy_scheduled",
+                                    "protect_policy_updated",
+                                    "protect_report_view",
                                     "classification_create_report",
                                     "classification_create_report_fail",
                                     "emm_create_exceptions_report",
@@ -39622,6 +39745,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "paper_desktop_policy_changed",
                                     "paper_enabled_users_group_addition",
                                     "paper_enabled_users_group_removal",
+                                    "paper_offline_mode_policy_changed",
                                     "passkey_login_policy_changed",
                                     "password_strength_requirements_change_policy",
                                     "permanent_delete_change_policy",
@@ -39653,6 +39777,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "stack_cross_team_access_policy_changed",
                                     "team_branding_policy_changed",
                                     "team_extensions_policy_changed",
+                                    "team_external_sharing_controls_activation_state_changed",
+                                    "team_external_sharing_controls_recipient_lists_changed",
                                     "team_member_storage_request_policy_changed",
                                     "team_selective_sync_policy_changed",
                                     "team_sharing_whitelist_subjects_changed",
@@ -41696,6 +41822,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::ProtectActionRemoveDomains(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "protect_action_remove_domains")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::ProtectActionRemoveLink(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -41714,6 +41847,41 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "protect_internal_domains_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ProtectPolicyActivated(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "protect_policy_activated")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ProtectPolicyDeactivated(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "protect_policy_deactivated")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ProtectPolicyScheduled(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "protect_policy_scheduled")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ProtectPolicyUpdated(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "protect_policy_updated")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ProtectReportView(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "protect_report_view")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -43474,6 +43642,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::PaperOfflineModePolicyChanged(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "paper_offline_mode_policy_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::PasskeyLoginPolicyChanged(x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -43688,6 +43863,20 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "team_extensions_policy_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::TeamExternalSharingControlsActivationStateChanged(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "team_external_sharing_controls_activation_state_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::TeamExternalSharingControlsRecipientListsChanged(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "team_external_sharing_controls_recipient_lists_changed")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -44678,12 +44867,24 @@ pub enum EventTypeArg {
     ProtectActionExport,
     /// (protect) Removed collaborators via Dropbox Protect
     ProtectActionRemoveCollaborator,
+    /// (protect) Removed domains via Dropbox Protect
+    ProtectActionRemoveDomains,
     /// (protect) Removed a link via Dropbox Protect
     ProtectActionRemoveLink,
     /// (protect) Stopped sharing content via Dropbox Protect
     ProtectActionStopSharing,
     /// (protect) Modified Protect internal domains list
     ProtectInternalDomainsChanged,
+    /// (protect) Activated a Dropbox Protect policy
+    ProtectPolicyActivated,
+    /// (protect) Deactivated a Dropbox Protect policy
+    ProtectPolicyDeactivated,
+    /// (protect) Scheduled a Dropbox Protect policy
+    ProtectPolicyScheduled,
+    /// (protect) Updated a Dropbox Protect policy
+    ProtectPolicyUpdated,
+    /// (protect) Viewed a Dropbox Protect report
+    ProtectReportView,
     /// (reports) Created Classification report
     ClassificationCreateReport,
     /// (reports) Couldn't create Classification report
@@ -45197,6 +45398,8 @@ pub enum EventTypeArg {
     PaperEnabledUsersGroupAddition,
     /// (team_policies) Removed users from Paper-enabled users list
     PaperEnabledUsersGroupRemoval,
+    /// (team_policies) Enabled/disabled Paper offline mode for team
+    PaperOfflineModePolicyChanged,
     /// (team_policies) Changed passkey login policy for team
     PasskeyLoginPolicyChanged,
     /// (team_policies) Changed team password strength requirements
@@ -45261,6 +45464,10 @@ pub enum EventTypeArg {
     TeamBrandingPolicyChanged,
     /// (team_policies) Changed App Integrations setting for team
     TeamExtensionsPolicyChanged,
+    /// (team_policies) Changed external sharing controls activation state
+    TeamExternalSharingControlsActivationStateChanged,
+    /// (team_policies) Changed approved or blocked entries for external sharing controls
+    TeamExternalSharingControlsRecipientListsChanged,
     /// (team_policies) Changed team member storage request policy for team
     TeamMemberStorageRequestPolicyChanged,
     /// (team_policies) Enabled/disabled Team Selective Sync for team
@@ -45692,9 +45899,15 @@ impl<'de> ::serde::de::Deserialize<'de> for EventTypeArg {
                     "protect_action_delete" => EventTypeArg::ProtectActionDelete,
                     "protect_action_export" => EventTypeArg::ProtectActionExport,
                     "protect_action_remove_collaborator" => EventTypeArg::ProtectActionRemoveCollaborator,
+                    "protect_action_remove_domains" => EventTypeArg::ProtectActionRemoveDomains,
                     "protect_action_remove_link" => EventTypeArg::ProtectActionRemoveLink,
                     "protect_action_stop_sharing" => EventTypeArg::ProtectActionStopSharing,
                     "protect_internal_domains_changed" => EventTypeArg::ProtectInternalDomainsChanged,
+                    "protect_policy_activated" => EventTypeArg::ProtectPolicyActivated,
+                    "protect_policy_deactivated" => EventTypeArg::ProtectPolicyDeactivated,
+                    "protect_policy_scheduled" => EventTypeArg::ProtectPolicyScheduled,
+                    "protect_policy_updated" => EventTypeArg::ProtectPolicyUpdated,
+                    "protect_report_view" => EventTypeArg::ProtectReportView,
                     "classification_create_report" => EventTypeArg::ClassificationCreateReport,
                     "classification_create_report_fail" => EventTypeArg::ClassificationCreateReportFail,
                     "emm_create_exceptions_report" => EventTypeArg::EmmCreateExceptionsReport,
@@ -45946,6 +46159,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventTypeArg {
                     "paper_desktop_policy_changed" => EventTypeArg::PaperDesktopPolicyChanged,
                     "paper_enabled_users_group_addition" => EventTypeArg::PaperEnabledUsersGroupAddition,
                     "paper_enabled_users_group_removal" => EventTypeArg::PaperEnabledUsersGroupRemoval,
+                    "paper_offline_mode_policy_changed" => EventTypeArg::PaperOfflineModePolicyChanged,
                     "passkey_login_policy_changed" => EventTypeArg::PasskeyLoginPolicyChanged,
                     "password_strength_requirements_change_policy" => EventTypeArg::PasswordStrengthRequirementsChangePolicy,
                     "permanent_delete_change_policy" => EventTypeArg::PermanentDeleteChangePolicy,
@@ -45977,6 +46191,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventTypeArg {
                     "stack_cross_team_access_policy_changed" => EventTypeArg::StackCrossTeamAccessPolicyChanged,
                     "team_branding_policy_changed" => EventTypeArg::TeamBrandingPolicyChanged,
                     "team_extensions_policy_changed" => EventTypeArg::TeamExtensionsPolicyChanged,
+                    "team_external_sharing_controls_activation_state_changed" => EventTypeArg::TeamExternalSharingControlsActivationStateChanged,
+                    "team_external_sharing_controls_recipient_lists_changed" => EventTypeArg::TeamExternalSharingControlsRecipientListsChanged,
                     "team_member_storage_request_policy_changed" => EventTypeArg::TeamMemberStorageRequestPolicyChanged,
                     "team_selective_sync_policy_changed" => EventTypeArg::TeamSelectiveSyncPolicyChanged,
                     "team_sharing_whitelist_subjects_changed" => EventTypeArg::TeamSharingWhitelistSubjectsChanged,
@@ -46324,9 +46540,15 @@ impl<'de> ::serde::de::Deserialize<'de> for EventTypeArg {
                                     "protect_action_delete",
                                     "protect_action_export",
                                     "protect_action_remove_collaborator",
+                                    "protect_action_remove_domains",
                                     "protect_action_remove_link",
                                     "protect_action_stop_sharing",
                                     "protect_internal_domains_changed",
+                                    "protect_policy_activated",
+                                    "protect_policy_deactivated",
+                                    "protect_policy_scheduled",
+                                    "protect_policy_updated",
+                                    "protect_report_view",
                                     "classification_create_report",
                                     "classification_create_report_fail",
                                     "emm_create_exceptions_report",
@@ -46578,6 +46800,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventTypeArg {
                                     "paper_desktop_policy_changed",
                                     "paper_enabled_users_group_addition",
                                     "paper_enabled_users_group_removal",
+                                    "paper_offline_mode_policy_changed",
                                     "passkey_login_policy_changed",
                                     "password_strength_requirements_change_policy",
                                     "permanent_delete_change_policy",
@@ -46609,6 +46832,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventTypeArg {
                                     "stack_cross_team_access_policy_changed",
                                     "team_branding_policy_changed",
                                     "team_extensions_policy_changed",
+                                    "team_external_sharing_controls_activation_state_changed",
+                                    "team_external_sharing_controls_recipient_lists_changed",
                                     "team_member_storage_request_policy_changed",
                                     "team_selective_sync_policy_changed",
                                     "team_sharing_whitelist_subjects_changed",
@@ -48370,6 +48595,12 @@ impl ::serde::ser::Serialize for EventTypeArg {
                 s.serialize_field(".tag", "protect_action_remove_collaborator")?;
                 s.end()
             }
+            EventTypeArg::ProtectActionRemoveDomains => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "protect_action_remove_domains")?;
+                s.end()
+            }
             EventTypeArg::ProtectActionRemoveLink => {
                 // unit
                 let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
@@ -48386,6 +48617,36 @@ impl ::serde::ser::Serialize for EventTypeArg {
                 // unit
                 let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
                 s.serialize_field(".tag", "protect_internal_domains_changed")?;
+                s.end()
+            }
+            EventTypeArg::ProtectPolicyActivated => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "protect_policy_activated")?;
+                s.end()
+            }
+            EventTypeArg::ProtectPolicyDeactivated => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "protect_policy_deactivated")?;
+                s.end()
+            }
+            EventTypeArg::ProtectPolicyScheduled => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "protect_policy_scheduled")?;
+                s.end()
+            }
+            EventTypeArg::ProtectPolicyUpdated => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "protect_policy_updated")?;
+                s.end()
+            }
+            EventTypeArg::ProtectReportView => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "protect_report_view")?;
                 s.end()
             }
             EventTypeArg::ClassificationCreateReport => {
@@ -49894,6 +50155,12 @@ impl ::serde::ser::Serialize for EventTypeArg {
                 s.serialize_field(".tag", "paper_enabled_users_group_removal")?;
                 s.end()
             }
+            EventTypeArg::PaperOfflineModePolicyChanged => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "paper_offline_mode_policy_changed")?;
+                s.end()
+            }
             EventTypeArg::PasskeyLoginPolicyChanged => {
                 // unit
                 let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
@@ -50078,6 +50345,18 @@ impl ::serde::ser::Serialize for EventTypeArg {
                 // unit
                 let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
                 s.serialize_field(".tag", "team_extensions_policy_changed")?;
+                s.end()
+            }
+            EventTypeArg::TeamExternalSharingControlsActivationStateChanged => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "team_external_sharing_controls_activation_state_changed")?;
+                s.end()
+            }
+            EventTypeArg::TeamExternalSharingControlsRecipientListsChanged => {
+                // unit
+                let mut s = serializer.serialize_struct("EventTypeArg", 1)?;
+                s.serialize_field(".tag", "team_external_sharing_controls_recipient_lists_changed")?;
                 s.end()
             }
             EventTypeArg::TeamMemberStorageRequestPolicyChanged => {
@@ -51903,6 +52182,78 @@ impl ::serde::ser::Serialize for ExternalDriveBackupStatusChangedType {
         let mut s = serializer.serialize_struct("ExternalDriveBackupStatusChangedType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ExternalSharingControlsActivationState {
+    Active,
+    Disabled,
+    Legacy,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExternalSharingControlsActivationState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ExternalSharingControlsActivationState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ExternalSharingControlsActivationState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "active" => ExternalSharingControlsActivationState::Active,
+                    "disabled" => ExternalSharingControlsActivationState::Disabled,
+                    "legacy" => ExternalSharingControlsActivationState::Legacy,
+                    _ => ExternalSharingControlsActivationState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["active",
+                                    "disabled",
+                                    "legacy",
+                                    "other"];
+        deserializer.deserialize_struct("ExternalSharingControlsActivationState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExternalSharingControlsActivationState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ExternalSharingControlsActivationState::Active => {
+                // unit
+                let mut s = serializer.serialize_struct("ExternalSharingControlsActivationState", 1)?;
+                s.serialize_field(".tag", "active")?;
+                s.end()
+            }
+            ExternalSharingControlsActivationState::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ExternalSharingControlsActivationState", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ExternalSharingControlsActivationState::Legacy => {
+                // unit
+                let mut s = serializer.serialize_struct("ExternalSharingControlsActivationState", 1)?;
+                s.serialize_field(".tag", "legacy")?;
+                s.end()
+            }
+            ExternalSharingControlsActivationState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -75923,6 +76274,8 @@ impl ::serde::ser::Serialize for MediaHubProjectRole {
 pub struct MediaHubProjectTeamAddDetails {
     /// Replay project.
     pub project: Option<MediaHubProjectLogInfo>,
+    /// The email address of the Replay project member targeted by the event.
+    pub invitee: Option<EmailAddress>,
 }
 
 impl MediaHubProjectTeamAddDetails {
@@ -75930,15 +76283,22 @@ impl MediaHubProjectTeamAddDetails {
         self.project = Some(value);
         self
     }
+
+    pub fn with_invitee(mut self, value: EmailAddress) -> Self {
+        self.invitee = Some(value);
+        self
+    }
 }
 
-const MEDIA_HUB_PROJECT_TEAM_ADD_DETAILS_FIELDS: &[&str] = &["project"];
+const MEDIA_HUB_PROJECT_TEAM_ADD_DETAILS_FIELDS: &[&str] = &["project",
+                                                             "invitee"];
 impl MediaHubProjectTeamAddDetails {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MediaHubProjectTeamAddDetails, V::Error> {
         let mut field_project = None;
+        let mut field_invitee = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "project" => {
@@ -75946,6 +76306,12 @@ impl MediaHubProjectTeamAddDetails {
                         return Err(::serde::de::Error::duplicate_field("project"));
                     }
                     field_project = Some(map.next_value()?);
+                }
+                "invitee" => {
+                    if field_invitee.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("invitee"));
+                    }
+                    field_invitee = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -75955,6 +76321,7 @@ impl MediaHubProjectTeamAddDetails {
         }
         let result = MediaHubProjectTeamAddDetails {
             project: field_project.and_then(Option::flatten),
+            invitee: field_invitee.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -75966,6 +76333,9 @@ impl MediaHubProjectTeamAddDetails {
         use serde::ser::SerializeStruct;
         if let Some(val) = &self.project {
             s.serialize_field("project", val)?;
+        }
+        if let Some(val) = &self.invitee {
+            s.serialize_field("invitee", val)?;
         }
         Ok(())
     }
@@ -75993,7 +76363,7 @@ impl ::serde::ser::Serialize for MediaHubProjectTeamAddDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MediaHubProjectTeamAddDetails", 1)?;
+        let mut s = serializer.serialize_struct("MediaHubProjectTeamAddDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -76095,6 +76465,8 @@ impl ::serde::ser::Serialize for MediaHubProjectTeamAddType {
 pub struct MediaHubProjectTeamDeleteDetails {
     /// Replay project.
     pub project: Option<MediaHubProjectLogInfo>,
+    /// The email address of the Replay project member targeted by the event.
+    pub invitee: Option<EmailAddress>,
 }
 
 impl MediaHubProjectTeamDeleteDetails {
@@ -76102,15 +76474,22 @@ impl MediaHubProjectTeamDeleteDetails {
         self.project = Some(value);
         self
     }
+
+    pub fn with_invitee(mut self, value: EmailAddress) -> Self {
+        self.invitee = Some(value);
+        self
+    }
 }
 
-const MEDIA_HUB_PROJECT_TEAM_DELETE_DETAILS_FIELDS: &[&str] = &["project"];
+const MEDIA_HUB_PROJECT_TEAM_DELETE_DETAILS_FIELDS: &[&str] = &["project",
+                                                                "invitee"];
 impl MediaHubProjectTeamDeleteDetails {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MediaHubProjectTeamDeleteDetails, V::Error> {
         let mut field_project = None;
+        let mut field_invitee = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "project" => {
@@ -76118,6 +76497,12 @@ impl MediaHubProjectTeamDeleteDetails {
                         return Err(::serde::de::Error::duplicate_field("project"));
                     }
                     field_project = Some(map.next_value()?);
+                }
+                "invitee" => {
+                    if field_invitee.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("invitee"));
+                    }
+                    field_invitee = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -76127,6 +76512,7 @@ impl MediaHubProjectTeamDeleteDetails {
         }
         let result = MediaHubProjectTeamDeleteDetails {
             project: field_project.and_then(Option::flatten),
+            invitee: field_invitee.and_then(Option::flatten),
         };
         Ok(result)
     }
@@ -76138,6 +76524,9 @@ impl MediaHubProjectTeamDeleteDetails {
         use serde::ser::SerializeStruct;
         if let Some(val) = &self.project {
             s.serialize_field("project", val)?;
+        }
+        if let Some(val) = &self.invitee {
+            s.serialize_field("invitee", val)?;
         }
         Ok(())
     }
@@ -76165,7 +76554,7 @@ impl ::serde::ser::Serialize for MediaHubProjectTeamDeleteDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MediaHubProjectTeamDeleteDetails", 1)?;
+        let mut s = serializer.serialize_struct("MediaHubProjectTeamDeleteDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -76271,6 +76660,8 @@ pub struct MediaHubProjectTeamRoleChangedDetails {
     pub new_role: MediaHubProjectRole,
     /// Replay project.
     pub project: Option<MediaHubProjectLogInfo>,
+    /// The email address of the Replay project member targeted by the event.
+    pub invitee: Option<EmailAddress>,
 }
 
 impl MediaHubProjectTeamRoleChangedDetails {
@@ -76279,6 +76670,7 @@ impl MediaHubProjectTeamRoleChangedDetails {
             previous_role,
             new_role,
             project: None,
+            invitee: None,
         }
     }
 
@@ -76286,11 +76678,17 @@ impl MediaHubProjectTeamRoleChangedDetails {
         self.project = Some(value);
         self
     }
+
+    pub fn with_invitee(mut self, value: EmailAddress) -> Self {
+        self.invitee = Some(value);
+        self
+    }
 }
 
 const MEDIA_HUB_PROJECT_TEAM_ROLE_CHANGED_DETAILS_FIELDS: &[&str] = &["previous_role",
                                                                       "new_role",
-                                                                      "project"];
+                                                                      "project",
+                                                                      "invitee"];
 impl MediaHubProjectTeamRoleChangedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -76305,6 +76703,7 @@ impl MediaHubProjectTeamRoleChangedDetails {
         let mut field_previous_role = None;
         let mut field_new_role = None;
         let mut field_project = None;
+        let mut field_invitee = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -76327,6 +76726,12 @@ impl MediaHubProjectTeamRoleChangedDetails {
                     }
                     field_project = Some(map.next_value()?);
                 }
+                "invitee" => {
+                    if field_invitee.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("invitee"));
+                    }
+                    field_invitee = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -76340,6 +76745,7 @@ impl MediaHubProjectTeamRoleChangedDetails {
             previous_role: field_previous_role.ok_or_else(|| ::serde::de::Error::missing_field("previous_role"))?,
             new_role: field_new_role.ok_or_else(|| ::serde::de::Error::missing_field("new_role"))?,
             project: field_project.and_then(Option::flatten),
+            invitee: field_invitee.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -76353,6 +76759,9 @@ impl MediaHubProjectTeamRoleChangedDetails {
         s.serialize_field("new_role", &self.new_role)?;
         if let Some(val) = &self.project {
             s.serialize_field("project", val)?;
+        }
+        if let Some(val) = &self.invitee {
+            s.serialize_field("invitee", val)?;
         }
         Ok(())
     }
@@ -76380,7 +76789,7 @@ impl ::serde::ser::Serialize for MediaHubProjectTeamRoleChangedDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MediaHubProjectTeamRoleChangedDetails", 3)?;
+        let mut s = serializer.serialize_struct("MediaHubProjectTeamRoleChangedDetails", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -76482,6 +76891,7 @@ impl ::serde::ser::Serialize for MediaHubProjectTeamRoleChangedType {
 pub enum MediaHubSharedLinkAudience {
     NoOne,
     Public,
+    PublicLoggedInOnly,
     TeamOnly,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -76506,6 +76916,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MediaHubSharedLinkAudience {
                 let value = match tag {
                     "no_one" => MediaHubSharedLinkAudience::NoOne,
                     "public" => MediaHubSharedLinkAudience::Public,
+                    "public_logged_in_only" => MediaHubSharedLinkAudience::PublicLoggedInOnly,
                     "team_only" => MediaHubSharedLinkAudience::TeamOnly,
                     _ => MediaHubSharedLinkAudience::Other,
                 };
@@ -76515,6 +76926,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MediaHubSharedLinkAudience {
         }
         const VARIANTS: &[&str] = &["no_one",
                                     "public",
+                                    "public_logged_in_only",
                                     "team_only",
                                     "other"];
         deserializer.deserialize_struct("MediaHubSharedLinkAudience", VARIANTS, EnumVisitor)
@@ -76536,6 +76948,12 @@ impl ::serde::ser::Serialize for MediaHubSharedLinkAudience {
                 // unit
                 let mut s = serializer.serialize_struct("MediaHubSharedLinkAudience", 1)?;
                 s.serialize_field(".tag", "public")?;
+                s.end()
+            }
+            MediaHubSharedLinkAudience::PublicLoggedInOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("MediaHubSharedLinkAudience", 1)?;
+                s.serialize_field(".tag", "public_logged_in_only")?;
                 s.end()
             }
             MediaHubSharedLinkAudience::TeamOnly => {
@@ -97681,6 +98099,274 @@ impl ::serde::ser::Serialize for PaperMemberPolicy {
     }
 }
 
+/// Policy for controlling if team members can use Paper offline mode
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum PaperOfflineModePolicy {
+    Default,
+    Disabled,
+    Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperOfflineModePolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperOfflineModePolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperOfflineModePolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "default" => PaperOfflineModePolicy::Default,
+                    "disabled" => PaperOfflineModePolicy::Disabled,
+                    "enabled" => PaperOfflineModePolicy::Enabled,
+                    _ => PaperOfflineModePolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["default",
+                                    "disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("PaperOfflineModePolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperOfflineModePolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            PaperOfflineModePolicy::Default => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperOfflineModePolicy", 1)?;
+                s.serialize_field(".tag", "default")?;
+                s.end()
+            }
+            PaperOfflineModePolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperOfflineModePolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            PaperOfflineModePolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperOfflineModePolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            PaperOfflineModePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Enabled/disabled Paper offline mode for team.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct PaperOfflineModePolicyChangedDetails {
+    /// New Paper offline mode policy.
+    pub new_value: PaperOfflineModePolicy,
+    /// Previous Paper offline mode policy.
+    pub previous_value: PaperOfflineModePolicy,
+}
+
+impl PaperOfflineModePolicyChangedDetails {
+    pub fn new(new_value: PaperOfflineModePolicy, previous_value: PaperOfflineModePolicy) -> Self {
+        PaperOfflineModePolicyChangedDetails {
+            new_value,
+            previous_value,
+        }
+    }
+}
+
+const PAPER_OFFLINE_MODE_POLICY_CHANGED_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                    "previous_value"];
+impl PaperOfflineModePolicyChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<PaperOfflineModePolicyChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperOfflineModePolicyChangedDetails>, V::Error> {
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperOfflineModePolicyChangedDetails {
+            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value.ok_or_else(|| ::serde::de::Error::missing_field("previous_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperOfflineModePolicyChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperOfflineModePolicyChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperOfflineModePolicyChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperOfflineModePolicyChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperOfflineModePolicyChangedDetails", PAPER_OFFLINE_MODE_POLICY_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperOfflineModePolicyChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperOfflineModePolicyChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct PaperOfflineModePolicyChangedType {
+    pub description: String,
+}
+
+impl PaperOfflineModePolicyChangedType {
+    pub fn new(description: String) -> Self {
+        PaperOfflineModePolicyChangedType {
+            description,
+        }
+    }
+}
+
+const PAPER_OFFLINE_MODE_POLICY_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl PaperOfflineModePolicyChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<PaperOfflineModePolicyChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperOfflineModePolicyChangedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperOfflineModePolicyChangedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperOfflineModePolicyChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperOfflineModePolicyChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperOfflineModePolicyChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperOfflineModePolicyChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperOfflineModePolicyChangedType", PAPER_OFFLINE_MODE_POLICY_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperOfflineModePolicyChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperOfflineModePolicyChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Changed permissions for published doc.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -102475,6 +103161,188 @@ impl ::serde::ser::Serialize for ProtectActionRemoveCollaboratorType {
     }
 }
 
+/// Removed domains via Dropbox Protect.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectActionRemoveDomainsDetails {
+    /// Action ID.
+    pub action_id: String,
+}
+
+impl ProtectActionRemoveDomainsDetails {
+    pub fn new(action_id: String) -> Self {
+        ProtectActionRemoveDomainsDetails {
+            action_id,
+        }
+    }
+}
+
+const PROTECT_ACTION_REMOVE_DOMAINS_DETAILS_FIELDS: &[&str] = &["action_id"];
+impl ProtectActionRemoveDomainsDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectActionRemoveDomainsDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectActionRemoveDomainsDetails>, V::Error> {
+        let mut field_action_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "action_id" => {
+                    if field_action_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("action_id"));
+                    }
+                    field_action_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectActionRemoveDomainsDetails {
+            action_id: field_action_id.ok_or_else(|| ::serde::de::Error::missing_field("action_id"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("action_id", &self.action_id)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectActionRemoveDomainsDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectActionRemoveDomainsDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectActionRemoveDomainsDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectActionRemoveDomainsDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectActionRemoveDomainsDetails", PROTECT_ACTION_REMOVE_DOMAINS_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectActionRemoveDomainsDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectActionRemoveDomainsDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectActionRemoveDomainsType {
+    pub description: String,
+}
+
+impl ProtectActionRemoveDomainsType {
+    pub fn new(description: String) -> Self {
+        ProtectActionRemoveDomainsType {
+            description,
+        }
+    }
+}
+
+const PROTECT_ACTION_REMOVE_DOMAINS_TYPE_FIELDS: &[&str] = &["description"];
+impl ProtectActionRemoveDomainsType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectActionRemoveDomainsType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectActionRemoveDomainsType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectActionRemoveDomainsType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectActionRemoveDomainsType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectActionRemoveDomainsType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectActionRemoveDomainsType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectActionRemoveDomainsType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectActionRemoveDomainsType", PROTECT_ACTION_REMOVE_DOMAINS_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectActionRemoveDomainsType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectActionRemoveDomainsType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Removed a link via Dropbox Protect.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -103025,6 +103893,1670 @@ impl ::serde::ser::Serialize for ProtectInternalDomainsChangedType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("ProtectInternalDomainsChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Activated a Dropbox Protect policy.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectPolicyActivatedDetails {
+    /// Policy ID.
+    pub policy_id: String,
+}
+
+impl ProtectPolicyActivatedDetails {
+    pub fn new(policy_id: String) -> Self {
+        ProtectPolicyActivatedDetails {
+            policy_id,
+        }
+    }
+}
+
+const PROTECT_POLICY_ACTIVATED_DETAILS_FIELDS: &[&str] = &["policy_id"];
+impl ProtectPolicyActivatedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectPolicyActivatedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectPolicyActivatedDetails>, V::Error> {
+        let mut field_policy_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "policy_id" => {
+                    if field_policy_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("policy_id"));
+                    }
+                    field_policy_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectPolicyActivatedDetails {
+            policy_id: field_policy_id.ok_or_else(|| ::serde::de::Error::missing_field("policy_id"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("policy_id", &self.policy_id)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectPolicyActivatedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectPolicyActivatedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectPolicyActivatedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectPolicyActivatedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectPolicyActivatedDetails", PROTECT_POLICY_ACTIVATED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectPolicyActivatedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectPolicyActivatedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectPolicyActivatedType {
+    pub description: String,
+}
+
+impl ProtectPolicyActivatedType {
+    pub fn new(description: String) -> Self {
+        ProtectPolicyActivatedType {
+            description,
+        }
+    }
+}
+
+const PROTECT_POLICY_ACTIVATED_TYPE_FIELDS: &[&str] = &["description"];
+impl ProtectPolicyActivatedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectPolicyActivatedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectPolicyActivatedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectPolicyActivatedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectPolicyActivatedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectPolicyActivatedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectPolicyActivatedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectPolicyActivatedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectPolicyActivatedType", PROTECT_POLICY_ACTIVATED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectPolicyActivatedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectPolicyActivatedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Deactivated a Dropbox Protect policy.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectPolicyDeactivatedDetails {
+    /// Policy ID.
+    pub policy_id: String,
+}
+
+impl ProtectPolicyDeactivatedDetails {
+    pub fn new(policy_id: String) -> Self {
+        ProtectPolicyDeactivatedDetails {
+            policy_id,
+        }
+    }
+}
+
+const PROTECT_POLICY_DEACTIVATED_DETAILS_FIELDS: &[&str] = &["policy_id"];
+impl ProtectPolicyDeactivatedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectPolicyDeactivatedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectPolicyDeactivatedDetails>, V::Error> {
+        let mut field_policy_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "policy_id" => {
+                    if field_policy_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("policy_id"));
+                    }
+                    field_policy_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectPolicyDeactivatedDetails {
+            policy_id: field_policy_id.ok_or_else(|| ::serde::de::Error::missing_field("policy_id"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("policy_id", &self.policy_id)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectPolicyDeactivatedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectPolicyDeactivatedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectPolicyDeactivatedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectPolicyDeactivatedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectPolicyDeactivatedDetails", PROTECT_POLICY_DEACTIVATED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectPolicyDeactivatedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectPolicyDeactivatedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectPolicyDeactivatedType {
+    pub description: String,
+}
+
+impl ProtectPolicyDeactivatedType {
+    pub fn new(description: String) -> Self {
+        ProtectPolicyDeactivatedType {
+            description,
+        }
+    }
+}
+
+const PROTECT_POLICY_DEACTIVATED_TYPE_FIELDS: &[&str] = &["description"];
+impl ProtectPolicyDeactivatedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectPolicyDeactivatedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectPolicyDeactivatedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectPolicyDeactivatedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectPolicyDeactivatedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectPolicyDeactivatedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectPolicyDeactivatedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectPolicyDeactivatedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectPolicyDeactivatedType", PROTECT_POLICY_DEACTIVATED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectPolicyDeactivatedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectPolicyDeactivatedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Scheduled a Dropbox Protect policy.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectPolicyScheduledDetails {
+    /// Policy ID.
+    pub policy_id: String,
+}
+
+impl ProtectPolicyScheduledDetails {
+    pub fn new(policy_id: String) -> Self {
+        ProtectPolicyScheduledDetails {
+            policy_id,
+        }
+    }
+}
+
+const PROTECT_POLICY_SCHEDULED_DETAILS_FIELDS: &[&str] = &["policy_id"];
+impl ProtectPolicyScheduledDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectPolicyScheduledDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectPolicyScheduledDetails>, V::Error> {
+        let mut field_policy_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "policy_id" => {
+                    if field_policy_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("policy_id"));
+                    }
+                    field_policy_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectPolicyScheduledDetails {
+            policy_id: field_policy_id.ok_or_else(|| ::serde::de::Error::missing_field("policy_id"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("policy_id", &self.policy_id)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectPolicyScheduledDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectPolicyScheduledDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectPolicyScheduledDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectPolicyScheduledDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectPolicyScheduledDetails", PROTECT_POLICY_SCHEDULED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectPolicyScheduledDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectPolicyScheduledDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectPolicyScheduledType {
+    pub description: String,
+}
+
+impl ProtectPolicyScheduledType {
+    pub fn new(description: String) -> Self {
+        ProtectPolicyScheduledType {
+            description,
+        }
+    }
+}
+
+const PROTECT_POLICY_SCHEDULED_TYPE_FIELDS: &[&str] = &["description"];
+impl ProtectPolicyScheduledType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectPolicyScheduledType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectPolicyScheduledType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectPolicyScheduledType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectPolicyScheduledType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectPolicyScheduledType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectPolicyScheduledType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectPolicyScheduledType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectPolicyScheduledType", PROTECT_POLICY_SCHEDULED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectPolicyScheduledType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectPolicyScheduledType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Updated a Dropbox Protect policy.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectPolicyUpdatedDetails {
+    /// Policy ID.
+    pub policy_id: String,
+}
+
+impl ProtectPolicyUpdatedDetails {
+    pub fn new(policy_id: String) -> Self {
+        ProtectPolicyUpdatedDetails {
+            policy_id,
+        }
+    }
+}
+
+const PROTECT_POLICY_UPDATED_DETAILS_FIELDS: &[&str] = &["policy_id"];
+impl ProtectPolicyUpdatedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectPolicyUpdatedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectPolicyUpdatedDetails>, V::Error> {
+        let mut field_policy_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "policy_id" => {
+                    if field_policy_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("policy_id"));
+                    }
+                    field_policy_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectPolicyUpdatedDetails {
+            policy_id: field_policy_id.ok_or_else(|| ::serde::de::Error::missing_field("policy_id"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("policy_id", &self.policy_id)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectPolicyUpdatedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectPolicyUpdatedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectPolicyUpdatedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectPolicyUpdatedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectPolicyUpdatedDetails", PROTECT_POLICY_UPDATED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectPolicyUpdatedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectPolicyUpdatedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectPolicyUpdatedType {
+    pub description: String,
+}
+
+impl ProtectPolicyUpdatedType {
+    pub fn new(description: String) -> Self {
+        ProtectPolicyUpdatedType {
+            description,
+        }
+    }
+}
+
+const PROTECT_POLICY_UPDATED_TYPE_FIELDS: &[&str] = &["description"];
+impl ProtectPolicyUpdatedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectPolicyUpdatedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectPolicyUpdatedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectPolicyUpdatedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectPolicyUpdatedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectPolicyUpdatedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectPolicyUpdatedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectPolicyUpdatedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectPolicyUpdatedType", PROTECT_POLICY_UPDATED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectPolicyUpdatedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectPolicyUpdatedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// The category that a Dropbox Protect report belongs to
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ProtectReportCategory {
+    Overview,
+    StaleAccess,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectReportCategory {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ProtectReportCategory;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectReportCategory structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "overview" => ProtectReportCategory::Overview,
+                    "stale_access" => ProtectReportCategory::StaleAccess,
+                    _ => ProtectReportCategory::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["overview",
+                                    "stale_access",
+                                    "other"];
+        deserializer.deserialize_struct("ProtectReportCategory", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectReportCategory {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ProtectReportCategory::Overview => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportCategory", 1)?;
+                s.serialize_field(".tag", "overview")?;
+                s.end()
+            }
+            ProtectReportCategory::StaleAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportCategory", 1)?;
+                s.serialize_field(".tag", "stale_access")?;
+                s.end()
+            }
+            ProtectReportCategory::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// The metric that a Dropbox Protect report corresponds to
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ProtectReportMetric {
+    ExternalModifiedOver1Year,
+    ExternalModifiedOver1YearCompany,
+    ExternalModifiedOver1YearOutside,
+    ExternalModifiedOver1YearPersonal,
+    ExternalModifiedOver1YearPublic,
+    ExternalModifiedOver2Years,
+    ExternalModifiedOver2YearsCompany,
+    ExternalModifiedOver2YearsOutside,
+    ExternalModifiedOver2YearsPersonal,
+    ExternalModifiedOver2YearsPublic,
+    ExternalModifiedOver3Years,
+    ExternalModifiedOver3YearsCompany,
+    ExternalModifiedOver3YearsOutside,
+    ExternalModifiedOver3YearsPersonal,
+    ExternalModifiedOver3YearsPublic,
+    ExternalModifiedOver5Years,
+    ExternalModifiedOver5YearsCompany,
+    ExternalModifiedOver5YearsOutside,
+    ExternalModifiedOver5YearsPersonal,
+    ExternalModifiedOver5YearsPublic,
+    FoldersCompany,
+    FoldersInternal,
+    FoldersOutside,
+    FoldersPersonal,
+    FoldersPublic,
+    InternalModifiedOver1Year,
+    InternalModifiedOver1YearCompany,
+    InternalModifiedOver1YearOutside,
+    InternalModifiedOver1YearPersonal,
+    InternalModifiedOver1YearPublic,
+    InternalModifiedOver2Years,
+    InternalModifiedOver2YearsCompany,
+    InternalModifiedOver2YearsOutside,
+    InternalModifiedOver2YearsPersonal,
+    InternalModifiedOver2YearsPublic,
+    InternalModifiedOver3Years,
+    InternalModifiedOver3YearsCompany,
+    InternalModifiedOver3YearsOutside,
+    InternalModifiedOver3YearsPersonal,
+    InternalModifiedOver3YearsPublic,
+    InternalModifiedOver5Years,
+    InternalModifiedOver5YearsCompany,
+    InternalModifiedOver5YearsOutside,
+    InternalModifiedOver5YearsPersonal,
+    InternalModifiedOver5YearsPublic,
+    ItemsAll,
+    ItemsCompanyAccess,
+    ItemsInternallyOwned,
+    ItemsModifiedOver1Year,
+    ItemsModifiedOver3Years,
+    ItemsOutsideAccess,
+    ItemsPersonalAccess,
+    ItemsPublicLinks,
+    OtherFolders,
+    OtherSharedDrives,
+    SharedDrivesInternal,
+    SharedDrivesOutside,
+    SharedDrivesPersonal,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectReportMetric {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ProtectReportMetric;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectReportMetric structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "external_modified_over_1_year" => ProtectReportMetric::ExternalModifiedOver1Year,
+                    "external_modified_over_1_year_company" => ProtectReportMetric::ExternalModifiedOver1YearCompany,
+                    "external_modified_over_1_year_outside" => ProtectReportMetric::ExternalModifiedOver1YearOutside,
+                    "external_modified_over_1_year_personal" => ProtectReportMetric::ExternalModifiedOver1YearPersonal,
+                    "external_modified_over_1_year_public" => ProtectReportMetric::ExternalModifiedOver1YearPublic,
+                    "external_modified_over_2_years" => ProtectReportMetric::ExternalModifiedOver2Years,
+                    "external_modified_over_2_years_company" => ProtectReportMetric::ExternalModifiedOver2YearsCompany,
+                    "external_modified_over_2_years_outside" => ProtectReportMetric::ExternalModifiedOver2YearsOutside,
+                    "external_modified_over_2_years_personal" => ProtectReportMetric::ExternalModifiedOver2YearsPersonal,
+                    "external_modified_over_2_years_public" => ProtectReportMetric::ExternalModifiedOver2YearsPublic,
+                    "external_modified_over_3_years" => ProtectReportMetric::ExternalModifiedOver3Years,
+                    "external_modified_over_3_years_company" => ProtectReportMetric::ExternalModifiedOver3YearsCompany,
+                    "external_modified_over_3_years_outside" => ProtectReportMetric::ExternalModifiedOver3YearsOutside,
+                    "external_modified_over_3_years_personal" => ProtectReportMetric::ExternalModifiedOver3YearsPersonal,
+                    "external_modified_over_3_years_public" => ProtectReportMetric::ExternalModifiedOver3YearsPublic,
+                    "external_modified_over_5_years" => ProtectReportMetric::ExternalModifiedOver5Years,
+                    "external_modified_over_5_years_company" => ProtectReportMetric::ExternalModifiedOver5YearsCompany,
+                    "external_modified_over_5_years_outside" => ProtectReportMetric::ExternalModifiedOver5YearsOutside,
+                    "external_modified_over_5_years_personal" => ProtectReportMetric::ExternalModifiedOver5YearsPersonal,
+                    "external_modified_over_5_years_public" => ProtectReportMetric::ExternalModifiedOver5YearsPublic,
+                    "folders_company" => ProtectReportMetric::FoldersCompany,
+                    "folders_internal" => ProtectReportMetric::FoldersInternal,
+                    "folders_outside" => ProtectReportMetric::FoldersOutside,
+                    "folders_personal" => ProtectReportMetric::FoldersPersonal,
+                    "folders_public" => ProtectReportMetric::FoldersPublic,
+                    "internal_modified_over_1_year" => ProtectReportMetric::InternalModifiedOver1Year,
+                    "internal_modified_over_1_year_company" => ProtectReportMetric::InternalModifiedOver1YearCompany,
+                    "internal_modified_over_1_year_outside" => ProtectReportMetric::InternalModifiedOver1YearOutside,
+                    "internal_modified_over_1_year_personal" => ProtectReportMetric::InternalModifiedOver1YearPersonal,
+                    "internal_modified_over_1_year_public" => ProtectReportMetric::InternalModifiedOver1YearPublic,
+                    "internal_modified_over_2_years" => ProtectReportMetric::InternalModifiedOver2Years,
+                    "internal_modified_over_2_years_company" => ProtectReportMetric::InternalModifiedOver2YearsCompany,
+                    "internal_modified_over_2_years_outside" => ProtectReportMetric::InternalModifiedOver2YearsOutside,
+                    "internal_modified_over_2_years_personal" => ProtectReportMetric::InternalModifiedOver2YearsPersonal,
+                    "internal_modified_over_2_years_public" => ProtectReportMetric::InternalModifiedOver2YearsPublic,
+                    "internal_modified_over_3_years" => ProtectReportMetric::InternalModifiedOver3Years,
+                    "internal_modified_over_3_years_company" => ProtectReportMetric::InternalModifiedOver3YearsCompany,
+                    "internal_modified_over_3_years_outside" => ProtectReportMetric::InternalModifiedOver3YearsOutside,
+                    "internal_modified_over_3_years_personal" => ProtectReportMetric::InternalModifiedOver3YearsPersonal,
+                    "internal_modified_over_3_years_public" => ProtectReportMetric::InternalModifiedOver3YearsPublic,
+                    "internal_modified_over_5_years" => ProtectReportMetric::InternalModifiedOver5Years,
+                    "internal_modified_over_5_years_company" => ProtectReportMetric::InternalModifiedOver5YearsCompany,
+                    "internal_modified_over_5_years_outside" => ProtectReportMetric::InternalModifiedOver5YearsOutside,
+                    "internal_modified_over_5_years_personal" => ProtectReportMetric::InternalModifiedOver5YearsPersonal,
+                    "internal_modified_over_5_years_public" => ProtectReportMetric::InternalModifiedOver5YearsPublic,
+                    "items_all" => ProtectReportMetric::ItemsAll,
+                    "items_company_access" => ProtectReportMetric::ItemsCompanyAccess,
+                    "items_internally_owned" => ProtectReportMetric::ItemsInternallyOwned,
+                    "items_modified_over_1_year" => ProtectReportMetric::ItemsModifiedOver1Year,
+                    "items_modified_over_3_years" => ProtectReportMetric::ItemsModifiedOver3Years,
+                    "items_outside_access" => ProtectReportMetric::ItemsOutsideAccess,
+                    "items_personal_access" => ProtectReportMetric::ItemsPersonalAccess,
+                    "items_public_links" => ProtectReportMetric::ItemsPublicLinks,
+                    "other_folders" => ProtectReportMetric::OtherFolders,
+                    "other_shared_drives" => ProtectReportMetric::OtherSharedDrives,
+                    "shared_drives_internal" => ProtectReportMetric::SharedDrivesInternal,
+                    "shared_drives_outside" => ProtectReportMetric::SharedDrivesOutside,
+                    "shared_drives_personal" => ProtectReportMetric::SharedDrivesPersonal,
+                    _ => ProtectReportMetric::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["external_modified_over_1_year",
+                                    "external_modified_over_1_year_company",
+                                    "external_modified_over_1_year_outside",
+                                    "external_modified_over_1_year_personal",
+                                    "external_modified_over_1_year_public",
+                                    "external_modified_over_2_years",
+                                    "external_modified_over_2_years_company",
+                                    "external_modified_over_2_years_outside",
+                                    "external_modified_over_2_years_personal",
+                                    "external_modified_over_2_years_public",
+                                    "external_modified_over_3_years",
+                                    "external_modified_over_3_years_company",
+                                    "external_modified_over_3_years_outside",
+                                    "external_modified_over_3_years_personal",
+                                    "external_modified_over_3_years_public",
+                                    "external_modified_over_5_years",
+                                    "external_modified_over_5_years_company",
+                                    "external_modified_over_5_years_outside",
+                                    "external_modified_over_5_years_personal",
+                                    "external_modified_over_5_years_public",
+                                    "folders_company",
+                                    "folders_internal",
+                                    "folders_outside",
+                                    "folders_personal",
+                                    "folders_public",
+                                    "internal_modified_over_1_year",
+                                    "internal_modified_over_1_year_company",
+                                    "internal_modified_over_1_year_outside",
+                                    "internal_modified_over_1_year_personal",
+                                    "internal_modified_over_1_year_public",
+                                    "internal_modified_over_2_years",
+                                    "internal_modified_over_2_years_company",
+                                    "internal_modified_over_2_years_outside",
+                                    "internal_modified_over_2_years_personal",
+                                    "internal_modified_over_2_years_public",
+                                    "internal_modified_over_3_years",
+                                    "internal_modified_over_3_years_company",
+                                    "internal_modified_over_3_years_outside",
+                                    "internal_modified_over_3_years_personal",
+                                    "internal_modified_over_3_years_public",
+                                    "internal_modified_over_5_years",
+                                    "internal_modified_over_5_years_company",
+                                    "internal_modified_over_5_years_outside",
+                                    "internal_modified_over_5_years_personal",
+                                    "internal_modified_over_5_years_public",
+                                    "items_all",
+                                    "items_company_access",
+                                    "items_internally_owned",
+                                    "items_modified_over_1_year",
+                                    "items_modified_over_3_years",
+                                    "items_outside_access",
+                                    "items_personal_access",
+                                    "items_public_links",
+                                    "other_folders",
+                                    "other_shared_drives",
+                                    "shared_drives_internal",
+                                    "shared_drives_outside",
+                                    "shared_drives_personal",
+                                    "other"];
+        deserializer.deserialize_struct("ProtectReportMetric", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectReportMetric {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ProtectReportMetric::ExternalModifiedOver1Year => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_1_year")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver1YearCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_1_year_company")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver1YearOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_1_year_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver1YearPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_1_year_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver1YearPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_1_year_public")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver2Years => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_2_years")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver2YearsCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_2_years_company")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver2YearsOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_2_years_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver2YearsPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_2_years_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver2YearsPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_2_years_public")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver3Years => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_3_years")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver3YearsCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_3_years_company")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver3YearsOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_3_years_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver3YearsPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_3_years_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver3YearsPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_3_years_public")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver5Years => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_5_years")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver5YearsCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_5_years_company")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver5YearsOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_5_years_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver5YearsPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_5_years_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::ExternalModifiedOver5YearsPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "external_modified_over_5_years_public")?;
+                s.end()
+            }
+            ProtectReportMetric::FoldersCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "folders_company")?;
+                s.end()
+            }
+            ProtectReportMetric::FoldersInternal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "folders_internal")?;
+                s.end()
+            }
+            ProtectReportMetric::FoldersOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "folders_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::FoldersPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "folders_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::FoldersPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "folders_public")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver1Year => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_1_year")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver1YearCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_1_year_company")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver1YearOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_1_year_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver1YearPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_1_year_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver1YearPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_1_year_public")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver2Years => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_2_years")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver2YearsCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_2_years_company")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver2YearsOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_2_years_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver2YearsPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_2_years_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver2YearsPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_2_years_public")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver3Years => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_3_years")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver3YearsCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_3_years_company")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver3YearsOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_3_years_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver3YearsPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_3_years_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver3YearsPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_3_years_public")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver5Years => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_5_years")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver5YearsCompany => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_5_years_company")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver5YearsOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_5_years_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver5YearsPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_5_years_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::InternalModifiedOver5YearsPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "internal_modified_over_5_years_public")?;
+                s.end()
+            }
+            ProtectReportMetric::ItemsAll => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "items_all")?;
+                s.end()
+            }
+            ProtectReportMetric::ItemsCompanyAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "items_company_access")?;
+                s.end()
+            }
+            ProtectReportMetric::ItemsInternallyOwned => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "items_internally_owned")?;
+                s.end()
+            }
+            ProtectReportMetric::ItemsModifiedOver1Year => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "items_modified_over_1_year")?;
+                s.end()
+            }
+            ProtectReportMetric::ItemsModifiedOver3Years => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "items_modified_over_3_years")?;
+                s.end()
+            }
+            ProtectReportMetric::ItemsOutsideAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "items_outside_access")?;
+                s.end()
+            }
+            ProtectReportMetric::ItemsPersonalAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "items_personal_access")?;
+                s.end()
+            }
+            ProtectReportMetric::ItemsPublicLinks => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "items_public_links")?;
+                s.end()
+            }
+            ProtectReportMetric::OtherFolders => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "other_folders")?;
+                s.end()
+            }
+            ProtectReportMetric::OtherSharedDrives => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "other_shared_drives")?;
+                s.end()
+            }
+            ProtectReportMetric::SharedDrivesInternal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "shared_drives_internal")?;
+                s.end()
+            }
+            ProtectReportMetric::SharedDrivesOutside => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "shared_drives_outside")?;
+                s.end()
+            }
+            ProtectReportMetric::SharedDrivesPersonal => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportMetric", 1)?;
+                s.serialize_field(".tag", "shared_drives_personal")?;
+                s.end()
+            }
+            ProtectReportMetric::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// The section that a Dropbox Protect report belongs to
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ProtectReportSection {
+    Items,
+    OverviewOther,
+    OwnedExternally,
+    OwnedInternally,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectReportSection {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ProtectReportSection;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectReportSection structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "items" => ProtectReportSection::Items,
+                    "overview_other" => ProtectReportSection::OverviewOther,
+                    "owned_externally" => ProtectReportSection::OwnedExternally,
+                    "owned_internally" => ProtectReportSection::OwnedInternally,
+                    _ => ProtectReportSection::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["items",
+                                    "overview_other",
+                                    "owned_externally",
+                                    "owned_internally",
+                                    "other"];
+        deserializer.deserialize_struct("ProtectReportSection", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectReportSection {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ProtectReportSection::Items => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportSection", 1)?;
+                s.serialize_field(".tag", "items")?;
+                s.end()
+            }
+            ProtectReportSection::OverviewOther => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportSection", 1)?;
+                s.serialize_field(".tag", "overview_other")?;
+                s.end()
+            }
+            ProtectReportSection::OwnedExternally => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportSection", 1)?;
+                s.serialize_field(".tag", "owned_externally")?;
+                s.end()
+            }
+            ProtectReportSection::OwnedInternally => {
+                // unit
+                let mut s = serializer.serialize_struct("ProtectReportSection", 1)?;
+                s.serialize_field(".tag", "owned_internally")?;
+                s.end()
+            }
+            ProtectReportSection::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Viewed a Dropbox Protect report.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectReportViewDetails {
+    /// The category of the report that was viewed.
+    pub report_category: ProtectReportCategory,
+    /// The section of the report that was viewed.
+    pub report_section: Option<ProtectReportSection>,
+    /// The metric of the report that was viewed.
+    pub report_metric: Option<ProtectReportMetric>,
+}
+
+impl ProtectReportViewDetails {
+    pub fn new(report_category: ProtectReportCategory) -> Self {
+        ProtectReportViewDetails {
+            report_category,
+            report_section: None,
+            report_metric: None,
+        }
+    }
+
+    pub fn with_report_section(mut self, value: ProtectReportSection) -> Self {
+        self.report_section = Some(value);
+        self
+    }
+
+    pub fn with_report_metric(mut self, value: ProtectReportMetric) -> Self {
+        self.report_metric = Some(value);
+        self
+    }
+}
+
+const PROTECT_REPORT_VIEW_DETAILS_FIELDS: &[&str] = &["report_category",
+                                                      "report_section",
+                                                      "report_metric"];
+impl ProtectReportViewDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectReportViewDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectReportViewDetails>, V::Error> {
+        let mut field_report_category = None;
+        let mut field_report_section = None;
+        let mut field_report_metric = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "report_category" => {
+                    if field_report_category.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("report_category"));
+                    }
+                    field_report_category = Some(map.next_value()?);
+                }
+                "report_section" => {
+                    if field_report_section.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("report_section"));
+                    }
+                    field_report_section = Some(map.next_value()?);
+                }
+                "report_metric" => {
+                    if field_report_metric.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("report_metric"));
+                    }
+                    field_report_metric = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectReportViewDetails {
+            report_category: field_report_category.ok_or_else(|| ::serde::de::Error::missing_field("report_category"))?,
+            report_section: field_report_section.and_then(Option::flatten),
+            report_metric: field_report_metric.and_then(Option::flatten),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("report_category", &self.report_category)?;
+        if let Some(val) = &self.report_section {
+            s.serialize_field("report_section", val)?;
+        }
+        if let Some(val) = &self.report_metric {
+            s.serialize_field("report_metric", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectReportViewDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectReportViewDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectReportViewDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectReportViewDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectReportViewDetails", PROTECT_REPORT_VIEW_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectReportViewDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectReportViewDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ProtectReportViewType {
+    pub description: String,
+}
+
+impl ProtectReportViewType {
+    pub fn new(description: String) -> Self {
+        ProtectReportViewType {
+            description,
+        }
+    }
+}
+
+const PROTECT_REPORT_VIEW_TYPE_FIELDS: &[&str] = &["description"];
+impl ProtectReportViewType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ProtectReportViewType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ProtectReportViewType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ProtectReportViewType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ProtectReportViewType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ProtectReportViewType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ProtectReportViewType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ProtectReportViewType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ProtectReportViewType", PROTECT_REPORT_VIEW_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ProtectReportViewType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ProtectReportViewType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -140121,6 +142653,433 @@ impl ::serde::ser::Serialize for TeamExtensionsPolicyChangedType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("TeamExtensionsPolicyChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Changed external sharing controls activation state.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TeamExternalSharingControlsActivationStateChangedDetails {
+    /// Previous external sharing controls activation state.
+    pub previous_activation_state: ExternalSharingControlsActivationState,
+    /// New external sharing controls activation state.
+    pub new_activation_state: ExternalSharingControlsActivationState,
+}
+
+impl TeamExternalSharingControlsActivationStateChangedDetails {
+    pub fn new(
+        previous_activation_state: ExternalSharingControlsActivationState,
+        new_activation_state: ExternalSharingControlsActivationState,
+    ) -> Self {
+        TeamExternalSharingControlsActivationStateChangedDetails {
+            previous_activation_state,
+            new_activation_state,
+        }
+    }
+}
+
+const TEAM_EXTERNAL_SHARING_CONTROLS_ACTIVATION_STATE_CHANGED_DETAILS_FIELDS: &[&str] = &["previous_activation_state",
+                                                                                          "new_activation_state"];
+impl TeamExternalSharingControlsActivationStateChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamExternalSharingControlsActivationStateChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamExternalSharingControlsActivationStateChangedDetails>, V::Error> {
+        let mut field_previous_activation_state = None;
+        let mut field_new_activation_state = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "previous_activation_state" => {
+                    if field_previous_activation_state.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_activation_state"));
+                    }
+                    field_previous_activation_state = Some(map.next_value()?);
+                }
+                "new_activation_state" => {
+                    if field_new_activation_state.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_activation_state"));
+                    }
+                    field_new_activation_state = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamExternalSharingControlsActivationStateChangedDetails {
+            previous_activation_state: field_previous_activation_state.ok_or_else(|| ::serde::de::Error::missing_field("previous_activation_state"))?,
+            new_activation_state: field_new_activation_state.ok_or_else(|| ::serde::de::Error::missing_field("new_activation_state"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_activation_state", &self.previous_activation_state)?;
+        s.serialize_field("new_activation_state", &self.new_activation_state)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamExternalSharingControlsActivationStateChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamExternalSharingControlsActivationStateChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamExternalSharingControlsActivationStateChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamExternalSharingControlsActivationStateChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamExternalSharingControlsActivationStateChangedDetails", TEAM_EXTERNAL_SHARING_CONTROLS_ACTIVATION_STATE_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamExternalSharingControlsActivationStateChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamExternalSharingControlsActivationStateChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TeamExternalSharingControlsActivationStateChangedType {
+    pub description: String,
+}
+
+impl TeamExternalSharingControlsActivationStateChangedType {
+    pub fn new(description: String) -> Self {
+        TeamExternalSharingControlsActivationStateChangedType {
+            description,
+        }
+    }
+}
+
+const TEAM_EXTERNAL_SHARING_CONTROLS_ACTIVATION_STATE_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl TeamExternalSharingControlsActivationStateChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamExternalSharingControlsActivationStateChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamExternalSharingControlsActivationStateChangedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamExternalSharingControlsActivationStateChangedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamExternalSharingControlsActivationStateChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamExternalSharingControlsActivationStateChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamExternalSharingControlsActivationStateChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamExternalSharingControlsActivationStateChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamExternalSharingControlsActivationStateChangedType", TEAM_EXTERNAL_SHARING_CONTROLS_ACTIVATION_STATE_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamExternalSharingControlsActivationStateChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamExternalSharingControlsActivationStateChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Changed approved or blocked entries for external sharing controls.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TeamExternalSharingControlsRecipientListsChangedDetails {
+    /// Added approved external sharing recipient entries.
+    pub added_approved_entries: Option<Vec<String>>,
+    /// Removed approved external sharing recipient entries.
+    pub removed_approved_entries: Option<Vec<String>>,
+    /// Added blocked external sharing recipient entries.
+    pub added_blocked_entries: Option<Vec<String>>,
+    /// Removed blocked external sharing recipient entries.
+    pub removed_blocked_entries: Option<Vec<String>>,
+}
+
+impl TeamExternalSharingControlsRecipientListsChangedDetails {
+    pub fn with_added_approved_entries(mut self, value: Vec<String>) -> Self {
+        self.added_approved_entries = Some(value);
+        self
+    }
+
+    pub fn with_removed_approved_entries(mut self, value: Vec<String>) -> Self {
+        self.removed_approved_entries = Some(value);
+        self
+    }
+
+    pub fn with_added_blocked_entries(mut self, value: Vec<String>) -> Self {
+        self.added_blocked_entries = Some(value);
+        self
+    }
+
+    pub fn with_removed_blocked_entries(mut self, value: Vec<String>) -> Self {
+        self.removed_blocked_entries = Some(value);
+        self
+    }
+}
+
+const TEAM_EXTERNAL_SHARING_CONTROLS_RECIPIENT_LISTS_CHANGED_DETAILS_FIELDS: &[&str] = &["added_approved_entries",
+                                                                                         "removed_approved_entries",
+                                                                                         "added_blocked_entries",
+                                                                                         "removed_blocked_entries"];
+impl TeamExternalSharingControlsRecipientListsChangedDetails {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamExternalSharingControlsRecipientListsChangedDetails, V::Error> {
+        let mut field_added_approved_entries = None;
+        let mut field_removed_approved_entries = None;
+        let mut field_added_blocked_entries = None;
+        let mut field_removed_blocked_entries = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "added_approved_entries" => {
+                    if field_added_approved_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("added_approved_entries"));
+                    }
+                    field_added_approved_entries = Some(map.next_value()?);
+                }
+                "removed_approved_entries" => {
+                    if field_removed_approved_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("removed_approved_entries"));
+                    }
+                    field_removed_approved_entries = Some(map.next_value()?);
+                }
+                "added_blocked_entries" => {
+                    if field_added_blocked_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("added_blocked_entries"));
+                    }
+                    field_added_blocked_entries = Some(map.next_value()?);
+                }
+                "removed_blocked_entries" => {
+                    if field_removed_blocked_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("removed_blocked_entries"));
+                    }
+                    field_removed_blocked_entries = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = TeamExternalSharingControlsRecipientListsChangedDetails {
+            added_approved_entries: field_added_approved_entries.and_then(Option::flatten),
+            removed_approved_entries: field_removed_approved_entries.and_then(Option::flatten),
+            added_blocked_entries: field_added_blocked_entries.and_then(Option::flatten),
+            removed_blocked_entries: field_removed_blocked_entries.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.added_approved_entries {
+            s.serialize_field("added_approved_entries", val)?;
+        }
+        if let Some(val) = &self.removed_approved_entries {
+            s.serialize_field("removed_approved_entries", val)?;
+        }
+        if let Some(val) = &self.added_blocked_entries {
+            s.serialize_field("added_blocked_entries", val)?;
+        }
+        if let Some(val) = &self.removed_blocked_entries {
+            s.serialize_field("removed_blocked_entries", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamExternalSharingControlsRecipientListsChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamExternalSharingControlsRecipientListsChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamExternalSharingControlsRecipientListsChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamExternalSharingControlsRecipientListsChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamExternalSharingControlsRecipientListsChangedDetails", TEAM_EXTERNAL_SHARING_CONTROLS_RECIPIENT_LISTS_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamExternalSharingControlsRecipientListsChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamExternalSharingControlsRecipientListsChangedDetails", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TeamExternalSharingControlsRecipientListsChangedType {
+    pub description: String,
+}
+
+impl TeamExternalSharingControlsRecipientListsChangedType {
+    pub fn new(description: String) -> Self {
+        TeamExternalSharingControlsRecipientListsChangedType {
+            description,
+        }
+    }
+}
+
+const TEAM_EXTERNAL_SHARING_CONTROLS_RECIPIENT_LISTS_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl TeamExternalSharingControlsRecipientListsChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamExternalSharingControlsRecipientListsChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamExternalSharingControlsRecipientListsChangedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamExternalSharingControlsRecipientListsChangedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamExternalSharingControlsRecipientListsChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamExternalSharingControlsRecipientListsChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamExternalSharingControlsRecipientListsChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamExternalSharingControlsRecipientListsChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamExternalSharingControlsRecipientListsChangedType", TEAM_EXTERNAL_SHARING_CONTROLS_RECIPIENT_LISTS_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamExternalSharingControlsRecipientListsChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamExternalSharingControlsRecipientListsChangedType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

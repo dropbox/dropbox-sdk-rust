@@ -282,8 +282,6 @@ pub struct AddFileMemberArgs {
     pub access_level: Option<AccessLevel>,
     /// If the custom message should be added as a comment on the file. Only meant for Paper files.
     pub add_message_as_comment: bool,
-    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-    pub fp_sealed_result: Option<String>,
 }
 
 impl AddFileMemberArgs {
@@ -295,7 +293,6 @@ impl AddFileMemberArgs {
             quiet: false,
             access_level: None,
             add_message_as_comment: false,
-            fp_sealed_result: None,
         }
     }
 
@@ -318,11 +315,6 @@ impl AddFileMemberArgs {
         self.add_message_as_comment = value;
         self
     }
-
-    pub fn with_fp_sealed_result(mut self, value: String) -> Self {
-        self.fp_sealed_result = Some(value);
-        self
-    }
 }
 
 const ADD_FILE_MEMBER_ARGS_FIELDS: &[&str] = &["file",
@@ -330,8 +322,7 @@ const ADD_FILE_MEMBER_ARGS_FIELDS: &[&str] = &["file",
                                                "custom_message",
                                                "quiet",
                                                "access_level",
-                                               "add_message_as_comment",
-                                               "fp_sealed_result"];
+                                               "add_message_as_comment"];
 impl AddFileMemberArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -349,7 +340,6 @@ impl AddFileMemberArgs {
         let mut field_quiet = None;
         let mut field_access_level = None;
         let mut field_add_message_as_comment = None;
-        let mut field_fp_sealed_result = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -390,12 +380,6 @@ impl AddFileMemberArgs {
                     }
                     field_add_message_as_comment = Some(map.next_value()?);
                 }
-                "fp_sealed_result" => {
-                    if field_fp_sealed_result.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("fp_sealed_result"));
-                    }
-                    field_fp_sealed_result = Some(map.next_value()?);
-                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -412,7 +396,6 @@ impl AddFileMemberArgs {
             quiet: field_quiet.unwrap_or(false),
             access_level: field_access_level.and_then(Option::flatten),
             add_message_as_comment: field_add_message_as_comment.unwrap_or(false),
-            fp_sealed_result: field_fp_sealed_result.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -435,9 +418,6 @@ impl AddFileMemberArgs {
         }
         if self.add_message_as_comment {
             s.serialize_field("add_message_as_comment", &self.add_message_as_comment)?;
-        }
-        if let Some(val) = &self.fp_sealed_result {
-            s.serialize_field("fp_sealed_result", val)?;
         }
         Ok(())
     }
@@ -465,7 +445,7 @@ impl ::serde::ser::Serialize for AddFileMemberArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddFileMemberArgs", 7)?;
+        let mut s = serializer.serialize_struct("AddFileMemberArgs", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -614,8 +594,6 @@ pub struct AddFolderMemberArg {
     pub quiet: bool,
     /// Optional message to display to added members in their invitation.
     pub custom_message: Option<String>,
-    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-    pub fp_sealed_result: Option<String>,
 }
 
 impl AddFolderMemberArg {
@@ -628,7 +606,6 @@ impl AddFolderMemberArg {
             members,
             quiet: false,
             custom_message: None,
-            fp_sealed_result: None,
         }
     }
 
@@ -641,18 +618,12 @@ impl AddFolderMemberArg {
         self.custom_message = Some(value);
         self
     }
-
-    pub fn with_fp_sealed_result(mut self, value: String) -> Self {
-        self.fp_sealed_result = Some(value);
-        self
-    }
 }
 
 const ADD_FOLDER_MEMBER_ARG_FIELDS: &[&str] = &["shared_folder_id",
                                                 "members",
                                                 "quiet",
-                                                "custom_message",
-                                                "fp_sealed_result"];
+                                                "custom_message"];
 impl AddFolderMemberArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -668,7 +639,6 @@ impl AddFolderMemberArg {
         let mut field_members = None;
         let mut field_quiet = None;
         let mut field_custom_message = None;
-        let mut field_fp_sealed_result = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -697,12 +667,6 @@ impl AddFolderMemberArg {
                     }
                     field_custom_message = Some(map.next_value()?);
                 }
-                "fp_sealed_result" => {
-                    if field_fp_sealed_result.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("fp_sealed_result"));
-                    }
-                    field_fp_sealed_result = Some(map.next_value()?);
-                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -717,7 +681,6 @@ impl AddFolderMemberArg {
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             quiet: field_quiet.unwrap_or(false),
             custom_message: field_custom_message.and_then(Option::flatten),
-            fp_sealed_result: field_fp_sealed_result.and_then(Option::flatten),
         };
         Ok(Some(result))
     }
@@ -734,9 +697,6 @@ impl AddFolderMemberArg {
         }
         if let Some(val) = &self.custom_message {
             s.serialize_field("custom_message", val)?;
-        }
-        if let Some(val) = &self.fp_sealed_result {
-            s.serialize_field("fp_sealed_result", val)?;
         }
         Ok(())
     }
@@ -764,7 +724,7 @@ impl ::serde::ser::Serialize for AddFolderMemberArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddFolderMemberArg", 5)?;
+        let mut s = serializer.serialize_struct("AddFolderMemberArg", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -15477,9 +15437,13 @@ pub enum SharePathError {
     IsOsxPackage,
     /// We do not support sharing a folder inside a Mac OS X package.
     InsideOsxPackage,
-    /// We do not support sharing the Vault folder.
+    /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing
+    /// errors are no longer emitted.
+    #[deprecated]
     IsVault,
-    /// We do not support sharing a folder inside a locked Vault.
+    /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated:
+    /// Vault sharing errors are no longer emitted.
+    #[deprecated]
     IsVaultLocked,
     /// We do not support sharing the Family folder.
     IsFamily,
@@ -15517,7 +15481,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                     "invalid_path" => SharePathError::InvalidPath,
                     "is_osx_package" => SharePathError::IsOsxPackage,
                     "inside_osx_package" => SharePathError::InsideOsxPackage,
+                    #[allow(deprecated)]
                     "is_vault" => SharePathError::IsVault,
+                    #[allow(deprecated)]
                     "is_vault_locked" => SharePathError::IsVaultLocked,
                     "is_family" => SharePathError::IsFamily,
                     _ => SharePathError::Other,
@@ -15631,12 +15597,14 @@ impl ::serde::ser::Serialize for SharePathError {
                 s.serialize_field(".tag", "inside_osx_package")?;
                 s.end()
             }
+            #[allow(deprecated)]
             SharePathError::IsVault => {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathError", 1)?;
                 s.serialize_field(".tag", "is_vault")?;
                 s.end()
             }
+            #[allow(deprecated)]
             SharePathError::IsVaultLocked => {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathError", 1)?;
@@ -15673,8 +15641,8 @@ impl ::std::fmt::Display for SharePathError {
             SharePathError::InvalidPath => f.write_str("Path is not valid."),
             SharePathError::IsOsxPackage => f.write_str("We do not support sharing a Mac OS X package."),
             SharePathError::InsideOsxPackage => f.write_str("We do not support sharing a folder inside a Mac OS X package."),
-            SharePathError::IsVault => f.write_str("We do not support sharing the Vault folder."),
-            SharePathError::IsVaultLocked => f.write_str("We do not support sharing a folder inside a locked Vault."),
+            #[allow(deprecated)] SharePathError::IsVault => f.write_str("Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no longer emitted."),
+            #[allow(deprecated)] SharePathError::IsVaultLocked => f.write_str("Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing errors are no longer emitted."),
             SharePathError::IsFamily => f.write_str("We do not support sharing the Family folder."),
             _ => write!(f, "{:?}", *self),
         }
@@ -15708,9 +15676,13 @@ pub enum SharePathErrorBaseV2 {
     IsOsxPackage,
     /// We do not support sharing a folder inside a Mac OS X package.
     InsideOsxPackage,
-    /// We do not support sharing the Vault folder.
+    /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing
+    /// errors are no longer emitted.
+    #[deprecated]
     IsVault,
-    /// We do not support sharing a folder inside a locked Vault.
+    /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated:
+    /// Vault sharing errors are no longer emitted.
+    #[deprecated]
     IsVaultLocked,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -15745,7 +15717,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathErrorBaseV2 {
                     "invalid_path" => SharePathErrorBaseV2::InvalidPath,
                     "is_osx_package" => SharePathErrorBaseV2::IsOsxPackage,
                     "inside_osx_package" => SharePathErrorBaseV2::InsideOsxPackage,
+                    #[allow(deprecated)]
                     "is_vault" => SharePathErrorBaseV2::IsVault,
+                    #[allow(deprecated)]
                     "is_vault_locked" => SharePathErrorBaseV2::IsVaultLocked,
                     _ => SharePathErrorBaseV2::Other,
                 };
@@ -15850,12 +15824,14 @@ impl ::serde::ser::Serialize for SharePathErrorBaseV2 {
                 s.serialize_field(".tag", "inside_osx_package")?;
                 s.end()
             }
+            #[allow(deprecated)]
             SharePathErrorBaseV2::IsVault => {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
                 s.serialize_field(".tag", "is_vault")?;
                 s.end()
             }
+            #[allow(deprecated)]
             SharePathErrorBaseV2::IsVaultLocked => {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathErrorBaseV2", 1)?;
@@ -15894,9 +15870,13 @@ pub enum SharePathErrorV2 {
     IsOsxPackage,
     /// We do not support sharing a folder inside a Mac OS X package.
     InsideOsxPackage,
-    /// We do not support sharing the Vault folder.
+    /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing
+    /// errors are no longer emitted.
+    #[deprecated]
     IsVault,
-    /// We do not support sharing a folder inside a locked Vault.
+    /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated:
+    /// Vault sharing errors are no longer emitted.
+    #[deprecated]
     IsVaultLocked,
     /// We do not support sharing the Family folder.
     IsFamily,
@@ -15935,7 +15915,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathErrorV2 {
                     "invalid_path" => SharePathErrorV2::InvalidPath,
                     "is_osx_package" => SharePathErrorV2::IsOsxPackage,
                     "inside_osx_package" => SharePathErrorV2::InsideOsxPackage,
+                    #[allow(deprecated)]
                     "is_vault" => SharePathErrorV2::IsVault,
+                    #[allow(deprecated)]
                     "is_vault_locked" => SharePathErrorV2::IsVaultLocked,
                     "is_family" => SharePathErrorV2::IsFamily,
                     "contains_app_folder" => SharePathErrorV2::ContainsAppFolder,
@@ -16044,12 +16026,14 @@ impl ::serde::ser::Serialize for SharePathErrorV2 {
                 s.serialize_field(".tag", "inside_osx_package")?;
                 s.end()
             }
+            #[allow(deprecated)]
             SharePathErrorV2::IsVault => {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;
                 s.serialize_field(".tag", "is_vault")?;
                 s.end()
             }
+            #[allow(deprecated)]
             SharePathErrorV2::IsVaultLocked => {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathErrorV2", 1)?;

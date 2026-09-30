@@ -14,14 +14,16 @@
 #[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiExifGpsMetadata {
-    /// Latitude / longitude in decimal degrees (positive = N/E, negative = S/W).
+    /// Latitude in decimal degrees (positive = north, negative = south).
     pub latitude: f32,
+    /// Longitude in decimal degrees (positive = east, negative = west).
     pub longitude: f32,
     /// Altitude in meters, as reported by the source (string to preserve the original
     /// representation, which may include a reference direction).
     pub altitude: String,
-    /// Timestamp / datestamp of the GPS fix, in the EXIF-provided format.
+    /// Time of the GPS fix, in the EXIF-provided format.
     pub timestamp: String,
+    /// Date of the GPS fix, in the EXIF-provided format.
     pub datestamp: String,
 }
 
@@ -167,31 +169,42 @@ impl ::serde::ser::Serialize for ApiExifGpsMetadata {
     }
 }
 
-/// Image EXIF metadata. Mirrors the useful subset of the internal `riviera.ExifMetadata` message.
-/// Fields are best-effort and may be empty.
+/// Image EXIF metadata. Fields are populated on a best-effort basis and may be empty when absent
+/// from the source file.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiExifMetadata {
+    /// Width of the image, in pixels.
     pub image_width: u32,
+    /// Height of the image, in pixels.
     pub image_height: u32,
+    /// Manufacturer of the device that captured the image, e.g. "Apple".
     pub camera_make: String,
+    /// Model of the device that captured the image, e.g. "iPhone 15 Pro".
     pub camera_model: String,
+    /// Model of the lens the image was captured with, when the source records it.
     pub lens_model: String,
     /// Capture time in the EXIF-provided format (local time of the camera).
     pub date_time_original: String,
-    /// Timezone offset for `date_time_original`, e.g. "+09:00".
+    /// Timezone offset for [`ApiExifMetadata::date_time_original`](ApiExifMetadata), e.g. "+09:00".
     pub offset_time_original: String,
     /// EXIF orientation value (1-8). See the EXIF spec; 1 is the normal upright orientation.
     pub orientation: u32,
-    /// fraction in string form, e.g. "1/250"
+    /// Exposure time the image was captured with, as a fractional-second string, e.g. "1/250".
     pub exposure_time: String,
+    /// Aperture the image was captured at, as reported by the EXIF aperture tag.
     pub aperture_value: f64,
+    /// ISO sensitivity the image was captured at.
     pub iso_speed: u32,
-    /// e.g. "26.0 mm"
+    /// Focal length the image was captured at, including the unit, e.g. "26.0 mm".
     pub focal_length: String,
+    /// Total pixel count of the image, in megapixels.
     pub megapixels: f64,
+    /// Creator credited in the EXIF artist tag.
     pub artist: String,
+    /// Copyright notice from the EXIF copyright tag.
     pub copyright: String,
+    /// Location tags from the image, when the source recorded a location.
     pub gps_metadata: Option<ApiExifGpsMetadata>,
 }
 
@@ -524,15 +537,142 @@ impl ::serde::ser::Serialize for ApiExifMetadata {
     }
 }
 
-/// Audio/video container and per-stream metadata. Mirrors the useful subset of the internal
-/// `riviera.MediaMetadata` message.
+/// A single extracted scene-change keyframe.
+#[derive(Debug, Clone, PartialEq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ApiKeyframe {
+    /// Presentation timestamp of the keyframe, in seconds from the start of the video.
+    pub timestamp: f64,
+    /// Scene-change score that triggered this keyframe, in the range [0.0, 1.0]. Higher values
+    /// indicate a more pronounced scene change relative to the preceding frame. The first keyframe
+    /// of a video is always reported as 1.0: the start of a video is a scene boundary by
+    /// definition, so that score is not a measured frame-to-frame comparison.
+    pub scene_score: f64,
+    /// The extracted frame as a base64-encoded JPEG image. Empty when the request set
+    /// `include_images = false`.
+    pub image_base64: String,
+}
+
+impl ApiKeyframe {
+    pub fn with_timestamp(mut self, value: f64) -> Self {
+        self.timestamp = value;
+        self
+    }
+
+    pub fn with_scene_score(mut self, value: f64) -> Self {
+        self.scene_score = value;
+        self
+    }
+
+    pub fn with_image_base64(mut self, value: String) -> Self {
+        self.image_base64 = value;
+        self
+    }
+}
+
+const API_KEYFRAME_FIELDS: &[&str] = &["timestamp",
+                                       "scene_score",
+                                       "image_base64"];
+impl ApiKeyframe {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiKeyframe, V::Error> {
+        let mut field_timestamp = None;
+        let mut field_scene_score = None;
+        let mut field_image_base64 = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "timestamp" => {
+                    if field_timestamp.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("timestamp"));
+                    }
+                    field_timestamp = Some(map.next_value()?);
+                }
+                "scene_score" => {
+                    if field_scene_score.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("scene_score"));
+                    }
+                    field_scene_score = Some(map.next_value()?);
+                }
+                "image_base64" => {
+                    if field_image_base64.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("image_base64"));
+                    }
+                    field_image_base64 = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ApiKeyframe {
+            timestamp: field_timestamp.unwrap_or(0.0),
+            scene_score: field_scene_score.unwrap_or(0.0),
+            image_base64: field_image_base64.unwrap_or_default(),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.timestamp != 0.0 {
+            s.serialize_field("timestamp", &self.timestamp)?;
+        }
+        if self.scene_score != 0.0 {
+            s.serialize_field("scene_score", &self.scene_score)?;
+        }
+        if !self.image_base64.is_empty() {
+            s.serialize_field("image_base64", &self.image_base64)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ApiKeyframe {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ApiKeyframe;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ApiKeyframe struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ApiKeyframe::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ApiKeyframe", API_KEYFRAME_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ApiKeyframe {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ApiKeyframe", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Audio/video container and per-stream metadata. Fields are populated on a best-effort basis and
+/// may be empty when absent from the source file.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiMediaMetadata {
+    /// Overall bitrate of the container, in bits per second.
     pub bitrate_bps: u64,
+    /// Duration of the media, in seconds.
     pub duration_s: f64,
     /// Container-level creation time, when present.
     pub creation_time: String,
+    /// The audio and video streams the container holds, in container order.
     pub streams: Option<Vec<ApiMediaStream>>,
 }
 
@@ -665,22 +805,33 @@ impl ::serde::ser::Serialize for ApiMediaMetadata {
 #[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiMediaStream {
+    /// Zero-based index of the stream within the container.
     pub index: u32,
-    /// "audio", "video", etc.
+    /// Kind of media the stream carries, e.g. "audio" or "video".
     pub codec_type: String,
+    /// Name of the codec the stream is encoded with, e.g. "h264" or "aac".
     pub codec_name: String,
+    /// Bitrate of this stream, in bits per second.
     pub bitrate_bps: u64,
+    /// Duration of this stream, in seconds.
     pub duration_s: f64,
-    /// Video-specific fields (zero / empty for audio streams).
+    /// Width of the video frame, in pixels. Zero for audio streams.
     pub width: u32,
+    /// Height of the video frame, in pixels. Zero for audio streams.
     pub height: u32,
+    /// Frame rate of the stream, in frames per second. Zero for audio streams.
     pub frames_per_second: f64,
+    /// Rotation to apply on playback, in degrees, as recorded in the stream metadata. Zero for
+    /// audio streams and for video that needs no rotation.
     pub rotation: i32,
-    /// e.g. "16:9"
+    /// Aspect ratio the video should be displayed at, as a "width:height" string, e.g. "16:9".
+    /// Empty for audio streams.
     pub display_aspect_ratio: String,
-    /// Audio-specific fields (zero / empty for video streams).
+    /// Number of audio channels in the stream. Zero for video streams.
     pub channels: u32,
+    /// Layout of the audio channels, e.g. "stereo". Empty for video streams.
     pub channel_layout: String,
+    /// Sample rate of the audio stream, in samples per second. Zero for video streams.
     pub sample_rate_s: u64,
     /// ISO 639 language code for the stream, when present.
     pub language_iso_639: String,
@@ -981,24 +1132,40 @@ impl ::serde::ser::Serialize for ApiMediaStream {
     }
 }
 
-/// MS Office document metadata. Mirrors the internal `riviera.OfficeMetadata` message. Some fields
-/// apply only to specific document types (e.g. `slides` for PowerPoint, `words`/`pages` for Word).
+/// MS Office document metadata. Some fields apply only to specific document types (e.g.
+/// [`ApiOfficeMetadata::slides`](ApiOfficeMetadata) for PowerPoint,
+/// [`ApiOfficeMetadata::words`](ApiOfficeMetadata) and
+/// [`ApiOfficeMetadata::pages`](ApiOfficeMetadata) for Word).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiOfficeMetadata {
+    /// Which kind of Office document this metadata was extracted from.
     pub file_type: OfficeFileType,
+    /// Author recorded in the document properties.
     pub creator: String,
+    /// Company recorded in the document properties.
     pub company: String,
+    /// Title recorded in the document properties.
     pub title: String,
+    /// Subject recorded in the document properties.
     pub subject: String,
+    /// Keywords recorded in the document properties, in the document's own formatting (typically a
+    /// single comma- or space-separated string).
     pub keywords: String,
+    /// Description recorded in the document properties.
     pub description: String,
+    /// Total editing time recorded in the document properties, in minutes.
     pub total_edit_time_minutes: u32,
-    /// Word only.
+    /// Page count recorded in the document properties. Word documents only; zero for PowerPoint and
+    /// Excel.
     pub pages: u32,
+    /// Word count recorded in the document properties. Word documents only; zero for PowerPoint and
+    /// Excel.
     pub words: u32,
-    /// PowerPoint only.
+    /// Slide count recorded in the document properties. PowerPoint documents only; zero for Word
+    /// and Excel.
     pub slides: u32,
+    /// Revision number recorded in the document properties.
     pub revision_number: String,
 }
 
@@ -1286,9 +1453,11 @@ impl ::serde::ser::Serialize for ApiOfficeMetadata {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiPdfMetadata {
+    /// Number of pages in the document.
     pub pages: u32,
-    /// Width / height of the first page, in PDF points.
+    /// Width of the first page, in PDF points.
     pub width: u32,
+    /// Height of the first page, in PDF points.
     pub height: u32,
 }
 
@@ -1400,11 +1569,15 @@ impl ::serde::ser::Serialize for ApiPdfMetadata {
     }
 }
 
-/// Structured transcript for APIv2
+/// A transcript, split into segments.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiStructuredTranscript {
+    /// The segments of the transcript, in playback order.
     pub segments: Option<Vec<ApiTranscriptSegment>>,
+    /// The language of the transcript, as an ISO 639-1 code (e.g. "en"). This is the language
+    /// detected in the audio, or the one supplied in
+    /// [`GetTranscriptArgs::audio_language`](GetTranscriptArgs).
     pub transcript_locale: String,
 }
 
@@ -1499,12 +1672,16 @@ impl ::serde::ser::Serialize for ApiStructuredTranscript {
     }
 }
 
-/// Transcript segment for APIv2
+/// A contiguous span of transcribed speech. The span covered by a segment depends on the requested
+/// [`TimestampLevel`].
 #[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiTranscriptSegment {
+    /// The transcribed text of this segment.
     pub text: String,
+    /// Offset of the start of this segment, in seconds from the beginning of the media.
     pub start_time: f64,
+    /// Offset of the end of this segment, in seconds from the beginning of the media.
     pub end_time: f64,
 }
 
@@ -1616,10 +1793,10 @@ impl ::serde::ser::Serialize for ApiTranscriptSegment {
     }
 }
 
-/// Reason a transcript job failed. Returned in the `failed` variant of
-/// `GetTranscriptAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll
-/// request itself is unaffected (a poll that surfaces a failed job is still a normal successful
-/// poll response). Callers should branch on the variant.
+/// Reason a transcript job failed. Returned in the [`GetTranscriptAsyncCheckResult::Failed`]
+/// variant. This is a semantic error union: the HTTP status of the poll request itself is
+/// unaffected (a poll that surfaces a failed job is still a normal successful poll response).
+/// Callers should branch on the variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ContentApiV2Error {
@@ -1629,10 +1806,16 @@ pub enum ContentApiV2Error {
     /// The request could not be processed as supplied (a problem with the caller's input). The
     /// string is a human-readable message; retrying the same request will not help.
     UserError(String),
+    /// The audio to transcribe is longer than the supported maximum.
     MediaDurationError(MediaDurationError),
+    /// The file has no audio track, or no audio content could be detected in it.
     NoAudioError,
+    /// [`FileIdOrUrl::Url`] referenced a Dropbox shared link whose owner has disabled downloads.
     LinkDownloadDisabledError,
+    /// [`FileIdOrUrl::Url`] referenced a password-protected Dropbox shared link. Riviera cannot
+    /// supply the password, so such links cannot be transcribed.
     SharedLinkPasswordProtected,
+    /// A resource limit was exceeded while producing the result.
     LimitExceededError,
     /// The referenced file does not exist or is not accessible.
     NotFoundError,
@@ -1775,7 +1958,9 @@ impl ::std::fmt::Display for ContentApiV2Error {
         match self {
             ContentApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
             ContentApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
-            ContentApiV2Error::MediaDurationError(inner) => write!(f, "media_duration_error: {:?}", inner),
+            ContentApiV2Error::MediaDurationError(inner) => write!(f, "The audio to transcribe is longer than the supported maximum: {:?}", inner),
+            ContentApiV2Error::NoAudioError => f.write_str("The file has no audio track, or no audio content could be detected in it."),
+            ContentApiV2Error::LimitExceededError => f.write_str("A resource limit was exceeded while producing the result."),
             ContentApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
             ContentApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
             _ => write!(f, "{:?}", *self),
@@ -1786,17 +1971,17 @@ impl ::std::fmt::Display for ContentApiV2Error {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileIdOrUrl {
-    /// A Dropbox-issued file id (format: "id:<id>") for a file the authenticated user has access
-    /// to.
+    /// A Dropbox-issued file ID for a file the authenticated user has access to, e.g.
+    /// "id:a4ayc_80_OEAAAAAAAAAYa".
     FileId(String),
-    /// Either a Dropbox shared link (www.dropbox.com) or an external HTTP or HTTPS URL pointing to
-    /// a supported file. - Dropbox shared links are resolved internally using the caller's
+    /// Either a Dropbox shared link (www.dropbox.com) or an internet-accessible URL pointing to a
+    /// supported file. - Dropbox shared links are resolved internally using the caller's
     /// authenticated identity and the link's visibility / download settings. They therefore require
-    /// an authenticated user context (anonymous `url` requests against Dropbox links are rejected
-    /// with an `access_error`). Links protected by a password are rejected with
-    /// `shared_link_password_protected`; links with downloads disabled are rejected with
-    /// `link_download_disabled_error`. - External URLs are fetched through the backend's egress
-    /// proxy and must point at a supported file extension.
+    /// an authenticated user context; requests made with app auth alone are rejected.
+    /// Password-protected links and links with downloads disabled are rejected as well. - Other
+    /// URLs are fetched by Dropbox's servers, so they must be reachable from the public internet --
+    /// not only from the calling application's network -- and must point at a supported file
+    /// extension.
     Url(String),
     /// An absolute Dropbox path, e.g. "/folder/example.pdf".
     Path(String),
@@ -1887,15 +2072,312 @@ impl ::serde::ser::Serialize for FileIdOrUrl {
     }
 }
 
-/// Arguments for the asynchronous `get_markdown_async` route. Exactly one of `file_id`, `path`, or
-/// `url` must be supplied via `file_id_or_url` to identify the document to convert to markdown.
+/// Arguments for the asynchronous `get_keyframes_async` route. Exactly one of `file_id`, `path`, or
+/// `url` must be supplied via `file_id_or_url` to identify the video whose scene-change keyframes
+/// should be extracted.
+#[derive(Debug, Clone, PartialEq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetKeyframesArgs {
+    /// Identifier of the video file to extract keyframes from. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. Keyframe extraction is supported for video files only; see the route
+    /// description for the supported formats. Requests against unsupported formats return
+    /// `unsupported_format_error`.
+    pub file_id_or_url: Option<FileIdOrUrl>,
+    /// Sensitivity of scene-change detection. A keyframe is emitted whenever the frame-to-frame
+    /// scene score crosses this threshold, so a LOWER value yields MORE keyframes. Valid range is
+    /// (0.0, 1.0]. When omitted (0.0) the service uses a default of 0.3, which is a good starting
+    /// point for most videos.
+    pub scene_change_threshold: f64,
+    /// When true, each returned keyframe includes the JPEG image bytes, base64-encoded, in
+    /// `ApiKeyframe.image_base64`. When false, the response contains only per-keyframe metadata
+    /// (timestamp and scene score) and `image_base64` is left empty -- useful when you only need
+    /// the scene boundaries and want a small response. NOTE: because the field defaults to false in
+    /// proto3, callers who want images must set this explicitly to true.
+    pub include_images: bool,
+}
+
+impl GetKeyframesArgs {
+    pub fn with_file_id_or_url(mut self, value: FileIdOrUrl) -> Self {
+        self.file_id_or_url = Some(value);
+        self
+    }
+
+    pub fn with_scene_change_threshold(mut self, value: f64) -> Self {
+        self.scene_change_threshold = value;
+        self
+    }
+
+    pub fn with_include_images(mut self, value: bool) -> Self {
+        self.include_images = value;
+        self
+    }
+}
+
+const GET_KEYFRAMES_ARGS_FIELDS: &[&str] = &["file_id_or_url",
+                                             "scene_change_threshold",
+                                             "include_images"];
+impl GetKeyframesArgs {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetKeyframesArgs, V::Error> {
+        let mut field_file_id_or_url = None;
+        let mut field_scene_change_threshold = None;
+        let mut field_include_images = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "file_id_or_url" => {
+                    if field_file_id_or_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_id_or_url"));
+                    }
+                    field_file_id_or_url = Some(map.next_value()?);
+                }
+                "scene_change_threshold" => {
+                    if field_scene_change_threshold.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("scene_change_threshold"));
+                    }
+                    field_scene_change_threshold = Some(map.next_value()?);
+                }
+                "include_images" => {
+                    if field_include_images.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("include_images"));
+                    }
+                    field_include_images = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetKeyframesArgs {
+            file_id_or_url: field_file_id_or_url.and_then(Option::flatten),
+            scene_change_threshold: field_scene_change_threshold.unwrap_or(0.0),
+            include_images: field_include_images.unwrap_or(false),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.file_id_or_url {
+            s.serialize_field("file_id_or_url", val)?;
+        }
+        if self.scene_change_threshold != 0.0 {
+            s.serialize_field("scene_change_threshold", &self.scene_change_threshold)?;
+        }
+        if self.include_images {
+            s.serialize_field("include_images", &self.include_images)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetKeyframesArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetKeyframesArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetKeyframesArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetKeyframesArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetKeyframesArgs", GET_KEYFRAMES_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetKeyframesArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetKeyframesArgs", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Result type for EventBus async check - must end in "CheckResult"
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum GetKeyframesAsyncCheckResult {
+    InProgress,
+    Complete(GetKeyframesResult),
+    Failed(KeyframesExtractionApiV2Error),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetKeyframesAsyncCheckResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetKeyframesAsyncCheckResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetKeyframesAsyncCheckResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "in_progress" => GetKeyframesAsyncCheckResult::InProgress,
+                    "complete" => GetKeyframesAsyncCheckResult::Complete(GetKeyframesResult::internal_deserialize(&mut map)?),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => GetKeyframesAsyncCheckResult::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => GetKeyframesAsyncCheckResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("GetKeyframesAsyncCheckResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetKeyframesAsyncCheckResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            GetKeyframesAsyncCheckResult::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("GetKeyframesAsyncCheckResult", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            GetKeyframesAsyncCheckResult::Complete(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetKeyframesAsyncCheckResult", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetKeyframesAsyncCheckResult::Failed(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("GetKeyframesAsyncCheckResult", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            GetKeyframesAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetKeyframesResult {
+    /// The extracted keyframes, ordered by `timestamp`. May be empty when no scene changes are
+    /// detected in the source.
+    pub frames: Option<Vec<ApiKeyframe>>,
+}
+
+impl GetKeyframesResult {
+    pub fn with_frames(mut self, value: Vec<ApiKeyframe>) -> Self {
+        self.frames = Some(value);
+        self
+    }
+}
+
+const GET_KEYFRAMES_RESULT_FIELDS: &[&str] = &["frames"];
+impl GetKeyframesResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetKeyframesResult, V::Error> {
+        let mut field_frames = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "frames" => {
+                    if field_frames.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("frames"));
+                    }
+                    field_frames = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetKeyframesResult {
+            frames: field_frames.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.frames {
+            s.serialize_field("frames", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetKeyframesResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetKeyframesResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetKeyframesResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetKeyframesResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetKeyframesResult", GET_KEYFRAMES_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetKeyframesResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetKeyframesResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Arguments for the asynchronous [`get_markdown_async()`](crate::riviera::get_markdown_async)
+/// route. Exactly one of [`FileIdOrUrl::FileId`], [`FileIdOrUrl::Path`], or [`FileIdOrUrl::Url`]
+/// must be supplied via [`GetMarkdownArgs::file_id_or_url`](GetMarkdownArgs) to identify the
+/// document to convert to markdown.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMarkdownArgs {
-    /// Identifier of the document to convert. Callers must set exactly one of the `FileIdOrUrl`
+    /// Identifier of the document to convert. Callers must set exactly one of the [`FileIdOrUrl`]
     /// variants. The referenced file must be a document in a supported format (see the route
-    /// description for the list); requests against unsupported formats return
-    /// `unsupported_format_error`.
+    /// description for the list); requests against unsupported formats fail with
+    /// [`MarkdownConversionApiV2Error::UserError`].
     pub file_id_or_url: Option<FileIdOrUrl>,
     /// Enable OCR for PDF documents. Processing is slower when enabled.
     pub enable_ocr: bool,
@@ -2012,12 +2494,17 @@ impl ::serde::ser::Serialize for GetMarkdownArgs {
     }
 }
 
-/// Result type for EventBus async check
+/// Status of a markdown conversion job started by
+/// [`get_markdown_async()`](crate::riviera::get_markdown_async), as returned by
+/// [`get_markdown_async_check()`](crate::riviera::get_markdown_async_check).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetMarkdownAsyncCheckResult {
+    /// The job has not finished yet. Poll again.
     InProgress,
+    /// The job finished successfully.
     Complete(GetMarkdownResult),
+    /// The job finished unsuccessfully.
     Failed(MarkdownConversionApiV2Error),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2096,7 +2583,7 @@ impl ::serde::ser::Serialize for GetMarkdownAsyncCheckResult {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMarkdownResult {
-    /// The converted markdown content
+    /// The markdown the source document was converted to.
     pub markdown: String,
 }
 
@@ -2174,18 +2661,19 @@ impl ::serde::ser::Serialize for GetMarkdownResult {
     }
 }
 
-/// Arguments for the asynchronous `get_metadata_async` route. Exactly one of `file_id`, `path`, or
-/// `url` must be supplied via `file_id_or_url` to identify the file whose metadata should be
-/// extracted.
+/// Arguments for the asynchronous [`get_metadata_async()`](crate::riviera::get_metadata_async)
+/// route. Exactly one of [`FileIdOrUrl::FileId`], [`FileIdOrUrl::Path`], or [`FileIdOrUrl::Url`]
+/// must be supplied via [`GetMetadataArgs::file_id_or_url`](GetMetadataArgs) to identify the file
+/// whose metadata should be extracted.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMetadataArgs {
     /// Identifier of the file to extract metadata from. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The kind of metadata returned is determined by the file type: image
-    /// files return EXIF metadata, audio/video files return media metadata, PDFs return PDF
+    /// [`FileIdOrUrl`] variants. The kind of metadata returned is determined by the file type:
+    /// image files return EXIF metadata, audio/video files return media metadata, PDFs return PDF
     /// metadata, and MS Office documents (docx, pptx, xlsx) return Office metadata. See the route
-    /// description for the supported formats. Requests against unsupported formats return
-    /// `unsupported_format_error`.
+    /// description for the supported formats. Requests against unsupported formats fail with
+    /// [`MetadataExtractionApiV2Error::UserError`].
     pub file_id_or_url: Option<FileIdOrUrl>,
 }
 
@@ -2263,12 +2751,17 @@ impl ::serde::ser::Serialize for GetMetadataArgs {
     }
 }
 
-/// Result type for EventBus async check - must end in "CheckResult"
+/// Status of a metadata extraction job started by
+/// [`get_metadata_async()`](crate::riviera::get_metadata_async), as returned by
+/// [`get_metadata_async_check()`](crate::riviera::get_metadata_async_check).
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetMetadataAsyncCheckResult {
+    /// The job has not finished yet. Poll again.
     InProgress,
+    /// The job finished successfully.
     Complete(GetMetadataResult),
+    /// The job finished unsuccessfully.
     Failed(MetadataExtractionApiV2Error),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2348,7 +2841,7 @@ impl ::serde::ser::Serialize for GetMetadataAsyncCheckResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMetadataResult {
     /// The kind of metadata that was extracted for the requested file. Callers should read the
-    /// matching field of the `metadata` oneof.
+    /// matching variant of [`GetMetadataResult::metadata`](GetMetadataResult).
     pub metadata_type: MetadataType,
     pub metadata: Option<MetadataUnion>,
 }
@@ -2453,30 +2946,561 @@ impl ::serde::ser::Serialize for GetMetadataResult {
     }
 }
 
-/// Arguments for the asynchronous `get_transcript_async` route. Exactly one of `file_id`, `path`,
-/// or `url` must be supplied via `file_id_or_url` to identify the audio or video asset to
-/// transcribe.
+/// Arguments for the asynchronous `get_ocr_async` route. Exactly one of `file_id`, `path`, or `url`
+/// must be supplied via `file_id_or_url` to identify the image or PDF whose text should be
+/// extracted via OCR (optical character recognition).
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetOcrArgs {
+    /// Identifier of the file to run OCR on. Callers must set exactly one of the `FileIdOrUrl`
+    /// variants. OCR is supported for image files and PDFs, including scanned / non-text PDFs; see
+    /// the route description for the supported formats. Requests against unsupported formats return
+    /// `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared links
+    /// (www.dropbox.com) are supported. External (non-Dropbox) URLs are not supported and return
+    /// `unsupported_format_error`; import the file into Dropbox and reference it by `file_id` or
+    /// `path` instead.
+    pub file_id_or_url: Option<FileIdOrUrl>,
+}
+
+impl GetOcrArgs {
+    pub fn with_file_id_or_url(mut self, value: FileIdOrUrl) -> Self {
+        self.file_id_or_url = Some(value);
+        self
+    }
+}
+
+const GET_OCR_ARGS_FIELDS: &[&str] = &["file_id_or_url"];
+impl GetOcrArgs {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetOcrArgs, V::Error> {
+        let mut field_file_id_or_url = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "file_id_or_url" => {
+                    if field_file_id_or_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_id_or_url"));
+                    }
+                    field_file_id_or_url = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetOcrArgs {
+            file_id_or_url: field_file_id_or_url.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.file_id_or_url {
+            s.serialize_field("file_id_or_url", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetOcrArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetOcrArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetOcrArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetOcrArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetOcrArgs", GET_OCR_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetOcrArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetOcrArgs", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Result type for EventBus async check - must end in "CheckResult"
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum GetOcrAsyncCheckResult {
+    InProgress,
+    Complete(GetOcrResult),
+    Failed(OcrExtractionApiV2Error),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetOcrAsyncCheckResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetOcrAsyncCheckResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetOcrAsyncCheckResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "in_progress" => GetOcrAsyncCheckResult::InProgress,
+                    "complete" => GetOcrAsyncCheckResult::Complete(GetOcrResult::internal_deserialize(&mut map)?),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => GetOcrAsyncCheckResult::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => GetOcrAsyncCheckResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("GetOcrAsyncCheckResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetOcrAsyncCheckResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            GetOcrAsyncCheckResult::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("GetOcrAsyncCheckResult", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            GetOcrAsyncCheckResult::Complete(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetOcrAsyncCheckResult", 3)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetOcrAsyncCheckResult::Failed(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("GetOcrAsyncCheckResult", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            GetOcrAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetOcrResult {
+    /// The plain-text content extracted from the file via OCR. Words within a line are separated by
+    /// a single space, lines are newline-separated in reading order, and for multi-page PDFs pages
+    /// are separated by a blank line in page order. May be empty when no text is detected in the
+    /// source.
+    pub text: String,
+    /// The same content as hOCR: HTML that carries the position of every recognized word. Each page
+    /// is a `<section>` holding `<p class="line">` elements with one `<span>` per word, and each
+    /// element carries `data-x`, `data-y`, `data-width`, and `data-height` attributes in pixels
+    /// relative to the upright page (whose dimensions are on the `<section>`). Use this when you
+    /// need word coordinates -- to highlight matches over a page image, for example; use `text`
+    /// when you just need the words.
+    pub hocr: String,
+}
+
+impl GetOcrResult {
+    pub fn with_text(mut self, value: String) -> Self {
+        self.text = value;
+        self
+    }
+
+    pub fn with_hocr(mut self, value: String) -> Self {
+        self.hocr = value;
+        self
+    }
+}
+
+const GET_OCR_RESULT_FIELDS: &[&str] = &["text",
+                                         "hocr"];
+impl GetOcrResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetOcrResult, V::Error> {
+        let mut field_text = None;
+        let mut field_hocr = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "text" => {
+                    if field_text.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("text"));
+                    }
+                    field_text = Some(map.next_value()?);
+                }
+                "hocr" => {
+                    if field_hocr.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("hocr"));
+                    }
+                    field_hocr = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetOcrResult {
+            text: field_text.unwrap_or_default(),
+            hocr: field_hocr.unwrap_or_default(),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if !self.text.is_empty() {
+            s.serialize_field("text", &self.text)?;
+        }
+        if !self.hocr.is_empty() {
+            s.serialize_field("hocr", &self.hocr)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetOcrResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetOcrResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetOcrResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetOcrResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetOcrResult", GET_OCR_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetOcrResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetOcrResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Arguments for the asynchronous `get_text_async` route. Exactly one of `file_id`, `path`, or
+/// `url` must be supplied via `file_id_or_url` to identify the document whose plain-text content
+/// should be extracted.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetTextArgs {
+    /// Identifier of the document to extract text from. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. Text extraction is supported for common document formats (Word,
+    /// PowerPoint, Excel, PDF, RTF, and Dropbox document types); see the route description for the
+    /// supported formats. Requests against unsupported formats return `unsupported_format_error`.
+    /// NOTE: for the `url` variant, only Dropbox shared links (www.dropbox.com) are supported.
+    /// External (non-Dropbox) URLs are not supported and return `unsupported_format_error`; import
+    /// the file into Dropbox and reference it by `file_id` or `path` instead.
+    pub file_id_or_url: Option<FileIdOrUrl>,
+}
+
+impl GetTextArgs {
+    pub fn with_file_id_or_url(mut self, value: FileIdOrUrl) -> Self {
+        self.file_id_or_url = Some(value);
+        self
+    }
+}
+
+const GET_TEXT_ARGS_FIELDS: &[&str] = &["file_id_or_url"];
+impl GetTextArgs {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTextArgs, V::Error> {
+        let mut field_file_id_or_url = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "file_id_or_url" => {
+                    if field_file_id_or_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_id_or_url"));
+                    }
+                    field_file_id_or_url = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetTextArgs {
+            file_id_or_url: field_file_id_or_url.and_then(Option::flatten),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if let Some(val) = &self.file_id_or_url {
+            s.serialize_field("file_id_or_url", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTextArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetTextArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetTextArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetTextArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetTextArgs", GET_TEXT_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTextArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetTextArgs", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Result type for EventBus async check - must end in "CheckResult"
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum GetTextAsyncCheckResult {
+    InProgress,
+    Complete(GetTextResult),
+    Failed(TextExtractionApiV2Error),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTextAsyncCheckResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetTextAsyncCheckResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetTextAsyncCheckResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "in_progress" => GetTextAsyncCheckResult::InProgress,
+                    "complete" => GetTextAsyncCheckResult::Complete(GetTextResult::internal_deserialize(&mut map)?),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => GetTextAsyncCheckResult::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => GetTextAsyncCheckResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("GetTextAsyncCheckResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTextAsyncCheckResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            GetTextAsyncCheckResult::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("GetTextAsyncCheckResult", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            GetTextAsyncCheckResult::Complete(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetTextAsyncCheckResult", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetTextAsyncCheckResult::Failed(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("GetTextAsyncCheckResult", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            GetTextAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct GetTextResult {
+    /// The plain-text content extracted from the document. For multi-page documents the text is
+    /// concatenated in document order. May be empty when no text is detected in the source.
+    pub text: String,
+}
+
+impl GetTextResult {
+    pub fn with_text(mut self, value: String) -> Self {
+        self.text = value;
+        self
+    }
+}
+
+const GET_TEXT_RESULT_FIELDS: &[&str] = &["text"];
+impl GetTextResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTextResult, V::Error> {
+        let mut field_text = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "text" => {
+                    if field_text.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("text"));
+                    }
+                    field_text = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = GetTextResult {
+            text: field_text.unwrap_or_default(),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if !self.text.is_empty() {
+            s.serialize_field("text", &self.text)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTextResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetTextResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetTextResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetTextResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetTextResult", GET_TEXT_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTextResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetTextResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Arguments for the asynchronous [`get_transcript_async()`](crate::riviera::get_transcript_async)
+/// route. Exactly one of [`FileIdOrUrl::FileId`], [`FileIdOrUrl::Path`], or [`FileIdOrUrl::Url`]
+/// must be supplied via [`GetTranscriptArgs::file_id_or_url`](GetTranscriptArgs) to identify the
+/// audio or video asset to transcribe.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTranscriptArgs {
     /// Identifier of the media asset to transcribe. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The referenced asset must be an audio or video file in a supported
+    /// [`FileIdOrUrl`] variants. The referenced asset must be an audio or video file in a supported
     /// format (see the route description for the list); requests against files with no audio track
-    /// return a `no_audio_error`.
+    /// fail with [`ContentApiV2Error::NoAudioError`].
     pub file_id_or_url: Option<FileIdOrUrl>,
-    /// Granularity of the time offsets returned for each transcript segment. Defaults to `SENTENCE`
-    /// when the field is omitted. - SENTENCE: one segment per spoken sentence (recommended). -
-    /// WORD: one segment per word, useful for fine-grained alignment such as captioning or
-    /// highlight-as-you-listen experiences.
+    /// Granularity of the time offsets returned for each transcript segment. Defaults to
+    /// [`TimestampLevel::Sentence`] when the field is omitted.
     pub timestamp_level: TimestampLevel,
     /// Comma-delimited list of non-lexical filler words to preserve in the transcript output, e.g.
     /// `"uh, ah, uhm"`. By default these fillers are stripped. Unrecognized tokens are ignored.
     /// Leave empty to use the default filtering behavior.
     pub included_special_words: String,
-    /// Optional ISO 639-1 two-letter language code hinting the spoken language of the source audio
-    /// (e.g. "en", "ja"). When empty, the service auto-detects the language; supplying a hint
-    /// improves accuracy and latency for short or ambiguous clips. Unsupported languages fall back
-    /// to auto-detection.
+    /// Hint for the spoken language of the source audio, as an ISO 639-1 code (e.g. "en", "ja").
+    /// When empty, the service auto-detects the language; supplying a hint improves accuracy and
+    /// latency for short or ambiguous clips. Languages the service does not support fall back to
+    /// auto-detection.
     pub audio_language: String,
 }
 
@@ -2616,12 +3640,17 @@ impl ::serde::ser::Serialize for GetTranscriptArgs {
     }
 }
 
-/// Result type for EventBus async check - must end in "CheckResult"
+/// Status of a transcript job started by
+/// [`get_transcript_async()`](crate::riviera::get_transcript_async), as returned by
+/// [`get_transcript_async_check()`](crate::riviera::get_transcript_async_check).
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetTranscriptAsyncCheckResult {
+    /// The job has not finished yet. Poll again.
     InProgress,
+    /// The job finished successfully.
     Complete(GetTranscriptResult),
+    /// The job finished unsuccessfully.
     Failed(ContentApiV2Error),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2700,9 +3729,7 @@ impl ::serde::ser::Serialize for GetTranscriptAsyncCheckResult {
 #[derive(Debug, Clone, PartialEq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTranscriptResult {
-    /// The structured transcript produced for the requested media asset, with per-segment text,
-    /// start/end offsets (in seconds from the beginning of the media), and the detected or
-    /// caller-supplied locale.
+    /// The transcript produced for the requested media asset.
     pub structured_transcript: Option<ApiStructuredTranscript>,
 }
 
@@ -2780,23 +3807,206 @@ impl ::serde::ser::Serialize for GetTranscriptResult {
     }
 }
 
-/// Reason a markdown conversion job failed. Returned in the `failed` variant of
-/// `GetMarkdownAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll
+/// Reason a keyframe extraction job failed. Returned in the `failed` variant of
+/// `GetKeyframesAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll
 /// request itself is unaffected (a poll that surfaces a failed job is still a normal successful
 /// poll response). Callers should branch on the variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
-pub enum MarkdownConversionApiV2Error {
+pub enum KeyframesExtractionApiV2Error {
     /// An unexpected, typically transient, server-side failure. The string is a human-readable
     /// message; retrying with backoff may succeed.
     ServerError(String),
     /// The request could not be processed as supplied (a problem with the caller's input). The
     /// string is a human-readable message; retrying the same request will not help.
     UserError(String),
+    /// The source file is not in a format this route supports.
     UnsupportedFormatError,
+    /// [`FileIdOrUrl::Url`] referenced a Dropbox shared link whose owner has disabled downloads.
     LinkDownloadDisabledError,
+    /// [`FileIdOrUrl::Url`] referenced a password-protected Dropbox shared link. Riviera cannot
+    /// supply the password, so such links cannot be processed.
     SharedLinkPasswordProtected,
+    /// The request exceeded a service limit -- for example the source video is too large, or the
+    /// extraction produced more keyframes / more total image data than the response can carry.
+    /// Lower the resolution, raise `scene_change_threshold`, or set `include_images = false`.
     LimitExceededError,
+    /// The source file was readable but could not be processed, for example because it is corrupt.
+    ConversionFailureError,
+    /// The referenced file does not exist or is not accessible.
+    NotFoundError,
+    /// The target is a folder, not a file.
+    IsAFolderError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for KeyframesExtractionApiV2Error {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = KeyframesExtractionApiV2Error;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a KeyframesExtractionApiV2Error structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "server_error" => {
+                        match map.next_key()? {
+                            Some("server_error") => KeyframesExtractionApiV2Error::ServerError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("server_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_error" => {
+                        match map.next_key()? {
+                            Some("user_error") => KeyframesExtractionApiV2Error::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unsupported_format_error" => KeyframesExtractionApiV2Error::UnsupportedFormatError,
+                    "link_download_disabled_error" => KeyframesExtractionApiV2Error::LinkDownloadDisabledError,
+                    "shared_link_password_protected" => KeyframesExtractionApiV2Error::SharedLinkPasswordProtected,
+                    "limit_exceeded_error" => KeyframesExtractionApiV2Error::LimitExceededError,
+                    "conversion_failure_error" => KeyframesExtractionApiV2Error::ConversionFailureError,
+                    "not_found_error" => KeyframesExtractionApiV2Error::NotFoundError,
+                    "is_a_folder_error" => KeyframesExtractionApiV2Error::IsAFolderError,
+                    _ => KeyframesExtractionApiV2Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["server_error",
+                                    "user_error",
+                                    "unsupported_format_error",
+                                    "link_download_disabled_error",
+                                    "shared_link_password_protected",
+                                    "limit_exceeded_error",
+                                    "conversion_failure_error",
+                                    "not_found_error",
+                                    "is_a_folder_error",
+                                    "other"];
+        deserializer.deserialize_struct("KeyframesExtractionApiV2Error", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for KeyframesExtractionApiV2Error {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            KeyframesExtractionApiV2Error::ServerError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 2)?;
+                s.serialize_field(".tag", "server_error")?;
+                s.serialize_field("server_error", x)?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::UserError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 2)?;
+                s.serialize_field(".tag", "user_error")?;
+                s.serialize_field("user_error", x)?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::UnsupportedFormatError => {
+                // unit
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_format_error")?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::LinkDownloadDisabledError => {
+                // unit
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "link_download_disabled_error")?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::SharedLinkPasswordProtected => {
+                // unit
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "shared_link_password_protected")?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::LimitExceededError => {
+                // unit
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "limit_exceeded_error")?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::ConversionFailureError => {
+                // unit
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "conversion_failure_error")?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::NotFoundError => {
+                // unit
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "not_found_error")?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::IsAFolderError => {
+                // unit
+                let mut s = serializer.serialize_struct("KeyframesExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "is_a_folder_error")?;
+                s.end()
+            }
+            KeyframesExtractionApiV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for KeyframesExtractionApiV2Error {
+}
+
+impl ::std::fmt::Display for KeyframesExtractionApiV2Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            KeyframesExtractionApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
+            KeyframesExtractionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
+            KeyframesExtractionApiV2Error::UnsupportedFormatError => f.write_str("The source file is not in a format this route supports."),
+            KeyframesExtractionApiV2Error::LimitExceededError => f.write_str("The request exceeded a service limit -- for example the source video is too large, or the extraction produced more keyframes / more total image data than the response can carry. Lower the resolution, raise `scene_change_threshold`, or set `include_images = false`."),
+            KeyframesExtractionApiV2Error::ConversionFailureError => f.write_str("The source file was readable but could not be processed, for example because it is corrupt."),
+            KeyframesExtractionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
+            KeyframesExtractionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// Reason a markdown conversion job failed. Returned in the [`GetMarkdownAsyncCheckResult::Failed`]
+/// variant. This is a semantic error union: the HTTP status of the poll request itself is
+/// unaffected (a poll that surfaces a failed job is still a normal successful poll response).
+/// Callers should branch on the variant.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MarkdownConversionApiV2Error {
+    /// An unexpected, typically transient, server-side failure. The string is a human-readable
+    /// message; retrying with backoff may succeed.
+    ServerError(String),
+    /// The request could not be processed as supplied (a problem with the caller's input) -- for
+    /// example an unsupported file format or a file over the size limit. The string is a
+    /// human-readable message; retrying the same request will not help.
+    UserError(String),
+    /// The source file is not in a format this route can convert.
+    UnsupportedFormatError,
+    /// [`FileIdOrUrl::Url`] referenced a Dropbox shared link whose owner has disabled downloads.
+    LinkDownloadDisabledError,
+    /// [`FileIdOrUrl::Url`] referenced a password-protected Dropbox shared link. Riviera cannot
+    /// supply the password, so such links cannot be converted.
+    SharedLinkPasswordProtected,
+    /// A resource limit was exceeded while producing the result.
+    LimitExceededError,
+    /// The source file was readable but could not be converted, for example because it is corrupt.
     ConversionFailureError,
     /// The referenced file does not exist or is not accessible.
     NotFoundError,
@@ -2937,7 +4147,10 @@ impl ::std::fmt::Display for MarkdownConversionApiV2Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             MarkdownConversionApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
-            MarkdownConversionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
+            MarkdownConversionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input) -- for example an unsupported file format or a file over the size limit. The string is a human-readable message; retrying the same request will not help: {:?}", inner),
+            MarkdownConversionApiV2Error::UnsupportedFormatError => f.write_str("The source file is not in a format this route can convert."),
+            MarkdownConversionApiV2Error::LimitExceededError => f.write_str("A resource limit was exceeded while producing the result."),
+            MarkdownConversionApiV2Error::ConversionFailureError => f.write_str("The source file was readable but could not be converted, for example because it is corrupt."),
             MarkdownConversionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
             MarkdownConversionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
             _ => write!(f, "{:?}", *self),
@@ -2948,6 +4161,7 @@ impl ::std::fmt::Display for MarkdownConversionApiV2Error {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MediaDurationError {
+    /// The maximum supported duration, in seconds, of the audio to transcribe.
     pub limit: i32,
 }
 
@@ -3025,23 +4239,31 @@ impl ::serde::ser::Serialize for MediaDurationError {
     }
 }
 
-/// Reason a metadata extraction job failed. Returned in the `failed` variant of
-/// `GetMetadataAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll
-/// request itself is unaffected (a poll that surfaces a failed job is still a normal successful
-/// poll response). Callers should branch on the variant.
+/// Reason a metadata extraction job failed. Returned in the [`GetMetadataAsyncCheckResult::Failed`]
+/// variant. This is a semantic error union: the HTTP status of the poll request itself is
+/// unaffected (a poll that surfaces a failed job is still a normal successful poll response).
+/// Callers should branch on the variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MetadataExtractionApiV2Error {
     /// An unexpected, typically transient, server-side failure. The string is a human-readable
     /// message; retrying with backoff may succeed.
     ServerError(String),
-    /// The request could not be processed as supplied (a problem with the caller's input). The
+    /// The request could not be processed as supplied (a problem with the caller's input) -- for
+    /// example an unsupported file format or a file over the size limit for its metadata kind. The
     /// string is a human-readable message; retrying the same request will not help.
     UserError(String),
+    /// The source file is not in a format this route can extract metadata from.
     UnsupportedFormatError,
+    /// [`FileIdOrUrl::Url`] referenced a Dropbox shared link whose owner has disabled downloads.
     LinkDownloadDisabledError,
+    /// [`FileIdOrUrl::Url`] referenced a password-protected Dropbox shared link. Riviera cannot
+    /// supply the password, so metadata cannot be extracted from such links.
     SharedLinkPasswordProtected,
+    /// A resource limit was exceeded while producing the result.
     LimitExceededError,
+    /// The source file was readable but its metadata could not be extracted, for example because
+    /// the file is corrupt.
     ConversionFailureError,
     /// The referenced file does not exist or is not accessible.
     NotFoundError,
@@ -3182,7 +4404,10 @@ impl ::std::fmt::Display for MetadataExtractionApiV2Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             MetadataExtractionApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
-            MetadataExtractionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
+            MetadataExtractionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input) -- for example an unsupported file format or a file over the size limit for its metadata kind. The string is a human-readable message; retrying the same request will not help: {:?}", inner),
+            MetadataExtractionApiV2Error::UnsupportedFormatError => f.write_str("The source file is not in a format this route can extract metadata from."),
+            MetadataExtractionApiV2Error::LimitExceededError => f.write_str("A resource limit was exceeded while producing the result."),
+            MetadataExtractionApiV2Error::ConversionFailureError => f.write_str("The source file was readable but its metadata could not be extracted, for example because the file is corrupt."),
             MetadataExtractionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
             MetadataExtractionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
             _ => write!(f, "{:?}", *self),
@@ -3190,14 +4415,25 @@ impl ::std::fmt::Display for MetadataExtractionApiV2Error {
     }
 }
 
-/// Which metadata variant is populated in a `GetMetadataResult`, derived from the file type.
+/// Which metadata variant is populated in a [`GetMetadataResult`], derived from the file type.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MetadataType {
+    /// No metadata kind applies to the file, so no variant of
+    /// [`GetMetadataResult::metadata`](GetMetadataResult) is populated. Riviera only produces
+    /// metadata for the formats listed on
+    /// [`get_metadata_async()`](crate::riviera::get_metadata_async); a request for any other file
+    /// normally fails with [`MetadataExtractionApiV2Error::UserError`] rather than completing with
+    /// this value. An app that does receive it should treat the file as having no extractable
+    /// metadata; retrying will not change the outcome.
     MetadataTypeUnknown,
+    /// [`MetadataUnion::Exif`] is populated.
     MetadataTypeExif,
+    /// [`MetadataUnion::Media`] is populated.
     MetadataTypeMedia,
+    /// [`MetadataUnion::Pdf`] is populated.
     MetadataTypePdf,
+    /// [`MetadataUnion::Office`] is populated.
     MetadataTypeOffice,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -3281,7 +4517,181 @@ impl ::serde::ser::Serialize for MetadataType {
     }
 }
 
-/// The kind of MS Office document that produced an `ApiOfficeMetadata` result.
+/// Reason an OCR extraction job failed. Returned in the `failed` variant of
+/// `GetOcrAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll request
+/// itself is unaffected (a poll that surfaces a failed job is still a normal successful poll
+/// response). Callers should branch on the variant.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum OcrExtractionApiV2Error {
+    /// An unexpected, typically transient, server-side failure. The string is a human-readable
+    /// message; retrying with backoff may succeed.
+    ServerError(String),
+    /// The request could not be processed as supplied (a problem with the caller's input). The
+    /// string is a human-readable message; retrying the same request will not help.
+    UserError(String),
+    /// The source file is not in a format this route supports.
+    UnsupportedFormatError,
+    /// [`FileIdOrUrl::Url`] referenced a Dropbox shared link whose owner has disabled downloads.
+    LinkDownloadDisabledError,
+    /// [`FileIdOrUrl::Url`] referenced a password-protected Dropbox shared link. Riviera cannot
+    /// supply the password, so such links cannot be processed.
+    SharedLinkPasswordProtected,
+    /// A resource limit was exceeded while producing the result.
+    LimitExceededError,
+    /// The source file was readable but could not be processed, for example because it is corrupt.
+    ConversionFailureError,
+    /// The referenced file does not exist or is not accessible.
+    NotFoundError,
+    /// The target is a folder, not a file.
+    IsAFolderError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for OcrExtractionApiV2Error {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = OcrExtractionApiV2Error;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a OcrExtractionApiV2Error structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "server_error" => {
+                        match map.next_key()? {
+                            Some("server_error") => OcrExtractionApiV2Error::ServerError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("server_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_error" => {
+                        match map.next_key()? {
+                            Some("user_error") => OcrExtractionApiV2Error::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unsupported_format_error" => OcrExtractionApiV2Error::UnsupportedFormatError,
+                    "link_download_disabled_error" => OcrExtractionApiV2Error::LinkDownloadDisabledError,
+                    "shared_link_password_protected" => OcrExtractionApiV2Error::SharedLinkPasswordProtected,
+                    "limit_exceeded_error" => OcrExtractionApiV2Error::LimitExceededError,
+                    "conversion_failure_error" => OcrExtractionApiV2Error::ConversionFailureError,
+                    "not_found_error" => OcrExtractionApiV2Error::NotFoundError,
+                    "is_a_folder_error" => OcrExtractionApiV2Error::IsAFolderError,
+                    _ => OcrExtractionApiV2Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["server_error",
+                                    "user_error",
+                                    "unsupported_format_error",
+                                    "link_download_disabled_error",
+                                    "shared_link_password_protected",
+                                    "limit_exceeded_error",
+                                    "conversion_failure_error",
+                                    "not_found_error",
+                                    "is_a_folder_error",
+                                    "other"];
+        deserializer.deserialize_struct("OcrExtractionApiV2Error", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for OcrExtractionApiV2Error {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            OcrExtractionApiV2Error::ServerError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 2)?;
+                s.serialize_field(".tag", "server_error")?;
+                s.serialize_field("server_error", x)?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::UserError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 2)?;
+                s.serialize_field(".tag", "user_error")?;
+                s.serialize_field("user_error", x)?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::UnsupportedFormatError => {
+                // unit
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_format_error")?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::LinkDownloadDisabledError => {
+                // unit
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "link_download_disabled_error")?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::SharedLinkPasswordProtected => {
+                // unit
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "shared_link_password_protected")?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::LimitExceededError => {
+                // unit
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "limit_exceeded_error")?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::ConversionFailureError => {
+                // unit
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "conversion_failure_error")?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::NotFoundError => {
+                // unit
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "not_found_error")?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::IsAFolderError => {
+                // unit
+                let mut s = serializer.serialize_struct("OcrExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "is_a_folder_error")?;
+                s.end()
+            }
+            OcrExtractionApiV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for OcrExtractionApiV2Error {
+}
+
+impl ::std::fmt::Display for OcrExtractionApiV2Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            OcrExtractionApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
+            OcrExtractionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
+            OcrExtractionApiV2Error::UnsupportedFormatError => f.write_str("The source file is not in a format this route supports."),
+            OcrExtractionApiV2Error::LimitExceededError => f.write_str("A resource limit was exceeded while producing the result."),
+            OcrExtractionApiV2Error::ConversionFailureError => f.write_str("The source file was readable but could not be processed, for example because it is corrupt."),
+            OcrExtractionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
+            OcrExtractionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// The kind of MS Office document that produced an [`ApiOfficeMetadata`] result.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum OfficeFileType {
@@ -3363,10 +4773,189 @@ impl ::serde::ser::Serialize for OfficeFileType {
     }
 }
 
+/// Reason a text extraction job failed. Returned in the `failed` variant of
+/// `GetTextAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll request
+/// itself is unaffected (a poll that surfaces a failed job is still a normal successful poll
+/// response). Callers should branch on the variant.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum TextExtractionApiV2Error {
+    /// An unexpected, typically transient, server-side failure. The string is a human-readable
+    /// message; retrying with backoff may succeed.
+    ServerError(String),
+    /// The request could not be processed as supplied (a problem with the caller's input). The
+    /// string is a human-readable message; retrying the same request will not help.
+    UserError(String),
+    /// The source file is not in a format this route supports.
+    UnsupportedFormatError,
+    /// [`FileIdOrUrl::Url`] referenced a Dropbox shared link whose owner has disabled downloads.
+    LinkDownloadDisabledError,
+    /// [`FileIdOrUrl::Url`] referenced a password-protected Dropbox shared link. Riviera cannot
+    /// supply the password, so such links cannot be processed.
+    SharedLinkPasswordProtected,
+    /// A resource limit was exceeded while producing the result.
+    LimitExceededError,
+    /// The source file was readable but could not be processed, for example because it is corrupt.
+    ConversionFailureError,
+    /// The referenced file does not exist or is not accessible.
+    NotFoundError,
+    /// The target is a folder, not a file.
+    IsAFolderError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TextExtractionApiV2Error {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TextExtractionApiV2Error;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TextExtractionApiV2Error structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "server_error" => {
+                        match map.next_key()? {
+                            Some("server_error") => TextExtractionApiV2Error::ServerError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("server_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_error" => {
+                        match map.next_key()? {
+                            Some("user_error") => TextExtractionApiV2Error::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unsupported_format_error" => TextExtractionApiV2Error::UnsupportedFormatError,
+                    "link_download_disabled_error" => TextExtractionApiV2Error::LinkDownloadDisabledError,
+                    "shared_link_password_protected" => TextExtractionApiV2Error::SharedLinkPasswordProtected,
+                    "limit_exceeded_error" => TextExtractionApiV2Error::LimitExceededError,
+                    "conversion_failure_error" => TextExtractionApiV2Error::ConversionFailureError,
+                    "not_found_error" => TextExtractionApiV2Error::NotFoundError,
+                    "is_a_folder_error" => TextExtractionApiV2Error::IsAFolderError,
+                    _ => TextExtractionApiV2Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["server_error",
+                                    "user_error",
+                                    "unsupported_format_error",
+                                    "link_download_disabled_error",
+                                    "shared_link_password_protected",
+                                    "limit_exceeded_error",
+                                    "conversion_failure_error",
+                                    "not_found_error",
+                                    "is_a_folder_error",
+                                    "other"];
+        deserializer.deserialize_struct("TextExtractionApiV2Error", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TextExtractionApiV2Error {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            TextExtractionApiV2Error::ServerError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 2)?;
+                s.serialize_field(".tag", "server_error")?;
+                s.serialize_field("server_error", x)?;
+                s.end()
+            }
+            TextExtractionApiV2Error::UserError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 2)?;
+                s.serialize_field(".tag", "user_error")?;
+                s.serialize_field("user_error", x)?;
+                s.end()
+            }
+            TextExtractionApiV2Error::UnsupportedFormatError => {
+                // unit
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_format_error")?;
+                s.end()
+            }
+            TextExtractionApiV2Error::LinkDownloadDisabledError => {
+                // unit
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "link_download_disabled_error")?;
+                s.end()
+            }
+            TextExtractionApiV2Error::SharedLinkPasswordProtected => {
+                // unit
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "shared_link_password_protected")?;
+                s.end()
+            }
+            TextExtractionApiV2Error::LimitExceededError => {
+                // unit
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "limit_exceeded_error")?;
+                s.end()
+            }
+            TextExtractionApiV2Error::ConversionFailureError => {
+                // unit
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "conversion_failure_error")?;
+                s.end()
+            }
+            TextExtractionApiV2Error::NotFoundError => {
+                // unit
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "not_found_error")?;
+                s.end()
+            }
+            TextExtractionApiV2Error::IsAFolderError => {
+                // unit
+                let mut s = serializer.serialize_struct("TextExtractionApiV2Error", 1)?;
+                s.serialize_field(".tag", "is_a_folder_error")?;
+                s.end()
+            }
+            TextExtractionApiV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for TextExtractionApiV2Error {
+}
+
+impl ::std::fmt::Display for TextExtractionApiV2Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            TextExtractionApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
+            TextExtractionApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
+            TextExtractionApiV2Error::UnsupportedFormatError => f.write_str("The source file is not in a format this route supports."),
+            TextExtractionApiV2Error::LimitExceededError => f.write_str("A resource limit was exceeded while producing the result."),
+            TextExtractionApiV2Error::ConversionFailureError => f.write_str("The source file was readable but could not be processed, for example because it is corrupt."),
+            TextExtractionApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
+            TextExtractionApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// Granularity of the time offsets returned for each transcript segment.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TimestampLevel {
+    /// One segment per spoken sentence (recommended). This is the default when
+    /// [`GetTranscriptArgs::timestamp_level`](GetTranscriptArgs) is omitted.
     Sentence,
+    /// One segment per word, useful for fine-grained alignment such as captioning or
+    /// highlight-as-you-listen experiences.
     Word,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -3426,13 +5015,18 @@ impl ::serde::ser::Serialize for TimestampLevel {
     }
 }
 
-/// Exactly one variant is populated, corresponding to `metadata_type`.
+/// The extracted metadata. Exactly one variant is populated, corresponding to
+/// [`GetMetadataResult::metadata_type`](GetMetadataResult).
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MetadataUnion {
+    /// EXIF metadata, for image files.
     Exif(ApiExifMetadata),
+    /// Container and per-stream metadata, for audio and video files.
     Media(ApiMediaMetadata),
+    /// Document metadata, for PDFs.
     Pdf(ApiPdfMetadata),
+    /// Document metadata, for MS Office files.
     Office(ApiOfficeMetadata),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
