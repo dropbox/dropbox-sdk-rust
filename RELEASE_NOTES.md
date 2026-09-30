@@ -1,5 +1,7 @@
 # unreleased changes
 * API spec update 2026-09-30
+*   * very minor breaking changes: some things that were meant to be internal-only were removed
+* fixed a bug where non-ASCII characters in parameters were not properly escaped for upload and download routes
 
 # v0.20.3
 2026-07-29
