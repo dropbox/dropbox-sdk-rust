@@ -1968,6 +1968,219 @@ impl ::std::fmt::Display for ContentApiV2Error {
     }
 }
 
+/// Arguments for `download_transform_output`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct DownloadTransformOutputArgs {
+    /// The `output_handle` from a `complete` `get_transform_async/check` result.
+    pub output_handle: String,
+}
+
+impl DownloadTransformOutputArgs {
+    pub fn new(output_handle: String) -> Self {
+        DownloadTransformOutputArgs {
+            output_handle,
+        }
+    }
+}
+
+const DOWNLOAD_TRANSFORM_OUTPUT_ARGS_FIELDS: &[&str] = &["output_handle"];
+impl DownloadTransformOutputArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DownloadTransformOutputArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DownloadTransformOutputArgs>, V::Error> {
+        let mut field_output_handle = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "output_handle" => {
+                    if field_output_handle.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("output_handle"));
+                    }
+                    field_output_handle = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DownloadTransformOutputArgs {
+            output_handle: field_output_handle.ok_or_else(|| ::serde::de::Error::missing_field("output_handle"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("output_handle", &self.output_handle)?;
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DownloadTransformOutputArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DownloadTransformOutputArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DownloadTransformOutputArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DownloadTransformOutputArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DownloadTransformOutputArgs", DOWNLOAD_TRANSFORM_OUTPUT_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DownloadTransformOutputArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DownloadTransformOutputArgs", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Describes the bytes in the response body. Returned in the `Dropbox-API-Result` header.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct DownloadTransformOutputResult {
+    /// Size of the output in bytes.
+    pub size: u64,
+    /// Format of the output, as a short lowercase format name such as "pdf", "html", "jpeg", or
+    /// "png".
+    pub format: String,
+    /// MIME type corresponding to `format`.
+    pub mime_type: String,
+}
+
+impl DownloadTransformOutputResult {
+    pub fn with_size(mut self, value: u64) -> Self {
+        self.size = value;
+        self
+    }
+
+    pub fn with_format(mut self, value: String) -> Self {
+        self.format = value;
+        self
+    }
+
+    pub fn with_mime_type(mut self, value: String) -> Self {
+        self.mime_type = value;
+        self
+    }
+}
+
+const DOWNLOAD_TRANSFORM_OUTPUT_RESULT_FIELDS: &[&str] = &["size",
+                                                           "format",
+                                                           "mime_type"];
+impl DownloadTransformOutputResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DownloadTransformOutputResult, V::Error> {
+        let mut field_size = None;
+        let mut field_format = None;
+        let mut field_mime_type = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "size" => {
+                    if field_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("size"));
+                    }
+                    field_size = Some(map.next_value()?);
+                }
+                "format" => {
+                    if field_format.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("format"));
+                    }
+                    field_format = Some(map.next_value()?);
+                }
+                "mime_type" => {
+                    if field_mime_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("mime_type"));
+                    }
+                    field_mime_type = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = DownloadTransformOutputResult {
+            size: field_size.unwrap_or(0),
+            format: field_format.unwrap_or_default(),
+            mime_type: field_mime_type.unwrap_or_default(),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.size != 0 {
+            s.serialize_field("size", &self.size)?;
+        }
+        if !self.format.is_empty() {
+            s.serialize_field("format", &self.format)?;
+        }
+        if !self.mime_type.is_empty() {
+            s.serialize_field("mime_type", &self.mime_type)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DownloadTransformOutputResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DownloadTransformOutputResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DownloadTransformOutputResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DownloadTransformOutputResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DownloadTransformOutputResult", DOWNLOAD_TRANSFORM_OUTPUT_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DownloadTransformOutputResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DownloadTransformOutputResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileIdOrUrl {
@@ -3807,6 +4020,205 @@ impl ::serde::ser::Serialize for GetTranscriptResult {
     }
 }
 
+/// Result type for EventBus async check - must end in "CheckResult"
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum GetTransformAsyncCheckResult {
+    /// The job has not finished yet. Poll again.
+    InProgress,
+    /// The job finished successfully.
+    Complete(TransformOutput),
+    /// The job finished unsuccessfully.
+    Failed(TransformApiV2Error),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTransformAsyncCheckResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetTransformAsyncCheckResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a GetTransformAsyncCheckResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "in_progress" => GetTransformAsyncCheckResult::InProgress,
+                    "complete" => GetTransformAsyncCheckResult::Complete(TransformOutput::internal_deserialize(&mut map)?),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => GetTransformAsyncCheckResult::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => GetTransformAsyncCheckResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("GetTransformAsyncCheckResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTransformAsyncCheckResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            GetTransformAsyncCheckResult::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("GetTransformAsyncCheckResult", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            GetTransformAsyncCheckResult::Complete(x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetTransformAsyncCheckResult", 6)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetTransformAsyncCheckResult::Failed(x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("GetTransformAsyncCheckResult", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            GetTransformAsyncCheckResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Options for `TransformType.image` and `TransformType.image_pdf`. Supplying this message with any
+/// other transform type fails with `invalid_options_error`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ImageOptions {
+    /// For multi-page sources (PDFs, presentations, documents), the 1-based page to render. Each
+    /// request renders one page; to render a whole document, issue one request per page. Defaults
+    /// to the first page when omitted.
+    pub page_number: u32,
+    /// Scale the rendered image to this percentage of its natural size. Must be in (0, 100] -- the
+    /// pipeline does not upscale, so values above 100 are rejected with `invalid_options_error`.
+    /// Defaults to 100 (no scaling) when omitted.
+    pub scale_percent: u32,
+}
+
+impl Default for ImageOptions {
+    fn default() -> Self {
+        ImageOptions {
+            page_number: 1,
+            scale_percent: 100,
+        }
+    }
+}
+
+impl ImageOptions {
+    pub fn with_page_number(mut self, value: u32) -> Self {
+        self.page_number = value;
+        self
+    }
+
+    pub fn with_scale_percent(mut self, value: u32) -> Self {
+        self.scale_percent = value;
+        self
+    }
+}
+
+const IMAGE_OPTIONS_FIELDS: &[&str] = &["page_number",
+                                        "scale_percent"];
+impl ImageOptions {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ImageOptions, V::Error> {
+        let mut field_page_number = None;
+        let mut field_scale_percent = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "page_number" => {
+                    if field_page_number.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("page_number"));
+                    }
+                    field_page_number = Some(map.next_value()?);
+                }
+                "scale_percent" => {
+                    if field_scale_percent.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("scale_percent"));
+                    }
+                    field_scale_percent = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ImageOptions {
+            page_number: field_page_number.unwrap_or(1),
+            scale_percent: field_scale_percent.unwrap_or(100),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.page_number != 1 {
+            s.serialize_field("page_number", &self.page_number)?;
+        }
+        if self.scale_percent != 100 {
+            s.serialize_field("scale_percent", &self.scale_percent)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ImageOptions {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ImageOptions;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ImageOptions struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ImageOptions::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ImageOptions", IMAGE_OPTIONS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ImageOptions {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ImageOptions", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Reason a keyframe extraction job failed. Returned in the `failed` variant of
 /// `GetKeyframesAsyncCheckResult`. This is a semantic error union: the HTTP status of the poll
 /// request itself is unaffected (a poll that surfaces a failed job is still a normal successful
@@ -4947,6 +5359,441 @@ impl ::std::fmt::Display for TextExtractionApiV2Error {
     }
 }
 
+/// The encoding of the produced image. These match `files/get_thumbnail`'s formats: JPEG is the
+/// better choice for photographs, PNG for screenshots, line art, and anything with sharp text edges
+/// or transparency.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ThumbnailFormat {
+    /// Lossy JPEG. The default, and the right choice for photographic sources.
+    Jpeg,
+    /// Lossless PNG, with alpha preserved.
+    Png,
+    /// WebP, which compresses better than either JPEG or PNG at comparable quality but is not
+    /// readable by every consumer.
+    Webp,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ThumbnailFormat;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailFormat structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "jpeg" => ThumbnailFormat::Jpeg,
+                    "png" => ThumbnailFormat::Png,
+                    "webp" => ThumbnailFormat::Webp,
+                    _ => ThumbnailFormat::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["jpeg",
+                                    "png",
+                                    "webp",
+                                    "other"];
+        deserializer.deserialize_struct("ThumbnailFormat", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailFormat {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ThumbnailFormat::Jpeg => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailFormat", 1)?;
+                s.serialize_field(".tag", "jpeg")?;
+                s.end()
+            }
+            ThumbnailFormat::Png => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailFormat", 1)?;
+                s.serialize_field(".tag", "png")?;
+                s.end()
+            }
+            ThumbnailFormat::Webp => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailFormat", 1)?;
+                s.serialize_field(".tag", "webp")?;
+                s.end()
+            }
+            ThumbnailFormat::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// How to resize and crop the source to reach the requested `ThumbnailSize`. These match
+/// `files/get_thumbnail`'s modes.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ThumbnailMode {
+    /// Scale down the image to fit within the given size.
+    Strict,
+    /// Scale down the image to fit within the given size or its transpose.
+    Bestfit,
+    /// Scale down the image to completely cover the given size or its transpose.
+    FitoneBestfit,
+    /// Don't resize the image at all.
+    Original,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailMode {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ThumbnailMode;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailMode structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "strict" => ThumbnailMode::Strict,
+                    "bestfit" => ThumbnailMode::Bestfit,
+                    "fitone_bestfit" => ThumbnailMode::FitoneBestfit,
+                    "original" => ThumbnailMode::Original,
+                    _ => ThumbnailMode::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["strict",
+                                    "bestfit",
+                                    "fitone_bestfit",
+                                    "original",
+                                    "other"];
+        deserializer.deserialize_struct("ThumbnailMode", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailMode {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ThumbnailMode::Strict => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailMode", 1)?;
+                s.serialize_field(".tag", "strict")?;
+                s.end()
+            }
+            ThumbnailMode::Bestfit => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailMode", 1)?;
+                s.serialize_field(".tag", "bestfit")?;
+                s.end()
+            }
+            ThumbnailMode::FitoneBestfit => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailMode", 1)?;
+                s.serialize_field(".tag", "fitone_bestfit")?;
+                s.end()
+            }
+            ThumbnailMode::Original => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailMode", 1)?;
+                s.serialize_field(".tag", "original")?;
+                s.end()
+            }
+            ThumbnailMode::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Options for `TransformType.thumbnail`. Supplying this message with any other transform type
+/// fails with `invalid_options_error`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct ThumbnailOptions {
+    /// The size bucket to produce. Defaults to `w64h64` when omitted.
+    pub size: ThumbnailSize,
+    /// How to fit the source into `size`. Defaults to `strict` when omitted.
+    pub mode: ThumbnailMode,
+    /// The output encoding. Defaults to `jpeg` when omitted.
+    pub format: ThumbnailFormat,
+}
+
+impl Default for ThumbnailOptions {
+    fn default() -> Self {
+        ThumbnailOptions {
+            size: ThumbnailSize::W64h64,
+            mode: ThumbnailMode::Strict,
+            format: ThumbnailFormat::Jpeg,
+        }
+    }
+}
+
+impl ThumbnailOptions {
+    pub fn with_size(mut self, value: ThumbnailSize) -> Self {
+        self.size = value;
+        self
+    }
+
+    pub fn with_mode(mut self, value: ThumbnailMode) -> Self {
+        self.mode = value;
+        self
+    }
+
+    pub fn with_format(mut self, value: ThumbnailFormat) -> Self {
+        self.format = value;
+        self
+    }
+}
+
+const THUMBNAIL_OPTIONS_FIELDS: &[&str] = &["size",
+                                            "mode",
+                                            "format"];
+impl ThumbnailOptions {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ThumbnailOptions, V::Error> {
+        let mut field_size = None;
+        let mut field_mode = None;
+        let mut field_format = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "size" => {
+                    if field_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("size"));
+                    }
+                    field_size = Some(map.next_value()?);
+                }
+                "mode" => {
+                    if field_mode.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("mode"));
+                    }
+                    field_mode = Some(map.next_value()?);
+                }
+                "format" => {
+                    if field_format.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("format"));
+                    }
+                    field_format = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ThumbnailOptions {
+            size: field_size.unwrap_or(ThumbnailSize::W64h64),
+            mode: field_mode.unwrap_or(ThumbnailMode::Strict),
+            format: field_format.unwrap_or(ThumbnailFormat::Jpeg),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.size != ThumbnailSize::W64h64 {
+            s.serialize_field("size", &self.size)?;
+        }
+        if self.mode != ThumbnailMode::Strict {
+            s.serialize_field("mode", &self.mode)?;
+        }
+        if self.format != ThumbnailFormat::Jpeg {
+            s.serialize_field("format", &self.format)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailOptions {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ThumbnailOptions;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailOptions struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ThumbnailOptions::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ThumbnailOptions", THUMBNAIL_OPTIONS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailOptions {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ThumbnailOptions", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// The size of the thumbnail to produce. These are the same named size buckets
+/// `files/get_thumbnail` supports, with the same meanings; arbitrary pixel dimensions are not
+/// accepted.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum ThumbnailSize {
+    /// 32 by 32 px.
+    W32h32,
+    /// 64 by 64 px.
+    W64h64,
+    /// 128 by 128 px.
+    W128h128,
+    /// 256 by 256 px.
+    W256h256,
+    /// 480 by 320 px.
+    W480h320,
+    /// 640 by 480 px.
+    W640h480,
+    /// 960 by 640 px.
+    W960h640,
+    /// 1024 by 768 px.
+    W1024h768,
+    /// 2048 by 1536 px.
+    W2048h1536,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ThumbnailSize;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailSize structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "w32h32" => ThumbnailSize::W32h32,
+                    "w64h64" => ThumbnailSize::W64h64,
+                    "w128h128" => ThumbnailSize::W128h128,
+                    "w256h256" => ThumbnailSize::W256h256,
+                    "w480h320" => ThumbnailSize::W480h320,
+                    "w640h480" => ThumbnailSize::W640h480,
+                    "w960h640" => ThumbnailSize::W960h640,
+                    "w1024h768" => ThumbnailSize::W1024h768,
+                    "w2048h1536" => ThumbnailSize::W2048h1536,
+                    _ => ThumbnailSize::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["w32h32",
+                                    "w64h64",
+                                    "w128h128",
+                                    "w256h256",
+                                    "w480h320",
+                                    "w640h480",
+                                    "w960h640",
+                                    "w1024h768",
+                                    "w2048h1536",
+                                    "other"];
+        deserializer.deserialize_struct("ThumbnailSize", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailSize {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            ThumbnailSize::W32h32 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w32h32")?;
+                s.end()
+            }
+            ThumbnailSize::W64h64 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w64h64")?;
+                s.end()
+            }
+            ThumbnailSize::W128h128 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w128h128")?;
+                s.end()
+            }
+            ThumbnailSize::W256h256 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w256h256")?;
+                s.end()
+            }
+            ThumbnailSize::W480h320 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w480h320")?;
+                s.end()
+            }
+            ThumbnailSize::W640h480 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w640h480")?;
+                s.end()
+            }
+            ThumbnailSize::W960h640 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w960h640")?;
+                s.end()
+            }
+            ThumbnailSize::W1024h768 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w1024h768")?;
+                s.end()
+            }
+            ThumbnailSize::W2048h1536 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w2048h1536")?;
+                s.end()
+            }
+            ThumbnailSize::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Granularity of the time offsets returned for each transcript segment.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -5012,6 +5859,799 @@ impl ::serde::ser::Serialize for TimestampLevel {
             }
             TimestampLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+/// Reason a transform job failed. Returned in the `failed` variant of
+/// `GetTransformAsyncCheckResult`, and by `download_transform_output`. This is a semantic error
+/// union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a failed
+/// job is still a normal successful poll response). Callers should branch on the variant.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum TransformApiV2Error {
+    /// An unexpected, typically transient, server-side failure. The string is a human-readable
+    /// message; retrying with backoff may succeed.
+    ServerError(String),
+    /// The request could not be processed as supplied (a problem with the caller's input). The
+    /// string is a human-readable message; retrying the same request will not help.
+    UserError(String),
+    /// The source file is not in a format the requested `transform_type` can convert.
+    UnsupportedFormatError,
+    /// `FileIdOrUrl.url` referenced a Dropbox shared link whose owner has disabled downloads.
+    LinkDownloadDisabledError,
+    /// `FileIdOrUrl.url` referenced a password-protected Dropbox shared link. Riviera cannot supply
+    /// the password, so such links cannot be transformed.
+    SharedLinkPasswordProtected,
+    /// A resource limit was exceeded while producing the result -- for example the source file is
+    /// larger than the requested transform accepts.
+    LimitExceededError,
+    /// The source file was readable but could not be converted, for example because it is corrupt.
+    ConversionFailureError,
+    /// The referenced file does not exist or is not accessible.
+    NotFoundError,
+    /// The target is a folder, not a file.
+    IsAFolderError,
+    /// `transform_type` was missing, or the supplied options did not match the requested transform
+    /// type, or an option was out of range. The request is malformed; fix it rather than retrying
+    /// it.
+    InvalidOptionsError,
+    /// The `output_handle` presented to `download_transform_output` has passed its
+    /// `TransformOutput.expires_ts`. Request the transform again to get a fresh handle. Only
+    /// `download_transform_output` produces this; a poll never does.
+    ExpiredHandleError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TransformApiV2Error {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TransformApiV2Error;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TransformApiV2Error structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "server_error" => {
+                        match map.next_key()? {
+                            Some("server_error") => TransformApiV2Error::ServerError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("server_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_error" => {
+                        match map.next_key()? {
+                            Some("user_error") => TransformApiV2Error::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unsupported_format_error" => TransformApiV2Error::UnsupportedFormatError,
+                    "link_download_disabled_error" => TransformApiV2Error::LinkDownloadDisabledError,
+                    "shared_link_password_protected" => TransformApiV2Error::SharedLinkPasswordProtected,
+                    "limit_exceeded_error" => TransformApiV2Error::LimitExceededError,
+                    "conversion_failure_error" => TransformApiV2Error::ConversionFailureError,
+                    "not_found_error" => TransformApiV2Error::NotFoundError,
+                    "is_a_folder_error" => TransformApiV2Error::IsAFolderError,
+                    "invalid_options_error" => TransformApiV2Error::InvalidOptionsError,
+                    "expired_handle_error" => TransformApiV2Error::ExpiredHandleError,
+                    _ => TransformApiV2Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["server_error",
+                                    "user_error",
+                                    "unsupported_format_error",
+                                    "link_download_disabled_error",
+                                    "shared_link_password_protected",
+                                    "limit_exceeded_error",
+                                    "conversion_failure_error",
+                                    "not_found_error",
+                                    "is_a_folder_error",
+                                    "invalid_options_error",
+                                    "expired_handle_error",
+                                    "other"];
+        deserializer.deserialize_struct("TransformApiV2Error", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TransformApiV2Error {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            TransformApiV2Error::ServerError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 2)?;
+                s.serialize_field(".tag", "server_error")?;
+                s.serialize_field("server_error", x)?;
+                s.end()
+            }
+            TransformApiV2Error::UserError(x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 2)?;
+                s.serialize_field(".tag", "user_error")?;
+                s.serialize_field("user_error", x)?;
+                s.end()
+            }
+            TransformApiV2Error::UnsupportedFormatError => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_format_error")?;
+                s.end()
+            }
+            TransformApiV2Error::LinkDownloadDisabledError => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "link_download_disabled_error")?;
+                s.end()
+            }
+            TransformApiV2Error::SharedLinkPasswordProtected => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "shared_link_password_protected")?;
+                s.end()
+            }
+            TransformApiV2Error::LimitExceededError => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "limit_exceeded_error")?;
+                s.end()
+            }
+            TransformApiV2Error::ConversionFailureError => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "conversion_failure_error")?;
+                s.end()
+            }
+            TransformApiV2Error::NotFoundError => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "not_found_error")?;
+                s.end()
+            }
+            TransformApiV2Error::IsAFolderError => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "is_a_folder_error")?;
+                s.end()
+            }
+            TransformApiV2Error::InvalidOptionsError => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "invalid_options_error")?;
+                s.end()
+            }
+            TransformApiV2Error::ExpiredHandleError => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformApiV2Error", 1)?;
+                s.serialize_field(".tag", "expired_handle_error")?;
+                s.end()
+            }
+            TransformApiV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for TransformApiV2Error {
+}
+
+impl ::std::fmt::Display for TransformApiV2Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            TransformApiV2Error::ServerError(inner) => write!(f, "An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying with backoff may succeed: {:?}", inner),
+            TransformApiV2Error::UserError(inner) => write!(f, "The request could not be processed as supplied (a problem with the caller's input). The string is a human-readable message; retrying the same request will not help: {:?}", inner),
+            TransformApiV2Error::UnsupportedFormatError => f.write_str("The source file is not in a format the requested `transform_type` can convert."),
+            TransformApiV2Error::LinkDownloadDisabledError => f.write_str("`FileIdOrUrl.url` referenced a Dropbox shared link whose owner has disabled downloads."),
+            TransformApiV2Error::SharedLinkPasswordProtected => f.write_str("`FileIdOrUrl.url` referenced a password-protected Dropbox shared link. Riviera cannot supply the password, so such links cannot be transformed."),
+            TransformApiV2Error::LimitExceededError => f.write_str("A resource limit was exceeded while producing the result -- for example the source file is larger than the requested transform accepts."),
+            TransformApiV2Error::ConversionFailureError => f.write_str("The source file was readable but could not be converted, for example because it is corrupt."),
+            TransformApiV2Error::NotFoundError => f.write_str("The referenced file does not exist or is not accessible."),
+            TransformApiV2Error::IsAFolderError => f.write_str("The target is a folder, not a file."),
+            TransformApiV2Error::InvalidOptionsError => f.write_str("`transform_type` was missing, or the supplied options did not match the requested transform type, or an option was out of range. The request is malformed; fix it rather than retrying it."),
+            TransformApiV2Error::ExpiredHandleError => f.write_str("The `output_handle` presented to `download_transform_output` has passed its `TransformOutput.expires_ts`. Request the transform again to get a fresh handle. Only `download_transform_output` produces this; a poll never does."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+/// Arguments for the asynchronous `get_transform_async` route. Exactly one of `file_id`, `path`, or
+/// `url` must be supplied via `file_id_or_url` to identify the source file, and exactly one variant
+/// of `transform_type` must be set to say what to produce from it. At most one options message may
+/// be set, and it must be the one belonging to the requested `transform_type`. Options that belong
+/// to a different transform type are rejected with `invalid_options_error` rather than ignored, so
+/// that a request whose parameters were misassembled fails visibly instead of quietly producing the
+/// wrong output.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TransformArgs {
+    /// What to produce from the source file. Required.
+    pub transform_type: TransformType,
+    /// Identifier of the source file to transform. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. The referenced file must be in a format the requested
+    /// `transform_type` supports; see the route description for the per-transform format lists.
+    /// Requests against unsupported formats fail with `unsupported_format_error`.
+    pub file_id_or_url: Option<FileIdOrUrl>,
+    /// Options for `TransformType.thumbnail`.
+    pub thumbnail: Option<ThumbnailOptions>,
+    /// Options for `TransformType.image` and `TransformType.image_pdf`.
+    pub image: Option<ImageOptions>,
+    /// Options for `TransformType.video_frame`.
+    pub video_frame: Option<VideoFrameOptions>,
+}
+
+impl TransformArgs {
+    pub fn new(transform_type: TransformType) -> Self {
+        TransformArgs {
+            transform_type,
+            file_id_or_url: None,
+            thumbnail: None,
+            image: None,
+            video_frame: None,
+        }
+    }
+
+    pub fn with_file_id_or_url(mut self, value: FileIdOrUrl) -> Self {
+        self.file_id_or_url = Some(value);
+        self
+    }
+
+    pub fn with_thumbnail(mut self, value: ThumbnailOptions) -> Self {
+        self.thumbnail = Some(value);
+        self
+    }
+
+    pub fn with_image(mut self, value: ImageOptions) -> Self {
+        self.image = Some(value);
+        self
+    }
+
+    pub fn with_video_frame(mut self, value: VideoFrameOptions) -> Self {
+        self.video_frame = Some(value);
+        self
+    }
+}
+
+const TRANSFORM_ARGS_FIELDS: &[&str] = &["transform_type",
+                                         "file_id_or_url",
+                                         "thumbnail",
+                                         "image",
+                                         "video_frame"];
+impl TransformArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TransformArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TransformArgs>, V::Error> {
+        let mut field_transform_type = None;
+        let mut field_file_id_or_url = None;
+        let mut field_thumbnail = None;
+        let mut field_image = None;
+        let mut field_video_frame = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "transform_type" => {
+                    if field_transform_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("transform_type"));
+                    }
+                    field_transform_type = Some(map.next_value()?);
+                }
+                "file_id_or_url" => {
+                    if field_file_id_or_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_id_or_url"));
+                    }
+                    field_file_id_or_url = Some(map.next_value()?);
+                }
+                "thumbnail" => {
+                    if field_thumbnail.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("thumbnail"));
+                    }
+                    field_thumbnail = Some(map.next_value()?);
+                }
+                "image" => {
+                    if field_image.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("image"));
+                    }
+                    field_image = Some(map.next_value()?);
+                }
+                "video_frame" => {
+                    if field_video_frame.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("video_frame"));
+                    }
+                    field_video_frame = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TransformArgs {
+            transform_type: field_transform_type.ok_or_else(|| ::serde::de::Error::missing_field("transform_type"))?,
+            file_id_or_url: field_file_id_or_url.and_then(Option::flatten),
+            thumbnail: field_thumbnail.and_then(Option::flatten),
+            image: field_image.and_then(Option::flatten),
+            video_frame: field_video_frame.and_then(Option::flatten),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("transform_type", &self.transform_type)?;
+        if let Some(val) = &self.file_id_or_url {
+            s.serialize_field("file_id_or_url", val)?;
+        }
+        if let Some(val) = &self.thumbnail {
+            s.serialize_field("thumbnail", val)?;
+        }
+        if let Some(val) = &self.image {
+            s.serialize_field("image", val)?;
+        }
+        if let Some(val) = &self.video_frame {
+            s.serialize_field("video_frame", val)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TransformArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TransformArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TransformArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TransformArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TransformArgs", TRANSFORM_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TransformArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TransformArgs", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// A completed transform: a handle for retrieving the produced bytes, plus enough metadata to
+/// decide whether to retrieve them. The bytes themselves are deliberately not carried here. A
+/// completed async result is persisted, so it is bounded by a row-size limit well below the size of
+/// a typical converted document -- an inline payload would fail for exactly the large documents
+/// this route exists to convert. The transform therefore completes by caching its output and
+/// handing back `output_handle`, which `download_transform_output` exchanges for the bytes.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TransformOutput {
+    /// Opaque, single-purpose handle for the produced bytes. Pass it to `download_transform_output`
+    /// to retrieve them. The handle is scoped to the account that created it and cannot be used to
+    /// read anything other than the output of this transform. It is not a URL and carries no
+    /// meaning for callers beyond being passed back verbatim.
+    pub output_handle: String,
+    /// Size of the produced output in bytes.
+    pub size: u64,
+    /// Format of the produced output, as a short lowercase format name such as "pdf", "html",
+    /// "jpeg", or "png". This reflects what was actually produced, which for some sources differs
+    /// from what was requested.
+    pub format: String,
+    /// MIME type corresponding to `format`, for callers that need a Content-Type to hand to a
+    /// downstream consumer.
+    pub mime_type: String,
+    /// Unix timestamp, in seconds, after which `output_handle` is no longer accepted. Retrieve the
+    /// bytes before this point; after it, `download_transform_output` reports
+    /// `expired_handle_error` and the transform has to be requested again.
+    pub expires_ts: u64,
+}
+
+impl TransformOutput {
+    pub fn with_output_handle(mut self, value: String) -> Self {
+        self.output_handle = value;
+        self
+    }
+
+    pub fn with_size(mut self, value: u64) -> Self {
+        self.size = value;
+        self
+    }
+
+    pub fn with_format(mut self, value: String) -> Self {
+        self.format = value;
+        self
+    }
+
+    pub fn with_mime_type(mut self, value: String) -> Self {
+        self.mime_type = value;
+        self
+    }
+
+    pub fn with_expires_ts(mut self, value: u64) -> Self {
+        self.expires_ts = value;
+        self
+    }
+}
+
+const TRANSFORM_OUTPUT_FIELDS: &[&str] = &["output_handle",
+                                           "size",
+                                           "format",
+                                           "mime_type",
+                                           "expires_ts"];
+impl TransformOutput {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TransformOutput, V::Error> {
+        let mut field_output_handle = None;
+        let mut field_size = None;
+        let mut field_format = None;
+        let mut field_mime_type = None;
+        let mut field_expires_ts = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "output_handle" => {
+                    if field_output_handle.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("output_handle"));
+                    }
+                    field_output_handle = Some(map.next_value()?);
+                }
+                "size" => {
+                    if field_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("size"));
+                    }
+                    field_size = Some(map.next_value()?);
+                }
+                "format" => {
+                    if field_format.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("format"));
+                    }
+                    field_format = Some(map.next_value()?);
+                }
+                "mime_type" => {
+                    if field_mime_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("mime_type"));
+                    }
+                    field_mime_type = Some(map.next_value()?);
+                }
+                "expires_ts" => {
+                    if field_expires_ts.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("expires_ts"));
+                    }
+                    field_expires_ts = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = TransformOutput {
+            output_handle: field_output_handle.unwrap_or_default(),
+            size: field_size.unwrap_or(0),
+            format: field_format.unwrap_or_default(),
+            mime_type: field_mime_type.unwrap_or_default(),
+            expires_ts: field_expires_ts.unwrap_or(0),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if !self.output_handle.is_empty() {
+            s.serialize_field("output_handle", &self.output_handle)?;
+        }
+        if self.size != 0 {
+            s.serialize_field("size", &self.size)?;
+        }
+        if !self.format.is_empty() {
+            s.serialize_field("format", &self.format)?;
+        }
+        if !self.mime_type.is_empty() {
+            s.serialize_field("mime_type", &self.mime_type)?;
+        }
+        if self.expires_ts != 0 {
+            s.serialize_field("expires_ts", &self.expires_ts)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TransformOutput {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TransformOutput;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TransformOutput struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TransformOutput::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TransformOutput", TRANSFORM_OUTPUT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TransformOutput {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TransformOutput", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Which derived file to produce from the source file. Unlike the other Riviera content routes,
+/// which each expose one capability, `get_transform_async` is a single route over many conversions:
+/// the caller names the source file and the output it wants, and the service picks the conversion
+/// pipeline. Exactly one variant must be set; a request with none set fails with
+/// `invalid_options_error`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum TransformType {
+    /// Convert the source document to PDF. Supported for word-processing, presentation, and
+    /// spreadsheet documents; images are not accepted.
+    Pdf,
+    /// Convert the source document to HTML. Supported for spreadsheets only, where HTML preserves
+    /// the sheet layout that a PDF rendering flattens.
+    Html,
+    /// Re-encode the source as a web-safe raster image (JPEG or PNG). This is the transform to use
+    /// to normalize formats a browser cannot display directly -- HEIC, camera RAW, PSD, SVG -- and
+    /// to render a single page of a document as an image. Formats a browser can already display,
+    /// such as JPEG and PNG, are not accepted; use `thumbnail` to resize or re-encode those.
+    /// Configured by `TransformArgs.image`.
+    Image,
+    /// Produce a resized thumbnail of the source at one of the supported sizes. Configured by
+    /// `TransformArgs.thumbnail`.
+    Thumbnail,
+    /// Render the source as a page image by way of a PDF conversion, rather than by whichever image
+    /// pipeline the source format would otherwise use. Prefer `image` unless you specifically need
+    /// the PDF-rendered result; the two differ for formats that have a native image pipeline of
+    /// their own (ebooks, for example). Configured by `TransformArgs.image`.
+    ImagePdf,
+    /// Extract a single frame from a video as a still image. Configured by
+    /// `TransformArgs.video_frame`. This produces one frame at one requested offset. To get the set
+    /// of scene-change keyframes across a whole video, use `get_keyframes_async`, which returns
+    /// every detected frame with its timestamp and scene score.
+    VideoFrame,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TransformType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TransformType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TransformType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "pdf" => TransformType::Pdf,
+                    "html" => TransformType::Html,
+                    "image" => TransformType::Image,
+                    "thumbnail" => TransformType::Thumbnail,
+                    "image_pdf" => TransformType::ImagePdf,
+                    "video_frame" => TransformType::VideoFrame,
+                    _ => TransformType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["pdf",
+                                    "html",
+                                    "image",
+                                    "thumbnail",
+                                    "image_pdf",
+                                    "video_frame",
+                                    "other"];
+        deserializer.deserialize_struct("TransformType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TransformType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match self {
+            TransformType::Pdf => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformType", 1)?;
+                s.serialize_field(".tag", "pdf")?;
+                s.end()
+            }
+            TransformType::Html => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformType", 1)?;
+                s.serialize_field(".tag", "html")?;
+                s.end()
+            }
+            TransformType::Image => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformType", 1)?;
+                s.serialize_field(".tag", "image")?;
+                s.end()
+            }
+            TransformType::Thumbnail => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformType", 1)?;
+                s.serialize_field(".tag", "thumbnail")?;
+                s.end()
+            }
+            TransformType::ImagePdf => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformType", 1)?;
+                s.serialize_field(".tag", "image_pdf")?;
+                s.end()
+            }
+            TransformType::VideoFrame => {
+                // unit
+                let mut s = serializer.serialize_struct("TransformType", 1)?;
+                s.serialize_field(".tag", "video_frame")?;
+                s.end()
+            }
+            TransformType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Options for `TransformType.video_frame`. Supplying this message with any other transform type
+/// fails with `invalid_options_error`.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct VideoFrameOptions {
+    /// Offset into the video, in seconds, of the frame to extract. Should be within the video's
+    /// duration. Defaults to 0 (the first frame) when omitted. Only the lower bound is enforced,
+    /// because the upper bound is the source's duration, which is not known until the video is
+    /// opened. An offset past the end is not rejected.
+    pub offset_in_seconds: f64,
+    /// Scale the extracted frame to this percentage of the video's natural frame size. Must be in
+    /// (0, 100]; the pipeline does not upscale. Defaults to 100 (no scaling) when omitted.
+    pub scale_percent: u32,
+}
+
+impl Default for VideoFrameOptions {
+    fn default() -> Self {
+        VideoFrameOptions {
+            offset_in_seconds: 0.0,
+            scale_percent: 100,
+        }
+    }
+}
+
+impl VideoFrameOptions {
+    pub fn with_offset_in_seconds(mut self, value: f64) -> Self {
+        self.offset_in_seconds = value;
+        self
+    }
+
+    pub fn with_scale_percent(mut self, value: u32) -> Self {
+        self.scale_percent = value;
+        self
+    }
+}
+
+const VIDEO_FRAME_OPTIONS_FIELDS: &[&str] = &["offset_in_seconds",
+                                              "scale_percent"];
+impl VideoFrameOptions {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<VideoFrameOptions, V::Error> {
+        let mut field_offset_in_seconds = None;
+        let mut field_scale_percent = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "offset_in_seconds" => {
+                    if field_offset_in_seconds.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("offset_in_seconds"));
+                    }
+                    field_offset_in_seconds = Some(map.next_value()?);
+                }
+                "scale_percent" => {
+                    if field_scale_percent.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("scale_percent"));
+                    }
+                    field_scale_percent = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = VideoFrameOptions {
+            offset_in_seconds: field_offset_in_seconds.unwrap_or(0.0),
+            scale_percent: field_scale_percent.unwrap_or(100),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        if self.offset_in_seconds != 0.0 {
+            s.serialize_field("offset_in_seconds", &self.offset_in_seconds)?;
+        }
+        if self.scale_percent != 100 {
+            s.serialize_field("scale_percent", &self.scale_percent)?;
+        }
+        Ok(())
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for VideoFrameOptions {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = VideoFrameOptions;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a VideoFrameOptions struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                VideoFrameOptions::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("VideoFrameOptions", VIDEO_FRAME_OPTIONS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for VideoFrameOptions {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("VideoFrameOptions", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 

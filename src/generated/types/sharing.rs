@@ -6856,6 +6856,9 @@ pub enum LinkAudience {
     /// Field is deprecated. Link is accessible only by members of the content.
     #[deprecated]
     Members,
+    /// Link is accessible only by signed-in Dropbox users. This audience is currently read-only
+    /// through API v2: API v2 write methods reject requests that set it.
+    PublicLoggedInOnly,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -6884,6 +6887,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                     "password" => LinkAudience::Password,
                     #[allow(deprecated)]
                     "members" => LinkAudience::Members,
+                    "public_logged_in_only" => LinkAudience::PublicLoggedInOnly,
                     _ => LinkAudience::Other,
                 };
                 crate::eat_json_fields(&mut map)?;
@@ -6895,6 +6899,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                                     "no_one",
                                     "password",
                                     "members",
+                                    "public_logged_in_only",
                                     "other"];
         deserializer.deserialize_struct("LinkAudience", VARIANTS, EnumVisitor)
     }
@@ -6935,6 +6940,12 @@ impl ::serde::ser::Serialize for LinkAudience {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAudience", 1)?;
                 s.serialize_field(".tag", "members")?;
+                s.end()
+            }
+            LinkAudience::PublicLoggedInOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudience", 1)?;
+                s.serialize_field(".tag", "public_logged_in_only")?;
                 s.end()
             }
             LinkAudience::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

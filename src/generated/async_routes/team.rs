@@ -1079,6 +1079,34 @@ pub fn members_suspend<'a>(
         None)
 }
 
+/// Launch a member suspension batch. The server enforces a maximum of 500 members.
+pub fn members_suspend_batch<'a>(
+    client: &'a impl crate::async_client_trait::TeamAuthClient,
+    arg: &'a MembersSuspendBatchArg,
+) -> impl std::future::Future<Output=Result<crate::types::dbx_async::LaunchResultBase, crate::Error<MembersSuspendBatchError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "team/members/suspend_batch",
+        arg,
+        None)
+}
+
+/// Poll a previously launched member suspension batch job.
+pub fn members_suspend_batch_job_status_check<'a>(
+    client: &'a impl crate::async_client_trait::TeamAuthClient,
+    arg: &'a crate::types::dbx_async::PollArg,
+) -> impl std::future::Future<Output=Result<MembersSuspendBatchJobStatus, crate::Error<crate::types::dbx_async::PollError>>> + Send + 'a {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait_common::Endpoint::Api,
+        crate::client_trait_common::Style::Rpc,
+        "team/members/suspend_batch/job_status/check",
+        arg,
+        None)
+}
+
 /// Unsuspend a member from a team. Permission : Team member management Exactly one of
 /// team_member_id, email, or external_id must be provided to identify the user account.
 pub fn members_unsuspend<'a>(
