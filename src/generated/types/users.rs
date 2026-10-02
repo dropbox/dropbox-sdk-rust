@@ -411,6 +411,7 @@ impl From<BasicAccount> for Account {
         }
     }
 }
+
 /// The value for [`UserFeature::DistinctMemberHome`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -860,6 +861,7 @@ impl From<FullAccount> for Account {
         }
     }
 }
+
 /// Detailed information about a team.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -1020,6 +1022,7 @@ impl From<FullTeam> for Team {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetAccountArg {

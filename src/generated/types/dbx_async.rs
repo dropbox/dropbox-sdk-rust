@@ -88,6 +88,7 @@ impl From<LaunchResultBase> for LaunchEmptyResult {
         }
     }
 }
+
 /// Result returned by methods that launch an asynchronous job. A method who may either launch an
 /// asynchronous job, or complete the request synchronously, can use this union by extending it, and
 /// adding a 'complete' field with the type of the synchronous response. See [`LaunchEmptyResult`]
@@ -311,6 +312,7 @@ impl From<PollResultBase> for PollEmptyResult {
         }
     }
 }
+
 /// Error returned by methods for polling the status of asynchronous job.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future

@@ -20523,6 +20523,7 @@ impl From<DesktopDeviceSessionLogInfo> for DeviceSessionLogInfo {
         DeviceSessionLogInfo::DesktopDeviceSession(subtype)
     }
 }
+
 /// Desktop session.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -20611,6 +20612,7 @@ impl From<DesktopSessionLogInfo> for SessionLogInfo {
         SessionLogInfo::Desktop(subtype)
     }
 }
+
 /// Added members to device approvals exception list.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -55953,6 +55955,7 @@ impl From<FileLogInfo> for FileOrFolderLogInfo {
         }
     }
 }
+
 /// Moved files and/or folders.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -62003,6 +62006,7 @@ impl From<FolderLogInfo> for FileOrFolderLogInfo {
         }
     }
 }
+
 /// Updated folder overview.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -71634,6 +71638,7 @@ impl From<LegacyDeviceSessionLogInfo> for DeviceSessionLogInfo {
         DeviceSessionLogInfo::LegacyDeviceSession(subtype)
     }
 }
+
 /// Activated a hold.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -84610,6 +84615,7 @@ impl From<MobileDeviceSessionLogInfo> for DeviceSessionLogInfo {
         DeviceSessionLogInfo::MobileDeviceSession(subtype)
     }
 }
+
 /// Mobile session.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -84698,6 +84704,7 @@ impl From<MobileSessionLogInfo> for SessionLogInfo {
         SessionLogInfo::Mobile(subtype)
     }
 }
+
 /// Multi-team identity policy
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -86625,6 +86632,7 @@ impl From<NonTeamMemberLogInfo> for UserLogInfo {
         UserLogInfo::NonTeamMember(subtype)
     }
 }
+
 /// The email to which the request was sent
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -145228,6 +145236,7 @@ impl From<TeamLinkedAppLogInfo> for AppLogInfo {
         AppLogInfo::TeamLinkedApp(subtype)
     }
 }
+
 /// Team's logged information.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -145506,6 +145515,7 @@ impl From<TeamMemberLogInfo> for UserLogInfo {
         UserLogInfo::TeamMember(subtype)
     }
 }
+
 /// Policy for deciding whether team members can request increased storage limits from admins
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -154279,6 +154289,7 @@ impl From<TrustedNonTeamMemberLogInfo> for UserLogInfo {
         UserLogInfo::TrustedNonTeamMember(subtype)
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TrustedNonTeamMemberType {
@@ -155146,6 +155157,7 @@ impl From<UserLinkedAppLogInfo> for AppLogInfo {
         AppLogInfo::UserLinkedApp(subtype)
     }
 }
+
 /// User's logged information.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -155451,6 +155463,7 @@ impl From<UserOrTeamLinkedAppLogInfo> for AppLogInfo {
         AppLogInfo::UserOrTeamLinkedApp(subtype)
     }
 }
+
 /// Tagged a file.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -156473,6 +156486,7 @@ impl From<WebDeviceSessionLogInfo> for DeviceSessionLogInfo {
         DeviceSessionLogInfo::WebDeviceSession(subtype)
     }
 }
+
 /// Web session.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -156561,6 +156575,7 @@ impl From<WebSessionLogInfo> for SessionLogInfo {
         SessionLogInfo::Web(subtype)
     }
 }
+
 /// Changed limit on active sessions per member.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.

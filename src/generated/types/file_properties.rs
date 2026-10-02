@@ -328,6 +328,7 @@ impl From<InvalidPropertyGroupError> for AddPropertiesError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddTemplateArg {
@@ -456,6 +457,7 @@ impl From<AddTemplateArg> for PropertyGroupTemplate {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddTemplateResult {
@@ -770,6 +772,7 @@ impl From<GetTemplateResult> for PropertyGroupTemplate {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum InvalidPropertyGroupError {
@@ -934,6 +937,7 @@ impl From<PropertiesError> for InvalidPropertyGroupError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTemplateResult {
@@ -1408,6 +1412,7 @@ impl From<TemplateError> for ModifyTemplateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct OverwritePropertyGroupArg {
@@ -1642,6 +1647,7 @@ impl From<TemplateError> for PropertiesError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PropertiesSearchArg {
@@ -3321,6 +3327,7 @@ impl From<PropertiesError> for RemovePropertiesError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveTemplateArg {
@@ -3581,6 +3588,7 @@ impl From<TemplateFilterBase> for TemplateFilter {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TemplateFilterBase {
@@ -3998,6 +4006,7 @@ impl From<InvalidPropertyGroupError> for UpdatePropertiesError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateTemplateArg {

@@ -282,6 +282,7 @@ impl From<AddPaperDocUser> for RefPaperDoc {
         }
     }
 }
+
 /// Per-member result for [`docs_users_add()`](crate::paper::docs_users_add).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -714,6 +715,7 @@ impl From<PaperApiBaseError> for DocLookupError {
         }
     }
 }
+
 /// The subscription level of a Paper doc.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DocSubscriptionLevel {
@@ -2286,6 +2288,7 @@ impl From<PaperApiBaseError> for ListUsersCursorError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderArgs {
@@ -2406,6 +2409,7 @@ impl From<ListUsersOnFolderArgs> for RefPaperDoc {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderContinueArgs {
@@ -2520,6 +2524,7 @@ impl From<ListUsersOnFolderContinueArgs> for RefPaperDoc {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderResponse {
@@ -2802,6 +2807,7 @@ impl From<ListUsersOnPaperDocArgs> for RefPaperDoc {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocContinueArgs {
@@ -2916,6 +2922,7 @@ impl From<ListUsersOnPaperDocContinueArgs> for RefPaperDoc {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocResponse {
@@ -3474,6 +3481,7 @@ impl From<PaperApiBaseError> for PaperDocCreateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocCreateUpdateResult {
@@ -3724,6 +3732,7 @@ impl From<PaperDocExport> for RefPaperDoc {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocExportResult {
@@ -4223,6 +4232,7 @@ impl From<PaperDocSharingPolicy> for RefPaperDoc {
         }
     }
 }
+
 /// The status of a Paper doc.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -4433,6 +4443,7 @@ impl From<PaperDocUpdateArgs> for RefPaperDoc {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdateError {
@@ -4590,6 +4601,7 @@ impl From<DocLookupError> for PaperDocUpdateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdatePolicy {
@@ -4901,6 +4913,7 @@ impl From<PaperApiBaseError> for PaperFolderCreateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperFolderCreateResult {
@@ -5196,6 +5209,7 @@ impl From<RemovePaperDocUser> for RefPaperDoc {
         }
     }
 }
+
 /// Sharing policy of Paper doc.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -5386,6 +5400,7 @@ impl From<SharingTeamPolicyType> for SharingPublicPolicyType {
         }
     }
 }
+
 /// The sharing policy type of the Paper doc.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SharingTeamPolicyType {

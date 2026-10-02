@@ -91,6 +91,7 @@ impl From<GeneralFileRequestsError> for CountFileRequestsError {
         }
     }
 }
+
 /// Result for [`count()`](crate::file_requests::count).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -558,6 +559,7 @@ impl From<FileRequestError> for CreateFileRequestError {
         }
     }
 }
+
 /// There was an error deleting all closed file requests.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -722,6 +724,7 @@ impl From<FileRequestError> for DeleteAllClosedFileRequestsError {
         }
     }
 }
+
 /// Result for [`delete_all_closed()`](crate::file_requests::delete_all_closed).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -1081,6 +1084,7 @@ impl From<FileRequestError> for DeleteFileRequestError {
         }
     }
 }
+
 /// Result for [`delete()`](crate::file_requests::delete).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -1689,6 +1693,7 @@ impl From<GeneralFileRequestsError> for FileRequestError {
         }
     }
 }
+
 /// There is an error accessing the file requests functionality.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -2013,6 +2018,7 @@ impl From<FileRequestError> for GetFileRequestError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GracePeriod {
@@ -2372,6 +2378,7 @@ impl From<GeneralFileRequestsError> for ListFileRequestsContinueError {
         }
     }
 }
+
 /// There was an error retrieving the file requests.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -2449,6 +2456,7 @@ impl From<GeneralFileRequestsError> for ListFileRequestsError {
         }
     }
 }
+
 /// Result for [`list()`](crate::file_requests::list).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -3091,3 +3099,4 @@ impl From<FileRequestError> for UpdateFileRequestError {
         }
     }
 }
+
