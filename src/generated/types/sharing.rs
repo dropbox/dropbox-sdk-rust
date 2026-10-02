@@ -1373,6 +1373,7 @@ impl From<ResolvedVisibility> for AlphaResolvedVisibility {
         }
     }
 }
+
 /// Information about the content that has a link audience different than that of this folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -1890,6 +1891,7 @@ impl From<CollectionLinkMetadata> for LinkMetadata {
         LinkMetadata::Collection(subtype)
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateSharedLinkArg {
@@ -2597,6 +2599,7 @@ impl From<ExpectedSharedContentLinkMetadata> for SharedContentLinkMetadataBase {
         }
     }
 }
+
 /// Sharing actions that may be taken on files.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -3158,6 +3161,7 @@ impl From<FileLinkMetadata> for SharedLinkMetadata {
         SharedLinkMetadata::File(subtype)
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileMemberActionError {
@@ -4135,6 +4139,7 @@ impl From<FolderLinkMetadata> for SharedLinkMetadata {
         SharedLinkMetadata::Folder(subtype)
     }
 }
+
 /// Whether the user is allowed to take the action on the shared folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -5170,6 +5175,7 @@ impl From<SharedLinkError> for GetSharedLinkFileError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinkMetadataArg {
@@ -5784,6 +5790,7 @@ impl From<GroupInfo> for crate::types::team_common::GroupSummary {
         }
     }
 }
+
 /// The information about a group member of the shared content.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -5966,6 +5973,7 @@ impl From<GroupMembershipInfo> for MembershipInfo {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct InsufficientPlan {
@@ -6460,6 +6468,7 @@ impl From<InviteeMembershipInfo> for MembershipInfo {
         }
     }
 }
+
 /// Error occurred while performing an asynchronous job from
 /// [`unshare_folder()`](crate::sharing::unshare_folder) or
 /// [`remove_folder_member()`](crate::sharing::remove_folder_member).
@@ -6667,6 +6676,7 @@ impl From<crate::types::dbx_async::PollResultBase> for JobStatus {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum LinkAccessLevel {
@@ -7074,6 +7084,7 @@ impl From<VisibilityPolicyDisallowedReason> for LinkAudienceDisallowedReason {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkAudienceOption {
@@ -9633,6 +9644,7 @@ impl From<ListFolderMembersArgs> for ListFolderMembersCursorArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersContinueArg {
@@ -11587,6 +11599,7 @@ impl From<SharedLinkError> for ModifySharedLinkSettingsError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MountFolderArg {
@@ -12106,6 +12119,7 @@ impl From<PathLinkMetadata> for LinkMetadata {
         LinkMetadata::Path(subtype)
     }
 }
+
 /// Flag to indicate pending upload default (for linking to not-yet-existing paths).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PendingUploadMode {
@@ -13660,6 +13674,7 @@ impl From<crate::types::dbx_async::PollResultBase> for RemoveMemberJobStatus {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RequestedLinkAccessLevel {
@@ -13951,6 +13966,7 @@ impl From<RequestedVisibility> for ResolvedVisibility {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeSharedLinkArg {
@@ -14164,6 +14180,7 @@ impl From<SharedLinkError> for RevokeSharedLinkError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetAccessInheritanceArg {
@@ -14635,6 +14652,7 @@ impl From<ShareFolderArg> for ShareFolderArgBase {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ShareFolderArgBase {
@@ -14985,6 +15003,7 @@ impl From<ShareFolderErrorBase> for ShareFolderError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ShareFolderErrorBase {
@@ -15260,6 +15279,7 @@ impl From<ShareFolderErrorBaseV2> for ShareFolderErrorV2 {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ShareFolderJobStatus {
     /// The asynchronous job is still in progress.
@@ -15344,6 +15364,7 @@ impl From<crate::types::dbx_async::PollResultBase> for ShareFolderJobStatus {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ShareFolderLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -15419,6 +15440,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for ShareFolderLaunch {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SharePathError {
@@ -16090,6 +16112,7 @@ impl From<SharePathErrorBaseV2> for SharePathErrorV2 {
         }
     }
 }
+
 /// Metadata of a shared link for a file or folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -16343,6 +16366,7 @@ impl From<SharedContentLinkMetadata> for SharedContentLinkMetadataBase {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedContentLinkMetadataBase {
@@ -17812,6 +17836,7 @@ impl From<SharedFolderMetadata> for SharedFolderMetadataBase {
         }
     }
 }
+
 /// Properties of the shared folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -18495,6 +18520,7 @@ impl From<SharedLinkError> for SharedLinkMetadataError {
         }
     }
 }
+
 /// Who can view shared links in this folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -21230,6 +21256,7 @@ impl From<UserFileMembershipInfo> for UserMembershipInfo {
         }
     }
 }
+
 /// Basic information about a user. Use [`users::get_account()`](crate::users::get_account) and
 /// [`users::get_account_batch()`](crate::users::get_account_batch) to obtain more detailed
 /// information.
@@ -21570,6 +21597,7 @@ impl From<UserMembershipInfo> for MembershipInfo {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ViewerInfoPolicy {

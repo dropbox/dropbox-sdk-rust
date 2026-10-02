@@ -812,6 +812,7 @@ class RustBackend(RustHelperBackend):
                         field_name = self.field_name(field)
                         attr = '#[allow(deprecated)] ' if field.deprecated else ''
                         self.emit(f'{attr}{field_name}: subtype.{field_name},')
+        self.emit()
 
     # "extends" for polymorphic structs means it's one of the supertype's variants, so we can
     # convert from the subtype to the supertype.
@@ -828,6 +829,7 @@ class RustBackend(RustHelperBackend):
                     variant_name = self.enum_variant_name(subtype)
                     attr = '#[allow(deprecated)] ' if subtype.deprecated else ''
                     self.emit(f'{attr}{supertype}::{variant_name}(subtype)')
+        self.emit()
 
     # "extends" for unions means the subtype adds additional variants, so we can convert from the
     # supertype to the subtype.
@@ -843,6 +845,7 @@ class RustBackend(RustHelperBackend):
                         attr = '#[allow(deprecated)] ' if field.deprecated else ''
                         x = "" if isinstance(field.data_type, ir.Void) else "(x)"
                         self.emit(f'{attr}{supertype}::{variant_name}{x} => {subtype}::{variant_name}{x},')
+        self.emit()
 
     # Helpers
 

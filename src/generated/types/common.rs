@@ -496,6 +496,7 @@ impl From<TeamRootInfo> for RootInfo {
         RootInfo::Team(subtype)
     }
 }
+
 /// Root info when user is not member of a team or the user is a member of a team and the team does
 /// not have a separate root namespace.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -631,3 +632,4 @@ impl From<UserRootInfo> for RootInfo {
         RootInfo::User(subtype)
     }
 }
+

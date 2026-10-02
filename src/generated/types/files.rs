@@ -232,6 +232,7 @@ impl From<BaseTagError> for AddTagError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AlphaGetMetadataArg {
@@ -449,6 +450,7 @@ impl From<AlphaGetMetadataArg> for GetMetadataArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum AlphaGetMetadataError {
     Path(LookupError),
@@ -546,6 +548,7 @@ impl From<GetMetadataError> for AlphaGetMetadataError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum BaseTagError {
@@ -1459,6 +1462,7 @@ impl From<crate::types::dbx_async::PollResultBase> for CreateFolderBatchJobStatu
         }
     }
 }
+
 /// Result returned by [`create_folder_batch()`](crate::files::create_folder_batch) that may either
 /// launch an asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1542,6 +1546,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for CreateFolderBatchLaunch
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderBatchResult {
@@ -2405,6 +2410,7 @@ impl From<crate::types::dbx_async::PollResultBase> for DeleteBatchJobStatus {
         }
     }
 }
+
 /// Result returned by [`delete_batch()`](crate::files::delete_batch) that may either launch an
 /// asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
@@ -2488,6 +2494,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for DeleteBatchLaunch {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteBatchResult {
@@ -3171,6 +3178,7 @@ impl From<DeletedMetadata> for Metadata {
         Metadata::Deleted(subtype)
     }
 }
+
 /// Dimensions for a photo or video.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -5267,6 +5275,7 @@ impl From<FileMetadata> for Metadata {
         Metadata::File(subtype)
     }
 }
+
 /// Result for File Operations
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -5448,6 +5457,7 @@ impl From<FileSharingInfo> for SharingInfo {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileStatus {
@@ -5785,6 +5795,7 @@ impl From<FolderMetadata> for Metadata {
         Metadata::Folder(subtype)
     }
 }
+
 /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount
 /// point.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -5972,6 +5983,7 @@ impl From<FolderSharingInfo> for SharingInfo {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetCopyReferenceArg {
@@ -10876,6 +10888,7 @@ impl From<MoveBatchArg> for RelocationBatchArgBase {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MoveIntoFamilyError {
@@ -11374,6 +11387,7 @@ impl From<PaperContentError> for PaperCreateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperCreateResult {
@@ -11902,6 +11916,7 @@ impl From<PaperContentError> for PaperUpdateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperUpdateResult {
@@ -12294,6 +12309,7 @@ impl From<PhotoMetadata> for MediaMetadata {
         MediaMetadata::Photo(subtype)
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PreviewArg {
@@ -12796,6 +12812,7 @@ impl From<RelocationArg> for RelocationPath {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArg {
@@ -12962,6 +12979,7 @@ impl From<RelocationBatchArg> for RelocationBatchArgBase {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArgBase {
@@ -13389,6 +13407,7 @@ impl From<RelocationError> for RelocationBatchError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchErrorEntry {
@@ -13557,6 +13576,7 @@ impl From<crate::types::dbx_async::PollResultBase> for RelocationBatchJobStatus 
         }
     }
 }
+
 /// Result returned by [`copy_batch()`](crate::files::copy_batch) or
 /// [`move_batch()`](crate::files::move_batch) that may either launch an asynchronous job or
 /// complete synchronously.
@@ -13641,6 +13661,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for RelocationBatchLaunch {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchResult {
@@ -13976,6 +13997,7 @@ impl From<crate::types::dbx_async::PollResultBase> for RelocationBatchV2JobStatu
         }
     }
 }
+
 /// Result returned by [`copy_batch_v2()`](crate::files::copy_batch_v2) or
 /// [`move_batch_v2()`](crate::files::move_batch_v2) that may either launch an asynchronous job or
 /// complete synchronously.
@@ -14054,6 +14076,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for RelocationBatchV2Launch
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchV2Result {
@@ -14836,6 +14859,7 @@ impl From<BaseTagError> for RemoveTagError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RestoreArg {
@@ -15681,6 +15705,7 @@ impl From<crate::types::dbx_async::PollResultBase> for SaveUrlJobStatus {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum SaveUrlResult {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -15757,6 +15782,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for SaveUrlResult {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchArg {
@@ -19656,6 +19682,7 @@ impl From<UploadArg> for CommitInfo {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadError {
@@ -21079,6 +21106,7 @@ impl From<crate::types::dbx_async::PollResultBase> for UploadSessionFinishBatchJ
         }
     }
 }
+
 /// Result returned by [`upload_session_finish_batch()`](crate::files::upload_session_finish_batch)
 /// that may either launch an asynchronous job or complete synchronously.
 #[derive(Debug, Clone, PartialEq)]
@@ -21162,6 +21190,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for UploadSessionFinishBatc
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionFinishBatchResult {
@@ -22704,6 +22733,7 @@ impl From<VideoMetadata> for MediaMetadata {
         MediaMetadata::Video(subtype)
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum WriteConflictError {

@@ -266,6 +266,7 @@ impl From<ActiveWebSession> for DeviceSession {
         }
     }
 }
+
 /// Result of trying to add a secondary email to a user. 'success' is the only value indicating that
 /// a secondary email was successfully added to a user. The other values explain the type of error
 /// that occurred, and include the email for which the error occurred.
@@ -1630,6 +1631,7 @@ impl From<crate::types::dbx_async::PollResultBase> for BulkSuspendJobStatus {
         }
     }
 }
+
 /// One member selected for suspension. The opaque client item ID correlates the eventual report row
 /// with the caller's input without sending CSV data.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1952,6 +1954,7 @@ impl From<MembersSuspendError> for BulkSuspendRowFailure {
         }
     }
 }
+
 /// The terminal outcome for one requested member. Row outcomes are delivered in the report rather
 /// than embedded in the status response.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3010,6 +3013,7 @@ impl From<DesktopClientSession> for DeviceSession {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DesktopPlatform {
@@ -5068,6 +5072,7 @@ impl From<GetActivityReport> for BaseDfbReport {
         }
     }
 }
+
 /// Devices Report Result. Contains subsections for different time ranges of activity. Each of the
 /// items in each subsection of the storage report is an array of values, one value per day. If
 /// there is no data for a day, then the value will be None.
@@ -5214,6 +5219,7 @@ impl From<GetDevicesReport> for BaseDfbReport {
         }
     }
 }
+
 /// Membership Report Result. Each of the items in the storage report is an array of values, one
 /// value per day. If there is no data for a day, then the value will be None.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -5387,6 +5393,7 @@ impl From<GetMembershipReport> for BaseDfbReport {
         }
     }
 }
+
 /// Storage Report Result. Each of the items in the storage report is an array of values, one value
 /// per day. If there is no data for a day, then the value will be None.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -5563,6 +5570,7 @@ impl From<GetStorageReport> for BaseDfbReport {
         }
     }
 }
+
 /// Role of a user in group.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupAccessType {
@@ -5979,6 +5987,7 @@ impl From<GroupSelectorWithTeamGroupError> for GroupDeleteError {
         }
     }
 }
+
 /// Full description of a group.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -6188,6 +6197,7 @@ impl From<GroupFullInfo> for crate::types::team_common::GroupSummary {
         }
     }
 }
+
 /// Profile of group member, and role in group.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -6499,6 +6509,7 @@ impl From<GroupSelectorWithTeamGroupError> for GroupMemberSelectorError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupMemberSetAccessTypeError {
@@ -6610,6 +6621,7 @@ impl From<GroupMemberSelectorError> for GroupMemberSetAccessTypeError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersAddArg {
@@ -6744,6 +6756,7 @@ impl From<GroupMembersAddArg> for IncludeMembersArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupMembersAddError {
@@ -6922,6 +6935,7 @@ impl From<GroupSelectorWithTeamGroupError> for GroupMembersAddError {
         }
     }
 }
+
 /// Result returned by [`groups_members_add()`](crate::team::groups_members_add) and
 /// [`groups_members_remove()`](crate::team::groups_members_remove).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -7169,6 +7183,7 @@ impl From<GroupMembersRemoveArg> for IncludeMembersArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupMembersRemoveError {
@@ -7317,6 +7332,7 @@ impl From<GroupMembersSelectorError> for GroupMembersRemoveError {
         }
     }
 }
+
 /// Argument for selecting a group and a list of users.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -7523,6 +7539,7 @@ impl From<GroupSelectorWithTeamGroupError> for GroupMembersSelectorError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersSetAccessTypeArg {
@@ -7671,6 +7688,7 @@ impl From<GroupMembersSetAccessTypeArg> for GroupMemberSelector {
         }
     }
 }
+
 /// Argument for selecting a single group, either by group_id or by external group ID.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupSelector {
@@ -7902,6 +7920,7 @@ impl From<GroupSelectorError> for GroupSelectorWithTeamGroupError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupUpdateArgs {
@@ -8090,6 +8109,7 @@ impl From<GroupUpdateArgs> for IncludeMembersArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupUpdateError {
@@ -8211,6 +8231,7 @@ impl From<GroupSelectorWithTeamGroupError> for GroupUpdateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupsGetInfoError {
@@ -9205,6 +9226,7 @@ impl From<crate::types::dbx_async::PollError> for GroupsPollError {
         }
     }
 }
+
 /// Argument for selecting a list of groups, either by group_ids, or external group IDs.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupsSelector {
@@ -10424,6 +10446,7 @@ impl From<LegalHoldsError> for LegalHoldsGetPolicyError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListHeldRevisionResult {
@@ -10965,6 +10988,7 @@ impl From<LegalHoldsError> for LegalHoldsListHeldRevisionsError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListPoliciesArg {
@@ -11145,6 +11169,7 @@ impl From<LegalHoldsError> for LegalHoldsListPoliciesError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListPoliciesResult {
@@ -11578,6 +11603,7 @@ impl From<LegalHoldsError> for LegalHoldsPolicyCreateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsPolicyReleaseArg {
@@ -11790,6 +11816,7 @@ impl From<LegalHoldsError> for LegalHoldsPolicyReleaseError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsPolicyUpdateArg {
@@ -12117,6 +12144,7 @@ impl From<LegalHoldsError> for LegalHoldsPolicyUpdateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMemberAppsArg {
@@ -14324,6 +14352,7 @@ impl From<MemberAddArg> for MemberAddArgBase {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAddArgBase {
@@ -14788,6 +14817,7 @@ impl From<MemberAddResultBase> for MemberAddResult {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MemberAddResultBase {
     /// Team is already full. The organization has no available licenses.
@@ -15254,6 +15284,7 @@ impl From<MemberAddV2Arg> for MemberAddArgBase {
         }
     }
 }
+
 /// Describes the result of attempting to add a single user to the team. 'success' is the only value
 /// indicating that a user was indeed added to the team - the other values explain the type of
 /// failure that occurred, and include the email of the user for which the operation has failed.
@@ -15505,6 +15536,7 @@ impl From<MemberAddResultBase> for MemberAddV2Result {
         }
     }
 }
+
 /// Information on devices of a team's member.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -16194,6 +16226,7 @@ impl From<UserSelectorError> for MemberSelectorError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersAddArg {
@@ -16313,6 +16346,7 @@ impl From<MembersAddArg> for MembersAddArgBase {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersAddArgBase {
@@ -16487,6 +16521,7 @@ impl From<crate::types::dbx_async::PollResultBase> for MembersAddJobStatus {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersAddJobStatusV2Result {
@@ -16586,6 +16621,7 @@ impl From<crate::types::dbx_async::PollResultBase> for MembersAddJobStatusV2Resu
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MembersAddLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -16667,6 +16703,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for MembersAddLaunch {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersAddLaunchV2Result {
@@ -16754,6 +16791,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for MembersAddLaunchV2Resul
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersAddV2Arg {
@@ -16873,6 +16911,7 @@ impl From<MembersAddV2Arg> for MembersAddArgBase {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDataTransferArg {
@@ -17002,6 +17041,7 @@ impl From<MembersDataTransferArg> for MembersDeactivateBaseArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDeactivateArg {
@@ -17121,6 +17161,7 @@ impl From<MembersDeactivateArg> for MembersDeactivateBaseArg {
         }
     }
 }
+
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -17301,6 +17342,7 @@ impl From<UserSelectorError> for MembersDeactivateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersDeleteFormerMemberFilesError {
@@ -17437,6 +17479,7 @@ impl From<MembersPermanentlyDeleteFilesError> for MembersDeleteFormerMemberFiles
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDeleteProfilePhotoArg {
@@ -17627,6 +17670,7 @@ impl From<MemberSelectorError> for MembersDeleteProfilePhotoError {
         }
     }
 }
+
 /// Exactly one of team_member_id, email, or external_id must be provided to identify a former team
 /// member.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -18037,6 +18081,7 @@ impl From<MembersGetInfoItemBase> for MembersGetInfoItem {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MembersGetInfoItemBase {
     /// An ID that was provided as a parameter to
@@ -18184,6 +18229,7 @@ impl From<MembersGetInfoItemBase> for MembersGetInfoItemV2 {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersGetInfoV2Arg {
@@ -19153,6 +19199,7 @@ impl From<MembersDeactivateError> for MembersPermanentlyDeleteFilesError {
         }
     }
 }
+
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -19355,6 +19402,7 @@ impl From<UserSelectorError> for MembersRecoverError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersRemoveArg {
@@ -19583,6 +19631,7 @@ impl From<MembersRemoveArg> for MembersDeactivateArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersRemoveError {
@@ -19975,6 +20024,7 @@ impl From<MembersTransferFilesError> for MembersRemoveError {
     }
 }
 
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersSendWelcomeError {
@@ -20063,6 +20113,7 @@ impl From<MemberSelectorError> for MembersSendWelcomeError {
         }
     }
 }
+
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -20297,6 +20348,7 @@ impl From<UserSelectorError> for MembersSetPermissions2Error {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetPermissions2Result {
@@ -20634,6 +20686,7 @@ impl From<UserSelectorError> for MembersSetPermissionsError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetPermissionsResult {
@@ -21144,6 +21197,7 @@ impl From<MemberSelectorError> for MembersSetProfileError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetProfilePhotoArg {
@@ -21370,6 +21424,7 @@ impl From<MemberSelectorError> for MembersSetProfilePhotoError {
         }
     }
 }
+
 /// Launches one action-specific member suspension batch job.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -21811,6 +21866,7 @@ impl From<crate::types::dbx_async::PollResultBase> for MembersSuspendBatchJobSta
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersSuspendBatchReportDeliveryStatus {
@@ -22029,6 +22085,7 @@ impl From<MembersSuspendError> for MembersSuspendBatchRowFailure {
         }
     }
 }
+
 /// The terminal outcome for one requested member. Row outcomes are delivered in the report rather
 /// than embedded in the status response.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -22390,6 +22447,7 @@ impl From<MembersDeactivateError> for MembersSuspendError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersTransferFilesError {
@@ -22614,6 +22672,7 @@ impl From<MembersPermanentlyDeleteFilesError> for MembersTransferFilesError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MembersTransferFormerMembersFilesError {
@@ -22891,6 +22950,7 @@ impl From<MembersTransferFilesError> for MembersTransferFormerMembersFilesError 
         }
     }
 }
+
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -23095,6 +23155,7 @@ impl From<MembersDeactivateError> for MembersUnsuspendError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MobileClientPlatform {
@@ -23464,6 +23525,7 @@ impl From<MobileClientSession> for DeviceSession {
         }
     }
 }
+
 /// Properties of a namespace.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
@@ -24321,6 +24383,7 @@ impl From<RevokeDesktopClientArg> for DeviceSessionArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RevokeDeviceSessionArg {
     /// End an active session.
@@ -25557,6 +25620,7 @@ impl From<CustomQuotaError> for SetCustomQuotaError {
         }
     }
 }
+
 /// Structure representing Approve List entries. Domain and emails are supported. At least one entry
 /// of any supported type is required.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -26880,6 +26944,7 @@ impl From<BaseTeamFolderError> for TeamFolderActivateError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderArchiveArg {
@@ -26999,6 +27064,7 @@ impl From<TeamFolderArchiveArg> for TeamFolderIdArg {
         }
     }
 }
+
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
@@ -27126,6 +27192,7 @@ impl From<BaseTeamFolderError> for TeamFolderArchiveError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TeamFolderArchiveJobStatus {
     /// The asynchronous job is still in progress.
@@ -27212,6 +27279,7 @@ impl From<crate::types::dbx_async::PollResultBase> for TeamFolderArchiveJobStatu
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TeamFolderArchiveLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -27287,6 +27355,7 @@ impl From<crate::types::dbx_async::LaunchResultBase> for TeamFolderArchiveLaunch
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderCreateArg {
@@ -28642,6 +28711,7 @@ impl From<BaseTeamFolderError> for TeamFolderPermanentlyDeleteError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderRenameArg {
@@ -28754,6 +28824,7 @@ impl From<TeamFolderRenameArg> for TeamFolderIdArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderRenameError {
@@ -28913,6 +28984,7 @@ impl From<BaseTeamFolderError> for TeamFolderRenameError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderRestoreError {
@@ -29050,6 +29122,7 @@ impl From<BaseTeamFolderError> for TeamFolderRestoreError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderStatus {
@@ -29346,6 +29419,7 @@ impl From<TeamFolderUpdateSyncSettingsArg> for TeamFolderIdArg {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderUpdateSyncSettingsError {
@@ -29491,6 +29565,7 @@ impl From<BaseTeamFolderError> for TeamFolderUpdateSyncSettingsError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamGetInfoResult {
@@ -30385,6 +30460,7 @@ impl From<TeamMemberProfile> for MemberProfile {
         }
     }
 }
+
 /// A role which can be attached to a team member. This replaces AdminTier; each AdminTier
 /// corresponds to a new TeamMemberRole with a matching name.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -30922,6 +30998,7 @@ impl From<TeamNamespacesListError> for TeamNamespacesListContinueError {
         }
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum TeamNamespacesListError {
