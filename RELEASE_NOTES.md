@@ -1,4 +1,5 @@
-# unreleased changes
+# v0.21.0
+2026-10-02
 * API spec updates up to 2026-10-02 (dropbox/dropbox-api-spec#134)
     * very minor breaking changes: some things that were meant to be internal-only were removed
 * fixed a bug where non-ASCII characters in parameters were not properly escaped for upload and download routes
